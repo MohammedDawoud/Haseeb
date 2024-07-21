@@ -1,0 +1,554 @@
+<div class="add-search pb-4">
+  <app-navigator [title]="title"></app-navigator>
+
+  <div class="tables-data mt-3 overflow-hidden">
+    <div class="flex gap-2 flex-wrap items-end">
+      <div class="max-w-xs flex-grow">
+        <label class="col-form-label"> {{ "Shift" | translate }}</label>
+        <ng-select
+          #dawam
+          class="w-full p-0"
+          name="dawam"
+          [(ngModel)]="data.filter.shift"
+          (ngModelChange)="GetReport()"
+          placeholder="{{ 'Chose' | translate }}"
+            [ngModelOptions]="{ standalone: true }"
+                    [dropdownPosition]="'bottom'"
+        >
+          <ng-option [value]="0"> الفترتين معاً </ng-option>
+          <ng-option [value]="1"> فترة صباحية </ng-option>
+          <ng-option [value]="2"> فترة مسائية </ng-option>
+        </ng-select>
+      </div>
+      <div class="max-w-xs flex-grow">
+        <!-- <label class="col-form-label"> {{ "Employee" | translate }}</label>
+        <ng-select
+          #Empsearch
+          [items]="EmployeeSearch"
+          bindLabel="name"
+          bindValue="id"
+          class="w-full p-0"
+          [(ngModel)]="data.filter.empid"
+          (ngModelChange)="GetReport()"
+          placeholder="{{ 'Chose' | translate }}"
+          [dropdownPosition]="'bottom'"
+        >
+        </ng-select> -->
+
+        <ng-select
+          class="w-full p-0"
+          placeholder="{{ 'Employee' | translate }}"
+          [(ngModel)]="data.filter.empid"
+          [ngModelOptions]="{ standalone: true }"
+          (ngModelChange)="GetReport()"
+          name="customer"
+          [dropdownPosition]="'bottom'"
+
+        >
+          <ng-option *ngFor="let user of EmployeeSearch" [value]="user.id">{{
+            user.name
+          }}</ng-option>
+        </ng-select>
+      </div>
+      <div class="max-w-xs flex-grow">
+        <label class="col-form-label"> {{ "Branch" | translate }}</label>
+        <ng-select
+          #Brsearch
+          [items]="BranchSearch"
+          bindLabel="name"
+          bindValue="id"
+          [clearable]="true"
+          class="w-full p-0"
+          [(ngModel)]="data.filter.branchid"
+          (ngModelChange)="GetReport()"
+          placeholder="{{ 'Chose' | translate }}"
+         [ngModelOptions]="{ standalone: true }"
+         [dropdownPosition]="'bottom'"
+        >
+        </ng-select>
+      </div>
+      <button
+        class="btn btn-primary"
+        (click)="data.filter.enable = !data.filter.enable"
+        [translate]="'name'"
+        [translateParams]="{
+          ar: 'فلترة بالوقت',
+          en: 'Time Filter'
+        }"
+      ></button>
+      <div class="form-group timeInput" *ngIf="data.filter.enable">
+        <input
+          placeholder="{{ 'Chose Date' | translate }}"
+          [(ngModel)]="data.filter.date"
+          type="text"
+          class="form-control"
+          (ngModelChange)="CheckDate($event)"
+          bsDaterangepicker
+          #dpr="bsDaterangepicker"
+        />
+      </div>
+    </div>
+
+    <div class="flex justify-end gap-2 items-center my-3 flex-wrap">
+      <!-- <div class="w-fit">
+        <input class="form-control" (keyup)="applyFilter($event)" placeholder="{{'search' | translate}}" #input />
+      </div> -->
+      <div class="flex gap-2 controler">
+        <button
+            type="button"
+            class="flex gap-1 btn btn-success"
+            (click)="exportData()"
+          >
+            {{ "exportExcel" | translate }}
+          </button>
+        <button
+          class="flex gap-1 btn btn-primary"
+          (click)="PrintearlyexitEmp()"
+        >
+          <span class="hidden md:block">{{ "Print" | translate }}</span>
+          <i class="fa-solid fa-print"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- <span [translate]="'name'" [translateParams]="{
+      ar: 'العميل',
+      en: 'Customer'
+    }"></span> -->
+    <!-- table -->
+    <div class="overflow-auto mt-3">
+      <table
+        class="min-w-max overflow-hidden rounded-t-lg table table-bordered table-striped"
+      >
+        <thead>
+          <tr class="bg-base text-white">
+            <th
+              class="invoice-title uppercase text-center"
+              [translate]="'name'"
+              [translateParams]="{
+                ar: 'اسم الموظف',
+                en: 'Employee Name'
+              }"
+            ></th>
+            <th
+              class="invoice-title uppercase text-center"
+              [translate]="'name'"
+              [translateParams]="{
+                ar: 'الرقم الوظيفى',
+                en: 'Jop Number'
+              }"
+            ></th>
+            <th
+              class="invoice-title uppercase text-center"
+              [translate]="'name'"
+              [translateParams]="{
+                ar: 'التاريخ',
+                en: 'Date'
+              }"
+            ></th>
+            <th
+              class="invoice-title uppercase text-center"
+              [translate]="'name'"
+              [translateParams]="{
+                ar: 'انصراف فترة اولى	',
+                en: 'Leaving the first period	'
+              }"
+            ></th>
+            <th
+              class="invoice-title uppercase text-center"
+              [translate]="'name'"
+              [translateParams]="{
+                ar: 'انصراف مبكر	',
+                en: 'Early departure	'
+              }"
+            ></th>
+            <th
+              class="invoice-title uppercase text-center"
+              [translate]="'name'"
+              [translateParams]="{
+                ar: 'انصراف فترة ثانية	',
+                en: 'Leaving a second period'
+              }"
+            ></th>
+            <th
+              class="invoice-title uppercase text-center"
+              [translate]="'name'"
+              [translateParams]="{
+                ar: 'انصراف مبكر',
+                en: 'Early departure	'
+              }"
+            ></th>
+          </tr>
+        </thead>
+        <tbody id="tabledetails">
+          <tr
+            class="text-black text-center"
+            *ngFor="let employee of data.earlyExite"
+          >
+            <td>{{ employee.fullName }}</td>
+            <td>{{ employee.empNo }}</td>
+            <td>{{ employee.dateDay }}</td>
+            <td>{{ employee.timeLeave1 }}</td>
+            <td>{{ employee.moveTimeStringLeave1 }}</td>
+            <td>{{ employee.timeLeave2 }}</td>
+            <td>{{ employee.moveTimeStringLeave2 }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div style="display: none">
+    <div
+      id="reportearlyexit"
+      [ngStyle]="{ direction: lang == 'ar' ? 'rtl' : 'ltr' }"
+    >
+      <div
+        class="report-header"
+        style="
+          display: flex;
+          align-items: center;
+          gap: 100px;
+          padding: 3px 0px;
+          margin-bottom: 20px;
+        "
+      >
+        <div class="headerNe-right-side">
+          <img
+            *ngIf="logourl"
+            src="{{ logourl }}"
+            alt="logo"
+            style="
+              height: 200px;
+              width: 200px;
+              max-width: 200px;
+              object-fit: fill;
+            "
+          />
+        </div>
+
+        <div class="headerNe-lefy-side" style="width: 100%">
+          <h1
+            style="
+              letter-spacing: 0.25px;
+              font-size: 23px;
+              margin: 0;
+              margin-bottom: 3px;
+            "
+          >
+            {{ userG?.companyName }}
+          </h1>
+          <div class="line" style="position: relative; padding: 5px 0px 10px">
+            <span
+              style="
+                position: absolute;
+                right: 0;
+                width: 100%;
+                height: 2px;
+                background-color: #e5e5e5;
+                z-index: 1;
+              "
+            ></span>
+            <span
+              style="
+                position: absolute;
+                right: 0;
+                width: 70%;
+                height: 2px;
+                background-color: #ec1c24;
+                z-index: 2;
+              "
+            ></span>
+          </div>
+
+          <h1
+            style="
+              margin-bottom: 0;
+              font-size: 34px;
+              color: #0c8191;
+              margin-bottom: 0;
+              margin-top: 30px;
+              font-weight: 500;
+            "
+            [translate]="'name'"
+            [translateParams]="{
+              ar: ' الخروج المبكر ',
+              en: 'Early Exit'
+            }"
+          ></h1>
+          <br />
+          <span
+            style="
+              margin-bottom: 0;
+              font-size: 18px;
+              color: #011417;
+              margin-bottom: 0;
+              margin-top: 50px;
+              font-weight: 500;
+            "
+          >
+            في الفتره من :
+            <span>{{
+              datepipe.transform(data.filter.fromDate, "yyyy-MM-dd")
+            }}</span>
+            - الي :
+            <span>{{
+              datepipe.transform(data.filter.toDate, "yyyy-MM-dd")
+            }}</span>
+          </span>
+          <br />
+                <div style="margin-bottom: 10px ;text-align: center;" >
+      <p>
+        <span
+          [translate]="'name'"
+          [translateParams]="{
+            ar: ' الفرع: ',
+            en: 'Branch: '
+          }"
+        ></span>
+        <span> {{BranchName}} </span>
+ 
+      </p>
+    </div>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 10px">
+        <p>
+          <span
+            [translate]="'name'"
+            [translateParams]="{
+              ar: 'التاريخ: ',
+              en: 'Date: '
+            }"
+          ></span>
+          <span> {{ datePrintJournals }}</span>
+        </p>
+      </div>
+
+      <div class="services" style="width: 100%; margin-bottom: 10px">
+        <div class="content">
+          <table
+            style="
+              text-align: center;
+              vertical-align: middle;
+              width: 100%;
+              font-size: 12px;
+            "
+          >
+            <thead>
+              <td
+                style="
+                  font-size: 16px;
+                  background-color: #fff;
+                  padding: 14px 4px;
+                  text-align: center;
+                  color: #272727;
+                  word-wrap: break-word;
+                  border-inline-start: 1px dashed #0c8191;
+                  border: 1px dashed #272727;
+                  font-weight: 600;
+                "
+              >
+                اسم الموظف
+              </td>
+
+              <td
+                style="
+                  font-size: 16px;
+                  background-color: #f7f7f7;
+                  padding: 14px 4px;
+                  text-align: center;
+                  color: #272727;
+                  word-wrap: break-word;
+                  border-inline-start: 1px dashed #0c8191;
+                  border: 1px dashed #272727;
+                  font-weight: 600;
+                "
+              >
+                الرقم الوظيفي
+              </td>
+              <td
+                style="
+                  font-size: 16px;
+                  background-color: #f7f7f7;
+                  padding: 14px 4px;
+                  text-align: center;
+                  color: #272727;
+                  word-wrap: break-word;
+                  border-inline-start: 1px dashed #0c8191;
+                  border: 1px dashed #272727;
+                  font-weight: 600;
+                "
+              >
+                التاريخ
+              </td>
+
+              <td
+                style="
+                  font-size: 16px;
+                  background-color: #f7f7f7;
+                  padding: 14px 4px;
+                  text-align: center;
+                  color: #272727;
+                  word-wrap: break-word;
+                  border-inline-start: 1px dashed #0c8191;
+                  border: 1px dashed #272727;
+                  font-weight: 600;
+                "
+              >
+                انصراف فترة اولي
+              </td>
+
+              <td
+                style="
+                  font-size: 16px;
+                  background-color: #f7f7f7;
+                  padding: 14px 4px;
+                  text-align: center;
+                  color: #272727;
+                  word-wrap: break-word;
+                  border-inline-start: 1px dashed #0c8191;
+                  border: 1px dashed #272727;
+                  font-weight: 600;
+                "
+              >
+                انصراف مبكر
+              </td>
+
+              <td
+                style="
+                  font-size: 16px;
+                  background-color: #f7f7f7;
+                  padding: 14px 4px;
+                  text-align: center;
+                  color: #272727;
+                  word-wrap: break-word;
+                  border-inline-start: 1px dashed #0c8191;
+                  border: 1px dashed #272727;
+                  font-weight: 600;
+                "
+              >
+                انصراف فترة ثانية
+              </td>
+
+              <td
+                style="
+                  font-size: 16px;
+                  background-color: #fff;
+                  padding: 14px 4px;
+                  text-align: center;
+                  color: #272727;
+                  word-wrap: break-word;
+                  border-inline-start: 1px dashed #0c8191;
+                  border: 1px dashed #272727;
+                  font-weight: 600;
+                "
+              >
+                انصراف مبكر
+              </td>
+            </thead>
+            <tbody>
+              <tr *ngFor="let employee of data.earlyExite">
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 0px;
+                    color: #272727;
+                    border-inline-start: 1px dashed #272727;
+                    border-bottom: 1px dashed #272727;
+                  "
+                >
+                  {{ employee.fullName }}
+                </td>
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 0px;
+                    color: #272727;
+                    border-inline-start: 1px dashed #272727;
+                    border-bottom: 1px dashed #272727;
+                  "
+                >
+                  {{ employee.empNo }}
+                </td>
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 0px;
+                    color: #272727;
+                    border-inline-start: 1px dashed #272727;
+                    border-bottom: 1px dashed #272727;
+                  "
+                >
+                  {{ employee.dateDay }}
+                </td>
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 0px;
+                    color: #272727;
+                    border-inline-start: 1px dashed #272727;
+                    border-bottom: 1px dashed #272727;
+                  "
+                >
+                  {{ employee.timeLeave1 }}
+                </td>
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 0px;
+                    color: #272727;
+                    border-inline-start: 1px dashed #272727;
+                    border-bottom: 1px dashed #272727;
+                  "
+                >
+                  {{ employee.moveTimeStringLeave1 }}
+                </td>
+
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 0px;
+                    color: #272727;
+                    border-inline-start: 1px dashed #272727;
+                    border-bottom: 1px dashed #272727;
+                  "
+                >
+                  {{ employee.timeLeave2 }}
+                </td>
+
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 0px;
+                    color: #272727;
+                    border-inline-start: 1px dashed #272727;
+                    border-bottom: 1px dashed #272727;
+                    border-left: 1px dashed #272727;
+                  "
+                >
+                  {{ employee.moveTimeStringLeave2 }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

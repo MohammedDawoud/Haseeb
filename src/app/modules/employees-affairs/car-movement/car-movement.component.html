@@ -1,0 +1,1578 @@
+<div class="car-movement">
+  <app-navigator [title]="title"></app-navigator>
+  <div class="head flex flex-column gap-4 flex-wrap items-start justify-start">
+    <div class="btns">
+      <button
+        type="button"
+        class="btn bg-base text-white"
+        (click)="open(addNewCarMovement, null, 'add')"
+      >
+        {{ "Add car movement" | translate }}
+      </button>
+
+      <button
+        type="button"
+        class="btn bg-base text-white"
+        (click)="Printcarmovement()"
+      >
+        {{ "movementsReport" | translate }}
+      </button>
+      <button
+        type="button"
+        class="btn bg-base text-white"
+        (click)="PrintCarMovementAll()"
+      >
+        {{ "Combined report" | translate }}
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-outline-success"
+        (click)="showSearch = !showSearch"
+      >
+        {{ "search" | translate }}
+      </button>
+    </div>
+
+    <div *ngIf="showSearch" class="flex gap-2 flex-wrap items-end">
+      <div class="max-w-xs flex-grow">
+        <label class="col-form-label"> {{ "movement type" | translate }}</label>
+        <!-- <ng-select
+          class="w-full p-0"
+          placeholder="{{ 'Chose' | translate }}"
+          [(ngModel)]="selectedUser"
+          [ngModelOptions]="{ standalone: true }"
+        >
+          <ng-option *ngFor="let user of users" [value]="user.id">{{
+            user.Name
+          }}</ng-option>
+        </ng-select> -->
+
+        <ng-select
+          #carMovementtype
+          [items]="CarMovementtype"
+          bindLabel="name"
+          bindValue="id"
+          [clearable]="true"
+          class="w-full p-0"
+          [(ngModel)]="data.filter.Type"
+          (ngModelChange)="GetCarmovementsearch(1)"
+          placeholder="{{ 'Chose' | translate }}"
+        >
+        </ng-select>
+      </div>
+
+      <div class="max-w-xs flex-grow">
+        <label class="col-form-label"> {{ "The Car" | translate }}</label>
+        <!-- <ng-select
+          class="w-full p-0"
+          placeholder="{{ 'Chose' | translate }}"
+          [(ngModel)]="selectedUser"
+          [ngModelOptions]="{ standalone: true }"
+        >
+          <ng-option *ngFor="let user of users" [value]="user.id">{{
+            user.Name
+          }}</ng-option>
+        </ng-select> -->
+
+        <ng-select
+          #carMovementitem
+          [items]="CarMovementitem"
+          bindLabel="name"
+          bindValue="id"
+          [clearable]="true"
+          class="w-full p-0"
+          [(ngModel)]="data.filter.ItemId"
+          (ngModelChange)="GetCarmovementsearch(1)"
+          placeholder="{{ 'Chose' | translate }}"
+        >
+        </ng-select>
+      </div>
+
+      <div class="max-w-xs flex-grow">
+        <label class="col-form-label"> {{ "the driver" | translate }}</label>
+        <!-- <ng-select
+          class="w-full p-0"
+          placeholder="{{ 'Chose' | translate }}"
+          [(ngModel)]="selectedUser"
+          [ngModelOptions]="{ standalone: true }"
+        >
+          <ng-option *ngFor="let user of users" [value]="user.id">{{
+            user.Name
+          }}</ng-option>
+        </ng-select> -->
+
+        <ng-select
+          #employeeSelect
+          [items]="EmployeeSelect"
+          bindLabel="name"
+          bindValue="id"
+          [clearable]="true"
+          class="w-full p-0"
+          [(ngModel)]="data.filter.EmpId"
+          (ngModelChange)="GetCarmovementsearch(1)"
+          placeholder="{{ 'Chose' | translate }}"
+        >
+        </ng-select>
+      </div>
+
+      <!-- <div class="flex items-center gap-2 mx-3" style="margin-bottom: 10px">
+        <input type="checkbox" name="dateSearch" id="dateSearch" />
+        <label for="dateSearch" class="mb-0">{{ "date" | translate }}</label>
+      </div>
+
+      <div class="form-group timeInput">
+        <label class="col-form-label">{{ "Chose Date" | translate }}</label>
+        <input
+          placeholder="{{ 'Chose Date' | translate }}"
+          name="date"
+          ngModel
+          type="text"
+          class="form-control"
+          bsDaterangepicker
+          #dpr="bsDaterangepicker"
+          style="min-width: 300px"
+        />
+      </div> -->
+
+      <div class="flex items-center gap-2 mx-3" style="margin-bottom: 10px">
+        <input
+          type="checkbox"
+          name="dateSearch"
+          id="dateSearch"
+          (change)="showDate = !showDate"
+        />
+        <label for="dateSearch" class="mb-0">{{ "date" | translate }}</label>
+      </div>
+
+      <!-- <div class="form-group timeInput">
+        <label class="col-form-label">{{ "Chose Date" | translate }}</label>
+        <input
+          placeholder="{{ 'Chose Date' | translate }}"
+          name="date"
+          ngModel
+          type="text"
+          class="form-control"
+          bsDaterangepicker
+          #dpr="bsDaterangepicker"
+          style="min-width: 300px"
+        />
+      </div> -->
+
+      <div class="form-group timeInput" *ngIf="showDate">
+        <label class="col-form-label">{{ "Chose Date" | translate }}</label>
+
+        <input
+          placeholder="{{ 'Chose Date' | translate }}"
+          [(ngModel)]="data.filter.date"
+          type="text"
+          (ngModelChange)="CheckDate($event)"
+          class="form-control"
+          bsDaterangepicker
+          #dpr="bsDaterangepicker"
+          style="min-width: 300px"
+        />
+      </div>
+    </div>
+  </div>
+
+  <div class="tables-data mt-3 overflow-hidden">
+    <!-- table -->
+    <input
+      (keyup)="applyFilter($event)"
+      class="form-control mb-3"
+      style="max-width: 300px"
+      #input
+      placeholder="{{ 'search' | translate }}"
+    />
+    <div class="overflow-auto">
+      <table
+        mat-table
+        [dataSource]="dataSource"
+        matSort
+        class="mat-elevation-z8 rounded-t-lg overflow-hidden w-max"
+      >
+        <!-- car column -->
+        <ng-container matColumnDef="car">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "The Car" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <span>{{ element?.itemName }}</span>
+          </td>
+        </ng-container>
+        <!-- movementType column -->
+        <ng-container matColumnDef="movementType">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "movement type" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <span>{{ element?.typeName }}</span>
+          </td>
+        </ng-container>
+        <!-- driver column -->
+        <ng-container matColumnDef="driver">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "the driver" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <span>{{ element?.employeeName }}</span>
+          </td>
+        </ng-container>
+        <!-- date column -->
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "date" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <span>{{ element?.date | date : "dd-MM-yyyy" }}</span>
+          </td>
+        </ng-container>
+        <!-- driverCost column -->
+        <ng-container matColumnDef="driverCost">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "The amount charged to the driver" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <span>{{ element?.empAmount }}</span>
+          </td>
+        </ng-container>
+        <!-- managerCost column -->
+        <ng-container matColumnDef="managerCost">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "The amount charged to the employer" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <span>{{ element?.ownerAmount }}</span>
+          </td>
+        </ng-container>
+
+        <!-- operations Column -->
+        <ng-container matColumnDef="operations">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ "operations" | translate }}
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <div class="flex gap-1 justify-center py-2">
+              <button
+                class="p-2 bg-orange-100 hover:bg-orange-500 rounded-lg duration-300 hover:text-white w-10"
+                (click)="open(addNewCarMovement, element, 'edit')"
+              >
+                <i class="fa fa-edit"></i>
+              </button>
+
+              <button
+                class="p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white w-10"
+                (click)="open(deleteModal, element, 'delete')"
+              >
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayedColumns"
+          class="duration-300 hover:bg-slate-100"
+        ></tr>
+
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="4">
+            {{ "noResult" | translate }} "{{ input.value }}"
+          </td>
+        </tr>
+      </table>
+    </div>
+    <mat-paginator [pageSizeOptions]="[10, 25, 100]"> </mat-paginator>
+  </div>
+
+  <div style="display: none">
+    <div
+      id="printcarmovment"
+      [ngStyle]="{ direction: lang == 'ar' ? 'rtl' : 'ltr' }"
+    >
+      <div
+        class="report-header"
+        style="
+          display: flex;
+          align-items: center;
+          gap: 100px;
+          padding: 3px 0px;
+          margin-bottom: 20px;
+        "
+      >
+        <div class="headerNe-right-side">
+          <img
+            *ngIf="logourl"
+            src="{{ logourl }}"
+            alt="logo"
+            style="
+              height: 200px;
+              width: 200px;
+              max-width: 200px;
+              object-fit: fill;
+            "
+          />
+        </div>
+
+        <div class="headerNe-lefy-side" style="width: 100%">
+          <h1
+            style="
+              letter-spacing: 0.25px;
+              font-size: 23px;
+              margin: 0;
+              margin-bottom: 3px;
+            "
+          >
+            {{ userG?.companyName }}
+          </h1>
+          <div class="line" style="position: relative; padding: 5px 0px 10px">
+            <span
+              style="
+                position: absolute;
+                right: 0;
+                width: 100%;
+                height: 2px;
+                background-color: #e5e5e5;
+                z-index: 1;
+              "
+            ></span>
+            <span
+              style="
+                position: absolute;
+                right: 0;
+                width: 70%;
+                height: 2px;
+                background-color: #ec1c24;
+                z-index: 2;
+              "
+            ></span>
+          </div>
+
+          <h1
+            style="
+              margin-bottom: 0;
+              font-size: 34px;
+              color: #0c8191;
+              margin-bottom: 0;
+              margin-top: 30px;
+              font-weight: 500;
+            "
+            [translate]="'name'"
+            [translateParams]="{
+              ar: 'حركة السيارات',
+              en: ' Car Movement'
+            }"
+          ></h1>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 10px">
+        <p>
+          <span
+            [translate]="'name'"
+            [translateParams]="{
+              ar: 'التاريخ: ',
+              en: 'Date: '
+            }"
+          ></span>
+          <span> {{ datePrintJournals }}</span>
+        </p>
+      </div>
+
+      <div class="services" style="width: 100%; margin-bottom: 10px">
+        <div class="content">
+          <table
+            style="
+              text-align: center;
+              vertical-align: middle;
+              width: 100%;
+              font-size: 12px;
+            "
+          >
+            <thead>
+              <td
+                style="
+                  font-size: 16px;
+                  background-color: #fff;
+                  padding: 14px 4px;
+                  text-align: center;
+                  color: #272727;
+                  word-wrap: break-word;
+                  border-inline-start: 1px dashed #0c8191;
+                  border: 1px dashed #272727;
+                  font-weight: 600;
+                "
+              >
+                التاريخ
+              </td>
+
+              <td
+                style="
+                  font-size: 16px;
+                  background-color: #f7f7f7;
+                  padding: 14px 4px;
+                  text-align: center;
+                  color: #272727;
+                  word-wrap: break-word;
+                  border-inline-start: 1px dashed #0c8191;
+                  border: 1px dashed #272727;
+                  font-weight: 600;
+                "
+              >
+                السيارة
+              </td>
+              <td
+                style="
+                  font-size: 16px;
+                  background-color: #f7f7f7;
+                  padding: 14px 4px;
+                  text-align: center;
+                  color: #272727;
+                  word-wrap: break-word;
+                  border-inline-start: 1px dashed #0c8191;
+                  border: 1px dashed #272727;
+                  font-weight: 600;
+                "
+              >
+                نوع الحركه
+              </td>
+
+              <td
+                style="
+                  font-size: 16px;
+                  background-color: #f7f7f7;
+                  padding: 14px 4px;
+                  text-align: center;
+                  color: #272727;
+                  word-wrap: break-word;
+                  border-inline-start: 1px dashed #0c8191;
+                  border: 1px dashed #272727;
+                  font-weight: 600;
+                "
+              >
+                المبلغ المستحق علي السائق
+              </td>
+
+              <td
+                style="
+                  font-size: 16px;
+                  background-color: #f7f7f7;
+                  padding: 14px 4px;
+                  text-align: center;
+                  color: #272727;
+                  word-wrap: break-word;
+                  border-inline-start: 1px dashed #0c8191;
+                  border: 1px dashed #272727;
+                  font-weight: 600;
+                "
+              >
+                علي صاحب العمل
+              </td>
+
+              <td
+                style="
+                  font-size: 16px;
+                  background-color: #fff;
+                  padding: 14px 4px;
+                  text-align: center;
+                  color: #272727;
+                  word-wrap: break-word;
+                  border-inline-start: 1px dashed #0c8191;
+                  border: 1px dashed #272727;
+                  font-weight: 600;
+                "
+              >
+                اسم السائق
+              </td>
+            </thead>
+            <tbody>
+              <tr *ngFor="let employee of CarList">
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 0px;
+                    color: #272727;
+                    border-inline-start: 1px dashed #272727;
+                    border-bottom: 1px dashed #272727;
+                  "
+                >
+                  {{ employee.date }}
+                </td>
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 0px;
+                    color: #272727;
+                    border-inline-start: 1px dashed #272727;
+                    border-bottom: 1px dashed #272727;
+                  "
+                >
+                  {{ employee.itemName }}
+                </td>
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 0px;
+                    color: #272727;
+                    border-inline-start: 1px dashed #272727;
+                    border-bottom: 1px dashed #272727;
+                  "
+                >
+                  {{ employee.typeName }}
+                </td>
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 0px;
+                    color: #272727;
+                    border-inline-start: 1px dashed #272727;
+                    border-bottom: 1px dashed #272727;
+                  "
+                >
+                  {{ employee.empAmount ?? 0 }}
+                </td>
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 0px;
+                    color: #272727;
+                    border-inline-start: 1px dashed #272727;
+                    border-bottom: 1px dashed #272727;
+                  "
+                >
+                  {{ employee.ownerAmount ?? 0 }}
+                </td>
+
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 0px;
+                    color: #272727;
+                    border-inline-start: 1px dashed #272727;
+                    border-bottom: 1px dashed #272727;
+                    border-left: 1px dashed #272727;
+                  "
+                >
+                  {{ employee.employeeName }}
+                </td>
+              </tr>
+
+              <tr>
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 0px;
+                    color: #272727;
+                    border-inline-start: 1px dashed #272727;
+                    border-bottom: 1px dashed #272727;
+                  "
+                >
+                  المجموع
+                </td>
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 0px;
+                    color: #272727;
+                    border-inline-start: 1px dashed #272727;
+                    border-bottom: 1px dashed #272727;
+                  "
+                ></td>
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 0px;
+                    color: #272727;
+                    border-inline-start: 1px dashed #272727;
+                    border-bottom: 1px dashed #272727;
+                  "
+                ></td>
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 0px;
+                    color: #272727;
+                    border-inline-start: 1px dashed #272727;
+                    border-bottom: 1px dashed #272727;
+                  "
+                >
+                  {{ TotalEmpAmount }}
+                </td>
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 0px;
+                    color: #272727;
+                    border-inline-start: 1px dashed #272727;
+                    border-bottom: 1px dashed #272727;
+                  "
+                >
+                  {{ TotalownerAmount }}
+                </td>
+
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 0px;
+                    color: #272727;
+                    border-inline-start: 1px dashed #272727;
+                    border-bottom: 1px dashed #272727;
+                    border-left: 1px dashed #272727;
+                  "
+                ></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="printAllcarmovment"
+      [ngStyle]="{ direction: lang == 'ar' ? 'rtl' : 'ltr' }"
+    >
+      <div
+        class="report-header"
+        style="
+          display: flex;
+          align-items: center;
+          gap: 100px;
+          padding: 3px 0px;
+          margin-bottom: 20px;
+        "
+      >
+        <div class="headerNe-right-side">
+          <img
+            *ngIf="logourl"
+            src="{{ logourl }}"
+            alt="logo"
+            style="
+              height: 200px;
+              width: 200px;
+              max-width: 200px;
+              object-fit: fill;
+            "
+          />
+        </div>
+
+        <div class="headerNe-lefy-side" style="width: 100%">
+          <h1
+            style="
+              letter-spacing: 0.25px;
+              font-size: 23px;
+              margin: 0;
+              margin-bottom: 3px;
+            "
+          >
+            {{ userG?.companyName }}
+          </h1>
+          <div class="line" style="position: relative; padding: 5px 0px 10px">
+            <span
+              style="
+                position: absolute;
+                right: 0;
+                width: 100%;
+                height: 2px;
+                background-color: #e5e5e5;
+                z-index: 1;
+              "
+            ></span>
+            <span
+              style="
+                position: absolute;
+                right: 0;
+                width: 70%;
+                height: 2px;
+                background-color: #ec1c24;
+                z-index: 2;
+              "
+            ></span>
+          </div>
+
+          <h1
+            style="
+              margin-bottom: 0;
+              font-size: 34px;
+              color: #0c8191;
+              margin-bottom: 0;
+              margin-top: 30px;
+              font-weight: 500;
+            "
+            [translate]="'name'"
+            [translateParams]="{
+              ar: 'التقرير المجمع للسيارات',
+              en: ''
+            }"
+          ></h1>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 10px">
+        <p>
+          <span
+            [translate]="'name'"
+            [translateParams]="{
+              ar: 'التاريخ: ',
+              en: 'Date: '
+            }"
+          ></span>
+          <span> {{ datePrintJournals }}</span>
+        </p>
+      </div>
+
+      <div class="services" style="width: 100%; margin-bottom: 10px">
+        <div class="content">
+          <table
+            style="
+              text-align: center;
+              vertical-align: middle;
+              width: 100%;
+              font-size: 12px;
+            "
+          >
+            <thead>
+              <td
+                style="
+                  font-size: 16px;
+                  background-color: #fff;
+                  padding: 14px 4px;
+                  text-align: center;
+                  color: #272727;
+                  word-wrap: break-word;
+                  border-inline-start: 1px dashed #0c8191;
+                  border: 1px dashed #272727;
+                  font-weight: 600;
+                "
+              >
+                السيارة
+              </td>
+
+              <td
+                style="
+                  font-size: 16px;
+                  background-color: #f7f7f7;
+                  padding: 14px 4px;
+                  text-align: center;
+                  color: #272727;
+                  word-wrap: break-word;
+                  border-inline-start: 1px dashed #0c8191;
+                  border: 1px dashed #272727;
+                  font-weight: 600;
+                "
+              >
+                تعبئة وقود
+              </td>
+
+              <td
+                style="
+                  font-size: 16px;
+                  background-color: #f7f7f7;
+                  padding: 14px 4px;
+                  text-align: center;
+                  color: #272727;
+                  word-wrap: break-word;
+                  border-inline-start: 1px dashed #0c8191;
+                  border: 1px dashed #272727;
+                  font-weight: 600;
+                "
+              >
+                تغيير زيت
+              </td>
+
+              <td
+                style="
+                  font-size: 16px;
+                  background-color: #f7f7f7;
+                  padding: 14px 4px;
+                  text-align: center;
+                  color: #272727;
+                  word-wrap: break-word;
+                  border-inline-start: 1px dashed #0c8191;
+                  border: 1px dashed #272727;
+                  font-weight: 600;
+                "
+              >
+                صيانة
+              </td>
+
+              <td
+                style="
+                  font-size: 16px;
+                  background-color: #f7f7f7;
+                  padding: 14px 4px;
+                  text-align: center;
+                  color: #272727;
+                  word-wrap: break-word;
+                  border-inline-start: 1px dashed #0c8191;
+                  border: 1px dashed #272727;
+                  font-weight: 600;
+                "
+              >
+                مخالفات
+              </td>
+              <td
+                style="
+                  font-size: 16px;
+                  background-color: #f7f7f7;
+                  padding: 14px 4px;
+                  text-align: center;
+                  color: #272727;
+                  word-wrap: break-word;
+                  border-inline-start: 1px dashed #0c8191;
+                  border: 1px dashed #272727;
+                  font-weight: 600;
+                "
+              >
+                تأمين
+              </td>
+              <td
+                style="
+                  font-size: 16px;
+                  background-color: #f7f7f7;
+                  padding: 14px 4px;
+                  text-align: center;
+                  color: #272727;
+                  word-wrap: break-word;
+                  border-inline-start: 1px dashed #0c8191;
+                  border: 1px dashed #272727;
+                  font-weight: 600;
+                "
+              >
+                أخري
+              </td>
+
+              <td
+                style="
+                  font-size: 16px;
+                  background-color: #fff;
+                  padding: 14px 4px;
+                  text-align: center;
+                  color: #272727;
+                  word-wrap: break-word;
+                  border-inline-start: 1px dashed #0c8191;
+                  border: 1px dashed #272727;
+                  font-weight: 600;
+                "
+              >
+                إجمالي
+              </td>
+            </thead>
+            <tbody>
+              <tr *ngFor="let employee of printall">
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 0px;
+                    color: #272727;
+                    border-inline-start: 1px dashed #272727;
+                    border-bottom: 1px dashed #272727;
+                  "
+                >
+                  {{ employee.carName }}
+                </td>
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 0px;
+                    color: #272727;
+                    border-inline-start: 1px dashed #272727;
+                    border-bottom: 1px dashed #272727;
+                  "
+                >
+                  {{ employee.oil }}
+                </td>
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 0px;
+                    color: #272727;
+                    border-inline-start: 1px dashed #272727;
+                    border-bottom: 1px dashed #272727;
+                  "
+                >
+                  {{ employee.zait }}
+                </td>
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 0px;
+                    color: #272727;
+                    border-inline-start: 1px dashed #272727;
+                    border-bottom: 1px dashed #272727;
+                  "
+                >
+                  {{ employee.repairr ?? 0 }}
+                </td>
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 0px;
+                    color: #272727;
+                    border-inline-start: 1px dashed #272727;
+                    border-bottom: 1px dashed #272727;
+                  "
+                >
+                  {{ employee.mokhalfa ?? 0 }}
+                </td>
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 0px;
+                    color: #272727;
+                    border-inline-start: 1px dashed #272727;
+                    border-bottom: 1px dashed #272727;
+                  "
+                >
+                  {{ employee.taamen ?? 0 }}
+                </td>
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 0px;
+                    color: #272727;
+                    border-inline-start: 1px dashed #272727;
+                    border-bottom: 1px dashed #272727;
+                  "
+                >
+                  {{ employee.others ?? 0 }}
+                </td>
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 0px;
+                    color: #272727;
+                    border-inline-start: 1px dashed #272727;
+                    border-bottom: 1px dashed #272727;
+                    border-left: 1px dashed #272727;
+                  "
+                >
+                  {{ employee.total }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- addNewCarMovement / edit -->
+<ng-template #addNewCarMovement let-modal>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="modal-title mb-0" id="modal-basic-title">
+      <span *ngIf="modalDetails?.id">{{
+        "Edit car movement" | translate
+      }}</span>
+
+      <span *ngIf="!modalDetails?.id">{{
+        "Add car movement" | translate
+      }}</span>
+    </h4>
+    <button
+      type="button"
+      class="text-white m-0"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <i class="fa fa-close"></i>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <div class="ngForm">
+      <div class="row items-end">
+        <div class="col-md-6 col-lg-3 mb-3">
+          <div class="form-group">
+            <label class="col-form-label"> {{ "The Car" | translate }}</label>
+            <div class="flex">
+              <ng-select
+                class="w-full p-0"
+                placeholder="{{ 'Chose' | translate }}"
+                [(ngModel)]="modalDetails.car"
+                [ngModelOptions]="{ standalone: true }"
+                name="car"
+                style="min-width: max-content !important"
+              >
+                <ng-option
+                  *ngFor="let user of CarMovementitem"
+                  [value]="user.id"
+                  >{{ user.name }}</ng-option
+                >
+              </ng-select>
+
+              <!-- <ng-select #carMovementitem  [items]="CarMovementitem" bindLabel="name" bindValue="id" [clearable]="true"
+              class="w-full p-0" ngModel id="carMovementitem" name="carMovementitem" placeholder="{{ 'Chose' | translate }}"
+              style="min-width: max-content !important">
+              </ng-select> -->
+              <button class="btn bg-base text-white" (click)="open(AddModal)">
+                <i class="fa fa-plus"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3 mb-3">
+          <div class="form-group">
+            <label class="col-form-label">
+              {{ "movement type" | translate }}</label
+            >
+            <div class="flex">
+              <ng-select
+                class="w-full p-0"
+                placeholder="{{ 'Chose' | translate }}"
+                [(ngModel)]="modalDetails.movementType"
+                [ngModelOptions]="{ standalone: true }"
+                name="movementType"
+                style="min-width: max-content !important"
+              >
+                <ng-option
+                  *ngFor="let user of CarMovementtype"
+                  [value]="user.id"
+                  >{{ user.name }}</ng-option
+                >
+              </ng-select>
+
+              <!-- <ng-select #carMovementtype  [items]="CarMovementtype" bindLabel="name" bindValue="id" [clearable]="true"
+              class="w-full p-0" [(ngModel)]="modalDetails.movementType"  id="movementType" name="movementType" placeholder="{{ 'Chose' | translate }}"
+              style="min-width: max-content !important">
+              </ng-select> -->
+              <button class="btn bg-base text-white" (click)="open(AddModal2)">
+                <i class="fa fa-plus"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- <div class="col-md-6 col-lg-3 mb-3">
+          <div class="form-group">
+            <label class="text-right col-form-label block">
+              {{ "date" | translate }}
+            </label>
+            <div class="form-group timeInput">
+              <input
+                [(ngModel)]="modalDetails.date"
+                [ngModelOptions]="{ standalone: true }"
+                name="date"
+                (ngModelChange)="gethigridate()"
+                type="text"
+                class="form-control"
+                bsDatepicker
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3 mb-3">
+          <div class="form-group">
+            <label class="text-right col-form-label block">
+              {{ "hijri date" | translate }}
+            </label>
+            <div class="form-group">
+       
+
+              <hijri-gregorian-datepicker
+                [(selectedDate)]="modalDetails.hijriDate"
+                [isRequired]="true"
+                [hijriLabel]="'Hijri'"
+                [selectedDateType]="selectedDateType"
+                [dir]="'dir' | translate"
+              >
+              </hijri-gregorian-datepicker>
+            </div>
+          </div>
+        </div> -->
+
+        <div class="col-md-6 col-lg-3 mb-3">
+          <label class="col-form-label" for="phone"
+            >{{ "National End Date" | translate }}
+          </label>
+          <input
+            placeholder="{{ 'Chose Date' | translate }}"
+            name="nationalIdEndDate"
+            type="text"
+            class="form-control"
+            bsDatepicker
+            #dpr="bsDatepicker"
+            [(ngModel)]="modalDetails.date"
+            (ngModelChange)="ChangeemployeeGre($event)"
+          />
+        </div>
+
+        <div>
+          <div class="col-md-6 col-lg-3 mb-3 hijri-gregorianReciept">
+            <label for="Corresponding" class="text-right col-form-label block">
+              {{ "Corresponding" | translate }}
+            </label>
+            <hijri-gregorian-datepicker
+              [(selectedDate)]="modalDetails.hijriDate"
+              [hijriLabel]="'Hijri'"
+              [selectedDateType]="selectedDateType"
+              [dir]="'dir' | translate"
+              autocomplete="off"
+              (selectedDateChange)="ChangeemployeeDateHijri($event)"
+            >
+            </hijri-gregorian-datepicker>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3 mb-3">
+          <div class="form-group">
+            <label for="driverAmount" class="text-right col-form-label block">
+              {{ "The amount charged to the driver" | translate }}
+            </label>
+            <input
+              [(ngModel)]="modalDetails.driverAmount"
+              [ngModelOptions]="{ standalone: true }"
+              class="form-control"
+              type="number"
+              id="driverAmount"
+              name="driverAmount"
+            />
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3 mb-3">
+          <div class="form-group">
+            <label for="employerAmount" class="text-right col-form-label block">
+              {{ "The amount charged to the employer" | translate }}
+            </label>
+            <input
+              [(ngModel)]="modalDetails.employerAmount"
+              [ngModelOptions]="{ standalone: true }"
+              class="form-control"
+              type="number"
+              id="employerAmount"
+              name="employerAmount"
+            />
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3 mb-3">
+          <div class="form-group">
+            <label class="col-form-label">
+              {{ "the driver" | translate }}</label
+            >
+            <ng-select
+              class="w-full p-0"
+              placeholder="{{ 'Chose' | translate }}"
+              [(ngModel)]="modalDetails.driver"
+              [ngModelOptions]="{ standalone: true }"
+              name="driver"
+            >
+              <ng-option
+                *ngFor="let user of EmployeeSelect"
+                [value]="user.id"
+                >{{ user.name }}</ng-option
+              >
+            </ng-select>
+
+            <!-- <ng-select #employeeSelect  [items]="EmployeeSelect" bindLabel="name" bindValue="id" [clearable]="true"
+            class="w-full p-0" ngModel id="employeeSelect" name="employeeSelect" placeholder="{{ 'Chose' | translate }}"
+            >
+            </ng-select> -->
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3 mb-3">
+          <div class="form-group">
+            <label class="text-right col-form-label block">
+              {{ "details" | translate }}
+            </label>
+            <textarea
+              name="details"
+              [(ngModel)]="modalDetails.details"
+              [ngModelOptions]="{ standalone: true }"
+              style="min-height: 50px"
+            ></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex items-center justify-end gap-3 mt-4">
+      <button
+        type="button"
+        class="btn bg-base text-white"
+        (click)="
+          modalDetails?.id ? EditCarMovement() : AddCarMovement();
+          modal.close('Save click', 'end')
+        "
+      >
+        {{ modalDetails?.id ? ("edit" | translate) : ("add" | translate) }}
+      </button>
+
+      <button (click)="modal?.dismiss()" class="btn btn-outline-secondary">
+        {{ "close" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- deleteModal -->
+<ng-template #deleteModal let-modal>
+  <div class="modal-body text-center">
+    <p
+      [translate]="'name'"
+      [translateParams]="{
+        ar: 'هل تريد بالتأكيد حذف هذا الصف',
+        en: 'Are you sure to delete this row ?'
+      }"
+    ></p>
+    <div class="flex gap-2 justify-center">
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="Delete(); modal.dismiss()"
+      >
+        {{ "Yes" | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "No" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #deleteModal2 let-modal>
+  <div class="modal-body text-center">
+    <p
+      [translate]="'name'"
+      [translateParams]="{
+        ar: 'هل تريد بالتأكيد حذف هذا الصف',
+        en: 'Are you sure to delete this row ?'
+      }"
+    ></p>
+    <div class="flex gap-2 justify-center">
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="Deleteitemtype(); modal.dismiss()"
+      >
+        {{ "Yes" | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "No" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- AddModal -->
+<ng-template #AddModal let-modal>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="m-0">
+      <span class="text-2xl">{{ "Add New Item" | translate }}</span>
+    </h4>
+    <button
+      type="button"
+      class="text-2xl text-white m-0"
+      (click)="modal.dismiss()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="max-h-100 overflow-x-scroll overflow-y-scroll p-4">
+    <form class="" #addForm="ngForm">
+      <div class="row align-items-end mb-4 mx-3">
+        <div class="col-lg-4 mb-3">
+          <div class="form-group">
+            <label for="nameAr" class="text-right col-form-label block">
+              {{ "nameAr" | translate }}
+            </label>
+            <input
+              placeholder="{{ 'nameAr' | translate }}"
+              [(ngModel)]="modalcarmovmentitems.namear"
+              name="namear"
+              class="form-control"
+              type="text"
+            />
+          </div>
+        </div>
+
+        <div class="col-lg-4 mb-3">
+          <div class="form-group">
+            <label for="nameEn" class="text-right col-form-label block">
+              {{ "nameEn" | translate }}
+            </label>
+            <input
+              placeholder="{{ 'nameEn' | translate }}"
+              [(ngModel)]="modalcarmovmentitems.nameen"
+              name="nameen"
+              type="text"
+              class="form-control"
+            />
+          </div>
+        </div>
+
+        <div class="col-lg-4 mb-3">
+          <div class="form-group">
+            <label for="Quantity" class="text-right col-form-label block">
+              {{ "Quantity" | translate }}
+            </label>
+            <input
+              [(ngModel)]="modalcarmovmentitems.qty"
+              class="form-control"
+              type="number"
+              id="Quantity"
+              name="Quantity"
+            />
+          </div>
+        </div>
+
+        <div class="col-lg-4 mb-3">
+          <div class="form-group">
+            <label for="price" class="text-right col-form-label block">
+              {{ "price" | translate }}
+            </label>
+            <input
+              [(ngModel)]="modalcarmovmentitems.price"
+              class="form-control"
+              type="number"
+              id="price"
+              name="price"
+            />
+          </div>
+        </div>
+
+        <div class="col-lg-4 mb-3">
+          <div class="form-group">
+            <label for="color" class="text-right col-form-label block">
+              {{ "color" | translate }}
+            </label>
+            <input
+              [(ngModel)]="modalcarmovmentitems.color"
+              class="form-control"
+              type="text"
+              id="color"
+              name="color"
+            />
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="flex justify-end p-3">
+    <button class="btn me-2 btn-secondary" (click)="modal?.dismiss()">
+      {{ "close" | translate }}
+    </button>
+
+    <button
+      class="btn text-white"
+      style="background-color: var(--base-color)"
+      (click)="savemovementitems()"
+    >
+      {{ "save" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+<!-- AddModal2 -->
+<ng-template #AddModal2 let-modal>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="m-0">
+      <span class="text-2xl">{{ "Add New Item" | translate }}</span>
+    </h4>
+    <button
+      type="button"
+      class="text-2xl text-white m-0"
+      (click)="modal.dismiss()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="max-h-100 overflow-x-scroll overflow-y-scroll p-4">
+    <form class="" #addForm="ngForm">
+      <div class="row align-items-end mb-4 mx-3">
+        <!-- 1 line -->
+
+        <div class="col-sm-6 col-md-3 col-lg-6 mb-0 mb-sm-3">
+          <div class="form-group">
+            <label for="nameAr" class="text-right col-form-label block">
+              {{ "nameAr" | translate }}
+            </label>
+            <input
+              placeholder="{{ 'nameAr' | translate }}"
+              [(ngModel)]="modalcarmovtype.namear"
+              name="nameAr"
+              required
+              class="form-control"
+              type="text"
+            />
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-6 mb-0 mb-sm-3">
+          <div class="form-group">
+            <label for="nameEn" class="text-right col-form-label block">
+              {{ "nameEn" | translate }}
+            </label>
+            <input
+              placeholder="{{ 'nameEn' | translate }}"
+              [(ngModel)]="modalcarmovtype.nameen"
+              name="nameEn"
+              type="text"
+              class="form-control"
+            />
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-12 mb-0 mb-sm-3 text-center">
+          <button
+            type="button"
+            class="flex gap-1 btn text-white mb-3 col-md-2 me-3"
+            style="background-color: var(--base-color)"
+            (click)="savemovementtype()"
+          >
+            {{ "save" | translate }}
+          </button>
+
+          <button
+            type="button"
+            class="flex gap-1 btn btn-secondary mb-3 col-md-2"
+          >
+            {{ "close" | translate }}
+          </button>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-12 mb-0 mb-sm-3 text-center">
+          <input
+            name="dateCheck_transfer"
+            placeholder="{{ 'search' | translate }}"
+            type="text"
+            class="form-control"
+          />
+        </div>
+      </div>
+
+      <div class="editable shadow mb-4">
+        <table
+          class="table table-responsive table-striped table-bordered text-center"
+          style="vertical-align: middle; font-size: 14px"
+        >
+          <thead
+            class="bg-base text-white"
+            style="line-height: 30px; font-size: 13px"
+          >
+            <tr>
+              <th>{{ "nameAr" | translate }}</th>
+              <th>{{ "nameEn" | translate }}</th>
+              <th>{{ "operations" | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let item of Carmovementtypegtid; let i = index"
+              style="line-height: 5px"
+            >
+              <td>
+                <input
+                  type="text"
+                  name="os-name{{ i }}"
+                  [(ngModel)]="item.nameAr"
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  name="os-name{{ i }}"
+                  [(ngModel)]="item.nameEn"
+                />
+              </td>
+              <td>
+                <button
+                  (click)="edititemtype(item)"
+                  class="p-2 bg-orange-100 hover:bg-orange-500 rounded-lg duration-300 hover:text-white w-10"
+                >
+                  <i class="fa-regular fa-pen-to-square"></i>
+                </button>
+
+                <button
+                  class="p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white w-10 me-3"
+                  (click)="open(deleteModal2, item, 'deleted')"
+                >
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </form>
+  </div>
+
+  <div class="flex justify-end p-3">
+    <button class="btn me-2 btn-secondary" (click)="modal?.dismiss()">
+      {{ "close" | translate }}
+    </button>
+
+    <button class="btn text-white" style="background-color: var(--base-color)">
+      {{ "save" | translate }}
+    </button>
+  </div>
+</ng-template>

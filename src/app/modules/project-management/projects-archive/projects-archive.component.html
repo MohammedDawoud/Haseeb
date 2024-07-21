@@ -1,0 +1,362 @@
+<div class="pb-4">
+  <app-navigator [title]="title"></app-navigator>
+
+  <div class="teabls-data mt-3 overflow-hidden">
+
+    <div class="flex gap-6 flex-wrap items-end mb-4">
+      <div class="max-w-xs">
+        <label class="col-form-label" [translate]="'name'" [translateParams]="{
+              ar: ' نوع البحث',
+              en: 'Search Type'
+            }"> </label>
+        <ng-select class="w-full p-0" [(ngModel)]="searchBox.searchType" placeholder="{{ 'Chose' | translate }}">
+          <ng-option [value]="1">
+            {{ "Customer Name" | translate }}
+          </ng-option>
+          <ng-option [value]="2">
+            {{ "Project Number" | translate }}
+          </ng-option>
+          <ng-option [value]="3">
+            {{ "Project Type" | translate }}
+          </ng-option>
+          <ng-option [value]="4">
+            {{ "Project Maneger" | translate }}
+          </ng-option>
+          <ng-option [value]="5">
+            {{ "contract number" | translate }}
+          </ng-option>
+          <ng-option [value]="6">
+            {{ "NationalId" | translate }}
+          </ng-option>
+          <ng-option [value]="7">
+            {{ "Mobile Number" | translate }}
+          </ng-option>
+          <ng-option [value]="8">
+            {{ "Area" | translate }}
+          </ng-option>
+          <ng-option [value]="9">
+            {{ "Description" | translate }}
+          </ng-option>
+
+
+        </ng-select>
+      </div>
+
+
+      <div class="max-w-xs" *ngIf="searchBox.searchType == 1">
+        <label class="col-form-label"> {{ "Customer Name" | translate }}</label>
+
+        <ng-select #CustomerName [items]="load_CustomerName" bindLabel="name" bindValue="id" [clearable]="true"
+        class="w-full p-0" [(ngModel)]="data.filter.search_CustomerName"  placeholder="{{ 'Chose' | translate }}"
+        (change)="RefreshData()">
+        </ng-select>
+
+
+      </div>
+      <div class="max-w-xs" *ngIf="searchBox.searchType == 4">
+        <label class="col-form-label"> {{ "Project Maneger" | translate }}</label>
+
+        <ng-select #ProjectManeger  [items]="load_ProjectManeger" bindLabel="name" bindValue="id" [clearable]="true"
+        class="w-full p-0" [(ngModel)]="data.filter.search_ProjectManeger" placeholder="{{ 'Chose' | translate }}"
+        (change)="RefreshData()">
+        </ng-select>
+
+      </div>
+      <div class="max-w-xs" *ngIf="searchBox.searchType == 3">
+        <label class="col-form-label"> {{ "Project Type" | translate }}</label>
+
+        <ng-select #ProjectType  [items]="load_ProjectType" bindLabel="name" bindValue="id" [clearable]="true"
+        class="w-full p-0" [(ngModel)]="data.filter.search_ProjectType" placeholder="{{ 'Chose' | translate }}"
+        (change)="RefreshData()">
+        </ng-select>
+
+      </div>
+      <div class="max-w-xs" *ngIf="searchBox.searchType == 8">
+        <label class="col-form-label"> {{ "Area" | translate }}</label>
+
+        <ng-select #Area  [items]="load_Area" bindLabel="name" bindValue="id" [clearable]="true"
+        class="w-full p-0" [(ngModel)]="data.filter.search_Area" placeholder="{{ 'Chose' | translate }}"
+        (change)="RefreshData()">
+        </ng-select>
+      </div>
+
+      <div class="max-w-xs" *ngIf="searchBox.searchType == 5">
+        <label for="">{{ "contract number" | translate }}</label>
+        <input type="text" class="form-control" [(ngModel)]="data.filter.search_contractnumber" (change)="RefreshData()">
+      </div>
+      <div class="max-w-xs" *ngIf="searchBox.searchType == 6">
+        <label for="">{{ "NationalId" | translate }}</label>
+        <input type="text" class="form-control" [(ngModel)]="data.filter.search_NationalId" (change)="RefreshData()">
+      </div>
+      <div class="max-w-xs" *ngIf="searchBox.searchType == 7">
+        <label for="">{{ "Mobile Number" | translate }}</label>
+        <input type="text" class="form-control" [(ngModel)]="data.filter.search_MobileNumber" (change)="RefreshData()">
+      </div>
+      <div class="max-w-xs" *ngIf="searchBox.searchType == 2">
+        <label for="">{{ "Project Number" | translate }}</label>
+        <input type="text" class="form-control" [(ngModel)]="data.filter.search_ProjectNumber" (change)="RefreshData()">
+      </div>
+      <div class="max-w-xs" *ngIf="searchBox.searchType == 9">
+        <label for="">{{ "Description" | translate }}</label>
+        <input type="text" class="form-control" [(ngModel)]="data.filter.search_Description" (change)="RefreshData()">
+      </div>
+      <button class="btn btn-primary" (click)="data.filter.enable = !data.filter.enable" [translate]="'name'"
+        [translateParams]="{
+                  ar: 'فلترة بالوقت',
+                  en: 'Time Filter'
+                }"></button>
+      <div class="form-group col-md-2 timeInput" *ngIf="data.filter.enable">
+        <input placeholder="{{ 'Chose Date' | translate }}" [(ngModel)]="data.filter.date" type="text" (ngModelChange)="CheckDate($event)"
+          class="form-control" [bsConfig]="{rangeInputFormat : 'DD/MM/YYYY'}" bsDaterangepicker #dpr="bsDaterangepicker" />
+      </div>
+
+      <div class="form-check">
+        <label class="form-check-label" for="allProjects" [translate]="'name'" [translateParams]="{
+              ar: ' عرض الكل',
+              en: 'Show All'
+            }">
+
+        </label>
+        <input class="form-check-input"  type="checkbox" value="" id="allProjects"
+        [(ngModel)]="data.filter.isChecked" (change)="checkValue(data.filter.isChecked?'A':'B')">
+      </div>
+
+      <div class="w-fit">
+        <input class="form-control" (keyup)="applyFilter($event)" placeholder="{{'search' | translate}}" #input />
+      </div>
+
+    </div>
+
+    <!-- buttons -->
+    <!-- <div class="flex justify-between gap-2 items-center my-3 flex-wrap">
+
+
+    </div> -->
+
+
+    <!-- table -->
+    <div class="overflow-auto">
+      <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 rounded-t-lg overflow-hidden w-max">
+
+        <ng-container matColumnDef="Archivedate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span [translate]="'name'" [translateParams]="{
+                            ar: 'تاريخ الارشفة',
+                            en: 'Archive date'
+                          }"></span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+
+            {{element.finishDate}}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span [translate]="'name'" [translateParams]="{
+                    ar: 'الحالة',
+                    en: 'status'
+                  }"></span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+
+            {{element.reasonText}}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="finishReason">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span [translate]="'name'" [translateParams]="{
+                    ar: 'السبب',
+                    en: 'reason'
+                  }"></span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+
+            {{element.finishReason}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="projectNumber">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span [translate]="'name'" [translateParams]="{
+                    ar: 'رقم المشروع',
+                    en: 'Project Number'
+                  }"></span>
+          </th>
+          <td mat-cell *matCellDef="let element"  class="{{ColorProject(element)}}">
+
+            {{element.projectNo}}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="Client">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span [translate]="'name'" [translateParams]="{
+                    ar: 'العميل',
+                    en: 'Client'
+                  }"></span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.customerName }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="ProjectType">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span [translate]="'name'" [translateParams]="{
+                            ar: 'نوع المشروع',
+                            en: 'Project Type'
+                          }"></span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.projectTypesName }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="contractnumber">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span [translate]="'name'" [translateParams]="{
+                            ar: 'رقم العقد',
+                            en: 'contract number'
+                          }"></span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.contractNo }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="area">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span [translate]="'name'" [translateParams]="{
+                            ar: 'المنطقة	',
+                            en: 'Area'
+                          }"></span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.cityName }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="Projectmanager">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span [translate]="'name'" [translateParams]="{
+                            ar: 'مدير المشروع	',
+                            en: 'Project manager'
+                          }"></span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.projectMangerName }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="Projecttime">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span [translate]="'name'" [translateParams]="{
+                            ar: 'مدة المشروع',
+                            en: 'Project Time'
+                          }"></span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.timeStr }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="user">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span [translate]="'name'" [translateParams]="{
+                            ar: 'المستخدم	',
+                            en: 'user'
+                          }"></span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.updateUser}}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="operations">
+          <th mat-header-cell *matHeaderCellDef [translate]="'name'" [translateParams]="{
+                                    ar: 'خيارات',
+                                    en: 'Operations'
+                                  }"></th>
+          <td mat-cell *matCellDef="let element">
+
+            <div class="flex items-center justify-center">
+              <button  *ngIf="userG?.userPrivileges.includes(1212101)"
+              class="min-w-max p-2 bg-sky-100 hover:bg-sky-500 rounded-lg duration-300 hover:text-white "
+                (click)="availbleModal.show();getRow(element)" [translate]="'name'" [translateParams]="{
+                                    ar: 'تحويل المشروع الي جاري',
+                                    en: 'convert the project to an ongoing one'
+                                  }">
+
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns" ></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"
+        (dblclick)="open(projectDetailsModal, row, 'details')" class="duration-300 hover:bg-slate-100"></tr>
+        <!-- Row shown when there is no matching data. -->
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="4">
+            <!-- {{ "No result found for " }} "{{ input.value }}" -->
+          </td>
+        </tr>
+      </table>
+    </div>
+    <mat-paginator #MatPaginator [pageSizeOptions]="[10, 25,100,dataSource.data.length]"> </mat-paginator>
+
+  </div>
+</div>
+
+<div class="modal fade ngxModal center" bsModal #availbleModal="bs-modal" tabindex="-1" role="dialog">
+  <div class="modal-body text-center">
+    <p [translate]="'name'" [translateParams]="{
+            ar: 'هل تريد تحويل المشروع الي جاري',
+            en: 'Do you want to convert the project to an ongoing one ?'
+          }"></p>
+    <div class="flex gap-2 justify-center">
+      <button type="button" mat-raised-button class="bg-base text-white" (click)="ConvertProjectToActive();availbleModal.hide()">
+        {{ "Yes" | translate }}
+      </button>
+      <button type="button" (click)="availbleModal.hide()" mat-raised-button color="basic">
+        {{ "No" | translate }}
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- projectDetailsModal -->
+<ng-template #projectDetailsModal let-modal>
+  <div class="modal-header bg-base text-white">
+    <h4
+      class="modal-title mb-0"
+      id="modal-basic-title"
+      [translate]="'name'"
+      [translateParams]="{ ar: 'تفاصيل المشروع      ', en: 'Project Details' }"
+    ></h4>
+    <div class="flex items-center gap-12">
+      <p class="mb-0">
+        <span style="margin-inline-end: 10px">{{
+          "ProjectNumber" | translate
+        }}</span>
+        <span>{{ "255" }}</span>
+      </p>
+      <p class="mb-0">
+        <span style="margin-inline-end: 10px">{{
+          "projectDescription" | translate
+        }}</span>
+        <span>{{ "awd" }}</span>
+      </p>
+    </div>
+    <button type="button" class="m-0" (click)="modal.dismiss('Cross click')">
+      <i class="fa fa-close"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <app-project-details
+      [projectDetails]="projectDetails"
+    ></app-project-details>
+  </div>
+  <div class="modal-footer justify-content-end" style="border-top: none">
+    <button
+      type="button"
+      class="btn btn-light py-2 px-3 mt-0"
+      (click)="modal.dismiss('Cross click')"
+    >
+      {{ "close" | translate }}
+    </button>
+  </div>
+</ng-template>

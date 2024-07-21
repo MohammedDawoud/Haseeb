@@ -1,0 +1,405 @@
+<div class="add-search pb-4">
+  <app-navigator [title]="title"></app-navigator>
+
+  <div class="tables-data mt-3 overflow-hidden">
+
+
+    <div class="flex gap-2 flex-wrap items-end">
+      <div class="w-fit">
+        <input class="form-control" placeholder="{{'search' | translate}}" #input />
+      </div>
+      <div class="max-w-xs">
+        <label class="col-form-label" [translate]="'name'" [translateParams]="{
+                    ar: ' نوع البحث',
+                    en: 'Search Type'
+                  }">
+        </label>
+        <ng-select class="w-full p-0" [(ngModel)]="data.filter.searchType" name="searchType"
+        (ngModelChange)="cleardata()"
+          placeholder=" {{ 'Chose' | translate }}">
+          <ng-option [value]="1" [translate]="'name'" [translateParams]="{
+                    ar: 'رقم الصادر',
+                    en: 'Outbox Number'
+                  }">
+
+          </ng-option>
+          <ng-option [value]="2" [translate]="'name'" [translateParams]="{
+                    ar: 'الموضوع',
+                    en: 'Topic'
+                  }">
+
+          </ng-option>
+          <ng-option [value]="3" [translate]="'name'" [translateParams]="{
+                    ar: 'الجهة الى',
+                    en: 'Side To'
+                  }">
+
+          </ng-option>
+          <ng-option [value]="4" [translate]="'name'" [translateParams]="{
+                    ar: 'الجهة من',
+                    en: 'Side From'
+                  }">
+
+          </ng-option>
+          <ng-option [value]="5" [translate]="'name'" [translateParams]="{
+                    ar: 'نوع الصادر',
+                    en: 'OutBox Type'
+                  }">
+
+          </ng-option>
+          <!-- <ng-option [value]="6" [translate]="'name'" [translateParams]="{
+                    ar: 'نوع الوارد',
+                    en: 'Inbox Type'
+                  }">
+
+          </ng-option> -->
+
+        </ng-select>
+      </div>
+
+      <div class="max-w-xs" *ngIf="data.filter.searchType == 1">
+        <label [translate]="'name'" [translateParams]="{
+                    ar: 'الرقم',
+                    en: 'Number'
+                  }"> </label>
+        <input type="text" name="Number" [(ngModel)]="filters.Number" (keyup)="getData()" class="form-control" />
+      </div>
+      <div class="max-w-xs" *ngIf="data.filter.searchType == 2">
+        <label [translate]="'name'" [translateParams]="{
+                    ar: 'الموضوع',
+                    en: 'Topic'
+                  }"></label>
+        <input type="text"  name="Topic" [(ngModel)]="filters.Topic" (keyup)="getData()"  class="form-control" />
+      </div>
+      <div class="max-w-xs" *ngIf="data.filter.searchType == 3">
+        <label [translate]="'name'" [translateParams]="{
+                    ar: 'الجهة الى',
+                    en: 'Side To'
+                  }"></label>
+        <input type="text" name="SideToName" [(ngModel)]="filters.SideToName" (keyup)="getData()"  class="form-control" />
+      </div>
+      <div class="max-w-xs" *ngIf="data.filter.searchType == 4">
+        <label [translate]="'name'" [translateParams]="{
+                    ar: 'الجهة من',
+                    en: 'Side From'
+                  }"></label>
+        <input type="text" name="SideFromName" [(ngModel)]="filters.SideFromName" (keyup)="getData()"  class="form-control" />
+      </div>
+
+      <div class="max-w-xs" *ngIf="data.filter.searchType == 5">
+        <label [translate]="'name'" [translateParams]="{
+                      ar: 'نوع الصادر',
+                    en: 'OutBox Type'
+                  }"></label>
+              <input type="text" name="Type" [(ngModel)]="filters.Type" (keyup)="getData()"  class="form-control" />
+
+      </div>
+      <!-- <div class="max-w-xs" *ngIf="data.filter.searchType == 6">
+        <label [translate]="'name'" [translateParams]="{
+                     ar: 'نوع الوارد',
+                    en: 'Inbox Type'
+                  }"></label>
+        <ng-select class="w-full p-0" placeholder="{{ 'Chose' | translate }}">
+          <ng-option [value]="1">
+            خيار
+          </ng-option>
+
+        </ng-select>
+      </div> -->
+      <button class="btn btn-primary" (click)="data.filter.enable = !data.filter.enable;data.filter.date=null" [translate]="'name'"
+        [translateParams]="{
+        ar: 'فلترة بالوقت',
+        en: 'Time Filter'
+      }"></button>
+      <div class="form-group timeInput" *ngIf="data.filter.enable">
+        <input placeholder="{{ 'Chose Date' | translate }}" [(ngModel)]="data.filter.date" type="text"
+        (ngModelChange)="CheckDate($event)"
+          class="form-control" bsDaterangepicker #dpr="bsDaterangepicker" />
+      </div>
+      <!-- <mat-checkbox class="example-margin mt-3" color="primary"><span [translate]="'name'" [translateParams]="{
+                              ar: 'الكل',
+                              en: 'All'
+                            }"></span> </mat-checkbox> -->
+    </div>
+
+
+
+    <!-- table -->
+    <div class="overflow-auto mt-4" id="data-table">
+      <table mat-table [dataSource]="data.alloutbox" matSort
+        class="mat-elevation-z8 rounded-t-lg overflow-hidden w-max">
+        <ng-container matColumnDef="OutInTypeName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span [translate]="'name'" [translateParams]="{
+                      ar: 'النوع',
+                      en: 'Type'
+                    }"></span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.outInTypeName }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="Number">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span [translate]="'name'" [translateParams]="{
+                  ar: 'رقم الصادر',
+                    en: 'Outbox Number'
+                    }"></span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.number }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="inBox">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span [translate]="'name'" [translateParams]="{
+                      ar: 'رقم الوارد',
+                      en: ' Inbox Number'
+                    }"></span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.number }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="Date">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span [translate]="'name'" [translateParams]="{
+                      ar: 'التاريخ',
+                      en: ' Date'
+                    }"></span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.date }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="Topic">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span [translate]="'name'" [translateParams]="{
+                      ar: 'الموضوع',
+                      en: 'Topic'
+                    }"></span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.topic }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="FileCount">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span [translate]="'name'" [translateParams]="{
+                      ar: 'عدد الملفات',
+                      en: 'Files Count'
+                    }"></span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.fileCount }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="ProjectNumber">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span [translate]="'name'" [translateParams]="{
+                      ar: 'رقم المشروع',
+                      en: 'Project Number'
+                    }"></span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.projectNumber }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="CustomerName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span [translate]="'name'" [translateParams]="{
+                      ar: 'العميل',
+                      en: 'Customer '
+                    }"></span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.customerName }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="OutInBoxTypeName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span [translate]="'name'" [translateParams]="{
+                      ar: 'اسم الصادر',
+                      en: 'OutBox Name '
+                    }"></span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.outInBoxTypeName }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="ArchiveFilesName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span [translate]="'name'" [translateParams]="{
+                      ar: 'ملف الأرشيف',
+                      en: 'Archive File '
+                    }"></span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.archiveFilesName }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="SideFromName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span [translate]="'name'" [translateParams]="{
+                      ar: 'من  ',
+                      en: 'From'
+                    }"></span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.sideFromName }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="SideToName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span [translate]="'name'" [translateParams]="{
+                      ar: 'إلى',
+                      en: 'To'
+                    }"></span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.sideToName }}
+          </td>
+        </ng-container>
+
+
+        <ng-container matColumnDef="operations">
+          <th class="noPrint" mat-header-cell *matHeaderCellDef [translate]="'name'" [translateParams]="{
+                    ar: 'خيارات',
+                    en: 'Operations'
+                  }"></th>
+          <td class="noPrint" mat-cell *matCellDef="let element">
+            <div class="flex gap-1 justify-center py-2">
+              <button (click)="openEditoutbox(element)" 
+                class="min-w-max p-2 bg-orange-100 hover:bg-orange-500 rounded-lg duration-300 hover:text-white aspect-square w-10">
+                <i class="fa-regular fa-pen-to-square"></i>
+              </button>
+              <button
+                class="min-w-max p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white aspect-square w-10"
+                (click)="open(deleteModal, element, 'md')">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+              <button
+                class="min-w-max p-2 bg-blue-100 hover:bg-blue-500 rounded-lg duration-300 hover:text-white aspect-square w-10">
+                <i class="fa-solid fa-envelope"></i>
+
+              </button>
+              <button *ngIf="element.fileCount>0" (click)="GetAllFiles(element.outInBoxId);open(files, '','lg')"
+                class="min-w-max p-2 bg-sky-100 hover:bg-sky-500 rounded-lg duration-300 hover:text-white aspect-square w-10">
+                <i class="fa-solid fa-eye"></i>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Symbol Column  -->
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+        <tr mat-row *matRowDef="let row; columns: displayedColumns" class="duration-300 hover:bg-slate-100"></tr>
+        <!-- Row shown when there is no matching data. -->
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="4">
+            {{ "No result found for " }} "{{ input.value }}"
+          </td>
+        </tr>
+      </table>
+    </div>
+    <mat-paginator [pageSizeOptions]="[10, 25]"> </mat-paginator>
+  </div>
+</div>
+
+<!-- to view all files -->
+<ng-template #files let-modal>
+  <div style="background-color: var(--base-color)" class="modal-header text-white flex justify-between items-center">
+    <h4 class="m-0">
+      <span class="text-2xl" [translate]="'name'" [translateParams]="{
+              ar: 'الملفات ',
+              en: 'Files'
+            }">
+
+      </span>
+    </h4>
+    <button type="button" class="text-2xl text-white m-0" (click)="modal.dismiss()">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+
+
+
+    <div class="max-h-80 overflow-auto mt-2 col-span-1 md:col-span-2">
+      <table class="custome-table">
+        <thead>
+          <tr class="text-center">
+            <th>{{ "File Name" | translate }}</th>
+            <th [translate]="'name'" [translateParams]="{
+                  ar: 'عرض',
+                  en: 'Show'
+                }"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of AllFiles">
+            <td>{{item.fileName}}</td>
+            <td class="flex gap-2 justify-center">
+              <button (click)="open(viewFile, item.fileUrl,'lg')"
+                class="min-w-max p-2 bg-sky-100 hover:bg-sky-500 rounded-lg duration-300 hover:text-white aspect-square w-10">
+                <i class="fa-solid fa-eye"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="flex gap-2 justify-end pt-3 border-t border-neutral-300 col-span-1 md:col-span-2 mt-2">
+      <button (click)="modal.dismiss()" class="btn btn-secondary">
+        {{ "Back" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+<!-- to view file -->
+<ng-template #viewFile let-modal>
+  <div style="background-color: var(--base-color)" class="modal-header text-white flex justify-between items-center">
+    <h4 class="m-0">
+      <span class="text-2xl" [translate]="'name'" [translateParams]="{
+              ar: 'الملف ',
+              en: 'File'
+            }">
+
+      </span>
+    </h4>
+    <button type="button" class="text-2xl text-white m-0" (click)="modal.dismiss()">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="h-[60vh]">
+      <img class="w-100 h-100 object-cover rounded-lg" src="{{baseurl + data.tempData}}" alt="">
+    </div>
+    <div class="flex gap-2 justify-end pt-3 border-t border-neutral-300 col-span-1 md:col-span-2 mt-2">
+      <button class="btn btn-secondary" (click)="modal.dismiss()">
+        {{ "Back" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- confirm delete -->
+<ng-template #deleteModal let-modal>
+  <div class="modal-body text-center">
+    <p [translate]="'name'" [translateParams]="{
+            ar: 'هل تريد بالتأكيد حذف هذا الصف',
+            en: 'Are you sure to delete this row ?'
+          }"></p>
+    <div class="flex gap-2 justify-center">
+      <button type="button" mat-raised-button color="warn" (click)="DeleteOutInBox(modal)">
+        {{ "Yes" | translate }}
+      </button>
+      <button type="button" (click)="modal.dismiss()" mat-raised-button color="basic">
+        {{ "No" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>

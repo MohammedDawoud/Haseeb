@@ -1,0 +1,195 @@
+<div class="add-search pb-4">
+  <app-navigator [title]="title"></app-navigator>
+
+  <div class="tables-data mt-3 overflow-hidden">
+    <div class="flex gap-2 flex-wrap items-end">
+      <div class="max-w-xs flex-grow">
+        <label class="col-form-label"> {{ "Employee" | translate }}</label>
+        <ng-select
+          #Empsearch
+          [items]="EmployeeSearch"
+          bindLabel="name"
+          bindValue="id"
+          [clearable]="true"
+          class="w-full p-0"
+          [(ngModel)]="data.filter.empid"
+          (ngModelChange)="GetReport()"
+          placeholder="{{ 'Chose' | translate }}"
+        >
+        </ng-select>
+      </div>
+      <div class="max-w-xs flex-grow">
+        <label class="col-form-label"> {{ "Branch" | translate }}</label>
+        <ng-select
+          #Brsearch
+          [items]="BranchSearch"
+          bindLabel="name"
+          bindValue="id"
+          [clearable]="true"
+          class="w-full p-0"
+          [(ngModel)]="data.filter.branchid"
+          (ngModelChange)="GetReport()"
+          placeholder="{{ 'Chose' | translate }}"
+        >
+        </ng-select>
+      </div>
+      <button
+        class="btn btn-primary"
+        (click)="
+          data.filter.enable = !data.filter.enable; refresh(data.filter.enable)
+        "
+        [translate]="'name'"
+        [translateParams]="{
+          ar: 'فلترة بالوقت',
+          en: 'Time Filter'
+        }"
+      ></button>
+      <div class="form-group timeInput" *ngIf="data.filter.enable">
+        <input
+          placeholder="{{ 'Chose Date' | translate }}"
+          [(ngModel)]="data.filter.date"
+          type="text"
+          class="form-control"
+          (ngModelChange)="CheckDate($event)"
+          bsDaterangepicker
+          #dpr="bsDaterangepicker"
+          style="width: 150%"
+        />
+      </div>
+
+      <div class="w-fit">
+        <input
+          class="form-control"
+          (keyup)="applyFilter($event)"
+          placeholder="{{ 'search' | translate }}"
+          #input
+        />
+      </div>
+    </div>
+        <div class="flex justify-end gap-2 items-center my-3 flex-wrap">
+      <div class="flex gap-2 controler">
+            <button
+            type="button"
+            class="flex gap-1 btn btn-success"
+            (click)="exportData()"
+          >
+            {{ "exportExcel" | translate }}
+          </button>
+      </div>
+    </div>
+
+    <div class="overflow-auto mt-3">
+      <table
+        mat-table
+        [dataSource]="attendence.attendence"
+        matSort
+        class="mat-elevation-z8 rounded-t-lg overflow-hidden w-max"
+      >
+        <ng-container matColumnDef="EmployeeName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span
+              [translate]="'name'"
+              [translateParams]="{
+                ar: 'الموظف',
+                en: 'Employee'
+              }"
+            ></span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.employeeName }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="BranchName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span
+              [translate]="'name'"
+              [translateParams]="{
+                ar: 'الفرع',
+                en: 'Branch'
+              }"
+            ></span>
+          </th>
+          <td class="max-w-xs" mat-cell *matCellDef="let element">
+            {{ element.branchName }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="CheckIn">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span
+              [translate]="'name'"
+              [translateParams]="{
+                ar: 'التاريخ',
+                en: 'Miladi Date'
+              }"
+            ></span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.checkTime | date : "YYYY/MM/dd" }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="ShiftTime">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span
+              [translate]="'name'"
+              [translateParams]="{
+                ar: 'الفترة',
+                en: 'Shift'
+              }"
+            ></span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <span *ngIf="element.shiftTime == 1"> فترة صباحية </span>
+            <span *ngIf="element.shiftTime != 1"> فترة مسائية </span>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="CheckType">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span
+              [translate]="'name'"
+              [translateParams]="{
+                ar: 'الحالة',
+                en: 'Status'
+              }"
+            ></span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.checkType }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="CheckTime">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span
+              [translate]="'name'"
+              [translateParams]="{
+                ar: 'الوقت',
+                en: 'Time'
+              }"
+            ></span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <!-- {{ element.checkTime }} -->
+            {{ element.checkTime | date : "h:mm a" }}
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayedColumns"
+          class="duration-300 hover:bg-slate-100"
+        ></tr>
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="4">
+            {{ "No result found for " }} "{{ input.value }}"
+          </td>
+        </tr>
+      </table>
+    </div>
+    <mat-paginator
+      #attendence_paginator
+      [length]="attendenceData2.length"
+      (page)="onPageChange($event)"
+      [pageSizeOptions]="[10, 25, 100]"
+    >
+    </mat-paginator>
+  </div>
+</div>

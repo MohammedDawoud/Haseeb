@@ -1,0 +1,532 @@
+<div class="p-4" style="text-align: end">
+  <button (click)="printData('report')" class="btn btn-success">
+    <i class="fa fa-print"></i>
+  </button>
+</div>
+
+<hr />
+
+<div id="report" [ngStyle]="{ direction: lang == 'ar' ? 'rtl' : 'ltr' }">
+  <!--Header-->
+  <div
+    class="report-header"
+    style="display: flex; align-items: center; gap: 100px; padding: 3px 0px"
+  >
+    <div class="headerNe-right-side">
+      <img
+        src="https://placehold.co/200x200"
+        alt="logo"
+        style="height: 200px; width: 200px; max-width: 200px; object-fit: fill"
+      />
+    </div>
+
+    <div class="headerNe-lefy-side" style="width: 100%">
+      <h1
+        style="
+          letter-spacing: 0.25px;
+          font-size: 20px;
+          margin: 0;
+          margin-bottom: 5px;
+        "
+      >
+        النسخة التجريبية - DEMO
+      </h1>
+      <h1
+        style="
+          letter-spacing: 0.25px;
+          font-size: 20px;
+          margin: 0;
+          margin-bottom: 5px;
+        "
+      >
+        MAD Engineering Consultants
+      </h1>
+      <div class="line" style="position: relative; padding: 5px 0px 10px">
+        <span
+          style="
+            position: absolute;
+            right: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #e5e5e5;
+            z-index: 1;
+          "
+        ></span>
+        <span
+          style="
+            position: absolute;
+            right: 0;
+            width: 70%;
+            height: 2px;
+            background-color: #ec1c24;
+            z-index: 2;
+          "
+        ></span>
+      </div>
+      <h1
+        style="
+          letter-spacing: 0.25px;
+          font-size: 20px;
+          margin: 0;
+          margin-bottom: 5px;
+        "
+      >
+        info@bayanatech,com.sa - 050332610
+      </h1>
+      <h1
+        style="
+          margin-bottom: 0;
+          font-size: 28px;
+          color: #0c8191;
+          margin-bottom: 0;
+          margin-top: 30px;
+          font-weight: 500;
+        "
+        [translate]="'name'"
+        [translateParams]="{
+          ar: 'عرض سعر',
+          en: 'offer price'
+        }"
+      ></h1>
+    </div>
+  </div>
+  <!--/Header-->
+
+  <div style="margin-bottom: 10px">
+    <p>
+      <span
+        [translate]="'name'"
+        [translateParams]="{
+          ar: 'التاريخ: ',
+          en: 'Date: '
+        }"
+      ></span>
+      <span> 23-10-2023 </span>
+    </p>
+    <p style="font-size: 20px">
+      <span
+        [translate]="'name'"
+        [translateParams]="{
+          ar: 'السادة: ',
+          en: 'Gentlemen: '
+        }"
+      ></span>
+      <span>value - الاسم</span>
+      <span
+        [translate]="'name'"
+        [translateParams]="{
+          ar: ' المحترمين: ',
+          en: ' Respected:'
+        }"
+      ></span>
+    </p>
+  </div>
+
+  <div style="text-align: center">
+    <p
+      style="font-size: 20px; margin-bottom: 5px"
+      [translate]="'name'"
+      [translateParams]="{
+        ar: '  السلام عليكم ورحمة الله وبركاتة',
+        en: ' Peace, mercy and blessings of God  '
+      }"
+    ></p>
+    <p style="font-size: 20px; margin-bottom: 10px">..</p>
+  </div>
+
+  <div class="info" style="overflow: auto; margin-bottom: 16px">
+    <table
+      class="table m-0"
+      style="
+        width: 100%;
+        color: white;
+        text-align: center;
+        vertical-align: middle;
+        line-height: 36px;
+        min-width: max-content;
+      "
+    >
+      <tr>
+        <td
+          style="background-color: #0f9c9b; font-size: 16px"
+          [translate]="'name'"
+          [translateParams]="{ ar: 'رقم العرض', en: 'offer number' }"
+        ></td>
+        <td
+          style="background-color: #0f9c9b; font-size: 16px"
+          [translate]="'name'"
+          [translateParams]="{ ar: 'جوال العميل', en: 'Customer phone' }"
+        ></td>
+        <td
+          style="background-color: #0f9c9b; font-size: 16px"
+          [translate]="'name'"
+          [translateParams]="{ ar: 'البريد الالكتروني', en: 'E-mail' }"
+        ></td>
+        <td
+          style="background-color: #0f9c9b; font-size: 16px"
+          [translate]="'name'"
+          [translateParams]="{ ar: 'مهندس المبيعات', en: 'Sales engineer' }"
+        ></td>
+      </tr>
+
+      <tr>
+        <td style="background-color: #d1d1d1; color: black; font-size: 16px">
+          10651
+        </td>
+        <td style="background-color: #d1d1d1; color: black; font-size: 16px">
+          0566539973
+        </td>
+        <td style="background-color: #d1d1d1; color: black; font-size: 16px">
+          mohammeddawoud66@gmail.com
+        </td>
+        <td style="background-color: #d1d1d1; color: black; font-size: 16px">
+          محمد هلهل
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div
+    class="services"
+    style="width: 100%; overflow: auto; margin-bottom: 10px"
+  >
+    <div class="content" style="min-width: max-content">
+      <table
+        style="
+          text-align: center;
+          vertical-align: middle;
+          width: 100%;
+          min-width: max-content;
+        "
+      >
+        <thead>
+          <td
+            [translate]="'name'"
+            [translateParams]="{ ar: 'م', en: 'No.' }"
+            style="
+              font-size: 20px;
+              background-color: #0f9c9b;
+              padding: 5px;
+              text-align: center;
+              color: #fff;
+              word-wrap: break-word;
+            "
+          ></td>
+          <td
+            [translate]="'name'"
+            [translateParams]="{ ar: 'اسم الخدمة', en: 'Service Name' }"
+            style="
+              font-size: 20px;
+              background-color: #0f9c9b;
+              padding: 5px;
+              text-align: center;
+              color: #fff;
+              word-wrap: break-word;
+            "
+          ></td>
+          <td
+            [translate]="'name'"
+            [translateParams]="{ ar: '  الكميه', en: '  Amount' }"
+            style="
+              font-size: 20px;
+              background-color: #0f9c9b;
+              padding: 5px;
+              text-align: center;
+              color: #fff;
+              word-wrap: break-word;
+            "
+          ></td>
+          <td
+            [translate]="'name'"
+            [translateParams]="{ ar: 'سعر  الوحدة', en: '  Unit Price' }"
+            style="
+              font-size: 20px;
+              background-color: #0f9c9b;
+              padding: 5px;
+              text-align: center;
+              color: #fff;
+              word-wrap: break-word;
+            "
+          ></td>
+          <td
+            [translate]="'name'"
+            [translateParams]="{ ar: 'الضريبة   ', en: '    Tax' }"
+            style="
+              font-size: 20px;
+              background-color: #0f9c9b;
+              padding: 5px;
+              text-align: center;
+              color: #fff;
+              word-wrap: break-word;
+            "
+          ></td>
+          <td
+            [translate]="'name'"
+            [translateParams]="{ ar: 'الإجمالي   ', en: '    Total' }"
+            style="
+              font-size: 20px;
+              background-color: #0f9c9b;
+              padding: 5px;
+              text-align: center;
+              color: #fff;
+              word-wrap: break-word;
+            "
+          ></td>
+        </thead>
+        <tbody>
+          <td
+            style="
+              background-color: #fff;
+              font-size: 20px;
+              padding: 5px;
+              color: #0c8191;
+              border-inline-start: 2px dashed #0c8191;
+              border-bottom: 2px dashed #0c8191;
+            "
+          >
+            296
+          </td>
+          <td
+            style="
+              background-color: #fff;
+              font-size: 20px;
+              padding: 5px;
+              color: #0c8191;
+              border-inline-start: 2px dashed #0c8191;
+              border-bottom: 2px dashed #0c8191;
+            "
+          >
+            awdawd awdawd awdaw
+            <ul
+              style="
+                list-style: none;
+                padding: 0px;
+                margin-inline-start: 10px;
+                text-align: center;
+                margin-top: 10px;
+                line-height: 23px;
+                font-size: 17px;
+              "
+            >
+              <li>- awda awdaw dawd awd</li>
+              <li>- awda awdaw dawd awd</li>
+              <li>- awda awdaw dawd awd</li>
+            </ul>
+          </td>
+          <td
+            style="
+              background-color: #fff;
+              font-size: 20px;
+              padding: 5px;
+              color: #0c8191;
+              border-inline-start: 2px dashed #0c8191;
+              border-bottom: 2px dashed #0c8191;
+            "
+          >
+            151
+          </td>
+          <td
+            style="
+              background-color: #fff;
+              font-size: 20px;
+              padding: 5px;
+              color: #0c8191;
+              border-inline-start: 2px dashed #0c8191;
+              border-bottom: 2px dashed #0c8191;
+            "
+          >
+            23
+          </td>
+          <td
+            style="
+              background-color: #fff;
+              font-size: 20px;
+              padding: 5px;
+              color: #0c8191;
+              border-inline-start: 2px dashed #0c8191;
+              border-bottom: 2px dashed #0c8191;
+            "
+          >
+            475
+          </td>
+          <td
+            style="
+              background-color: #fff;
+              font-size: 20px;
+              padding: 5px;
+              color: #0c8191;
+              border-inline-start: 2px dashed #0c8191;
+              border-bottom: 2px dashed #0c8191;
+              border-inline-end: 2px dashed #0c8191;
+            "
+          >
+            2549
+          </td>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div
+    class="totalPrice"
+    style="text-align: end; color: black; margin-bottom: 10px"
+  >
+    <span
+      style="font-size: 17px"
+      [translate]="'name'"
+      [translateParams]="{ ar: 'المجموع', en: 'Total' }"
+    ></span>
+    <span
+      style="
+        font-size: 17px;
+        background-color: #0f9c9b;
+        color: #fff;
+        display: inline-block;
+        padding: 14px;
+        border-radius: 2px;
+        margin-inline-start: 10px;
+      "
+    >
+      5750.00</span
+    >
+  </div>
+
+  <div class="txtval" style="text-align: end; color: black">
+    <div style="font-size: 17px">
+      خمسة آلاف و سبعمائة و خمسون ريالاً سعودياً فقط لا غير
+    </div>
+  </div>
+
+  <!-- <div
+      style="
+        display: flex;
+        align-items: start;
+        justify-content: space-between;
+        flex-wrap: wrap;
+      "
+    > -->
+  <div style="margin-bottom: 15px; margin-top: 0px" class="payments">
+    <h2
+      style="font-weight: bold; margin-bottom: 5px"
+      [translate]="'name'"
+      [translateParams]="{ ar: 'الدفعات', en: 'Payments' }"
+    ></h2>
+    <ol
+      type="1"
+      style="
+        list-style: auto;
+        padding: 0;
+        margin-inline-start: 30px;
+        line-height: 1.7em;
+      "
+    >
+      <li>asdwdad . 121546</li>
+      <hr style="max-width: 50%" />
+      <li>asdwdad . 121546</li>
+      <hr style="max-width: 50%" />
+      <li>asdwdad . 121546</li>
+      <hr style="max-width: 50%" />
+    </ol>
+  </div>
+
+  <div style="margin-bottom: 15px" class="terms">
+    <h2
+      style="font-weight: bold; margin-bottom: 5px"
+      [translate]="'name'"
+      [translateParams]="{ ar: 'الشروط', en: 'Terms' }"
+    ></h2>
+    <ol
+      type="1"
+      style="
+        list-style: auto;
+        padding: 0;
+        margin-inline-start: 30px;
+        line-height: 1.7em;
+      "
+    >
+      <li>asdwdad . 121546</li>
+      <hr style="max-width: 50%" />
+      <li>asdwdad . 121546</li>
+      <hr style="max-width: 50%" />
+      <li>asdwdad . 121546</li>
+      <hr style="max-width: 50%" />
+    </ol>
+  </div>
+  <!-- </div> -->
+
+  <div
+    class="signture"
+    style="
+      display: flex;
+      justify-content: space-between;
+      font-size: 20px;
+      font-weight: 600;
+    "
+  >
+    <p
+      style="text-align: center; line-height: 1em"
+      [translate]="'name'"
+      [translateParams]="{
+        ar: 'توقيع الاداره الهندسيه',
+        en: '  engineering department Signature'
+      }"
+    ></p>
+    <p
+      style="text-align: center; line-height: 1em"
+      [translate]="'name'"
+      [translateParams]="{ ar: 'توقيع العميل', en: 'Client signature' }"
+    ></p>
+    <p
+      style="text-align: center; line-height: 1em"
+      [translate]="'name'"
+      [translateParams]="{
+        ar: 'توقيع الاداره الماليه',
+        en: ' financial department Signature'
+      }"
+    ></p>
+  </div>
+
+  <div class="accounts">
+    <div style="text-align: start !important">
+      <div
+        class="grid-container"
+        style="
+          margin-top: 120px;
+          display: flex;
+          align-items: center;
+          gap: 100px;
+        "
+      >
+        <div class="grid-item" style="align-self: center; text-align: right">
+          <img
+            src="https://placehold.co/75x50"
+            style="width: 130px; height: 65px"
+          />
+        </div>
+        <div class="grid-item" style="align-self: center; text-align: center">
+          <p>BankAccount1</p>
+        </div>
+      </div>
+
+      <div
+        class="grid-container"
+        style="
+          padding-top: 25px;
+          display: flex;
+          align-items: center;
+          gap: 100px;
+        "
+      >
+        <div class="grid-item" style="align-self: center; text-align: right">
+          <img
+            src="https://placehold.co/75x50"
+            style="width: 130px; height: 65px"
+          />
+        </div>
+        <div class="grid-item" style="align-self: center; text-align: center">
+          <p>BankAccount2</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

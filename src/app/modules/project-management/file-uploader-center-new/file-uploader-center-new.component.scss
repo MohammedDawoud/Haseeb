@@ -1,0 +1,234 @@
+.tree {
+  max-height: 60vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.tree-icon {
+  font-size: 24px;
+  width: 30px;
+  height: 24px;
+  display: flex;
+  line-height: 24px;
+  //color: var(--base-color);
+  color: #158e64;
+  align-items: center;
+  justify-content: center;
+}
+
+::ng-deep {
+  .node-name {
+    color: var(--gray-color);
+    letter-spacing: 0.5px;
+    font-size: 16px;
+    padding: 6px 14px !important;
+    cursor: pointer;
+
+    &.markSelected {
+      border: none !important;
+      @apply bg-green-100 text-base;
+    }
+  }
+
+  .collapsible-wrapper {
+    border-inline-start: 1px dashed #ccc;
+    margin-inline-start: 6px;
+    .node-name {
+      font-size: 14px;
+      color: var(--gray-color);
+      letter-spacing: 0.5px;
+      cursor: pointer;
+
+      &.markSelected {
+        border: none !important;
+        @apply bg-green-100 text-base;
+      }
+    }
+    node-icon-wrapper {
+      position: relative;
+
+      &::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        inset-inline-start: 0;
+        width: 90%;
+        height: 1px;
+        border: 1px dashed #ccc;
+      }
+    }
+  }
+}
+
+.wrn-msg {
+  padding: 10px;
+  margin: 30px 0px;
+  border: 2px solid #aaa;
+  text-align: center;
+  color: indianred;
+  letter-spacing: 0.5px;
+  border-radius: 3px;
+}
+
+.search-box {
+  ng-select {
+    min-width: 300px;
+  }
+}
+
+.content {
+  padding-top: 30px;
+  min-height: 400px;
+
+  .customLabel {
+    display: flex;
+    align-items: start;
+    justify-content: start;
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 30px;
+  }
+}
+
+::ng-deep {
+  .track-missions {
+    .nav-tabs {
+      width: max-content;
+      .nav-item {
+        .nav-link {
+          font-size: 14px;
+          font-weight: 500;
+          color: var(--gray-color);
+        }
+      }
+    }
+  }
+
+  .mat-radio-button {
+    margin-inline-end: 20px;
+  }
+}
+
+textarea {
+  &:focus-visible {
+    outline: none;
+  }
+}
+
+::ng-deep {
+  .apexcharts-legend {
+    display: none !important;
+  }
+}
+
+span {
+  &.value {
+    width: 30px;
+    height: 30px;
+    margin: 0px 10px;
+    background-color: #a5a5a521;
+    color: var(--base-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 2px;
+  }
+}
+
+.actions {
+  button {
+    font-size: 12px;
+    width: 30px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+::ng-deep {
+  .mat-paginator-container {
+    justify-content: space-between !important;
+    padding: 15px 10px 0px !important;
+  }
+  .mat-paginator-range-actions {
+    direction: inherit !important;
+  }
+  .mat-paginator-range-label {
+    direction: initial;
+  }
+}
+
+.info {
+  @media (max-width: 1200px) {
+    position: relative !important;
+    margin-bottom: 22px !important;
+    flex-wrap: wrap !important;
+  }
+}
+
+::ng-deep {
+  .ngx-gauge-meter {
+    width: 100px !important;
+    height: 100px !important;
+    canvas {
+      width: 100px;
+      height: 100px;
+    }
+    .reading-block {
+      font-size: 26px !important;
+      transform: translateY(-50%) !important;
+      top: 50%;
+      color: var(--base-color) !important;
+    }
+    .reading-label {
+      display: none !important;
+    }
+  }
+}
+
+.custome-task {
+  .form-control {
+    max-width: 45px !important;
+    margin: 0px 10px !important;
+    padding: 5px !important;
+    text-align: center !important;
+  }
+}
+.tasks-page textarea {
+  border: 1px solid #ccc;
+}
+
+.percent {
+  top: 50%;
+  transform: translateY(-50%);
+  inset-inline-end: -6px;
+  font-weight: 600;
+  font-size: 20px;
+}
+
+
+.uploadingIcon {
+  width: 30px;
+  height: 28px;
+  object-fit: contain;
+  padding: 5px;
+  display: block !important;
+  border: 1px solid var(--base-color);
+  border-radius: 0.25rem;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+

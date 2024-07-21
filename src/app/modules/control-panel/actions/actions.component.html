@@ -1,0 +1,261 @@
+<div class="system-actions">
+  <app-navigator [title]="title"></app-navigator>
+  <div
+    class="flex justify-between gap-2 items-center my-3 flex-wrap"
+    style="font-size: small"
+  >
+    <span
+      class="p-3 rounded-lg bg-red-200"
+      [translate]="'name'"
+      [translateParams]="{
+        ar: 'تنبيه : سجل الاحداث يحتفظ بجميع الاحداث التي حصلت خلال السنه الحالية ويتم حذف السجلات التي مضي عليها اكثر من 365 يوما',
+        en: 'تنبيه : سجل الاحداث يحتفظ بجميع الاحداث التي حصلت خلال السنه الحالية ويتم حذف السجلات التي مضي عليها اكثر من 365 يوما'
+      }"
+    >
+    </span>
+
+    <!-- <span>بمجرد فتح هذه الشاشة يظهر للادارة أن المستخدم اطلع علي التنبيه / او التعميم،كذلك فان حذفك للتعميم يخفيه من شاشتك فقط،لكنه يبقي في شاشة الادارة </span> -->
+  </div>
+  <div class="filters mb-4 flex align-items-end gap-4 flex-wrap">
+    <div class="form-group">
+      <label class="text-right col-form-label block">
+        {{ "search" | translate }}</label
+      >
+      <input
+        (keyup)="GetSystemActions()"
+        class="form-control"
+        style="max-width: 300px"
+        #input
+        placeholder="{{ 'search' | translate }}"
+        [(ngModel)]="Searchtxt"
+      />
+    </div>
+    <div class="form-group">
+      <label class="text-right col-form-label block">
+        {{ "userName" | translate }}</label
+      >
+      <ng-select
+        class="w-full p-0"
+        placeholder="{{ 'Chose' | translate }}"
+        [(ngModel)]="UserId"
+        name="user"
+        (ngModelChange)="GetSystemActions()"
+      >
+        <ng-option *ngFor="let user of users" [value]="user.id">{{
+          user.name
+        }}</ng-option>
+      </ng-select>
+    </div>
+    <div class="form-group flex items-center gap-1">
+      <input type="checkbox" name="date" id="date" [(ngModel)]="dateFilter" />
+      <label for="date" class="mx-2 mb-0">{{ "Date" | translate }}</label>
+    </div>
+    <!-- <div class="form-group timeInput">
+      <label class="text-right col-form-label block">{{
+        "Chose Date" | translate
+      }}</label>
+      <input
+        placeholder="{{ 'Chose Date' | translate }}"
+        name="date"
+        ngModel
+        type="text"
+        class="form-control"
+        bsDaterangepicker
+        #dpr="bsDaterangepicker"
+        [disabled]="!dateFilter"
+      />
+    </div> -->
+
+    <div class="form-group timeInput">
+      <input
+        placeholder="{{ 'Chose Date' | translate }}"
+        [(ngModel)]="date"
+        type="text"
+        class="form-control"
+        (ngModelChange)="CheckDate($event)"
+        bsDaterangepicker
+        #dpr="bsDaterangepicker"
+        [disabled]="!dateFilter"
+      />
+    </div>
+    <div class="form-group">
+      <label class="text-right col-form-label block">
+        {{ "movement type" | translate }}</label
+      >
+      <ng-select
+        class="w-full p-0"
+        placeholder="{{ 'Chose' | translate }}"
+        [(ngModel)]="ActionType"
+        name="movementType"
+        (ngModelChange)="GetSystemActions()"
+      >
+        <ng-option
+          *ngFor="let item of movementTypes"
+          [value]="item.id"
+          [translate]="'name'"
+          [translateParams]="{ ar: item.ar, en: item.en }"
+        ></ng-option>
+      </ng-select>
+    </div>
+
+    <div class="form-group">
+      <label class="col-form-label"> البحث خلال الفترة من</label>
+      <ng-select
+        class="w-full p-0"
+        placeholder="{{ 'Chose' | translate }}"
+        [(ngModel)]="FilterDay"
+        (ngModelChange)="SetDate()"
+        [ngModelOptions]="{ standalone: true }"
+      >
+        <ng-option [value]="-1">الامس</ng-option>
+        <ng-option [value]="0">الاسبوع الماضي</ng-option>
+        <ng-option *ngFor="let user of dayes" [value]="user.id">{{
+          user.name
+        }}</ng-option>
+      </ng-select>
+    </div>
+  </div>
+
+  <div class="tables-data mt-3 overflow-hidden">
+    <!-- table -->
+
+    <div class="overflow-auto">
+      <table
+        mat-table
+        [dataSource]="dataSource"
+        matSort
+        class="mat-elevation-z8 rounded-t-lg overflow-hidden w-max"
+      >
+        <!-- Movement history column -->
+        <ng-container matColumnDef="movementHistory">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "Movement history" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <span [dir]="'dir' | translate">{{
+              element?.fullDate | date : "a h:m:s , dd-MM-yyyy"
+            }}</span>
+          </td>
+        </ng-container>
+        <!-- process status column -->
+        <ng-container matColumnDef="processStatus">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "Movement status" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <span>{{ element?.actionTypeName }}</span>
+          </td>
+        </ng-container>
+        <!-- user name column -->
+        <ng-container matColumnDef="userName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "user name" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <span>{{ element?.userName }}</span>
+          </td>
+        </ng-container>
+        <!-- branch column -->
+        <ng-container matColumnDef="branch">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "branch" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <span>{{ element?.branchName }}</span>
+          </td>
+        </ng-container>
+        <!-- comments column -->
+        <ng-container matColumnDef="comments">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "Movement Details" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <span>{{ element?.note }}</span>
+          </td>
+        </ng-container>
+        <!-- the message column -->
+        <!-- <ng-container matColumnDef="message">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "the message" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <span>{{ element?.messageName }}</span>
+          </td>
+        </ng-container> -->
+        <!-- Function name column -->
+        <ng-container
+          matColumnDef="functionName"
+          *ngIf="userG?.userName == 'tadmin'"
+        >
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "Function name" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <span>{{ element?.functionName }}</span>
+          </td>
+        </ng-container>
+        <!-- Service name column -->
+        <ng-container
+          matColumnDef="serviceName"
+          *ngIf="userG?.userName == 'tadmin'"
+        >
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "Service name" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <span>{{ element?.serviceName }}</span>
+          </td>
+        </ng-container>
+        <!-- Operation success column -->
+        <ng-container matColumnDef="OperationSuccess">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "Operation success" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <span>{{ element?.successName }}</span>
+          </td>
+        </ng-container>
+
+        <tr
+          mat-header-row
+          *matHeaderRowDef="
+            userG?.userName == 'tadmin'
+              ? displayedColumnsadmin
+              : displayedColumns
+          "
+        ></tr>
+
+        <tr
+          mat-row
+          *matRowDef="
+            let row;
+            columns: userG?.userName == 'tadmin'
+              ? displayedColumnsadmin
+              : displayedColumns
+          "
+          class="{{
+            row.success == 1 ? 'bg-success text-white' : 'bg-danger text-white'
+          }}"
+        ></tr>
+        <!-- <tr
+          mat-row
+          *matRowDef="let row; columns: displayedColumns"
+          class="duration-300 hover:bg-slate-100"
+        ></tr> -->
+
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="4">
+            {{ "noResult" | translate }} "{{ input.value }}"
+          </td>
+        </tr>
+      </table>
+    </div>
+    <mat-paginator
+      #tasksPaginator2
+      [length]="alldata.length"
+      (page)="onPageChange($event)"
+      [pageSizeOptions]="[10, 25, 100]"
+    >
+    </mat-paginator>
+  </div>
+</div>

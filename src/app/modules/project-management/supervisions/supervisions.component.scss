@@ -1,0 +1,41 @@
+.modal-form {
+  @apply max-h-[65vh] p-2 overflow-auto;
+  > div {
+    @apply grid md:grid-cols-2 lg:grid-cols-4 gap-4;
+  }
+  hr {
+    @apply my-3;
+  }
+}
+table {
+  td,
+  th {
+    @apply border border-neutral-300 text-center px-1 ;
+  }
+}
+::ng-deep {
+  .mat-paginator-container {
+    justify-content: space-between !important;
+    padding: 15px 10px 0px !important;
+  }
+  .mat-paginator-range-actions {
+    direction: inherit !important;
+  }
+  .mat-paginator-range-label {
+    direction: initial;
+  }
+}
+.endNotice {
+  width: 270px;
+  margin: auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  span {
+    width: 100%;
+  }
+}
+
+

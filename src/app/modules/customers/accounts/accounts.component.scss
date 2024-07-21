@@ -1,0 +1,27 @@
+::ng-deep {
+  .mat-paginator-container {
+    justify-content: space-between !important;
+    padding: 15px 10px 0px !important;
+  }
+  .mat-paginator-range-actions {
+    direction: inherit !important;
+  }
+  .mat-paginator-range-label {
+    direction: initial;
+  }
+  .mat-tab-group {
+    padding-bottom: 15px;
+  }
+}
+
+.timeInput {
+  width: 240px;
+  text-align: center;
+}
+
+.ShowBalanceBefore{
+  visibility: visible !important;
+}
+.HideBalanceBefore{
+  visibility: hidden !important;
+}

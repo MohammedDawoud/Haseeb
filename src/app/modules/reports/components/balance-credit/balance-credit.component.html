@@ -1,0 +1,1015 @@
+<div class="p-4" style="text-align: end">
+  <button (click)="printData('report')" class="btn btn-success">
+    <i class="fa fa-print"></i>
+  </button>
+</div>
+
+<hr />
+
+<div id="report" [ngStyle]="{ direction: lang == 'ar' ? 'rtl' : 'ltr' }">
+  <!--Header-->
+  <div
+    class="report-header"
+    style="
+      display: flex;
+      align-items: center;
+      gap: 100px;
+      padding: 3px 0px;
+      margin-bottom: 20px;
+    "
+  >
+    <div class="headerNe-right-side">
+      <img
+        src="https://placehold.co/200x200"
+        alt="logo"
+        style="height: 200px; width: 200px; max-width: 200px; object-fit: fill"
+      />
+    </div>
+
+    <div class="headerNe-lefy-side" style="width: 100%">
+      <h1
+        style="
+          letter-spacing: 0.25px;
+          font-size: 23px;
+          margin: 0;
+          margin-bottom: 5px;
+        "
+      >
+        النسخة التجريبية - DEMO
+      </h1>
+      <h1
+        style="
+          letter-spacing: 0.25px;
+          font-size: 23px;
+          margin: 0;
+          margin-bottom: 5px;
+        "
+      >
+        MAD Engineering Consultants
+      </h1>
+      <div class="line" style="position: relative; padding: 5px 0px 10px">
+        <span
+          style="
+            position: absolute;
+            right: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #e5e5e5;
+            z-index: 1;
+          "
+        ></span>
+        <span
+          style="
+            position: absolute;
+            right: 0;
+            width: 70%;
+            height: 2px;
+            background-color: #ec1c24;
+            z-index: 2;
+          "
+        ></span>
+      </div>
+
+      <h1
+        style="
+          margin-bottom: 0;
+          font-size: 34px;
+          color: #0c8191;
+          margin-bottom: 0;
+          margin-top: 30px;
+          font-weight: 500;
+        "
+        [translate]="'name'"
+        [translateParams]="{
+          ar: 'ميزان المراجعة',
+          en: 'Trial Balance'
+        }"
+      ></h1>
+    </div>
+  </div>
+  <!--/Header-->
+
+  <div style="margin-bottom: 10px">
+    <p>
+      <span
+        [translate]="'name'"
+        [translateParams]="{
+          ar: 'التاريخ: ',
+          en: 'Date: '
+        }"
+      ></span>
+      <span> 23-10-2023 </span>
+    </p>
+  </div>
+
+  <div class="info" style="overflow: auto; margin-bottom: 20px">
+    <table
+      class="table table-bordered m-0"
+      style="
+        width: 100%;
+        color: white;
+        text-align: center;
+        vertical-align: middle;
+        min-width: max-content;
+      "
+    >
+      <tr>
+        <td
+          style="
+            line-height: 0 !important;
+            padding: 0px !important;
+            background-color: #f7f7f7;
+            font-size: 18px;
+            color: #21403f;
+            font-weight: 600;
+            border: 1px solid #dce0e4;
+          "
+          colspan="2"
+        >
+          <span
+            style="
+              border: none;
+              display: inline-block;
+              padding: 10px 0px;
+              width: 100%;
+
+              line-height: 24px;
+            "
+            [translate]="'name'"
+            [translateParams]="{
+              ar: ' الرصيد الافتتاحى',
+              en: 'Initial Balance '
+            }"
+          ></span>
+          <div
+            style="
+              width: 100%;
+              border-top: 1px solid #dce0e4;
+              margin: 0px !important;
+              padding: 0px !important;
+            "
+          >
+            <p
+              class="mb-0"
+              style="
+                line-height: 24px;
+                display: inline-block;
+                width: 50%;
+                border-bottom: 1px solid #dce0e4;
+                text-align: center;
+                padding: 7px 0px 10px;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+                border-inline: 1px solid #dce0e4;
+                margin: 0px !important;
+                margin-bottom: 0px !important;
+              "
+              [translate]="'name'"
+              [translateParams]="{ ar: 'مدين', en: 'debtor' }"
+            ></p>
+            <p
+              class="mb-0"
+              style="
+                line-height: 24px;
+                display: inline-block;
+                width: 50%;
+                border-bottom: 1px solid #dce0e4;
+                text-align: center;
+                padding: 7px 0px 10px;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+                margin: 0px !important;
+                margin-bottom: 0px !important;
+                /* border-inline-end: 1px solid #dce0e4; */
+              "
+              [translate]="'name'"
+              [translateParams]="{ ar: 'دائن', en: 'Creditor' }"
+            ></p>
+          </div>
+        </td>
+        <td
+          style="
+            line-height: 0 !important;
+            padding: 0px !important;
+            background-color: #f7f7f7;
+            font-size: 18px;
+            color: #21403f;
+            font-weight: 600;
+            border: 1px solid #dce0e4;
+          "
+          colspan="2"
+        >
+          <span
+            style="
+              border: none;
+              display: inline-block;
+              padding: 10px 0px;
+              width: 100%;
+
+              line-height: 24px;
+            "
+            [translate]="'name'"
+            [translateParams]="{ ar: ' حركة الفترة', en: 'Period movement ' }"
+          ></span>
+          <div
+            style="
+              width: 100%;
+              border-top: 1px solid #dce0e4;
+              margin: 0px !important;
+              padding: 0px !important;
+            "
+          >
+            <p
+              class="mb-0"
+              style="
+                line-height: 24px;
+                display: inline-block;
+                width: 50%;
+                border-bottom: 1px solid #dce0e4;
+                text-align: center;
+                padding: 7px 0px 10px;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+                border-inline: 1px solid #dce0e4;
+                margin: 0px !important;
+                margin-bottom: 0px !important;
+              "
+              [translate]="'name'"
+              [translateParams]="{ ar: 'مدين', en: 'debtor' }"
+            ></p>
+            <p
+              class="mb-0"
+              style="
+                line-height: 24px;
+                display: inline-block;
+                width: 50%;
+                border-bottom: 1px solid #dce0e4;
+                text-align: center;
+                padding: 7px 0px 10px;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+                margin: 0px !important;
+                margin-bottom: 0px !important;
+                /* border-inline-end: 1px solid #dce0e4; */
+              "
+              [translate]="'name'"
+              [translateParams]="{ ar: 'دائن', en: 'Creditor' }"
+            ></p>
+          </div>
+        </td>
+        <td
+          style="
+            line-height: 0 !important;
+            padding: 0px !important;
+            background-color: #f7f7f7;
+            font-size: 18px;
+            color: #21403f;
+            font-weight: 600;
+            border: 1px solid #dce0e4;
+          "
+          colspan="2"
+        >
+          <span
+            style="
+              border: none;
+              display: inline-block;
+              padding: 10px 0px;
+              width: 100%;
+
+              line-height: 24px;
+            "
+            [translate]="'name'"
+            [translateParams]="{ ar: ' صافي الحركة', en: 'net movement ' }"
+          ></span>
+          <div
+            style="
+              width: 100%;
+              border-top: 1px solid #dce0e4;
+              margin: 0px !important;
+              padding: 0px !important;
+            "
+          >
+            <p
+              class="mb-0"
+              style="
+                line-height: 24px;
+                display: inline-block;
+                width: 50%;
+                border-bottom: 1px solid #dce0e4;
+                text-align: center;
+                padding: 7px 0px 10px;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+                border-inline: 1px solid #dce0e4;
+                margin: 0px !important;
+                margin-bottom: 0px !important;
+              "
+              [translate]="'name'"
+              [translateParams]="{ ar: 'مدين', en: 'debtor' }"
+            ></p>
+            <p
+              class="mb-0"
+              style="
+                line-height: 24px;
+                display: inline-block;
+                width: 50%;
+                border-bottom: 1px solid #dce0e4;
+                text-align: center;
+                padding: 7px 0px 10px;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+                margin: 0px !important;
+                margin-bottom: 0px !important;
+                /* border-inline-end: 1px solid #dce0e4; */
+              "
+              [translate]="'name'"
+              [translateParams]="{ ar: 'دائن', en: 'Creditor' }"
+            ></p>
+          </div>
+        </td>
+        <td
+          style="
+            line-height: 0 !important;
+            padding: 0px !important;
+            background-color: #f7f7f7;
+            font-size: 18px;
+            color: #21403f;
+            font-weight: 600;
+            border: 1px solid #dce0e4;
+          "
+          colspan="2"
+        >
+          <span
+            style="
+              border: none;
+              display: inline-block;
+              padding: 10px 0px;
+              width: 100%;
+
+              line-height: 24px;
+            "
+            [translate]="'name'"
+            [translateParams]="{
+              ar: ' الارصدة النهائية',
+              en: 'Final balances '
+            }"
+          ></span>
+          <div
+            style="
+              width: 100%;
+              border-top: 1px solid #dce0e4;
+              margin: 0px !important;
+              padding: 0px !important;
+            "
+          >
+            <p
+              class="mb-0"
+              style="
+                line-height: 24px;
+                display: inline-block;
+                width: 50%;
+                border-bottom: 1px solid #dce0e4;
+                text-align: center;
+                padding: 7px 0px 10px;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+                border-inline: 1px solid #dce0e4;
+                margin: 0px !important;
+                margin-bottom: 0px !important;
+              "
+              [translate]="'name'"
+              [translateParams]="{ ar: 'مدين', en: 'debtor' }"
+            ></p>
+            <p
+              class="mb-0"
+              style="
+                line-height: 24px;
+                display: inline-block;
+                width: 50%;
+                border-bottom: 1px solid #dce0e4;
+                text-align: center;
+                padding: 7px 0px 10px;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+                margin: 0px !important;
+                margin-bottom: 0px !important;
+                border-inline-end: 1px solid #dce0e4;
+              "
+              [translate]="'name'"
+              [translateParams]="{ ar: 'دائن', en: 'Creditor' }"
+            ></p>
+          </div>
+        </td>
+      </tr>
+
+      <tr>
+        <td
+          style="
+            width: 12.5%;
+            padding-inline: 0px !important;
+            background-color: #f7f7f7;
+            font-size: 18px;
+            color: #21403f;
+            font-weight: 500;
+            border: 1px solid #dce0e4;
+            padding: 10px 0px;
+          "
+        >
+          10000
+        </td>
+        <td
+          style="
+            width: 12.5%;
+            padding-inline: 0px !important;
+            background-color: #f7f7f7;
+            font-size: 18px;
+            color: #21403f;
+            font-weight: 500;
+            border: 1px solid #dce0e4;
+            padding: 10px 0px;
+          "
+        >
+          10000
+        </td>
+        <td
+          style="
+            width: 12.5%;
+            padding-inline: 0px !important;
+            background-color: #f7f7f7;
+            font-size: 18px;
+            color: #21403f;
+            font-weight: 500;
+            border: 1px solid #dce0e4;
+            padding: 10px 0px;
+          "
+        >
+          10000
+        </td>
+        <td
+          style="
+            width: 12.5%;
+            padding-inline: 0px !important;
+            background-color: #f7f7f7;
+            font-size: 18px;
+            color: #21403f;
+            font-weight: 500;
+            border: 1px solid #dce0e4;
+            padding: 10px 0px;
+          "
+        >
+          10000
+        </td>
+        <td
+          style="
+            width: 12.5%;
+            padding-inline: 0px !important;
+            background-color: #f7f7f7;
+            font-size: 18px;
+            color: #21403f;
+            font-weight: 500;
+            border: 1px solid #dce0e4;
+            padding: 10px 0px;
+          "
+        >
+          10000
+        </td>
+        <td
+          style="
+            width: 12.5%;
+            padding-inline: 0px !important;
+            background-color: #f7f7f7;
+            font-size: 18px;
+            color: #21403f;
+            font-weight: 500;
+            border: 1px solid #dce0e4;
+            padding: 10px 0px;
+          "
+        >
+          10000
+        </td>
+        <td
+          style="
+            width: 12.5%;
+            padding-inline: 0px !important;
+            background-color: #f7f7f7;
+            font-size: 18px;
+            color: #21403f;
+            font-weight: 500;
+            border: 1px solid #dce0e4;
+            padding: 10px 0px;
+          "
+        >
+          10000
+        </td>
+        <td
+          style="
+            width: 12.5%;
+            padding-inline: 0px !important;
+            background-color: #f7f7f7;
+            font-size: 18px;
+            color: #21403f;
+            font-weight: 500;
+            border: 1px solid #dce0e4;
+            padding: 10px 0px;
+          "
+        >
+          10000
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div style="overflow: auto; margin-bottom: 20px">
+    <table
+      class="table m-0"
+      style="
+        width: 100%;
+        color: white;
+        text-align: center;
+        vertical-align: middle;
+        min-width: max-content;
+      "
+    >
+      <tr>
+        <td
+          style="
+            background-color: #fff;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 0px;
+            color: #272727;
+            border-inline-start: 1.5px dashed #272727;
+            border-block: 1.5px dashed #272727;
+          "
+          [translate]="'name'"
+          [translateParams]="{
+            ar: ' الحساب  ',
+            en: '  Account '
+          }"
+        ></td>
+
+        <td
+          style="
+            background-color: #fff;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 0px;
+            color: #272727;
+            border-inline-start: 1.5px dashed #272727;
+            border-block: 1.5px dashed #272727;
+          "
+          colspan="2"
+        >
+          <span
+            style="
+              border: none;
+              display: inline-block;
+              padding: 10px 0px;
+              width: 100%;
+
+              line-height: 24px;
+            "
+            [translate]="'name'"
+            [translateParams]="{
+              ar: ' الرصيد الافتتاحى',
+              en: 'Initial Balance '
+            }"
+          ></span>
+          <div
+            style="
+              width: 100%;
+              border-top: 1.5px dashed #272727;
+              margin: 0px !important;
+              padding: 0px !important;
+            "
+          >
+            <p
+              class="mb-0"
+              style="
+                line-height: 24px;
+                display: inline-block;
+                width: 50%;
+                border-bottom: 1.5px dashed #272727;
+                text-align: center;
+                padding: 7px 0px 10px;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+
+                border-bottom: 0;
+                border-inline-end: 1.5px dashed #272727;
+                margin: 0px !important;
+                margin-bottom: 0px !important;
+              "
+              [translate]="'name'"
+              [translateParams]="{ ar: 'مدين', en: 'debtor' }"
+            ></p>
+            <p
+              class="mb-0"
+              style="
+                line-height: 24px;
+                display: inline-block;
+                width: 50%;
+                border-bottom: 1.5px dashed #272727;
+                text-align: center;
+                padding: 7px 0px 10px;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+                margin: 0px !important;
+                margin-bottom: 0px !important;
+                /* border-inline-end:1.5px dashed #272727; */
+                border-bottom: 0;
+              "
+              [translate]="'name'"
+              [translateParams]="{ ar: 'دائن', en: 'Creditor' }"
+            ></p>
+          </div>
+        </td>
+
+        <td
+          style="
+            background-color: #fff;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 0px;
+            color: #272727;
+            border-inline-start: 1.5px dashed #272727;
+            border-block: 1.5px dashed #272727;
+          "
+          colspan="2"
+        >
+          <span
+            style="
+              border: none;
+              display: inline-block;
+              padding: 10px 0px;
+              width: 100%;
+
+              line-height: 24px;
+            "
+            [translate]="'name'"
+            [translateParams]="{
+              ar: ' الحركة  ',
+              en: '  Movement '
+            }"
+          ></span>
+          <div
+            style="
+              width: 100%;
+              border-top: 1.5px dashed #272727;
+              margin: 0px !important;
+              padding: 0px !important;
+            "
+          >
+            <p
+              class="mb-0"
+              style="
+                line-height: 24px;
+                display: inline-block;
+                width: 50%;
+                border-bottom: 1.5px dashed #272727;
+                text-align: center;
+                padding: 7px 0px 10px;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+
+                border-bottom: 0;
+                border-inline: 1.5px dashed #272727;
+                margin: 0px !important;
+                margin-bottom: 0px !important;
+              "
+              [translate]="'name'"
+              [translateParams]="{ ar: 'مدين', en: 'debtor' }"
+            ></p>
+            <p
+              class="mb-0"
+              style="
+                line-height: 24px;
+                display: inline-block;
+                width: 50%;
+                border-bottom: 1.5px dashed #272727;
+                text-align: center;
+                padding: 7px 0px 10px;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+                margin: 0px !important;
+                margin-bottom: 0px !important;
+                border-inline: 1.5px dashed #272727;
+
+                border-bottom: 0;
+              "
+              [translate]="'name'"
+              [translateParams]="{ ar: 'دائن', en: 'Creditor' }"
+            ></p>
+          </div>
+        </td>
+
+        <td
+          style="
+            background-color: #fff;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 0px;
+            color: #272727;
+            border-inline-start: 1.5px dashed #272727;
+            border-block: 1.5px dashed #272727;
+          "
+          colspan="2"
+        >
+          <span
+            style="
+              border: none;
+              display: inline-block;
+              padding: 10px 0px;
+              width: 100%;
+
+              line-height: 24px;
+            "
+            [translate]="'name'"
+            [translateParams]="{ ar: ' صافي الحركة', en: 'net movement ' }"
+          ></span>
+          <div
+            style="
+              width: 100%;
+              border-top: 1.5px dashed #272727;
+              margin: 0px !important;
+              padding: 0px !important;
+            "
+          >
+            <p
+              class="mb-0"
+              style="
+                line-height: 24px;
+                display: inline-block;
+                width: 50%;
+                border-bottom: 1.5px dashed #272727;
+                text-align: center;
+                padding: 7px 0px 10px;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+
+                border-bottom: 0;
+                border-inline: 1.5px dashed #272727;
+                margin: 0px !important;
+                margin-bottom: 0px !important;
+              "
+              [translate]="'name'"
+              [translateParams]="{ ar: 'مدين', en: 'debtor' }"
+            ></p>
+            <p
+              class="mb-0"
+              style="
+                line-height: 24px;
+                display: inline-block;
+                width: 50%;
+                border-bottom: 1.5px dashed #272727;
+                text-align: center;
+                padding: 7px 0px 10px;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+                margin: 0px !important;
+                margin-bottom: 0px !important;
+                border-inline: 1.5px dashed #272727;
+                border-bottom: 0;
+              "
+              [translate]="'name'"
+              [translateParams]="{ ar: 'دائن', en: 'Creditor' }"
+            ></p>
+          </div>
+        </td>
+
+        <td
+          style="
+            background-color: #fff;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 0px;
+            color: #272727;
+            border-inline: 1.5px dashed #272727;
+            border-block: 1.5px dashed #272727;
+          "
+          colspan="2"
+        >
+          <span
+            style="
+              border: none;
+              display: inline-block;
+              padding: 10px 0px;
+              width: 100%;
+
+              line-height: 24px;
+            "
+            [translate]="'name'"
+            [translateParams]="{
+              ar: ' الارصدة النهائية',
+              en: 'Final balances '
+            }"
+          ></span>
+          <div
+            style="
+              width: 100%;
+              border-top: 1.5px dashed #272727;
+              margin: 0px !important;
+              padding: 0px !important;
+            "
+          >
+            <p
+              class="mb-0"
+              style="
+                line-height: 24px;
+                display: inline-block;
+                width: 50%;
+                border-bottom: 1.5px dashed #272727;
+                text-align: center;
+                padding: 7px 0px 10px;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+
+                border-bottom: 0;
+                border-inline: 1.5px dashed #272727;
+                margin: 0px !important;
+                margin-bottom: 0px !important;
+              "
+              [translate]="'name'"
+              [translateParams]="{ ar: 'مدين', en: 'debtor' }"
+            ></p>
+            <p
+              class="mb-0"
+              style="
+                line-height: 24px;
+                display: inline-block;
+                width: 50%;
+                border-bottom: 1.5px dashed #272727;
+                text-align: center;
+                padding: 7px 0px 10px;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+                margin: 0px !important;
+                margin-bottom: 0px !important;
+                border-inline: 1.5px dashed #272727;
+                border-bottom: 0;
+              "
+              [translate]="'name'"
+              [translateParams]="{ ar: 'دائن', en: 'Creditor' }"
+            ></p>
+          </div>
+        </td>
+      </tr>
+
+      <tr *ngFor="let item of items; let i = index">
+        <td
+          style="
+            background-color: #fff;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 10px 0px;
+            color: #272727;
+            border-inline-start: 1.5px dashed #272727;
+            border-bottom: 1.5px dashed #272727;
+          "
+        >
+          <strong>
+            <span>{{ i + 1 + " - " }}</span>
+            <span *ngIf="lang == 'ar'">شصيشص شصيش بصشي</span>
+            <span *ngIf="lang == 'en'">adawd awdawd awdaw</span>
+          </strong>
+        </td>
+        <td
+          style="
+            background-color: #fff;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 10px 0px;
+            color: #272727;
+            border-inline-start: 1.5px dashed #272727;
+            border-bottom: 1.5px dashed #272727;
+          "
+        >
+          10000
+        </td>
+        <td
+          style="
+            background-color: #fff;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 10px 0px;
+            color: #272727;
+            border-inline-start: 1.5px dashed #272727;
+            border-bottom: 1.5px dashed #272727;
+          "
+        >
+          10000
+        </td>
+        <td
+          style="
+            background-color: #fff;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 10px 0px;
+            color: #272727;
+            border-inline-start: 1.5px dashed #272727;
+            border-bottom: 1.5px dashed #272727;
+          "
+        >
+          10000
+        </td>
+        <td
+          style="
+            background-color: #fff;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 10px 0px;
+            color: #272727;
+            border-inline-start: 1.5px dashed #272727;
+            border-bottom: 1.5px dashed #272727;
+          "
+        >
+          10000
+        </td>
+        <td
+          style="
+            background-color: #fff;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 10px 0px;
+            color: #272727;
+            border-inline-start: 1.5px dashed #272727;
+            border-bottom: 1.5px dashed #272727;
+          "
+        >
+          10000
+        </td>
+        <td
+          style="
+            background-color: #fff;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 10px 0px;
+            color: #272727;
+            border-inline-start: 1.5px dashed #272727;
+            border-bottom: 1.5px dashed #272727;
+          "
+        >
+          10000
+        </td>
+        <td
+          style="
+            background-color: #fff;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 10px 0px;
+            color: #272727;
+            border-inline-start: 1.5px dashed #272727;
+            border-bottom: 1.5px dashed #272727;
+          "
+        >
+          10000
+        </td>
+        <td
+          style="
+            background-color: #fff;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 10px 0px;
+            color: #272727;
+            border-inline: 1.5px dashed #272727;
+            border-bottom: 1.5px dashed #272727;
+          "
+        >
+          10000
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>

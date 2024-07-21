@@ -1,0 +1,473 @@
+<div class="pb-4">
+  <app-navigator [title]="title"></app-navigator>
+
+  <div class="teabls-data mt-3 overflow-hidden">
+
+    <div class="flex gap-2 flex-wrap items-end">
+      <div class="max-w-xs">
+        <label for="" [translate]="'name'" [translateParams]="{
+              ar: ' بحث باسم الملف',
+              en: 'Search by file name'
+            }"> </label>
+        <!-- <input class="form-control" placeholder="{{'search' | translate}}" #input /> -->
+        <input class="form-control" (keyup)="applyFilter($event)" placeholder="{{'search' | translate}}" #input />
+
+      </div>
+      <div class="max-w-xs">
+        <label class="col-form-label">
+          {{ "File Classification Filter" | translate }}</label>
+        <ng-select [required]="true" [ngModelOptions]="{standalone: true}" [items]="load_FileType" bindLabel="name" bindValue="id" [clearable]="true"
+        class="w-full p-0" (change)="Refreshfiles();" [(ngModel)]="data.filter.filetypesearch"  placeholder="{{ 'Chose' | translate }}">
+        </ng-select>
+      </div>
+
+      <button class="btn btn-primary" (click)="data.filter.enable = !data.filter.enable" [translate]="'name'"
+        [translateParams]="{
+                  ar: 'فلترة بالوقت',
+                  en: 'Time Filter'
+                }"></button>
+      <div class="form-group col-md-2 timeInput" *ngIf="data.filter.enable">
+        <input placeholder="{{ 'Chose Date' | translate }}" [(ngModel)]="data.filter.date" type="text" (ngModelChange)="CheckDate($event)"
+          class="form-control" [bsConfig]="{rangeInputFormat : 'DD/MM/YYYY'}" bsDaterangepicker #dpr="bsDaterangepicker" />
+      </div>
+
+      <div class="form-check">
+        <label class="form-check-label" for="allProjects" [translate]="'name'" [translateParams]="{
+              ar: ' الموثق فقط',
+              en: 'Approved only'
+            }">
+
+        </label>
+        <input class="form-check-input" type="checkbox" value="" id="allProjects"
+        [(ngModel)]="data.filter.isChecked" (change)="checkValue(data.filter.isChecked?'A':'B')">
+      </div>
+
+
+    </div>
+
+    <!-- buttons -->
+    <div class="flex justify-end gap-2 items-center my-3 flex-wrap">
+      <!-- <div class="w-fit">
+        <input class="form-control" (keyup)="applyFilter($event)" placeholder="{{'search' | translate}}" #input />
+      </div> -->
+      <button *ngIf="userG?.userPrivileges.includes(111027)"
+       (click)="addModal.show();AddPopup()" class="btn btn-primary" [translate]="'name'" [translateParams]="{
+                                    ar: 'تحميل ملف للمشروع',
+                                    en: '  Upload a file to the project  '
+                                  }">
+      </button>
+    </div>
+
+
+    <!-- table -->
+    <div class="overflow-auto">
+      <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 rounded-t-lg overflow-hidden w-max">
+
+
+
+        <ng-container matColumnDef="projectNumber">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span [translate]="'name'" [translateParams]="{
+                    ar: 'رقم المشروع',
+                    en: 'Project Number'
+                  }"></span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+
+            {{element.projectNo}}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="customername">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span [translate]="'name'" [translateParams]="{
+                    ar: 'اسم العميل',
+                    en: ' Customer Name'
+                  }"></span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.customerName }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="fileName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span [translate]="'name'" [translateParams]="{
+                    ar: 'اسم الملف',
+                    en: ' File Name'
+                  }"></span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.fileName }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="fileType">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span [translate]="'name'" [translateParams]="{
+                    ar: 'تصنيف الملف',
+                    en: ' File Classification'
+                  }"></span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.fileTypeName }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="filePageInsert">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "File Page Insert" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.pageInsertName }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="uploadDate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span [translate]="'name'" [translateParams]="{
+                            ar: 'تاريخ الرفع',
+                            en: 'Upload Date'
+                          }"></span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.uploadDate }}
+          </td>
+        </ng-container>
+
+
+        <ng-container matColumnDef="user">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span [translate]="'name'" [translateParams]="{
+                            ar: 'المستخدم	',
+                            en: 'user'
+                          }"></span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.userFullName }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="notes">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span [translate]="'name'" [translateParams]="{
+                            ar: 'الملاحظات	',
+                            en: 'Notes'
+                          }"></span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.notes }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="operations">
+          <th mat-header-cell *matHeaderCellDef [translate]="'name'" [translateParams]="{
+                                    ar: 'خيارات',
+                                    en: 'Operations'
+                                  }"></th>
+          <td mat-cell *matCellDef="let element">
+
+            <div class="flex items-center justify-center gap-1">
+              <button *ngIf="element.fileUrl"   (click)="downloadFile(element)"
+                class="min-w-max p-2 bg-sky-100 hover:bg-sky-500 rounded-lg duration-300 hover:text-white aspect-square w-10">
+                <i class="fa-solid fa-eye"></i>
+              </button>
+              <button *ngIf="(!(element.extension!='application/pdf' && element.extension!='.pdf')&& element.fileUrlW) "  (click)="downloadFileW(element)"
+                class="min-w-max p-2 bg-orange-100 hover:bg-orange-500 rounded-lg duration-300 hover:text-white aspect-square w-10">
+                <i class="fa-solid fa-eye"></i>
+              </button>
+              <button
+                class="min-w-max p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white aspect-square w-10"
+                (click)="deleteModal.show();getRow(element)">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns" class="duration-300 hover:bg-slate-100"></tr>
+        <!-- Row shown when there is no matching data. -->
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="6">
+            <!-- {{ "No result found for " }} "{{ input.value }}" -->
+          </td>
+        </tr>
+      </table>
+    </div>
+    <mat-paginator #MatPaginator [pageSizeOptions]="[10, 25,100,dataSource.data.length]"> </mat-paginator>
+
+  </div>
+</div>
+
+
+<div class="modal fade ngxModal" bsModal #addModal="bs-modal" tabindex="-1" role="dialog"
+  aria-labelledby="dialog-static-name2">
+  <div style="background-color: var(--base-color)" class="modal-header  text-white flex justify-between items-center">
+    <h4 class="m-0">
+      <span class="text-2xl" [translate]="'name'" [translateParams]="{
+                                    ar: 'اختر ملف',
+                                    en: 'Choose File'
+                                  }">
+      </span>
+    </h4>
+    <button type="button" class="text-2xl text-white m-0" (click)="addModal?.hide()">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body text-center max-h-[70vh] overflow-auto ">
+    <form class=" ">
+      <div class="flex gap-2 items-end">
+        <div class="flex-grow">
+          <label class="col-form-label">
+            {{ "Project Number" | translate }}</label>
+
+          <ng-select [ngModelOptions]="{standalone: true}" [items]="load_Project" bindLabel="name" bindValue="id" [clearable]="true"
+          class="w-full p-0" [(ngModel)]="data.ProjectValue"  placeholder="{{ 'Chose' | translate }}">
+          </ng-select>
+
+        </div>
+        <button class="btn bg-base text-white mt-3" type="type" (click)="projectsNumber.show()">
+          <i class="fa fa-plus"></i>
+        </button>
+      </div>
+
+
+      <div>
+        <label class="col-form-label">
+          {{ "File Name" | translate }}</label>
+        <input type="text" class="form-control" [ngModelOptions]="{standalone: true}"  [(ngModel)]="data.FileName">
+      </div>
+      <div class="form-check form-switch my-2 flex gap-6">
+        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault"
+        [(ngModel)]="data.Certificate" [ngModelOptions]="{standalone: true}">
+        <label class="form-check-label" for="flexSwitchCheckDefault" [translate]="'name'" [translateParams]="{
+                                    ar: 'اعتماد الملف',
+                                    en: 'Adoptthe file'
+                                  }"></label>
+      </div>
+
+      <div class="flex gap-2 items-end">
+        <div class="flex-grow">
+          <label class="col-form-label">
+            {{ "File Classification" | translate }}</label>
+          <ng-select [required]="true" [ngModelOptions]="{standalone: true}" [items]="load_FileType" bindLabel="name" bindValue="id" [clearable]="true"
+          class="w-full p-0" [(ngModel)]="data.FileTypeValue"  placeholder="{{ 'Chose' | translate }}">
+          </ng-select>
+
+
+        </div>
+        <button class="btn bg-base text-white mt-3" type="type" (click)="fileTypeModal.show();resetFileType();">
+          <i class="fa fa-plus"></i>
+        </button>
+      </div>
+
+
+      <div class="col-md-12 mb-3">
+        <div class="col-span-1 md:col-span-2">
+          <label for="formFile" class="form-label">
+            {{ "Upload File" | translate }}</label
+          >
+          <input class="form-control" type="file" id="formFile"
+          [(ngModel)]="uploadedFiles"
+          [ngModelOptions]="{standalone: true}"
+          (change)="selectFile($event)"
+          />
+        </div>
+      </div>
+      <!-- <div class="upload row-span-2">
+        <file-upload class="h-full" [control]="control">
+          <ng-template let-isFileDragDropAvailable="isFileDragDropAvailable" #placeholder>
+            <div class="px-5" *ngIf="control.size === 0">
+              <div class="icon">
+                <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 640 512">
+                  <path
+                    d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-217c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l39-39V392c0 13.3 10.7 24 24 24s24-10.7 24-24V257.9l39 39c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0l-80 80z" />
+                </svg>
+              </div>
+
+              <div class="upload-text">
+                {{ "Add file" | translate }}
+              </div>
+            </div>
+          </ng-template>
+
+          <ng-template let-i="index" let-file="file" let-control="control" #item  [(ngModel)]="uploadedFiles"
+          [ngModelOptions]="{standalone: true}">
+            <div class="overlay">
+              <span class="delete-button" (click)="control.removeFile(file)">
+                <svg viewBox="0 0 448 512">
+                  <path
+                    d="M32 464a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128H32zm272-256a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zM432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16z">
+                  </path>
+                </svg>
+              </span>
+              <img class="max-h-44" *ngIf="control.valid" [src]="uploadedFile | async" />
+            </div>
+          </ng-template>
+        </file-upload>
+      </div> -->
+    </form>
+  </div>
+  <div class="modal-footer">
+
+    <button class="btn bg-base text-white" type="submit" (click)="SaveprojectFiles('add')">
+      {{ "Save" | translate }}
+    </button>
+    <button (click)="addModal?.hide()" class="btn btn-secondary">
+      {{ "Back" | translate }}
+    </button>
+
+  </div>
+</div>
+
+<div class="modal fade ngxModal" bsModal #projectsNumber="bs-modal" tabindex="-1" role="dialog"
+  aria-labelledby="dialog-static-name2">
+  <div style="background-color: var(--base-color)" class="modal-header  text-white flex justify-between items-center">
+    <h4 class="m-0">
+      <span class="text-2xl"> ارقام المشاريع </span>
+    </h4>
+    <button type="button" class="text-2xl text-white m-0"  (click)="projectsNumber?.hide()">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body text-center" >
+    <form #addFileType="ngForm">
+      <div>
+        <input type="text" class="form-control" (keyup)="applyFilterProject($event)"/>
+      </div>
+    </form>
+    <div class="max-h-80 overflow-auto px-2 mt-3">
+      <table class="table table-hover  ">
+        <thead>
+          <tr class="bg-base text-white">
+            <th>{{ "Project Number" | translate }}</th>
+            <th>{{ "Customer Name" | translate }}</th>
+
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let type of data.allProjectNumbers" (dblclick)="setProjectInSelect(type,projectsNumber)">
+            <td>{{ type.projectNo }}</td>
+            <td>{{ type.customerName }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+<div class="modal fade ngxModal" bsModal #fileTypeModal="bs-modal" tabindex="-1" role="dialog"
+  aria-labelledby="dialog-static-name2">
+  <div style="background-color: var(--base-color)" class="modal-header  text-white flex justify-between items-center">
+    <h4 class="m-0">
+      <span class="text-2xl"> نوع ملف جديد </span>
+    </h4>
+    <button type="button" class="text-2xl text-white m-0" (click)="fileTypeModal?.hide()">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body text-center" >
+    <form #addFileType="ngForm" class="grid grid-cols-1 md:grid-cols-2 gap-2">
+      <div class="form-group">
+        <label for="FileNameArtxt3" class="text-right col-form-label block">
+          {{ "nameAr" | translate }}
+          <span class="text-danger">*</span></label>
+        <input required #FileNameAr="ngModel" ngModel [(ngModel)]="data.file.nameAr" class="form-control"
+          type="text" id="FileNameArtxt3" name="FileNameArtxt3" autocomplete="off"
+          [placeholder]="('Write' | translate) + ' ' + ('nameAr' | translate)" />
+      </div>
+      <div class="form-group">
+        <label for="FileNameEntxt3" class="text-right col-form-label block">
+          {{ "nameEn" | translate }}
+          <span class="text-danger">*</span></label>
+        <div style="display: inline-flex; width: 100%">
+          <input required #FileNameEnValue #FileNameEn="ngModel" [(ngModel)]="data.file.nameEn" ngModel
+            class="form-control" type="text" id="FileNameEntxt3" name="FileNameEntxt3" autocomplete="off"
+            [placeholder]="
+                  ('Write' | translate) + ' ' + ('nameEn' | translate)
+                " />
+          <a class="btn" id="CopyFileName2" (click)="data.file.nameEn = data.file.nameAr"><i
+              class="fa fa-copy"></i></a>
+        </div>
+      </div>
+    </form>
+    <div class="max-h-80 overflow-auto px-2">
+      <table class="table table-hover  ">
+        <thead>
+          <tr>
+            <th>{{ "nameAr" | translate }}</th>
+            <th>{{ "nameEn" | translate }}</th>
+            <th [translate]="'name'" [translateParams]="{
+                    ar: 'خيارات',
+                    en: 'Operations'
+                  }"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let type of data.files" (dblclick)="setFileTypeInSelect(type,fileTypeModal)">
+            <td>{{ type.name }}</td>
+            <td>{{ type.nameEn }}</td>
+            <td class="flex gap-2 justify-center">
+              <button
+                class="p-2 bg-orange-100 hover:bg-orange-500 rounded-lg duration-300 hover:text-white aspect-square w-10"
+                (click)="
+                      data.file.nameAr = type.name;
+                      data.file.nameEn = type.nameEn;
+                      data.file.id = type.id
+                    ">
+                <i class="fa-regular fa-pen-to-square"></i>
+              </button>
+              <button (click)="deleteFileType.show();getFiletypeRow(type)"
+                class="p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white aspect-square w-10">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="flex gap-2 mt-3 pt-3 border-t border-neutral-300">
+      <button class="btn bg-base text-white" type="submit" [disabled]="addFileType.invalid"
+        (click)="saveFileType();">
+        {{ "Save" | translate }}
+      </button>
+      <button (click)="fileTypeModal?.hide()" class="btn btn-secondary">
+        {{ "Back" | translate }}
+      </button>
+      <button (click)="resetFileType();" class="btn bg-base text-white">
+        {{ "جديد" | translate }}
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- confirm delete row-->
+<div class="modal fade ngxModal center" #deleteFileType="bs-modal" bsModal tabindex="-1" role="dialog">
+  <div class="modal-body text-center">
+    <p [translate]="'name'" [translateParams]="{
+            ar: 'هل تريد بالتأكيد حذف هذا الصف',
+            en: 'Are you sure to delete this row ?'
+          }"></p>
+    <div class="flex gap-2 justify-center">
+      <button type="button" mat-raised-button color="warn" (click)="confirmFiletypeDelete();deleteFileType.hide()">
+        {{ "Yes" | translate }}
+      </button>
+      <button type="button" (click)="deleteFileType.hide()" mat-raised-button color="basic">
+        {{ "No" | translate }}
+      </button>
+    </div>
+  </div>
+</div>
+<!-- confirm delete row-->
+<div class="modal fade ngxModal center" #deleteModal="bs-modal" bsModal tabindex="-1" role="dialog">
+  <div class="modal-body text-center">
+    <p [translate]="'name'" [translateParams]="{
+            ar: 'هل تريد بالتأكيد حذف هذا الصف',
+            en: 'Are you sure to delete this row ?'
+          }"></p>
+    <div class="flex gap-2 justify-center">
+      <button type="button" mat-raised-button color="warn" (click)="confirmDelete();deleteModal.hide()">
+        {{ "Yes" | translate }}
+      </button>
+      <button type="button" (click)="deleteModal.hide()" mat-raised-button color="basic">
+        {{ "No" | translate }}
+      </button>
+    </div>
+  </div>
+</div>

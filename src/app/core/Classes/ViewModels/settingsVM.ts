@@ -1,0 +1,37 @@
+export class SettingsVM {
+    settingId: number;
+    descriptionAr: string | null;
+    descriptionEn: string | null;
+    parentId: number | null;
+    projSubTypeId: number | null;
+    type: number | null;
+    timeMinutes: number | null;
+    isUrgent: boolean | null;
+    isTemp: boolean | null;
+    taskType: number | null;
+    orderNo: number | null;
+    startDate: string | null;
+    endDate: string | null;
+    percentComplete: number | null;
+    cost: number | null;
+    branchId: number | null;
+    userId: number | null;
+    timeType: number | null;
+    taskTypeName: string | null;
+    timeTypeName: string | null;
+    userName: string | null;
+    timeStr: string | null;
+    nodeLocation: string | null;
+    notes: string | null;
+    taskFullDescription: string | null;
+    priority: number | null;
+    execPercentage: number | null;
+    taskOn: number | null;
+    mainPhaseId: number | null;
+    subPhaseId: number | null;
+    isMerig: number | null;
+    endTime: string | null;
+    isUserDeleted: boolean | null;
+    vacationCount: number | null;
+    requirmentId: number | null;
+}

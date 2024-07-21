@@ -1,0 +1,765 @@
+<div class="cost-center-movement">
+  <app-navigator [title]="title"></app-navigator>
+
+  <!-- inputs -->
+  <div class="container-fluid">
+    <div class="flex flex-wrap gap-4 align-items-end">
+
+      <div class="form-group" >
+        <label class="col-form-label"> {{ "costCenter" | translate }}</label>
+        <ng-select
+          class="w-full p-0"
+          placeholder="{{ 'Chose' | translate }}"
+          [(ngModel)]="data.filter.search_CostCenter"
+          name="costCenter"
+          (change)="RefreshData();"
+        >
+          <ng-option *ngFor="let user of load_CostCenter" [value]="user.id">{{
+            user.name
+          }}</ng-option>
+        </ng-select>
+      </div>
+
+      <div class="flex justify-content-center gap-3">
+        <button class="btn btn-primary" (click)="data.filter.enable = !data.filter.enable;CheckDate(null)" [translate]="'name'"
+        [translateParams]="{
+                  ar: 'فلترة بالوقت',
+                  en: 'Time Filter'
+                }"></button>
+      <div class="form-group timeInput" *ngIf="data.filter.enable">
+        <input placeholder="{{ 'Chose Date' | translate }}" [(ngModel)]="data.filter.date" type="text" (ngModelChange)="CheckDate($event)"
+          class="form-control" bsDaterangepicker #dpr="bsDaterangepicker" />
+      </div>
+      </div>
+
+
+
+      <div class="form-group">
+        <label class="col-form-label"> {{ "search" | translate }}</label>
+
+        <input type="text " class="w-full p-2 inputType"autocomplete="off" name="search" (keyup)="applyFilter($event)"/>
+      </div>
+
+
+      <div class="flex flex-wrap justify-content-center gap-3">
+        <button type="button" class="flex gap-1 btn btn-outline-secondary"(click)="getPrintdata('report')">
+          {{ "Print" | translate }}
+          <i class="fa-solid fa-print"></i>
+        </button>
+
+        <button
+          type="button"
+          class="flex gap-1 btn btn-success"
+          (click)="exportData()"
+        >
+          {{ "exportExcel" | translate }}
+        </button>
+      </div>
+    </div>
+
+    <!-- table -->
+    <div class="overflow-auto mt-4">
+      <table
+        mat-table
+        [dataSource]="projectsDataSource"
+        matSort
+        class="mat-elevation-z8 rounded-t-lg overflow-hidden w-max"
+      >
+        <ng-container matColumnDef="transactionDate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "Date" | translate }}</span>
+          </th>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            class="{{
+              element.status == 0
+                ? 'text-red-500 fw-bold'
+                : element.status == 5
+                ? 'text-warning-500 fw-bold'
+                : ''
+            }}"
+          >
+            {{ element.transactionDate }}
+          </td>
+          <td mat-footer-cell *matFooterCellDef class="bg-light">  {{ "total" | translate }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="notes">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "Statement" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.notes }}
+          </td>
+          <td mat-footer-cell *matFooterCellDef class="bg-light"></td>
+        </ng-container>
+
+        <ng-container matColumnDef="depit">
+          <th
+            class="bg-green-100"
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+          >
+            <span class="text-green-900">{{ "debtor" | translate }}</span>
+          </th>
+          <td
+            class="bg-green-100 text-green-950 text-center"
+            mat-cell
+            *matCellDef="let element"
+          >
+            {{ element.depit }}
+          </td>
+          <td mat-footer-cell *matFooterCellDef class="bg-light">
+            {{totalDepit | number:'1.2-2' }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="credit">
+          <th
+            class="bg-red-100"
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+          >
+            <span class="text-red-900">{{ "Creditor" | translate }}</span>
+          </th>
+          <td
+            class="bg-red-100 text-red-950 text-center"
+            mat-cell
+            *matCellDef="let element"
+          >
+            {{ element.credit | number:'1.2-2' }}
+          </td>
+          <td mat-footer-cell *matFooterCellDef class="bg-light">
+            {{totalCredit| number:'1.2-2'}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="balance">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "balance" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.balance | number:'1.2-2' }}
+          </td>
+          <td mat-footer-cell *matFooterCellDef class="bg-light"></td>
+        </ng-container>
+
+        <ng-container matColumnDef="typeName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "Type" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.typeName }}
+          </td>
+          <td mat-footer-cell *matFooterCellDef class="bg-light"></td>
+        </ng-container>
+
+        <ng-container matColumnDef="accountName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "account" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.accountName }}
+          </td>
+          <td mat-footer-cell *matFooterCellDef class="bg-light"></td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="projectDisplayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: projectDisplayedColumns"></tr>
+        <tr mat-footer-row *matFooterRowDef="projectDisplayedColumns"></tr>
+      </table>
+    </div>
+    <mat-paginator [pageSizeOptions]="[10, 25,projectsDataSource.data.length]"> </mat-paginator>
+  </div>
+
+  <div id="report" [ngStyle]="{ direction: lang == 'ar' ? 'rtl' : 'ltr' }" style="position: absolute;">
+    <!--Header-->
+    <div
+      class="report-header"
+      style="
+        display: flex;
+        align-items: center;
+        gap: 100px;
+        padding: 3px 0px;
+        margin-bottom: 20px;
+      "
+    >
+      <div class="headerNe-right-side">
+        <img
+        src="{{environmentPho}}"
+          alt="logo"
+          style="height: 200px; width: 200px; max-width: 200px; object-fit: fill"
+        />
+      </div>
+
+      <div class="headerNe-lefy-side" style="width: 100%">
+        <h1
+          style="
+            letter-spacing: 0.25px;
+            font-size: 23px;
+            margin: 0;
+            margin-bottom: 5px;
+          "
+        >
+        {{OrganizationData?.nameAr}}
+        </h1>
+        <h1
+          style="
+            letter-spacing: 0.25px;
+            font-size: 23px;
+            margin: 0;
+            margin-bottom: 5px;
+          "
+        >
+        {{OrganizationData?.nameEn}}
+        </h1>
+        <div class="line" style="position: relative; padding: 5px 0px 10px">
+          <span
+            style="
+              position: absolute;
+              right: 0;
+              width: 100%;
+              height: 2px;
+              background-color: #e5e5e5;
+              z-index: 1;
+            "
+          ></span>
+          <span
+            style="
+              position: absolute;
+              right: 0;
+              width: 70%;
+              height: 2px;
+              background-color: #ec1c24;
+              z-index: 2;
+            "
+          ></span>
+        </div>
+
+        <h1
+          style="
+            margin-bottom: 0;
+            font-size: 34px;
+            color: #0c8191;
+            margin-bottom: 0;
+            margin-top: 30px;
+            font-weight: 500;
+          "
+          [translate]="'name'"
+          [translateParams]="{
+            ar: 'حركة مراكز التكلفة ',
+            en: 'Cost center movement'
+          }"
+        ></h1>
+      </div>
+    </div>
+    <!--/Header-->
+
+    <div style="margin-bottom: 10px">
+      <p>
+        <span
+          [translate]="'name'"
+          [translateParams]="{
+            ar: 'التاريخ: ',
+            en: 'Date: '
+          }"
+        ></span>
+        <span> {{dateprint}} </span>
+      </p>
+    </div>
+    <div style="margin-bottom: 10px ;text-align: center;"  *ngIf="data.filter.enable == true">
+      <p>
+        <span
+          [translate]="'name'"
+          [translateParams]="{
+            ar: 'من تاريخ: ',
+            en: 'From Date: '
+          }"
+        ></span>
+        <span> {{data.filter.DateFrom_P}} </span>
+        <span
+          [translate]="'name'"
+          [translateParams]="{
+            ar: 'الي تاريخ: ',
+            en: 'To Date: '
+          }"
+        ></span>
+        <span> {{data.filter.DateTo_P}} </span>
+      </p>
+    </div>
+    <div class="headerNe-lefy-side" style="width: 100%">
+      <h1
+        style="
+          letter-spacing: 0.25px;
+          font-size: 23px;
+          margin: 0;
+          margin-bottom: 5px;
+        "
+      >
+      {{costCenterName}}
+      </h1>
+      </div>
+      <div style="margin-bottom: 10px ;text-align: center;" >
+      <p>
+        <span
+          [translate]="'name'"
+          [translateParams]="{
+            ar: ' الفرع: ',
+            en: 'Branch: '
+          }"
+        ></span>
+        <span> {{BranchName}} </span>
+ 
+      </p>
+    </div>
+    <!-- <div class="info" style="overflow: auto; margin-bottom: 20px">
+      <table
+        class="table table-bordered m-0"
+        style="
+          width: 100%;
+          color: white;
+          text-align: center;
+          vertical-align: middle;
+          min-width: max-content;
+        "
+      >
+        <tr>
+          <td
+            style="
+              padding-inline: 0px !important;
+              background-color: #f7f7f7;
+              font-size: 18px;
+              color: #21403f;
+              font-weight: 600;
+              border: 1px solid #dce0e4;
+            "
+            [translate]="'name'"
+            [translateParams]="{ ar: 'اسم الحساب', en: 'account name' }"
+          ></td>
+          <td
+            style="
+              padding-inline: 0px !important;
+              background-color: #f7f7f7;
+              font-size: 18px;
+              color: #21403f;
+              font-weight: 600;
+              border: 1px solid #dce0e4;
+            "
+            [translate]="'name'"
+            [translateParams]="{ ar: 'كود الحساب', en: 'Account code' }"
+          ></td>
+          <td
+            style="
+              line-height: 0 !important;
+              padding: 0px !important;
+              background-color: #f7f7f7;
+              font-size: 18px;
+              color: #21403f;
+              font-weight: 600;
+              border: 1px solid #dce0e4;
+            "
+            colspan="2"
+          >
+            <span
+              style="
+                border: none;
+                display: inline-block;
+                padding: 10px 0px;
+                width: 100%;
+
+                line-height: 24px;
+              "
+              [translate]="'name'"
+              [translateParams]="{ ar: 'الرصيد', en: 'Balance' }"
+            ></span>
+            <div
+              style="
+                width: 100%;
+                border-top: 1px solid #dce0e4;
+                margin: 0px !important;
+                padding: 0px !important;
+              "
+            >
+              <p
+                class="mb-0"
+                style="
+                  line-height: 24px;
+                  display: inline-block;
+                  width: 50%;
+                  border-bottom: 1px solid #dce0e4;
+                  text-align: center;
+                  padding: 7px 0px 10px;
+                  background-color: #f7f7f7;
+                  font-size: 18px;
+                  color: #21403f;
+                  font-weight: 600;
+                  border-inline: 1px solid #dce0e4;
+                  margin: 0px !important;
+                  margin-bottom: 0px !important;
+                "
+                [translate]="'name'"
+                [translateParams]="{ ar: 'مدين', en: 'debtor' }"
+              ></p>
+              <p
+                class="mb-0"
+                style="
+                  line-height: 24px;
+                  display: inline-block;
+                  width: 50%;
+                  border-bottom: 1px solid #dce0e4;
+                  text-align: center;
+                  padding: 7px 0px 10px;
+                  background-color: #f7f7f7;
+                  font-size: 18px;
+                  color: #21403f;
+                  font-weight: 600;
+                  margin: 0px !important;
+                  margin-bottom: 0px !important;
+                  border-inline-end: 1px solid #dce0e4;
+                "
+                [translate]="'name'"
+                [translateParams]="{ ar: 'دائن', en: 'Creditor' }"
+              ></p>
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+          <td
+            style="
+              width: 25%;
+              padding-inline: 0px !important;
+              background-color: #f7f7f7;
+              font-size: 18px;
+              color: #21403f;
+              font-weight: 500;
+              border: 1px solid #dce0e4;
+              padding: 10px 0px;
+            "
+          >
+            الاصول
+          </td>
+          <td
+            style="
+              width: 25%;
+              padding-inline: 0px !important;
+              background-color: #f7f7f7;
+              font-size: 18px;
+              color: #21403f;
+              font-weight: 500;
+              border: 1px solid #dce0e4;
+              padding: 10px 0px;
+            "
+          >
+            32
+          </td>
+          <td
+            style="
+              width: 25%;
+              padding-inline: 0px !important;
+              background-color: #f7f7f7;
+              font-size: 18px;
+              color: #21403f;
+              font-weight: 500;
+              border: 1px solid #dce0e4;
+              padding: 10px 0px;
+            "
+          >
+            awdad
+          </td>
+          <td
+            style="
+              width: 25%;
+              padding-inline: 0px !important;
+              background-color: #f7f7f7;
+              font-size: 18px;
+              color: #21403f;
+              font-weight: 500;
+              border: 1px solid #dce0e4;
+              padding: 10px 0px;
+            "
+          >
+            awdaw
+          </td>
+        </tr>
+      </table>
+    </div> -->
+
+    <div class="services" style="width: 100%; margin-bottom: 20px">
+      <div class="content">
+        <table style="text-align: center; vertical-align: middle; width: 100%">
+          <thead>
+            <td
+              style="
+                font-size: 16px;
+                background-color: #fff;
+                padding: 14px 4px;
+                text-align: center;
+                color: #272727;
+                word-wrap: break-word;
+                border-inline-start: 1px dashed #0c8191;
+                border: 1px dashed #272727;
+                font-weight: 600;
+              "
+            >{{ "Date" | translate }}</td>
+            <td
+              style="
+                font-size: 16px;
+                background-color: #fff;
+                padding: 14px 4px;
+                text-align: center;
+                color: #272727;
+                word-wrap: break-word;
+                border-inline-start: 1px dashed #0c8191;
+                border: 1px dashed #272727;
+                font-weight: 600;
+              "
+            >{{ "Statement" | translate }}</td>
+            <td
+              style="
+                font-size: 16px;
+                background-color: #f7f7f7;
+                padding: 14px 4px;
+                text-align: center;
+                color: #272727;
+                word-wrap: break-word;
+                border-inline-start: 1px dashed #0c8191;
+                border: 1px dashed #272727;
+                font-weight: 600;
+              "
+            >{{ "debtor" | translate }}</td>
+            <td
+              style="
+                font-size: 16px;
+                background-color: #f7f7f7;
+                padding: 14px 4px;
+                text-align: center;
+                color: #272727;
+                word-wrap: break-word;
+                border-inline-start: 1px dashed #0c8191;
+                border: 1px dashed #272727;
+                font-weight: 600;
+              "
+            >{{ "Creditor" | translate }}</td>
+            <td
+              style="
+                font-size: 16px;
+                background-color: #fff;
+                padding: 14px 4px;
+                text-align: center;
+                color: #272727;
+                word-wrap: break-word;
+                border-inline-start: 1px dashed #0c8191;
+                border: 1px dashed #272727;
+                font-weight: 600;
+              "
+            >{{ "balance" | translate }}</td>
+            <td
+              style="
+                font-size: 16px;
+                background-color: #fff;
+                padding: 14px 4px;
+                text-align: center;
+                color: #272727;
+                word-wrap: break-word;
+                border-inline-start: 1px dashed #0c8191;
+                border: 1px dashed #272727;
+                font-weight: 600;
+              "
+            >{{ "Type" | translate }}</td>
+            <td
+              style="
+                font-size: 16px;
+                background-color: #fff;
+                padding: 14px 4px;
+                text-align: center;
+                color: #272727;
+                word-wrap: break-word;
+                border-inline-start: 1px dashed #0c8191;
+                border: 1px dashed #272727;
+                font-weight: 600;
+              "
+            >{{ "account" | translate }}</td>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of printprojectsDataSource">
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  padding: 10px 0px;
+                  color: #272727;
+                  border-inline-start: 1px dashed #272727;
+                border: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+              >
+              {{item.transactionDate}}
+              </td>
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  padding: 10px 0px;
+                  color: #272727;
+                  border-inline-start: 1px dashed #272727;
+                border: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+              >
+              {{item.notes}}
+              </td>
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  padding: 10px 0px;
+                  color: #272727;
+                  border-inline-start: 1px dashed #272727;
+                border: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+              >
+              {{item.depit| number:'1.2-2'}}
+              </td>
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  padding: 10px 0px;
+                  color: #272727;
+                  border-inline-start: 1px dashed #272727;
+                border: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+              >
+              {{item.credit| number:'1.2-2'}}
+              </td>
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  padding: 10px 0px;
+                  color: #272727;
+                  border-inline-start: 1px dashed #272727;
+                border: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+              >
+              {{item.balance | number:'1.2-2' }}
+              </td>
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  padding: 10px 0px;
+                  color: #272727;
+                  border-inline-start: 1px dashed #272727;
+                border: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+              >
+              {{item.typeName}}
+              </td>
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  padding: 10px 0px;
+                  color: #272727;
+                  border-inline-start: 1px dashed #272727;
+                border: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+              >
+              {{item.accountName}}
+              </td>
+            </tr>
+            <tr>
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  padding: 10px 0px;
+                  color: #272727;
+                  border-inline: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+                colspan="2"
+              >{{ "total" | translate }}</td>
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  padding: 10px 0px;
+                  color: #272727;
+                  border-inline: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+              >
+
+            {{ totalDepitP | number:'1.2-2' }} </td>
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  padding: 10px 0px;
+                  color: #272727;
+                  border-inline: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+              >
+              {{ totalCreditP | number:'1.2-2' }}</td>
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  padding: 10px 0px;
+                  color: #272727;
+                  border-inline: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+              ></td>
+              <td
+              style="
+                background-color: #fff;
+                font-size: 15px;
+                font-weight: 500;
+                padding: 10px 0px;
+                color: #272727;
+                border-inline: 1px dashed #272727;
+                border-bottom: 1px dashed #272727;
+              "
+              ></td>
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  padding: 10px 0px;
+                  color: #272727;
+                  border-inline: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+              ></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

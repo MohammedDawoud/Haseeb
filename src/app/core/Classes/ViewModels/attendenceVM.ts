@@ -1,0 +1,131 @@
+export class AttendenceVM {
+    attendenceId: number;
+    empId: number | null;
+    realEmpId: number | null;
+    day: string | null;
+    checkTime: string | null;
+    checkOut: string | null;
+    checkIn: string | null;
+    isLate: boolean | null;
+    lateDuration: number | null;
+    isOverTime: boolean | null;
+    sameDate: string | null;
+    isDone: boolean | null;
+    branchId: number | null;
+    employeeName: string | null;
+    branchName: string | null;
+    attendenceDate: string | null;
+    attendenceHijriDate: string | null;
+    checkType: string | null;
+    isSearch: boolean | null;
+    startDate: string | null;
+    endDate: string | null;
+    shiftTime: number | null;
+    workStartDate: string | null;
+    endWorkDate: string | null;
+}
+
+export class AbsenceVM {
+    empNo: string | null;
+    e_FullName: string | null;
+    dayNOfWeek: string | null;
+    mdate: string | null;
+    e_BranchId: string | null;
+}
+
+export class LateVM {
+    empNo: string | null;
+    empId: string | null;
+    mAXSER: string | null;
+    fullName: string | null;
+    dawamId: string | null;
+    timeLeave1: string | null;
+    timeJoin1: string | null;
+    timeJoin2: string | null;
+    timeLeave2: string | null;
+    moveTimeIntLeave1: string | null;
+    moveTimeStringJoin1: string | null;
+    moveTimeIntJoin2: string | null;
+    moveTimeStringJoin2: string | null;
+    dateDay: string | null;
+    moveTimeIntJoin1: string | null;
+    moveTimeStringLeave1: string | null;
+    moveTimeIntLeave2: string | null;
+    moveTimeStringLeave2: string | null;
+    startWorkDate: string | null;
+    timeLeave1_1: string | null;
+    timeJoin1_1: string | null;
+    timeJoin2_1: string | null;
+    timeLeave2_1: string | null;
+    branchId: string | null;
+    photoUrl: string | null;
+    jobName: string | null;
+    location: string | null;
+    latitude: string | null;
+    longitude: string | null;
+    fromApplication: string | null;
+    comment: string | null;
+}
+
+export class Attendance_M_VM {
+    empNo: string | null;
+    empId: string | null;
+    fullName: string | null;
+    dawamId: string | null;
+    startWorkDate: string | null;
+    m_1: number | null;
+    m_2: number | null;
+    m_3: number | null;
+    m_4: number | null;
+    m_5: number | null;
+    m_6: number | null;
+    m_7: number | null;
+    m_8: number | null;
+    m_9: number | null;
+    m_10: number | null;
+    m_11: number | null;
+    m_12: number | null;
+    m_13: number | null;
+    m_14: number | null;
+    m_15: number | null;
+    m_16: number | null;
+    m_17: number | null;
+    m_18: number | null;
+    m_19: number | null;
+    m_20: number | null;
+    m_21: number | null;
+    m_22: number | null;
+    m_23: number | null;
+    m_24: number | null;
+    m_25: number | null;
+    m_26: number | null;
+    m_27: number | null;
+    m_28: number | null;
+    m_29: number | null;
+    m_30: number | null;
+    m_31: number | null;
+    m_Total: number | null;
+}
+
+export class Attendance_W_VM {
+    empNo: string | null;
+    empId: string | null;
+    fullName: string | null;
+    dawamId: string | null;
+    startWorkDate: string | null;
+    m_1: number | null;
+    m_2: number | null;
+    m_3: number | null;
+    m_4: number | null;
+    m_5: number | null;
+    m_6: number | null;
+    m_7: number | null;
+}
+
+export class NotLoggedOutVM {
+    empNo: string | null;
+    fullName: string | null;
+    branchName: string | null;
+    checkTime: string | null;
+    day: number | null;
+}

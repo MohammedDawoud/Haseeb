@@ -1,0 +1,1166 @@
+<div class="quotation-request">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-5 mb-4 mb-lg-0">
+        <div class="info text-center">
+          <img *ngIf="OrganizationData?.logoUrl"
+            src="{{environmentPho}}"
+            alt="logo"
+            class="d-inline-block mb-3 img-fluid"
+          />
+          <h2>{{OrganizationData?.nameAr}}</h2>
+          <h2>{{OrganizationData?.nameEn}}</h2>
+        </div>
+      </div>
+      <div class="col-lg-7">
+        <div class="services">
+          <tabset>
+            <tab (selectTab)="resetDataObj()" heading="{{ 'Request a general quote' | translate }}">
+              <mat-stepper linear #stepper>
+                <mat-step
+                  [stepControl]="contactFormGroup"
+                  [editable]="isEditable"
+                >
+                  <form [formGroup]="contactFormGroup">
+                    <ng-template matStepLabel>
+                      <span
+                        [translate]="'name'"
+                        [translateParams]="{
+                          ar: ' معلومات الاتصال',
+                          en: 'contact information'
+                        }"
+                      ></span
+                    ></ng-template>
+                    <div class="row">
+                      <div class="col-lg-6">
+                        <div class="form-input">
+                          <img
+                            src="/assets/images/ic_perm_identity_24px.png"
+                            alt="user icon"
+                          />
+
+                          <input
+                            type="text"
+                            name="user_name"
+                            placeholder="{{ 'fullName' | translate }}"
+                            formControlName="user_name"
+                            autocomplete="off"
+                          />
+                          <span
+                            class="text-danger"
+                            *ngIf="
+                              contactFormGroup.controls.user_name.hasError(
+                                'required'
+                              ) && contactFormGroup.controls.user_name.touched
+                            "
+                            >{{ "requiredError" | translate }}</span
+                          >
+                          <span
+                            class="text-danger"
+                            *ngIf="
+                              contactFormGroup.controls.user_name.hasError(
+                                'minlength'
+                              ) &&
+                              !contactFormGroup.controls.user_name.hasError(
+                                'required'
+                              ) &&
+                              contactFormGroup.controls.user_name.touched
+                            "
+                            >{{ "userNameError" | translate }}</span
+                          >
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6">
+                        <div class="form-input">
+                          <img
+                            src="/assets/images/mobile.svg"
+                            alt="user icon"
+                          />
+
+                          <input
+                            type="text"
+                            name="phone"
+                            placeholder="{{ 'Mobile Number' | translate }}"
+                            autocomplete="off"
+                            formControlName="phone"
+                          />
+                          <span
+                            class="text-danger"
+                            *ngIf="
+                              contactFormGroup.controls.phone.hasError(
+                                'required'
+                              ) && contactFormGroup.controls.phone.touched
+                            "
+                            >{{ "requiredError" | translate }}</span
+                          >
+                          <span
+                            class="text-danger"
+                            *ngIf="
+                              (contactFormGroup.controls.phone.hasError(
+                                'minlength'
+                              ) ||
+                                contactFormGroup.controls.phone.hasError(
+                                  'maxlength'
+                                )) &&
+                              !contactFormGroup.controls.phone.hasError(
+                                'required'
+                              ) &&
+                              contactFormGroup.controls.phone.touched
+                            "
+                            >{{ "phoneError" | translate }}</span
+                          >
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6">
+                        <div class="form-input">
+                          <img
+                            src="/assets/images/ic_mail_outline_24px.png"
+                            alt="user icon"
+                          />
+
+                          <input
+                            type="text"
+                            name="user_name"
+                            placeholder="{{ 'email' | translate }}"
+                            autocomplete="off"
+                            formControlName="email"
+                          />
+                          <span
+                            class="text-danger"
+                            *ngIf="
+                              contactFormGroup.controls.email.hasError(
+                                'required'
+                              ) && contactFormGroup.controls.email.touched
+                            "
+                            >{{ "requiredError" | translate }}</span
+                          >
+                          <span
+                            class="text-danger"
+                            *ngIf="
+                              contactFormGroup.controls.email.hasError(
+                                'minlength'
+                              ) &&
+                              !contactFormGroup.controls.email.hasError(
+                                'required'
+                              ) &&
+                              contactFormGroup.controls.email.touched
+                            "
+                            >{{ "emailError" | translate }}</span
+                          >
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6">
+                        <div class="form-input without-icon">
+                          <select id="branchid" class="form-select" aria-label="Default select example"
+                          formControlName="branchid">
+                            <option *ngFor="let c of ServiceBranches" [ngValue]="c.id">{{c.name}}</option>
+                          </select>
+                          <span
+                            class="text-danger"
+                            *ngIf="
+                              contactFormGroup.controls.branchid.hasError(
+                                'required'
+                              ) && contactFormGroup.controls.branchid.touched
+                            "
+                            >{{ "requiredError" | translate }} {{ 'Chose' | translate }} {{ 'Branch' | translate }}</span
+                          >
+                        </div>
+                      </div>
+
+                      <div style="text-align: end">
+                        <button
+                          mat-button
+                          matStepperNext
+                          [disabled]="contactFormGroup.invalid"
+                          [translate]="'name'"
+                          [translateParams]="{ ar: 'التالي', en: 'Next' }"
+                        ></button>
+                      </div>
+                    </div>
+                  </form>
+                </mat-step>
+                <mat-step
+                  [stepControl]="earthInfoFormGroup"
+                  [editable]="isEditable"
+                >
+                  <form [formGroup]="earthInfoFormGroup">
+                    <ng-template matStepLabel>
+                      <span
+                        [translate]="'name'"
+                        [translateParams]="{
+                          ar: ' معلومات الأرض',
+                          en: '  Earth information'
+                        }"
+                      ></span
+                    ></ng-template>
+
+                    <div class="row">
+                      <div class="col-lg-6">
+                        <div class="form-input without-icon">
+                          <input
+                            type="text"
+                            name="land_area"
+                            placeholder="{{ 'land_area' | translate }}"
+                            autocomplete="off"
+                            formControlName="land_area"
+                          />
+                          <span
+                            class="text-danger"
+                            *ngIf="
+                              earthInfoFormGroup.controls.land_area.hasError(
+                                'required'
+                              ) && earthInfoFormGroup.controls.land_area.touched
+                            "
+                            >{{ "requiredError" | translate }}</span
+                          >
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6">
+                        <div class="form-input without-icon">
+                          <input
+                            type="text"
+                            name="number_of_streets"
+                            placeholder="{{ 'number_of_streets' | translate }}"
+                            autocomplete="off"
+                            formControlName="number_of_streets"
+                          />
+                          <span
+                            class="text-danger"
+                            *ngIf="
+                              earthInfoFormGroup.controls.number_of_streets.hasError(
+                                'required'
+                              ) &&
+                              earthInfoFormGroup.controls.number_of_streets
+                                .touched
+                            "
+                            >{{ "requiredError" | translate }}</span
+                          >
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6">
+                        <div class="form-input without-icon">
+                          <input
+                            type="text"
+                            name="height"
+                            placeholder="{{ 'height' | translate }}"
+                            autocomplete="off"
+                            formControlName="height"
+                          />
+                          <span
+                            class="text-danger"
+                            *ngIf="
+                              earthInfoFormGroup.controls.height.hasError(
+                                'required'
+                              ) && earthInfoFormGroup.controls.height.touched
+                            "
+                            >{{ "requiredError" | translate }}</span
+                          >
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6">
+                        <div class="form-input without-icon">
+                          <input
+                            type="text"
+                            name="width"
+                            placeholder="{{ 'width' | translate }}"
+                            autocomplete="off"
+                            formControlName="width"
+                          />
+                          <span
+                            class="text-danger"
+                            *ngIf="
+                              earthInfoFormGroup.controls.width.hasError(
+                                'required'
+                              ) && earthInfoFormGroup.controls.width.touched
+                            "
+                            >{{ "requiredError" | translate }}</span
+                          >
+                        </div>
+                      </div>
+                      <div
+                        class="d-flex align-items-center justify-content-between"
+                      >
+                        <button
+                          mat-button
+                          matStepperPrevious
+                          [translate]="'name'"
+                          [translateParams]="{ ar: 'السابق', en: 'Back' }"
+                        ></button>
+                        <button
+                          mat-button
+                          matStepperNext
+                          [disabled]="earthInfoFormGroup.invalid"
+                          [translate]="'name'"
+                          [translateParams]="{ ar: 'التالي', en: 'Next' }"
+                        ></button>
+                      </div>
+                    </div>
+                  </form>
+                </mat-step>
+                <mat-step>
+                  <form [formGroup]="requestServiceFormGroup">
+                    <ng-template matStepLabel>
+                      <span
+                        [translate]="'name'"
+                        [translateParams]="{
+                          ar: ' الخدمة المطلوبة',
+                          en: '  requested service'
+                        }"
+                      >
+                      </span>
+                    </ng-template>
+                    <div class="row">
+                      <div class="col-12">
+                        <div class="form-input without-icon">
+                          <textarea
+                            name="service"
+                            placeholder="{{ 'service' | translate }}"
+                            formControlName="service"
+                            autocomplete="off"
+                          ></textarea>
+                          <span
+                            class="text-danger"
+                            *ngIf="
+                              requestServiceFormGroup.controls.service.hasError(
+                                'required'
+                              ) &&
+                              requestServiceFormGroup.controls.service.touched
+                            "
+                            >{{ "requiredError" | translate }}</span
+                          >
+                        </div>
+                      </div>
+
+                      <div class="row qr m-0 p-0 position-relative">
+                        <div class="col-7 col-lg-8 mb-0">
+                          <div class="form-input">
+                            <img
+                              src="/assets/images/qr-code-scan.png"
+                              alt="qr-code icon"
+                            />
+
+                            <input
+                              type="text"
+                              name="parCode"
+                              placeholder="{{ 'code' | translate }}"
+                              formControlName="parCode"
+                              autocomplete="off"
+                            />
+                          </div>
+                        </div>
+                        <div class="col-5 col-lg-4 mb-0 p-0 p-sm-2">
+                          <div class="qrcode d-flex align-items-center">
+                            <div class="qrcode-value">
+                              <span>{{ qrCodeCheckValue[0] }}</span>
+                              <span>{{ qrCodeCheckValue[1] }}</span>
+                              <span>{{ qrCodeCheckValue[2] }}</span>
+                              <span>{{ qrCodeCheckValue[3] }}</span>
+                            </div>
+                            <i
+                              style="cursor: pointer"
+                              class="fa fa-refresh"
+                              (click)="
+                                refreshQrCode();
+                                requestServiceFormGroup.controls.parCode.reset()
+                              "
+                            ></i>
+                          </div>
+                        </div>
+
+                        <span
+                          class="text-danger"
+                          style="bottom: 4px"
+                          *ngIf="
+                            !requestServiceFormGroup.controls.parCode.value &&
+                            requestServiceFormGroup.controls.parCode.touched
+                          "
+                          >{{ "requiredError" | translate }}</span
+                        >
+                        <span
+                          class="text-danger"
+                          style="bottom: 4px"
+                          *ngIf="
+                            requestServiceFormGroup.controls.parCode.value !=
+                              qrCodeCheckValue &&
+                            requestServiceFormGroup.controls.parCode.touched &&
+                            requestServiceFormGroup.controls.parCode.dirty
+                          "
+                          >{{ "codeError" | translate }}</span
+                        >
+                      </div>
+                      <div
+                        class="d-flex align-items-center justify-content-between mt-3"
+                      >
+                        <button
+                          mat-button
+                          matStepperPrevious
+                          [translate]="'name'"
+                          [translateParams]="{ ar: 'السابق', en: 'Back' }"
+                        ></button>
+                        <div>
+                          <!-- <button
+                            mat-button
+                            (click)="stepper.reset()"
+                            [translate]="'name'"
+                            [translateParams]="{ ar: 'اعادة ضبط', en: 'Reset' }"
+                          ></button> -->
+                          <button
+                            class="request-btn"
+                            mat-button
+                            [disabled]=" disableButtonSave_req ||
+                              requestServiceFormGroup.invalid ||
+                              requestServiceFormGroup.controls.parCode.value !=
+                                qrCodeCheckValue
+                            "
+                            (click)="requestPrice(1)"
+                            [translate]="'name'"
+                            [translateParams]="{ ar: 'طلب', en: 'Request' }"
+                          ></button>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </mat-step>
+              </mat-stepper>
+            </tab>
+
+            <tab (selectTab)="resetDataObj()" heading="{{ 'Request a design quote' | translate }}">
+              <mat-stepper linear #stepper2>
+                <mat-step
+                  [stepControl]="contactFormGroup"
+                  [editable]="isEditable"
+                >
+                  <form [formGroup]="contactFormGroup">
+                    <ng-template matStepLabel>
+                      <span
+                        [translate]="'name'"
+                        [translateParams]="{
+                          ar: ' معلومات الاتصال',
+                          en: 'contact information'
+                        }"
+                      ></span
+                    ></ng-template>
+                    <div class="row">
+                      <div class="col-lg-6">
+                        <div class="form-input">
+                          <img
+                            src="/assets/images/ic_perm_identity_24px.png"
+                            alt="user icon"
+                          />
+
+                          <input
+                            type="text"
+                            name="user_name"
+                            placeholder="{{ 'fullName' | translate }}"
+                            formControlName="user_name"
+                            autocomplete="off"
+                          />
+                          <span
+                            class="text-danger"
+                            *ngIf="
+                              contactFormGroup.controls.user_name.hasError(
+                                'required'
+                              ) && contactFormGroup.controls.user_name.touched
+                            "
+                            >{{ "requiredError" | translate }}</span
+                          >
+                          <span
+                            class="text-danger"
+                            *ngIf="
+                              contactFormGroup.controls.user_name.hasError(
+                                'minlength'
+                              ) &&
+                              !contactFormGroup.controls.user_name.hasError(
+                                'required'
+                              ) &&
+                              contactFormGroup.controls.user_name.touched
+                            "
+                            >{{ "userNameError" | translate }}</span
+                          >
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6">
+                        <div class="form-input">
+                          <img
+                            src="/assets/images/mobile.svg"
+                            alt="user icon"
+                          />
+
+                          <input
+                            type="text"
+                            name="phone"
+                            placeholder="{{ 'Mobile Number' | translate }}"
+                            autocomplete="off"
+                            formControlName="phone"
+                          />
+                          <span
+                            class="text-danger"
+                            *ngIf="
+                              contactFormGroup.controls.phone.hasError(
+                                'required'
+                              ) && contactFormGroup.controls.phone.touched
+                            "
+                            >{{ "requiredError" | translate }}</span
+                          >
+                          <span
+                            class="text-danger"
+                            *ngIf="
+                              (contactFormGroup.controls.phone.hasError(
+                                'minlength'
+                              ) ||
+                                contactFormGroup.controls.phone.hasError(
+                                  'maxlength'
+                                )) &&
+                              !contactFormGroup.controls.phone.hasError(
+                                'required'
+                              ) &&
+                              contactFormGroup.controls.phone.touched
+                            "
+                            >{{ "phoneError" | translate }}</span
+                          >
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6">
+                        <div class="form-input">
+                          <img
+                            src="/assets/images/ic_mail_outline_24px.png"
+                            alt="user icon"
+                          />
+
+                          <input
+                            type="text"
+                            name="user_name"
+                            placeholder="{{ 'email' | translate }}"
+                            autocomplete="off"
+                            formControlName="email"
+                          />
+                          <span
+                            class="text-danger"
+                            *ngIf="
+                              contactFormGroup.controls.email.hasError(
+                                'required'
+                              ) && contactFormGroup.controls.email.touched
+                            "
+                            >{{ "requiredError" | translate }}</span
+                          >
+                          <span
+                            class="text-danger"
+                            *ngIf="
+                              contactFormGroup.controls.email.hasError(
+                                'minlength'
+                              ) &&
+                              !contactFormGroup.controls.email.hasError(
+                                'required'
+                              ) &&
+                              contactFormGroup.controls.email.touched
+                            "
+                            >{{ "emailError" | translate }}</span
+                          >
+                        </div>
+                      </div>
+
+
+                      <div class="col-lg-6">
+                        <div class="form-input without-icon">
+                          <select id="branchid" class="form-select" aria-label="Default select example"
+                          formControlName="branchid">
+                            <option *ngFor="let c of ServiceBranches" [ngValue]="c.id">{{c.name}}</option>
+                          </select>
+                          <span
+                            class="text-danger"
+                            *ngIf="
+                              contactFormGroup.controls.branchid.hasError(
+                                'required'
+                              ) && contactFormGroup.controls.branchid.touched
+                            "
+                            >{{ "requiredError" | translate }} {{ 'Chose' | translate }} {{ 'Branch' | translate }}</span
+                          >
+                        </div>
+                      </div>
+
+                      <div style="text-align: end">
+                        <button
+                          mat-button
+                          matStepperNext
+                          [disabled]="contactFormGroup.invalid"
+                          [translate]="'name'"
+                          [translateParams]="{ ar: 'التالي', en: 'Next' }"
+                        ></button>
+                      </div>
+                    </div>
+                  </form>
+                </mat-step>
+                <mat-step
+                  [stepControl]="earthInfoFormGroup"
+                  [editable]="isEditable"
+                >
+                  <form [formGroup]="earthInfoFormGroup">
+                    <ng-template matStepLabel>
+                      <span
+                        [translate]="'name'"
+                        [translateParams]="{
+                          ar: ' معلومات الأرض',
+                          en: '  Earth information'
+                        }"
+                      ></span
+                    ></ng-template>
+
+                    <div class="row">
+                      <div class="col-lg-6">
+                        <div class="form-input without-icon">
+                          <input
+                            type="text"
+                            name="land_area"
+                            placeholder="{{ 'land_area' | translate }}"
+                            autocomplete="off"
+                            formControlName="land_area"
+                          />
+                          <span
+                            class="text-danger"
+                            *ngIf="
+                              earthInfoFormGroup.controls.land_area.hasError(
+                                'required'
+                              ) && earthInfoFormGroup.controls.land_area.touched
+                            "
+                            >{{ "requiredError" | translate }}</span
+                          >
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6">
+                        <div class="form-input without-icon">
+                          <input
+                            type="text"
+                            name="number_of_streets"
+                            placeholder="{{ 'number_of_streets' | translate }}"
+                            autocomplete="off"
+                            formControlName="number_of_streets"
+                          />
+                          <span
+                            class="text-danger"
+                            *ngIf="
+                              earthInfoFormGroup.controls.number_of_streets.hasError(
+                                'required'
+                              ) &&
+                              earthInfoFormGroup.controls.number_of_streets
+                                .touched
+                            "
+                            >{{ "requiredError" | translate }}</span
+                          >
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6">
+                        <div class="form-input without-icon">
+                          <input
+                            type="text"
+                            name="height"
+                            placeholder="{{ 'height' | translate }}"
+                            autocomplete="off"
+                            formControlName="height"
+                          />
+                          <span
+                            class="text-danger"
+                            *ngIf="
+                              earthInfoFormGroup.controls.height.hasError(
+                                'required'
+                              ) && earthInfoFormGroup.controls.height.touched
+                            "
+                            >{{ "requiredError" | translate }}</span
+                          >
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6">
+                        <div class="form-input without-icon">
+                          <input
+                            type="text"
+                            name="width"
+                            placeholder="{{ 'width' | translate }}"
+                            autocomplete="off"
+                            formControlName="width"
+                          />
+                          <span
+                            class="text-danger"
+                            *ngIf="
+                              earthInfoFormGroup.controls.width.hasError(
+                                'required'
+                              ) && earthInfoFormGroup.controls.width.touched
+                            "
+                            >{{ "requiredError" | translate }}</span
+                          >
+                        </div>
+                      </div>
+                      <div
+                        class="d-flex align-items-center justify-content-between"
+                      >
+                        <button
+                          mat-button
+                          matStepperPrevious
+                          [translate]="'name'"
+                          [translateParams]="{ ar: 'السابق', en: 'Back' }"
+                        ></button>
+                        <button
+                          mat-button
+                          matStepperNext
+                          [disabled]="earthInfoFormGroup.invalid"
+                          [translate]="'name'"
+                          [translateParams]="{ ar: 'التالي', en: 'Next' }"
+                        ></button>
+                      </div>
+                    </div>
+                  </form>
+                </mat-step>
+                <mat-step>
+                  <form [formGroup]="serviceDetailsFormGroup">
+                    <ng-template matStepLabel>
+                      <span
+                        [translate]="'name'"
+                        [translateParams]="{
+                          ar: ' الخدمة المطلوبة',
+                          en: '  requested service'
+                        }"
+                      >
+                      </span>
+                    </ng-template>
+                    <div class="row">
+                      <div>
+                        <h4>{{ "basement" | translate }}</h4>
+                        <div class="col-12">
+                          <div class="form-input without-icon">
+                            <ng-select
+                              placeholder="{{ 'basement' | translate }}"
+                              [multiple]="true"
+                              [clearable]="true"
+                              formControlName="basement"
+                              name="basement"
+                            >
+                              <ng-option
+                                *ngFor="let item of basementOptions"
+                                [value]="item.value"
+                                [translate]="'name'"
+                                [translateParams]="{
+                                  ar: item.title.ar,
+                                  en: item.title.en
+                                }"
+                              ></ng-option>
+                            </ng-select>
+                          </div>
+                        </div>
+                        <div class="col-12">
+                          <div class="form-input without-icon">
+                            <input
+                              type="text"
+                              name="basementInfo"
+                              placeholder="{{
+                                'other_information' | translate
+                              }}"
+                              formControlName="basementInfo"
+                              autocomplete="off"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div>
+                        <h4>{{ "Ground_floor" | translate }}</h4>
+                        <div class="col-12">
+                          <div class="form-input without-icon">
+                            <ng-select
+                              placeholder="{{ 'Ground_floor' | translate }}"
+                              [multiple]="true"
+                              [clearable]="true"
+                              formControlName="Ground_floor"
+                              name="Ground_floor"
+                            >
+                              <ng-option
+                                *ngFor="let item of groundFloorOptions"
+                                [value]="item.value"
+                                [translate]="'name'"
+                                [translateParams]="{
+                                  ar: item.title.ar,
+                                  en: item.title.en
+                                }"
+                              ></ng-option>
+                            </ng-select>
+                          </div>
+                        </div>
+                        <div class="row m-0 p-0">
+                          <div class="col-lg-6">
+                            <div class="form-input without-icon">
+                              <input
+                                type="text"
+                                name="roomNumbers"
+                                placeholder="{{ 'roomNumbers' | translate }}"
+                                formControlName="roomNumbers"
+                                autocomplete="off"
+                              />
+                            </div>
+                          </div>
+                          <div class="col-lg-6">
+                            <div class="form-input without-icon">
+                              <input
+                                type="text"
+                                name="toiltNumbers"
+                                placeholder="{{ 'toiltNumbers' | translate }}"
+                                formControlName="toiltNumbers"
+                                autocomplete="off"
+                              />
+                            </div>
+                          </div>
+                          <div class="col-12">
+                            <div class="form-input without-icon">
+                              <input
+                                type="text"
+                                name="Ground_floor_info"
+                                placeholder="{{
+                                  'other_information' | translate
+                                }}"
+                                formControlName="Ground_floor_info"
+                                autocomplete="off"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div>
+                        <h4>{{ "First_round" | translate }}</h4>
+                        <div class="col-12">
+                          <div class="form-input without-icon">
+                            <ng-select
+                              placeholder="{{ 'First_round' | translate }}"
+                              [multiple]="true"
+                              [clearable]="true"
+                              formControlName="First_round"
+                              name="First_round"
+                            >
+                              <ng-option
+                                *ngFor="let item of firstFloorOptions"
+                                [value]="item.value"
+                                [translate]="'name'"
+                                [translateParams]="{
+                                  ar: item.title.ar,
+                                  en: item.title.en
+                                }"
+                              ></ng-option>
+                            </ng-select>
+                          </div>
+                        </div>
+                        <div class="col-12">
+                          <div class="form-input without-icon">
+                            <input
+                              type="text"
+                              name="First_round_if_Room_and_bathroom"
+                              placeholder="{{ 'choice1' | translate }}"
+                              formControlName="First_round_if_Room_and_bathroom"
+                              autocomplete="off"
+                            />
+                          </div>
+                        </div>
+                        <div class="col-12">
+                          <div class="form-input without-icon">
+                            <input
+                              type="text"
+                              name="First_round_if_oneRoom"
+                              placeholder="{{ 'choice2' | translate }}"
+                              formControlName="First_round_if_oneRoom"
+                              autocomplete="off"
+                            />
+                          </div>
+                        </div>
+                        <div class="col-12">
+                          <div class="form-input without-icon">
+                            <input
+                              type="text"
+                              name="First_round_info"
+                              placeholder="{{
+                                'other_information' | translate
+                              }}"
+                              formControlName="First_round_info"
+                              autocomplete="off"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div>
+                        <h4>{{ "surface_extension" | translate }}</h4>
+                        <div class="col-12">
+                          <div class="form-input without-icon">
+                            <ng-select
+                              placeholder="{{
+                                'surface_extension' | translate
+                              }}"
+                              [multiple]="true"
+                              [clearable]="true"
+                              formControlName="surface_extension"
+                              name="surface_extension"
+                            >
+                              <ng-option
+                                *ngFor="let item of surfaceExtensionOptions"
+                                [value]="item.value"
+                                [translate]="'name'"
+                                [translateParams]="{
+                                  ar: item.title.ar,
+                                  en: item.title.en
+                                }"
+                              ></ng-option>
+                            </ng-select>
+                          </div>
+                        </div>
+                        <div class="col-12">
+                          <div class="form-input without-icon">
+                            <input
+                              type="text"
+                              name="surface_extension_info"
+                              placeholder="{{
+                                'other_information' | translate
+                              }}"
+                              formControlName="surface_extension_info"
+                              autocomplete="off"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div>
+                        <h4>{{ "garden" | translate }}</h4>
+                        <div class="col-12">
+                          <div class="form-input without-icon">
+                            <ng-select
+                              placeholder="{{ 'garden' | translate }}"
+                              [multiple]="true"
+                              [clearable]="true"
+                              formControlName="garden"
+                              name="garden"
+                            >
+                              <ng-option
+                                *ngFor="let item of gardenOptions"
+                                [value]="item.value"
+                                [translate]="'name'"
+                                [translateParams]="{
+                                  ar: item.title.ar,
+                                  en: item.title.en
+                                }"
+                              ></ng-option>
+                            </ng-select>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div>
+                        <h4>{{ "external_supplement" | translate }}</h4>
+                        <div class="col-12">
+                          <div class="form-input without-icon">
+                            <ng-select
+                              placeholder="{{
+                                'external_supplement' | translate
+                              }}"
+                              [multiple]="false"
+                              [clearable]="true"
+                              formControlName="external_supplement"
+                              name="external_supplement"
+                            >
+                              <ng-option
+                                *ngFor="let item of externalSupplementOptions"
+                                [value]="item.value"
+                                [translate]="'name'"
+                                [translateParams]="{
+                                  ar: item.title.ar,
+                                  en: item.title.en
+                                }"
+                              ></ng-option>
+                            </ng-select>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div>
+                        <h4>{{ "parking" | translate }}</h4>
+                        <div class="col-12">
+                          <div class="form-input without-icon">
+                            <ng-select
+                              placeholder="{{ 'parking' | translate }}"
+                              [multiple]="false"
+                              [clearable]="true"
+                              formControlName="parking"
+                              name="parking"
+                            >
+                              <ng-option
+                                *ngFor="let item of ParkingOptions"
+                                [value]="item.value"
+                                [translate]="'name'"
+                                [translateParams]="{
+                                  ar: item.title.ar,
+                                  en: item.title.en
+                                }"
+                              ></ng-option>
+                            </ng-select>
+                          </div>
+                        </div>
+                        <div class="col-12">
+                          <div class="form-input without-icon">
+                            <input
+                              type="text"
+                              name="parkingInfo"
+                              placeholder="{{
+                                'the_choice_is_more' | translate
+                              }}"
+                              formControlName="parkingInfo"
+                              autocomplete="off"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div>
+                        <h4>{{ "Driver_room" | translate }}</h4>
+                        <div class="col-12">
+                          <div class="form-input without-icon">
+                            <ng-select
+                              placeholder="{{ 'Driver_room' | translate }}"
+                              [multiple]="false"
+                              [clearable]="true"
+                              formControlName="Driver_room"
+                              name="Driver_room"
+                            >
+                              <ng-option
+                                *ngFor="let item of driverRoomOptions"
+                                [value]="item.value"
+                                [translate]="'name'"
+                                [translateParams]="{
+                                  ar: item.title.ar,
+                                  en: item.title.en
+                                }"
+                              ></ng-option>
+                            </ng-select>
+                          </div>
+                        </div>
+                        <div class="col-12">
+                          <div class="form-input without-icon">
+                            <input
+                              type="text"
+                              name="Driver_room_info"
+                              placeholder="{{
+                                'the_choice_is_more' | translate
+                              }}"
+                              formControlName="Driver_room_info"
+                              autocomplete="off"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-12">
+                        <div class="form-input without-icon">
+                          <textarea
+                            name="more_info"
+                            placeholder="{{ 'more_info' | translate }}"
+                            formControlName="more_info"
+                            autocomplete="off"
+                          ></textarea>
+                        </div>
+                      </div>
+
+                      <div class="row qr m-0 p-0 position-relative">
+                        <div class="col-7 col-lg-8 mb-0">
+                          <div class="form-input">
+                            <img
+                              src="/assets/images/qr-code-scan.png"
+                              alt="qr-code icon"
+                            />
+
+                            <input
+                              type="text"
+                              name="parCode"
+                              placeholder="{{ 'code' | translate }}"
+                              formControlName="parCode"
+                              autocomplete="off"
+                            />
+                          </div>
+                        </div>
+                        <div class="col-5 col-lg-4 mb-0 p-0 p-sm-2">
+                          <div class="qrcode d-flex align-items-center">
+                            <div class="qrcode-value">
+                              <span>{{ qrCodeCheckValue2[0] }}</span>
+                              <span>{{ qrCodeCheckValue2[1] }}</span>
+                              <span>{{ qrCodeCheckValue2[2] }}</span>
+                              <span>{{ qrCodeCheckValue2[3] }}</span>
+                            </div>
+                            <i
+                              style="cursor: pointer"
+                              class="fa fa-refresh"
+                              (click)="
+                                refreshQrCode('2');
+                                requestServiceFormGroup.controls.parCode.reset()
+                              "
+                            ></i>
+                          </div>
+                        </div>
+
+                        <span
+                          class="text-danger"
+                          style="bottom: 4px"
+                          *ngIf="
+                            !requestServiceFormGroup.controls.parCode.value &&
+                            requestServiceFormGroup.controls.parCode.touched
+                          "
+                          >{{ "requiredError" | translate }}</span
+                        >
+                        <span
+                          class="text-danger"
+                          style="bottom: 4px"
+                          *ngIf="
+                            requestServiceFormGroup.controls.parCode.value !=
+                              qrCodeCheckValue2 &&
+                            requestServiceFormGroup.controls.parCode.touched &&
+                            requestServiceFormGroup.controls.parCode.dirty
+                          "
+                          >{{ "codeError" | translate }}</span
+                        >
+                      </div>
+
+                      <div
+                        class="d-flex align-items-center justify-content-between mt-3"
+                      >
+                        <button
+                          mat-button
+                          matStepperPrevious
+                          [translate]="'name'"
+                          [translateParams]="{ ar: 'السابق', en: 'Back' }"
+                        ></button>
+                        <div>
+                          <button
+                            class="request-btn"
+                            mat-button
+                            [disabled]=" disableButtonSave_req ||
+                              serviceDetailsFormGroup.invalid ||
+                              serviceDetailsFormGroup.controls.parCode.value !=
+                                qrCodeCheckValue2
+                            "
+                            (click)="requestPrice(2)"
+                            [translate]="'name'"
+                            [translateParams]="{ ar: 'طلب', en: 'Request' }"
+                          ></button>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </mat-step>
+              </mat-stepper>
+            </tab>
+          </tabset>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,724 @@
+<div class="suppliersP">
+  <app-navigator [title]="title"></app-navigator>
+
+  <!-- inputs -->
+  <div class="container-fluid">
+    <div class="flex flex-wrap gap-4 align-items-end">
+
+<!--
+      <div class="form-group">
+
+
+      </div> -->
+      <div class="w-fit">
+        <input class="form-control" (keyup)="applySuppliersFilter($event)" placeholder="{{'search' | translate}}" #input />
+      </div>
+
+      <div class="flex gap-3 justify-content-center">
+        <button
+        type="button"  class="flex gap-1 btn btn-primary"
+        (click)="open(AddNewResourceModal, null, 'addsupplier')">
+        {{ "AddNewResource" | translate }}
+      </button>
+      </div>
+
+
+
+      <div class="flex gap-3 justify-content-center">
+        <button type="button" class="flex gap-1 btn btn-success" (click)="getPrintdata('report')">
+          {{ "Print" | translate }}
+          <i class="fa-solid fa-print"></i>
+        </button>
+
+        <button type="button" class="flex gap-1 btn btn-outline-secondary"(click)="exportData()">
+          {{ "exportExcel" | translate }}
+        </button>
+      </div>
+    </div>
+
+    <!-- table -->
+    <div class="overflow-auto mt-4">
+      <table
+        mat-table
+        [dataSource]="dataSource"
+        matSort
+        class="mat-elevation-z8 rounded-t-lg overflow-hidden w-max"
+      >
+        <ng-container matColumnDef="nameAr">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "ResourceName_ar" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.nameAr }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="nameEn">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "ResourceName_en" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.nameEn }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="taxNo">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "Commerial Registration" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.taxNo }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="phoneNo">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "thePhone" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.phoneNo }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="cityName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "Region" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.cityName }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="compAddress">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "Address" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.compAddress }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="operations">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "operations" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <div class="child-btns">
+              <span class="dtr-data">
+
+                <button
+                class="p-2 bg-orange-100 hover:bg-orange-500 rounded-lg duration-300 hover:text-white w-10"
+                (click)="open(AddNewResourceModal, element, 'editsupplier')"
+              >
+                <i class="fa-regular fa-pen-to-square"></i>
+              </button>
+
+              <button
+                class="p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white w-10 me-3"
+                (click)="open(deletepplier, element, 'deletesupplier')"
+              >
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+              </span>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="suppliersDisplayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: suppliersDisplayedColumns"></tr>
+      </table>
+    </div>
+    <mat-paginator [pageSizeOptions]="[10, 25]"> </mat-paginator>
+  </div>
+
+
+  <div id="report" [ngStyle]="{ direction: lang == 'ar' ? 'rtl' : 'ltr' }" style="position: absolute;">
+    <!--Header-->
+    <div
+      class="report-header"
+      style="
+        display: flex;
+        align-items: center;
+        gap: 100px;
+        padding: 3px 0px;
+        margin-bottom: 20px;
+      "
+    >
+      <div class="headerNe-right-side">
+        <img
+        src="{{environmentPho}}"
+          alt="logo"
+          style="height: 200px; width: 200px; max-width: 200px; object-fit: fill"
+        />
+      </div>
+
+      <div class="headerNe-lefy-side" style="width: 100%">
+        <h1
+          style="
+            letter-spacing: 0.25px;
+            font-size: 23px;
+            margin: 0;
+            margin-bottom: 5px;
+          "
+        >
+        {{OrganizationData?.nameAr}}
+        </h1>
+        <h1
+          style="
+            letter-spacing: 0.25px;
+            font-size: 23px;
+            margin: 0;
+            margin-bottom: 5px;
+          "
+        >
+        {{OrganizationData?.nameEn}}
+        </h1>
+        <div class="line" style="position: relative; padding: 5px 0px 10px">
+          <span
+            style="
+              position: absolute;
+              right: 0;
+              width: 100%;
+              height: 2px;
+              background-color: #e5e5e5;
+              z-index: 1;
+            "
+          ></span>
+          <span
+            style="
+              position: absolute;
+              right: 0;
+              width: 70%;
+              height: 2px;
+              background-color: #ec1c24;
+              z-index: 2;
+            "
+          ></span>
+        </div>
+
+        <h1
+          style="
+            margin-bottom: 0;
+            font-size: 34px;
+            color: #0c8191;
+            margin-bottom: 0;
+            margin-top: 30px;
+            font-weight: 500;
+          "
+          [translate]="'name'"
+          [translateParams]="{
+            ar: 'الموردين',
+            en: 'Suppliers'
+          }"
+        ></h1>
+      </div>
+    </div>
+    <!--/Header-->
+
+    <div style="margin-bottom: 10px">
+      <p>
+        <span
+          [translate]="'name'"
+          [translateParams]="{
+            ar: 'التاريخ: ',
+            en: 'Date: '
+          }"
+        ></span>
+        <span> {{dateprint | date : "dd-MM-yyyy"}} </span>
+      </p>
+    </div>
+    <!-- <div style="margin-bottom: 10px ;text-align: center;"  *ngIf="data.filter.enable == true">
+      <p>
+        <span
+          [translate]="'name'"
+          [translateParams]="{
+            ar: 'من تاريخ: ',
+            en: 'From Date: '
+          }"
+        ></span>
+        <span> {{data.filter.DateFrom_P}} </span>
+        <span
+          [translate]="'name'"
+          [translateParams]="{
+            ar: 'الي تاريخ: ',
+            en: 'To Date: '
+          }"
+        ></span>
+        <span> {{data.filter.DateTo_P}} </span>
+      </p>
+    </div> -->
+
+    <div class="services" style="width: 100%; margin-bottom: 20px">
+      <div class="content">
+        <table style="text-align: center; vertical-align: middle; width: 100%">
+          <thead>
+            <td
+              style="
+                font-size: 16px;
+                background-color: #fff;
+                padding: 14px 4px;
+                text-align: center;
+                color: #272727;
+                word-wrap: break-word;
+                border-inline-start: 1px dashed #0c8191;
+                border: 1px dashed #272727;
+                font-weight: 600;
+              "
+            >{{ "ResourceName_ar" | translate }}</td>
+            <td
+              style="
+                font-size: 16px;
+                background-color: #fff;
+                padding: 14px 4px;
+                text-align: center;
+                color: #272727;
+                word-wrap: break-word;
+                border-inline-start: 1px dashed #0c8191;
+                border: 1px dashed #272727;
+                font-weight: 600;
+              "
+            >{{ "ResourceName_en" | translate }}</td>
+            <td
+              style="
+                font-size: 16px;
+                background-color: #f7f7f7;
+                padding: 14px 4px;
+                text-align: center;
+                color: #272727;
+                word-wrap: break-word;
+                border-inline-start: 1px dashed #0c8191;
+                border: 1px dashed #272727;
+                font-weight: 600;
+              "
+            >{{ "Commerial Registration" | translate }}</td>
+            <td
+              style="
+                font-size: 16px;
+                background-color: #f7f7f7;
+                padding: 14px 4px;
+                text-align: center;
+                color: #272727;
+                word-wrap: break-word;
+                border-inline-start: 1px dashed #0c8191;
+                border: 1px dashed #272727;
+                font-weight: 600;
+              "
+            >{{ "thePhone" | translate }}</td>
+            <td
+              style="
+                font-size: 16px;
+                background-color: #fff;
+                padding: 14px 4px;
+                text-align: center;
+                color: #272727;
+                word-wrap: break-word;
+                border-inline-start: 1px dashed #0c8191;
+                border: 1px dashed #272727;
+                font-weight: 600;
+              "
+            >{{ "Region" | translate }}</td>
+            <td
+              style="
+                font-size: 16px;
+                background-color: #fff;
+                padding: 14px 4px;
+                text-align: center;
+                color: #272727;
+                word-wrap: break-word;
+                border-inline-start: 1px dashed #0c8191;
+                border: 1px dashed #272727;
+                font-weight: 600;
+              "
+            >{{ "Address" | translate }}</td>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of dataSource.data">
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  padding: 10px 0px;
+                  color: #272727;
+                  border-inline-start: 1px dashed #272727;
+                border: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+              >
+              {{item.nameAr}}
+              </td>
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  padding: 10px 0px;
+                  color: #272727;
+                  border-inline-start: 1px dashed #272727;
+                border: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+              >
+              {{item.nameEn}}
+              </td>
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  padding: 10px 0px;
+                  color: #272727;
+                  border-inline-start: 1px dashed #272727;
+                border: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+              >
+              {{item.taxNo}}
+              </td>
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  padding: 10px 0px;
+                  color: #272727;
+                  border-inline-start: 1px dashed #272727;
+                border: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+              >
+              {{item.phoneNo}}
+              </td>
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  padding: 10px 0px;
+                  color: #272727;
+                  border-inline-start: 1px dashed #272727;
+                border: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+              >
+              {{item.cityName}}
+              </td>
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  padding: 10px 0px;
+                  color: #272727;
+                  border-inline-start: 1px dashed #272727;
+                border: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+              >
+              {{item.compAddress}}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+<!-- AddNewResourceModal -->
+<ng-template #AddNewResourceModal let-modal>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="m-0">
+      <span *ngIf="AddOrEditSupplier==1" class="text-2xl">{{ "newResource" | translate }}</span>
+      <span *ngIf="AddOrEditSupplier==2" class="text-2xl">{{ "Edit Supplier" | translate }}</span>
+
+    </h4>
+    <button
+      type="button"
+      class="text-2xl text-white m-0"
+      (click)="modal.dismiss()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="max-h-100 overflow-x-scroll overflow-y-scroll p-4">
+    <form class="" #smsForm="ngForm">
+      <div class="row align-items-end mb-4 mx-3">
+        <!-- 1 line -->
+
+        <div class="col-sm-6 col-md-3 col-lg-6 mb-0 mb-sm-3">
+          <div class="form-group">
+            <label for="nameAr" class="text-right col-form-label block">
+              {{ "nameAr" | translate }}
+            </label>
+            <input
+              required
+              placeholder="{{ 'nameAr' | translate }}"
+              class="form-control"
+              type="text"
+              [(ngModel)]="suppliermodel.nameAr"
+              autocomplete="off"
+              name="nameAr"
+            />
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-6 mb-0 mb-sm-3">
+          <div class="form-group">
+            <label for="nameEn" class="text-right col-form-label block">
+              {{ "nameEn" | translate }}
+            </label>
+            <input
+              name="dateCheck_transfer"
+              placeholder="{{ 'nameEn' | translate }}"
+              type="text"
+              class="form-control"
+              [(ngModel)]="suppliermodel.nameEn"
+              autocomplete="off"
+              name="nameEn"
+            />
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-4 mb-0 mb-sm-3">
+          <div class="form-group">
+            <label
+              for="Commerial Registration"
+              class="text-right col-form-label block"
+            >
+              {{ "Commerial Registration" | translate }}
+            </label>
+            <input
+              name="dateCheck_transfer"
+              placeholder="{{ 'Commerial Registration' | translate }}"
+              type="text"
+              class="form-control"
+              autocomplete="off"
+              [(ngModel)]="suppliermodel.taxNo"
+              name="taxNo"
+            />
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-4 mb-0 mb-sm-3">
+          <div class="form-group">
+            <label for="thePhone" class="text-right col-form-label block">
+              {{ "thePhone" | translate }}
+            </label>
+            <input
+              name="dateCheck_transfer"
+              placeholder="{{ 'thePhone' | translate }}"
+              type="text"
+              autocomplete="off"
+              class="form-control"
+              [(ngModel)]="suppliermodel.phoneNo"
+              name="phoneNo"
+            />
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-4 mb-0 mb-sm-3">
+          <div class="form-group">
+            <label for="Address" class="text-right col-form-label block">
+              {{ "Address" | translate }}
+            </label>
+            <input
+              name="dateCheck_transfer"
+              autocomplete="off"
+              placeholder="{{ 'Address' | translate }}"
+              type="text"
+              class="form-control"
+              [(ngModel)]="suppliermodel.compAddress"
+              name="compAddress"
+            />
+          </div>
+        </div>
+
+        <!--  -->
+
+        <div class="col-sm-6 col-md-3 col-lg-4 mb-0 mb-sm-3">
+          <div class="form-group">
+            <label for="Postal Code" class="text-right col-form-label block">
+              {{ "Postal Code" | translate }}
+            </label>
+            <input
+              name="dateCheck_transfer"
+              placeholder="{{ 'Postal Code' | translate }}"
+              type="text"
+              autocomplete="off"
+              class="form-control"
+              [(ngModel)]="suppliermodel.postalCodeFinal"
+              name="postalCodeFinal"
+            />
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-4 mb-0 mb-sm-3">
+          <div class="form-group">
+            <label
+              for="Additional Phone"
+              class="text-right col-form-label block"
+            >
+              {{ "Additional Phone" | translate }}
+            </label>
+            <input
+              name="dateCheck_transfer"
+              placeholder="{{ 'Additional Phone' | translate }}"
+              type="text"
+              class="form-control"
+              autocomplete="off"
+              [(ngModel)]="suppliermodel.externalPhone"
+              name="externalPhone"
+            />
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-4 mb-0 mb-sm-3">
+          <div class="form-group">
+            <label for="Country" class="text-right col-form-label block">
+              {{ "Country" | translate }}
+            </label>
+            <input
+              name="dateCheck_transfer"
+              autocomplete="off"
+              placeholder="{{ 'Country' | translate }}"
+              type="text"
+              class="form-control"
+              [(ngModel)]="suppliermodel.country"
+              name="country"
+            />
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-4 mb-0 mb-sm-3">
+          <div class="form-group">
+            <label for="Neighborhood" class="text-right col-form-label block">
+              {{ "Neighborhood" | translate }}
+            </label>
+            <input
+              name="dateCheck_transfer"
+              placeholder="{{ 'Neighborhood' | translate }}"
+              type="text"
+              autocomplete="off"
+              class="form-control"
+              [(ngModel)]="suppliermodel.neighborhood"
+              name="neighborhood"
+            />
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-4 mb-0 mb-sm-3">
+          <div class="form-group">
+            <label for="Street Name" class="text-right col-form-label block">
+              {{ "Street Name" | translate }}
+            </label>
+            <input
+              name="dateCheck_transfer"
+              placeholder="{{ 'Street Name' | translate }}"
+              type="text"
+              class="form-control"
+              autocomplete="off"
+              [(ngModel)]="suppliermodel.streetName"
+              name="streetName"
+            />
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-4 mb-0 mb-sm-3">
+          <div class="form-group">
+            <label for="BuildingNumber" class="text-right col-form-label block">
+              {{ "BuildingNumber" | translate }}
+            </label>
+            <input
+              name="dateCheck_transfer"
+              placeholder="{{ 'BuildingNumber' | translate }}"
+              type="text"
+              autocomplete="off"
+              class="form-control"
+              [(ngModel)]="suppliermodel.buildingNumber"
+              name="buildingNumber"
+            />
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-4 mb-0 mb-sm-3">
+          <div class="form-group">
+            <label for="Region" class="text-right col-form-label block">
+              {{ "Region" | translate }}
+            </label>
+
+            <ng-select
+              class="w-full p-0"
+              placeholder="{{ 'Chose' | translate }}"
+              [(ngModel)]="suppliermodel.cityId"
+              autocomplete="off"
+              name="user"
+            >
+              <ng-option *ngFor="let user of citylect" [value]="user.id">{{
+                user.name
+              }}</ng-option>
+            </ng-select>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-12 mb-0 mb-sm-3 text-center">
+          <button
+            type="button"
+            class="flex gap-1 btn mb-3 col-md-2 me-3 text-white"
+            style="background-color: var(--base-color)"
+            (click)="savesupplier()"
+          >
+            {{ "save" | translate }}
+          </button>
+
+          <button
+            type="button"
+            class="flex gap-1 btn btn-secondary mb-3 col-md-2"
+            (click)="modal?.dismiss()"
+          >
+            {{ "close" | translate }}
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+
+<!-- deletepplierModel -->
+<ng-template #deletepplier let-modal>
+  <div class="modal-body text-center">
+    <p
+      [translate]="'name'"
+      [translateParams]="{
+        ar: 'هل تريد حذف هذا العنصر ؟',
+        en: 'Do you want to delete this item?'
+      }"
+    ></p>
+    <div class="flex gap-2 justify-center">
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "close" | translate }}
+      </button>
+
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="DeleteSupplier(modal)"
+      >
+        {{ "confirem" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+
+</div>>

@@ -1,0 +1,237 @@
+<div class="electronic-services">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-5 mb-4 mb-lg-0">
+        <div class="info text-center">
+          <img *ngIf="OrganizationData?.logoUrl"
+            src="{{environmentPho}}"
+            alt="logo"
+            class="d-inline-block mb-3 img-fluid"
+          />
+          <h2>{{OrganizationData?.nameAr}}</h2>
+          <h2>{{OrganizationData?.nameEn}}</h2>
+        </div>
+      </div>
+      <div class="col-lg-7">
+        <div class="services">
+          <tabset>
+            <tab heading="{{ 'service1' | translate }}">
+              <h2>{{ "service1" | translate }}</h2>
+              <form #checkForm="ngForm">
+                <div class="scanner text-center">
+                  <button (click)="toggleWebcam()">
+                    <img src="/assets/images/camera.png" alt="camera" />
+                    <span
+                      [translate]="'name'"
+                      [translateParams]="{
+                        ar: 'مسح الي بالكاميرا',
+                        en: 'Auto scan with camera'
+                      }"
+                    ></span>
+                  </button>
+                  <div style="text-align: center">
+                    <webcam
+                      [height]="400"
+                      [width]="320"
+                      [trigger]="triggerObservable"
+                      (imageCapture)="handleImage($event)"
+                      *ngIf="showWebcam"
+                      [allowCameraSwitch]="true"
+                      [switchCamera]="nextWebcamObservable"
+                      [imageQuality]="1"
+                      (cameraSwitched)="cameraWasSwitched($event)"
+                      (initError)="handleInitError($event)"
+                    ></webcam>
+                    <br />
+                    <button
+                      *ngIf="showWebcam"
+                      [translate]="'name'"
+                      [translateParams]="{
+                        ar: 'اخذ صورة',
+                        en: ' Take A Snapshot'
+                      }"
+                      class="actionBtn"
+                      (click)="triggerSnapshot()"
+                    ></button>
+                    <!-- <span
+                      class="text-danger"
+                      *ngIf="showWebcam && !this.webcamImage?.imageData"
+                      >{{ "requiredError" | translate }}
+                    </span> -->
+                  </div>
+
+                  <div
+                    class="snapshot"
+                    *ngIf="webcamImage && errors.length == 0"
+                  >
+                    <img [src]="webcamImage.imageAsDataUrl" />
+                  </div>
+                </div>
+
+                <div class="form-input">
+                  <img src="/assets/images/barcode.svg" alt="user icon" />
+
+                  <input
+                    type="text"
+                    name="barcode_number"
+                    placeholder="{{ 'barcode number' | translate }}    "
+                    ngModel
+                    #barcode_number="ngModel"
+                    required
+                    autocomplete="off"
+                  />
+                  <span
+                    class="text-danger"
+                    *ngIf="
+                      barcode_number.hasError('required') &&
+                      barcode_number.touched
+                    "
+                    >{{ "requiredError" | translate }}
+                  </span>
+                </div>
+
+                <div class="form-input">
+                  <img src="/assets/images/id.svg" alt="user icon" />
+
+                  <input
+                    type="text"
+                    name="id"
+                    placeholder="{{ 'ID Number' | translate }}   "
+                    ngModel
+                    #id="ngModel"
+                    required
+                    autocomplete="off"
+                  />
+                  <span
+                    class="text-danger"
+                    *ngIf="id.hasError('required') && id.touched"
+                    >{{ "requiredError" | translate }}
+                  </span>
+                </div>
+
+                <button
+                  class="btn btn-outline-secondary check-btn"
+                  [disabled]="checkForm.invalid || !this.webcamImage?.imageData"
+                  (click)="check(checkForm.value)"
+                >
+                  {{ "check" | translate }}
+                </button>
+              </form>
+            </tab>
+            <tab heading="{{ 'service2' | translate }}">
+              <h2>{{ "service2" | translate }}</h2>
+              <form #shareForm="ngForm">
+                <div class="form-input">
+                  <img src="/assets/images/id.svg" alt="user icon" />
+
+                  <input
+                    type="text"
+                    name="id"
+                    placeholder="{{ 'ID Number' | translate }}"
+                    ngModel
+                    #id="ngModel"
+                    required
+                    autocomplete="off"
+                  />
+                  <span
+                    class="text-danger"
+                    *ngIf="id.hasError('required') && id.touched"
+                  >
+                    {{ "requiredError" | translate }}
+                  </span>
+                </div>
+
+                <div class="form-input">
+                  <img src="/assets/images/building.svg" alt="building icon" />
+
+                  <input
+                    type="text"
+                    name="project_number"
+                    placeholder="{{ 'project number' | translate }}"
+                    ngModel
+                    #project_number="ngModel"
+                    required
+                    autocomplete="off"
+                  />
+                  <span
+                    class="text-danger"
+                    *ngIf="
+                      project_number.hasError('required') &&
+                      project_number.touched
+                    "
+                  >
+                    {{ "requiredError" | translate }}
+                  </span>
+                </div>
+
+                <div class="row qr m-0 position-relative">
+                  <div class="col-7 col-lg-8 mb-0 ps-0">
+                    <div class="form-input">
+                      <img
+                        src="/assets/images/qr-code-scan.png"
+                        alt="qr-code icon"
+                      />
+
+                      <input
+                        type="text"
+                        name="parCode"
+                        placeholder="{{ 'code' | translate }}"
+                        ngModel
+                        #parCode="ngModel"
+                        required
+                        minlength="4"
+                        autocomplete="off"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-5 col-lg-4 mb-0 pe-0">
+                    <div class="qrcode d-flex align-items-center">
+                      <div class="qrcode-value">
+                        <span>{{ qrCodeCheckValue[0] }}</span>
+                        <span>{{ qrCodeCheckValue[1] }}</span>
+                        <span>{{ qrCodeCheckValue[2] }}</span>
+                        <span>{{ qrCodeCheckValue[3] }}</span>
+                      </div>
+                      <i
+                        style="cursor: pointer"
+                        class="fa fa-refresh"
+                        (click)="refreshQrCode(); parCode.reset()"
+                      ></i>
+                    </div>
+                  </div>
+
+                  <span
+                    class="text-danger"
+                    style="bottom: 4px"
+                    *ngIf="!parCode.value && parCode.touched"
+                    >{{ "requiredError" | translate }}</span
+                  >
+                  <span
+                    class="text-danger"
+                    style="bottom: 4px"
+                    *ngIf="
+                      parCode.value != qrCodeCheckValue &&
+                      parCode.touched &&
+                      parCode.dirty
+                    "
+                    >{{ "codeError" | translate }}</span
+                  >
+                </div>
+
+                <button
+                  class="btn btn-outline-secondary check-btn"
+                  [disabled]="
+                    shareForm.invalid || parCode.value != qrCodeCheckValue
+                  "
+                  (click)="share(shareForm.value)"
+                  [translate]="'name'"
+                  [translateParams]="{ ar: 'دخول', en: 'ُEnter' }"
+                ></button>
+              </form>
+            </tab>
+          </tabset>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

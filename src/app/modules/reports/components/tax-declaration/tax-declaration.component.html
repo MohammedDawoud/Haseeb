@@ -1,0 +1,761 @@
+<div class="p-4" style="text-align: end">
+  <button (click)="printData('report')" class="btn btn-success">
+    <i class="fa fa-print"></i>
+  </button>
+</div>
+
+<hr />
+
+<div id="report" [ngStyle]="{ direction: lang == 'ar' ? 'rtl' : 'ltr' }">
+  <!--Header-->
+  <div
+    class="report-header"
+    style="
+      display: flex;
+      align-items: center;
+      gap: 100px;
+      padding: 3px 0px;
+      margin-bottom: 20px;
+    "
+  >
+    <div class="headerNe-right-side">
+      <img
+        src="https://placehold.co/200x200"
+        alt="logo"
+        style="height: 200px; width: 200px; max-width: 200px; object-fit: fill"
+      />
+    </div>
+
+    <div class="headerNe-lefy-side" style="width: 100%">
+      <h1
+        style="
+          letter-spacing: 0.25px;
+          font-size: 23px;
+          margin: 0;
+          margin-bottom: 5px;
+        "
+      >
+        النسخة التجريبية - DEMO
+      </h1>
+      <h1
+        style="
+          letter-spacing: 0.25px;
+          font-size: 23px;
+          margin: 0;
+          margin-bottom: 5px;
+        "
+      >
+        MAD Engineering Consultants
+      </h1>
+      <div class="line" style="position: relative; padding: 5px 0px 10px">
+        <span
+          style="
+            position: absolute;
+            right: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #e5e5e5;
+            z-index: 1;
+          "
+        ></span>
+        <span
+          style="
+            position: absolute;
+            right: 0;
+            width: 70%;
+            height: 2px;
+            background-color: #ec1c24;
+            z-index: 2;
+          "
+        ></span>
+      </div>
+
+      <h1
+        style="
+          margin-bottom: 0;
+          font-size: 34px;
+          color: #0c8191;
+          margin-bottom: 0;
+          margin-top: 30px;
+          font-weight: 500;
+        "
+        [translate]="'name'"
+        [translateParams]="{
+          ar: '     نموذج اقرار ضريبة القيمة المضافة          ',
+          en: ' VAT Declaration Form    '
+        }"
+      ></h1>
+    </div>
+  </div>
+  <!--/Header-->
+
+  <div style="margin-bottom: 10px">
+    <p>
+      <span
+        [translate]="'name'"
+        [translateParams]="{
+          ar: 'التاريخ: ',
+          en: 'Date: '
+        }"
+      ></span>
+      <span> 23-10-2023 </span>
+    </p>
+  </div>
+
+  <div class="info" style="overflow: auto; margin-bottom: 20px">
+    <table
+      class="table table-bordered m-0"
+      style="
+        width: 100%;
+        color: white;
+        text-align: center;
+        vertical-align: middle;
+      "
+    >
+      <tr>
+        <td
+          style="
+            padding-inline: 0px !important;
+            background-color: #f7f7f7;
+            font-size: 18px;
+            color: #21403f;
+            font-weight: 600;
+            border: 1px solid #dce0e4;
+          "
+          [translate]="'name'"
+          [translateParams]="{ ar: 'نموذج', en: 'model' }"
+        ></td>
+        <td
+          style="
+            padding-inline: 0px !important;
+            background-color: #f7f7f7;
+            font-size: 18px;
+            color: #21403f;
+            font-weight: 600;
+            border: 1px solid #dce0e4;
+          "
+          [translate]="'name'"
+          [translateParams]="{ ar: 'الرقم الضريبي', en: 'Tax Number' }"
+        ></td>
+        <td
+          style="
+            padding-inline: 0px !important;
+            background-color: #f7f7f7;
+            font-size: 18px;
+            color: #21403f;
+            font-weight: 600;
+            border: 1px solid #dce0e4;
+          "
+          [translate]="'name'"
+          [translateParams]="{ ar: 'الربع', en: 'Quarter' }"
+        ></td>
+        <td
+          style="
+            line-height: 0 !important;
+            padding: 0px !important;
+            background-color: #f7f7f7;
+            font-size: 18px;
+            color: #21403f;
+            font-weight: 600;
+            border: 1px solid #dce0e4;
+          "
+          colspan="2"
+        >
+          <span
+            style="
+              border: none;
+              display: inline-block;
+              padding: 10px 0px;
+              width: 100%;
+
+              line-height: 24px;
+            "
+            [translate]="'name'"
+            [translateParams]="{ ar: 'الفترة', en: 'Period ' }"
+          ></span>
+          <div
+            style="
+              width: 100%;
+              border-top: 1px solid #dce0e4;
+              margin: 0px !important;
+              padding: 0px !important;
+            "
+          >
+            <p
+              class="mb-0"
+              style="
+                line-height: 24px;
+                display: inline-block;
+                width: 50%;
+                border-bottom: 1px solid #dce0e4;
+                text-align: center;
+                padding: 7px 0px 10px;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+                border-inline: 1px solid #dce0e4;
+                margin: 0px !important;
+                margin-bottom: 0px !important;
+              "
+              [translate]="'name'"
+              [translateParams]="{ ar: ' من', en: 'from ' }"
+            ></p>
+            <p
+              class="mb-0"
+              style="
+                line-height: 24px;
+                display: inline-block;
+                width: 50%;
+                border-bottom: 1px solid #dce0e4;
+                text-align: center;
+                padding: 7px 0px 10px;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+                margin: 0px !important;
+                margin-bottom: 0px !important;
+                border-inline-end: 1px solid #dce0e4;
+              "
+              [translate]="'name'"
+              [translateParams]="{ ar: ' الي', en: 'to ' }"
+            ></p>
+          </div>
+        </td>
+      </tr>
+
+      <tr>
+        <td
+          style="
+            width: 20%;
+            padding-inline: 0px !important;
+            background-color: #f7f7f7;
+            font-size: 18px;
+            color: #21403f;
+            font-weight: 500;
+            border: 1px solid #dce0e4;
+            padding: 10px 0px;
+          "
+        >
+          adawd
+        </td>
+        <td
+          style="
+            width: 20%;
+            padding-inline: 0px !important;
+            background-color: #f7f7f7;
+            font-size: 18px;
+            color: #21403f;
+            font-weight: 500;
+            border: 1px solid #dce0e4;
+            padding: 10px 0px;
+          "
+        >
+          adawd
+        </td>
+        <td
+          style="
+            width: 20%;
+            padding-inline: 0px !important;
+            background-color: #f7f7f7;
+            font-size: 18px;
+            color: #21403f;
+            font-weight: 500;
+            border: 1px solid #dce0e4;
+            padding: 10px 0px;
+          "
+        >
+          adawd
+        </td>
+        <td
+          style="
+            width: 20%;
+            padding-inline: 0px !important;
+            background-color: #f7f7f7;
+            font-size: 18px;
+            color: #21403f;
+            font-weight: 500;
+            border: 1px solid #dce0e4;
+            padding: 10px 0px;
+          "
+        >
+          adawd
+        </td>
+        <td
+          style="
+            width: 20%;
+            padding-inline: 0px !important;
+            background-color: #f7f7f7;
+            font-size: 18px;
+            color: #21403f;
+            font-weight: 500;
+            border: 1px solid #dce0e4;
+            padding: 10px 0px;
+          "
+        >
+          adawd
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div style="width: 100%">
+    <div class="content">
+      <table style="text-align: center; vertical-align: middle; width: 100%">
+        <tr>
+          <td
+            [translate]="'name'"
+            [translateParams]="{ ar: '   ', en: '   ' }"
+            style="
+              font-size: 16px;
+              background-color: #fff;
+              padding: 14px 4px;
+              text-align: center;
+              color: #272727;
+              word-wrap: break-word;
+              border-inline-start: 1px dashed #0c8191;
+              border: 1px dashed #272727;
+              font-weight: 600;
+            "
+          ></td>
+          <td
+            [translate]="'name'"
+            [translateParams]="{ ar: '  الرصيد ', en: '  Balance ' }"
+            style="
+              font-size: 16px;
+              background-color: #fff;
+              padding: 14px 4px;
+              text-align: center;
+              color: #272727;
+              word-wrap: break-word;
+              border-inline-start: 1px dashed #0c8191;
+              border: 1px dashed #272727;
+              font-weight: 600;
+            "
+          ></td>
+          <td
+            [translate]="'name'"
+            [translateParams]="{ ar: '  التعديل  ', en: '    Edit ' }"
+            style="
+              font-size: 16px;
+              background-color: #fff;
+              padding: 14px 4px;
+              text-align: center;
+              color: #272727;
+              word-wrap: break-word;
+              border-inline-start: 1px dashed #0c8191;
+              border: 1px dashed #272727;
+              font-weight: 600;
+            "
+          ></td>
+          <td
+            [translate]="'name'"
+            [translateParams]="{
+              ar: '  رصيد الضريبه    ',
+              en: '      Tax balance  '
+            }"
+            style="
+              font-size: 16px;
+              background-color: #fff;
+              padding: 14px 4px;
+              text-align: center;
+              color: #272727;
+              word-wrap: break-word;
+              border-inline: 1px dashed #0c8191;
+              border: 1px dashed #272727;
+              font-weight: 600;
+            "
+          ></td>
+        </tr>
+        <tr>
+          <td
+            [translate]="'name'"
+            [translateParams]="{ ar: 'الضريبه ', en: 'Tax ' }"
+            style="
+              font-size: 16px;
+              background-color: #f7f7f7;
+              padding: 14px 4px;
+              text-align: center;
+              color: #272727;
+              word-wrap: break-word;
+              border-inline-start: 1px dashed #0c8191;
+              border: 1px dashed #272727;
+              font-weight: 600;
+            "
+          ></td>
+          <td
+            [translate]="'name'"
+            [translateParams]="{ ar: ' المبيعات ', en: '  the sales ' }"
+            style="
+              font-size: 16px;
+              background-color: #f7f7f7;
+              padding: 14px 4px;
+              text-align: center;
+              color: #272727;
+              word-wrap: break-word;
+              border-inline-start: 1px dashed #0c8191;
+              border: 1px dashed #272727;
+              font-weight: 600;
+            "
+          ></td>
+          <td
+            [translate]="'name'"
+            [translateParams]="{ ar: '  التعديل', en: '   Edit' }"
+            style="
+              font-size: 16px;
+              background-color: #f7f7f7;
+              padding: 14px 4px;
+              text-align: center;
+              color: #272727;
+              word-wrap: break-word;
+              border-inline-start: 1px dashed #0c8191;
+              border: 1px dashed #272727;
+              font-weight: 600;
+            "
+          ></td>
+          <td
+            [translate]="'name'"
+            [translateParams]="{
+              ar: ' رصيد الضريبة المستحقة ',
+              en: '   Balance of tax due'
+            }"
+            style="
+              font-size: 16px;
+              background-color: #f7f7f7;
+              padding: 14px 4px;
+              text-align: center;
+              color: #272727;
+              word-wrap: break-word;
+              border-inline: 1px dashed #0c8191;
+              border: 1px dashed #272727;
+              font-weight: 600;
+            "
+          ></td>
+        </tr>
+
+        <tr *ngFor="let item of items1">
+          <td
+            style="
+              background-color: #fff;
+              font-size: 15px;
+              font-weight: 500;
+              padding: 10px 0px;
+              color: #272727;
+              border-inline-start: 1px dashed #272727;
+              border-bottom: 1px dashed #272727;
+            "
+          >
+            {{ item?.title }}
+          </td>
+          <td
+            style="
+              background-color: #fff;
+              font-size: 15px;
+              font-weight: 500;
+              padding: 10px 0px;
+              color: #272727;
+              border-inline-start: 1px dashed #272727;
+              border-bottom: 1px dashed #272727;
+            "
+          >
+            فاتورة مبيعات رقم 06060
+          </td>
+          <td
+            style="
+              background-color: #fff;
+              font-size: 15px;
+              font-weight: 500;
+              padding: 10px 0px;
+              color: #272727;
+              border-inline-start: 1px dashed #272727;
+              border-bottom: 1px dashed #272727;
+            "
+          >
+            296
+          </td>
+          <td
+            [ngStyle]="{
+              'background-color': item?.title == 'total' ? '#f7f7f7' : '#fff'
+            }"
+            style="
+              font-size: 15px;
+              font-weight: 500;
+              padding: 10px 0px;
+              color: #272727;
+              border-inline: 1px dashed #272727;
+              border-bottom: 1px dashed #272727;
+            "
+          >
+            165156
+          </td>
+        </tr>
+
+        <tr>
+          <td
+            [translate]="'name'"
+            [translateParams]="{ ar: 'الضريبه ', en: 'Tax ' }"
+            style="
+              font-size: 16px;
+              background-color: #f7f7f7;
+              padding: 14px 4px;
+              text-align: center;
+              color: #272727;
+              word-wrap: break-word;
+              border-inline-start: 1px dashed #0c8191;
+              border: 1px dashed #272727;
+              font-weight: 600;
+            "
+          ></td>
+          <td
+            [translate]="'name'"
+            [translateParams]="{ ar: ' المبيعات ', en: '  the sales ' }"
+            style="
+              font-size: 16px;
+              background-color: #f7f7f7;
+              padding: 14px 4px;
+              text-align: center;
+              color: #272727;
+              word-wrap: break-word;
+              border-inline-start: 1px dashed #0c8191;
+              border: 1px dashed #272727;
+              font-weight: 600;
+            "
+          ></td>
+          <td
+            [translate]="'name'"
+            [translateParams]="{ ar: '  التعديل', en: '   Edit' }"
+            style="
+              font-size: 16px;
+              background-color: #f7f7f7;
+              padding: 14px 4px;
+              text-align: center;
+              color: #272727;
+              word-wrap: break-word;
+              border-inline-start: 1px dashed #0c8191;
+              border: 1px dashed #272727;
+              font-weight: 600;
+            "
+          ></td>
+          <td
+            [translate]="'name'"
+            [translateParams]="{
+              ar: ' رصيد الضريبة المستحقة ',
+              en: '   Balance of tax due'
+            }"
+            style="
+              font-size: 16px;
+              background-color: #f7f7f7;
+              padding: 14px 4px;
+              text-align: center;
+              color: #272727;
+              word-wrap: break-word;
+              border-inline: 1px dashed #0c8191;
+              border: 1px dashed #272727;
+              font-weight: 600;
+            "
+          ></td>
+        </tr>
+
+        <tr *ngFor="let item of items2">
+          <td
+            style="
+              background-color: #fff;
+              font-size: 15px;
+              font-weight: 500;
+              padding: 10px 0px;
+              color: #272727;
+              border-inline-start: 1px dashed #272727;
+              border-bottom: 1px dashed #272727;
+            "
+          >
+            {{ item?.title }}
+          </td>
+          <td
+            style="
+              background-color: #fff;
+              font-size: 15px;
+              font-weight: 500;
+              padding: 10px 0px;
+              color: #272727;
+              border-inline-start: 1px dashed #272727;
+              border-bottom: 1px dashed #272727;
+            "
+          >
+            فاتورة مبيعات رقم 06060
+          </td>
+          <td
+            style="
+              background-color: #fff;
+              font-size: 15px;
+              font-weight: 500;
+              padding: 10px 0px;
+              color: #272727;
+              border-inline-start: 1px dashed #272727;
+              border-bottom: 1px dashed #272727;
+            "
+          >
+            296
+          </td>
+          <td
+            [ngStyle]="{
+              'background-color': item?.title == 'total' ? '#f7f7f7' : '#fff'
+            }"
+            style="
+              font-size: 15px;
+              font-weight: 500;
+              padding: 10px 0px;
+              color: #272727;
+              border-inline: 1px dashed #272727;
+              border-bottom: 1px dashed #272727;
+            "
+          >
+            165156
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <div style="overflow: auto">
+    <table
+      class="table table-bordered m-0"
+      style="
+        width: 100%;
+        color: white;
+        text-align: center;
+        vertical-align: middle;
+      "
+    >
+      <tr>
+        <td
+          style="
+            padding-inline: 0px !important;
+            background-color: #f7f7f7;
+            font-size: 15px;
+            color: #21403f;
+            font-weight: 600;
+
+            padding: 10px 0px;
+            border: 1px solid #dce0e4;
+          "
+          [translate]="'name'"
+          [translateParams]="{
+            ar: ' إجمالي ضريبة القيمة المضافة المستحقة عن الفترة الضريبية',
+            en: 'The total VAT due for the tax period '
+          }"
+        ></td>
+        <td
+          style="
+            padding-inline: 0px !important;
+            background-color: #f7f7f7;
+            font-size: 15px;
+            color: #21403f;
+            font-weight: 600;
+
+            padding: 10px 0px;
+            border: 1px solid #dce0e4;
+          "
+          [translate]="'name'"
+          [translateParams]="{
+            ar: '   ضريبة القيمة المضافة التي تم ترحيلها من الفترة /الفترات السابقة',
+            en: ' VAT carried over from the previous period/periods  '
+          }"
+        ></td>
+        <td
+          style="
+            padding-inline: 0px !important;
+            background-color: #f7f7f7;
+            font-size: 15px;
+            color: #21403f;
+            font-weight: 600;
+
+            padding: 10px 0px;
+            border: 1px solid #dce0e4;
+          "
+          [translate]="'name'"
+          [translateParams]="{
+            ar: ' التصحيحات من الفترة السابقة (-5000 إلــى 5000)',
+            en: 'Corrections from the previous period (-5000 to 5000) '
+          }"
+        ></td>
+        <td
+          style="
+            padding-inline: 0px !important;
+            background-color: #f7f7f7;
+            font-size: 15px;
+            color: #21403f;
+            font-weight: 600;
+
+            padding: 10px 0px;
+            border: 1px solid #dce0e4;
+          "
+          [translate]="'name'"
+          [translateParams]="{
+            ar: ' صافي القيمة المستحقة أو (المسترده)',
+            en: ' Net value due or (recovered)'
+          }"
+        ></td>
+      </tr>
+
+      <tr>
+        <td
+          style="
+            width: 20%;
+            padding-inline: 0px !important;
+            background-color: #f7f7f7;
+            font-size: 15px;
+            color: #21403f;
+            font-weight: 500;
+            border: 1px solid #dce0e4;
+            padding: 10px 0px;
+          "
+        >
+          adawd
+        </td>
+        <td
+          style="
+            width: 20%;
+            padding-inline: 0px !important;
+            background-color: #f7f7f7;
+            font-size: 15px;
+            color: #21403f;
+            font-weight: 500;
+            border: 1px solid #dce0e4;
+            padding: 10px 0px;
+          "
+        >
+          adawd
+        </td>
+        <td
+          style="
+            width: 20%;
+            padding-inline: 0px !important;
+            background-color: #f7f7f7;
+            font-size: 15px;
+            color: #21403f;
+            font-weight: 500;
+            border: 1px solid #dce0e4;
+            padding: 10px 0px;
+          "
+        >
+          adawd
+        </td>
+        <td
+          style="
+            width: 20%;
+            padding-inline: 0px !important;
+            background-color: #f7f7f7;
+            font-size: 15px;
+            color: #21403f;
+            font-weight: 500;
+            border: 1px solid #dce0e4;
+            padding: 10px 0px;
+          "
+        >
+          adawd
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>

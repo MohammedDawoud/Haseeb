@@ -1,0 +1,1924 @@
+<div class="add-search pb-4">
+  <app-navigator [title]="title"></app-navigator>
+
+  <div class="tables-data mt-3 overflow-hidden">
+    <div class="flex gap-2 justify-start flex-wrap items-end">
+      <div class="max-w-xs flex-grow">
+        <label class="col-form-label"> {{ "Assigned to" | translate }}</label>
+        <ng-select
+          [ngModelOptions]="{ standalone: true }"
+          [items]="load_AllUsersSelect"
+          bindLabel="name"
+          bindValue="id"
+          [clearable]="true"
+          class="w-full p-0"
+          [(ngModel)]="data.filter.Search_user"
+          placeholder="{{ 'Chose' | translate }}"
+          (change)="SearchUserChange()"
+        >
+        </ng-select>
+      </div>
+      <button
+        class="btn btn-primary"
+        (click)="data.filter.enable = !data.filter.enable"
+        [translate]="'name'"
+        [translateParams]="{
+          ar: 'فلترة بالوقت',
+          en: 'Time Filter'
+        }"
+      ></button>
+      <div class="form-group col-md-2 timeInput" *ngIf="data.filter.enable">
+        <input
+          placeholder="{{ 'Chose Date' | translate }}"
+          [(ngModel)]="data.filter.date"
+          type="text"
+          class="form-control"
+          bsDaterangepicker
+          #dpr="bsDaterangepicker"
+          [bsConfig]="{ rangeInputFormat: 'DD/MM/YYYY' }"
+          (ngModelChange)="CheckDate($event)"
+        />
+      </div>
+      <div class="w-fit">
+        <input
+          class="form-control"
+          (keyup)="applyFilter($event)"
+          placeholder="{{ 'search' | translate }}"
+          #input
+        />
+      </div>
+    </div>
+
+    <!-- buttons -->
+    <div class="flex justify-end gap-2 items-center my-3 flex-wrap">
+      <div class="flex gap-2 justify-end s controler">
+        <button
+          *ngIf="userG?.userPrivileges.includes(111911)"
+          (click)="
+            modalDetails.type = 'Add new supervisionTask';
+            dataModal.show();
+            AddPopup()
+          "
+          class="flex gap-1 btn btn-primary"
+        >
+          <span class="hidden md:block">{{
+            "Add new supervisionTask" | translate
+          }}</span>
+          <i class="fa-solid fa-plus"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- table -->
+    <div class="overflow-auto">
+      <table
+        #dataTable
+        mat-table
+        [dataSource]="dataSource"
+        matSort
+        class="mat-elevation-z8 rounded-t-lg overflow-hidden w-max"
+      >
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span
+              [translate]="'name'"
+              [translateParams]="{
+                ar: 'العميل',
+                en: 'Customer'
+              }"
+            ></span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.customerName }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="projectNumber">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span
+              [translate]="'name'"
+              [translateParams]="{
+                ar: 'رقم المشروع',
+                en: 'Project Number'
+              }"
+            ></span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.projectNo }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="orderNumber">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span
+              [translate]="'name'"
+              [translateParams]="{
+                ar: 'رقم أمر الاشراف ',
+                en: 'Supervision order number'
+              }"
+            ></span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.number }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="stage">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span
+              [translate]="'name'"
+              [translateParams]="{
+                ar: 'المرحلة',
+                en: 'stage'
+              }"
+            ></span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.phaseName }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="assignedTo">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span
+              [translate]="'name'"
+              [translateParams]="{
+                ar: 'المكلف بها',
+                en: 'assigned to it'
+              }"
+            ></span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.receivedUserName }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="assignedDate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span
+              [translate]="'name'"
+              [translateParams]="{
+                ar: 'تاريخ التكليف',
+                en: 'Commissioning date'
+              }"
+            ></span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.superDateConfirm }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span
+              [translate]="'name'"
+              [translateParams]="{
+                ar: 'الحالة',
+                en: 'status'
+              }"
+            ></span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.superStatusName }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="operations">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            [translate]="'name'"
+            [translateParams]="{
+              ar: 'خيارات',
+              en: 'Operations'
+            }"
+          ></th>
+          <td mat-cell *matCellDef="let element">
+            <div class="flex gap-1 justify-center py-2">
+              <button
+                *ngIf="userG?.userPrivileges.includes(111914)"
+                class="min-w-max p-2 bg-sky-100 hover:bg-sky-500 rounded-lg duration-300 hover:text-white aspect-square w-10"
+                (click)="
+                  GetUserById(element.receivedEmpId);
+                  GetCustomersByProjectId(element.projectId);
+                  availbleModal.show();
+                  getSupervisionRow(element)
+                "
+              >
+                <i class="fa-solid fa-paper-plane"></i>
+              </button>
+              <button
+                *ngIf="userG?.userPrivileges.includes(111912)"
+                class="min-w-max p-2 bg-orange-100 hover:bg-orange-500 rounded-lg duration-300 hover:text-white aspect-square w-10"
+                (click)="
+                  modalDetails.type = 'Edit supervision';
+                  dataModal.show();
+                  EditSupervision(element)
+                "
+              >
+                <i class="fa-regular fa-pen-to-square"></i>
+              </button>
+              <button
+                *ngIf="userG?.userPrivileges.includes(111913)"
+                class="min-w-max p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white aspect-square w-10"
+                (click)="deleteModal.show(); getSupervisionRow(element)"
+              >
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+              <button
+                class="min-w-max p-2 bg-neutral-100 hover:bg-neutral-500 rounded-lg duration-300 hover:text-white aspect-square w-10"
+                (click)="
+                  GetAllSupervisionDetailsBySuperId(element, phasedetails)
+                "
+              >
+                <i class="fa-solid fa-circle-info"></i>
+              </button>
+              <button
+                class="min-w-max p-2 bg-sky-100 hover:bg-sky-500 rounded-lg duration-300 hover:text-white aspect-square w-10"
+                (click)="
+                  resetCheckbox(); emailModal.show(); getSupervisionRow(element)
+                "
+                [disabled]="OrganizationData?.sendCustomerMail == false"
+              >
+                <i
+                  class="fa-solid fa-at"
+                  [title]="
+                    OrganizationData?.sendCustomerMail == false
+                      ? 'ايميل المنشأة غير مفعل'
+                      : 'ارسال ميل'
+                  "
+                ></i>
+              </button>
+              <button
+                class="min-w-max p-2 bg-green-100 hover:bg-green-500 rounded-lg duration-300 hover:text-white aspect-square w-10"
+                (click)="
+                  resetCheckbox(); whatsModal.show(); getSupervisionRow(element)"
+                  [disabled]="WhatsAppData?.sendactivationSupervision == false"
+
+              >
+              <i
+              class="fa-brands fa-whatsapp"
+              [title]="
+                WhatsAppData?.sendactivationSupervision == false ? 'خدمة ارسال واتس اب غير مفعل': 'ارسال واتس اب'"
+                 ></i>
+              </button>
+              <button
+                (click)="
+                  PrintSupervisionBase(element); open(PrintSupervisionBaseModal)
+                "
+                class="min-w-max p-2 bg-sky-100 hover:bg-sky-500 rounded-lg duration-300 hover:text-white aspect-square w-10"
+              >
+                <i class="fa-solid fa-print"></i>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayedColumns"
+          class="duration-300 hover:bg-slate-100"
+        ></tr>
+        <!-- Row shown when there is no matching data. -->
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="8">
+            {{ "No result found for " }} "{{ input.value }}"
+          </td>
+        </tr>
+      </table>
+    </div>
+    <mat-paginator
+      #MatPaginator
+      [pageSizeOptions]="[10, 25, 100, dataSource.data.length]"
+    >
+    </mat-paginator>
+  </div>
+</div>
+
+<!-- modals -->
+<div
+  class="modal fade ngxModal center"
+  bsModal
+  #availbleModal="bs-modal"
+  tabindex="-1"
+  role="dialog"
+>
+  <div class="modal-body text-center">
+    <p
+      [translate]="'name'"
+      [translateParams]="{
+        ar: 'هل انت متأكد من اتاحة طلعة الاشراف',
+        en: 'Are you sure supervision is available ?'
+      }"
+    ></p>
+    <div class="flex items-start justify-between flex-wrap mb-5">
+      <div
+        class="mt-4 text-center"
+        style="border-inline-end: 1px solid rgba(0, 0, 0, 0.2)"
+      >
+        <h3 class="text-base">
+          {{ "Customer notice" | translate }}
+        </h3>
+
+        <div class="mb-2 endNotice">
+          <mat-checkbox name="checkedEmail" [(ngModel)]="checkedEmail">
+          </mat-checkbox>
+          <button
+            [title]="'Send notice via e-mail' | translate"
+            class="min-w-max p-2 bg-green-100 hover:bg-green-500 rounded-lg duration-300 hover:text-white aspect-square w-10 mx-2"
+          >
+            <i class="fa-solid fa-at"></i>
+          </button>
+          <span *ngIf="checkedEmail">{{ EmailValue }}</span>
+        </div>
+
+        <div class="endNotice">
+          <mat-checkbox name="checkedPhone" [(ngModel)]="checkedPhone">
+          </mat-checkbox>
+          <button
+            [title]="'Sending notice via mobile number' | translate"
+            class="min-w-max p-2 bg-blue-100 hover:bg-blue-500 rounded-lg duration-300 hover:text-white aspect-square w-10 mx-2"
+          >
+            <i class="fa-solid fa-comment-sms"></i>
+          </button>
+          <span *ngIf="checkedPhone">{{ PhoneValue }}</span>
+        </div>
+      </div>
+
+      <div class="mt-4 text-center">
+        <h3 class="text-base">
+          {{ "Notice to the responsible engineer" | translate }}
+        </h3>
+
+        <div class="mb-2 endNotice">
+          <mat-checkbox name="checkedEmail" [(ngModel)]="checkedEmailAdmin">
+          </mat-checkbox>
+          <button
+            [title]="'Send notice via e-mail' | translate"
+            class="min-w-max p-2 bg-green-100 hover:bg-green-500 rounded-lg duration-300 hover:text-white aspect-square w-10 mx-2"
+          >
+            <i class="fa-solid fa-at"></i>
+          </button>
+          <span *ngIf="checkedEmailAdmin">{{ EmailValueAdmin }}</span>
+        </div>
+
+        <div class="endNotice">
+          <mat-checkbox name="checkedPhone" [(ngModel)]="checkedPhoneAdmin">
+          </mat-checkbox>
+          <button
+            [title]="'Sending notice via mobile number' | translate"
+            class="min-w-max p-2 bg-blue-100 hover:bg-blue-500 rounded-lg duration-300 hover:text-white aspect-square w-10 mx-2"
+          >
+            <i class="fa-solid fa-comment-sms"></i>
+          </button>
+          <span *ngIf="checkedPhoneAdmin">{{ PhoneValueAdmin }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="flex gap-2 justify-center">
+      <button
+        type="button"
+        mat-raised-button
+        class="bg-base text-white"
+        (click)="availableSupervision(); availbleModal.hide()"
+      >
+        {{ "Yes" | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="availbleModal.hide()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "No" | translate }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade ngxModal center"
+  #deleteModal="bs-modal"
+  bsModal
+  tabindex="-1"
+  role="dialog"
+>
+  <div class="modal-body text-center">
+    <p
+      [translate]="'name'"
+      [translateParams]="{
+        ar: 'هل تريد بالتأكيد حذف هذا الصف',
+        en: 'Are you sure to delete this row ?'
+      }"
+    ></p>
+    <div class="flex gap-2 justify-center">
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="confirmDelete(); deleteModal.hide()"
+      >
+        {{ "Yes" | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="deleteModal.hide()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "No" | translate }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade ngxModal edit"
+  bsModal
+  #dataModal="bs-modal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="asdw"
+>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="m-0">
+      <span class="text-2xl">{{ modalDetails?.type | translate }}</span>
+    </h4>
+    <button
+      type="button"
+      class="text-2xl text-white m-0"
+      (click)="dataModal.hide()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <ng-container>
+      <form
+        class="modal-form"
+        novalidate="novalidate"
+        data-select2-id="SupervisionsForm"
+      >
+        <div class="grid lg:grid-cols-3 md:grid-cols-2 gap-4">
+          <div class="form-group">
+            <label for="" class="">
+              {{ "chose client" | translate }}
+              <span class="text-danger">*</span></label
+            >
+            <ng-select
+              [ngModelOptions]="{ standalone: true }"
+              [items]="load_CustomerSelect"
+              bindLabel="name"
+              bindValue="id"
+              [clearable]="true"
+              class="w-full p-0"
+              [(ngModel)]="modalDetails.CustomerId"
+              placeholder="{{ 'Chose' | translate }}"
+              (change)="CustomerIdChange()"
+            >
+            </ng-select>
+          </div>
+          <div class="form-group">
+            <label for="" class=""
+              >{{ "The project" | translate }}
+              <span class="text-danger">*</span></label
+            >
+            <ng-select
+              [ngModelOptions]="{ standalone: true }"
+              [items]="load_ProjectSelect"
+              bindLabel="name"
+              bindValue="id"
+              [clearable]="true"
+              class="w-full p-0"
+              [(ngModel)]="modalDetails.ProjectId"
+              placeholder="{{ 'Chose' | translate }}"
+              (change)="ProjectIdChange()"
+            >
+            </ng-select>
+          </div>
+          <div class="form-group">
+            <label for="" class="">
+              {{ "Choose the stage" | translate }}
+              <span class="text-danger">*</span>
+            </label>
+            <ng-select
+              [ngModelOptions]="{ standalone: true }"
+              [items]="load_SuperPhasesSelect"
+              bindLabel="name"
+              bindValue="id"
+              [clearable]="true"
+              class="w-full p-0"
+              [(ngModel)]="modalDetails.PhaseId"
+              placeholder="{{ 'Chose' | translate }}"
+              (change)="PhaseIdChange()"
+            >
+            </ng-select>
+          </div>
+          <div class="form-group">
+            <label class="form-control-lable"
+              >{{ "Date of visit" | translate }}
+            </label>
+            <input
+              type="text"
+              placeholder="{{ 'Chose Date' | translate }}"
+              class="form-control"
+              bsDatepicker
+              [(ngModel)]="modalDetails.VisitDate"
+              [ngModelOptions]="{ standalone: true }"
+            />
+          </div>
+        </div>
+        <div>
+          <div
+            class="flex gap-2 items-end justify-center mt-3 lg:col-span-4 md:col-span-2"
+          >
+            <button
+              type="button"
+              class="btn btn-primary"
+              (click)="fileTypeModal.show(); resetSuperPhases()"
+            >
+              {{ "Add a new stage" | translate }}
+            </button>
+            <button
+              type="button"
+              class="btn btn-warning"
+              id="PhasesDrtailsBtn"
+              (click)="editphasedetails.show(); GetAllSuperPhaseDet()"
+              [disabled]="!modalDetails.PhaseId"
+            >
+              {{ "Stage details" | translate }}
+            </button>
+          </div>
+        </div>
+        <hr class="w-3/4 mx-auto my-4" />
+        <div class="grid lg:grid-cols-3 md:grid-cols-2 gap-3">
+          <div class="form-group">
+            <label for="date" class="">
+              {{ "Supervision Order No" | translate }}
+              <span class="text-danger">*</span></label
+            >
+            <input
+              class="form-control"
+              type="text"
+              id="SupervisionNumber"
+              disabled=""
+              name="SupervisionNumber"
+              placeholder="{{ 'Supervision Order No' | translate }}"
+              [(ngModel)]="modalDetails.SupervisionNumber"
+              [ngModelOptions]="{ standalone: true }"
+            />
+          </div>
+          <div class="form-group">
+            <label class=""> {{ "his history" | translate }}</label>
+            <input
+              type="text"
+              placeholder="{{ 'Chose Date' | translate }}"
+              class="form-control"
+              bsDatepicker
+              [(ngModel)]="modalDetails.SupervisionDate"
+              [ngModelOptions]="{ standalone: true }"
+            />
+          </div>
+          <div class="form-group">
+            <label for="date" class="">
+              {{ "Contractor's name" | translate }}
+              <span class="text-danger">*</span></label
+            >
+            <ng-select
+              [ngModelOptions]="{ standalone: true }"
+              [items]="load_ContractorsSelect"
+              bindLabel="name"
+              bindValue="id"
+              [clearable]="true"
+              class="w-full p-0"
+              [(ngModel)]="modalDetails.WorkerNameSelectId"
+              placeholder="{{ 'Chose' | translate }}"
+            >
+            </ng-select>
+          </div>
+          <div class="form-group">
+            <label for="" class="">
+              {{ "Assigned to" | translate }}<span class="text-danger">*</span>
+            </label>
+            <ng-select
+              [ngModelOptions]="{ standalone: true }"
+              [items]="load_AllUsersSelect_M"
+              bindLabel="name"
+              bindValue="id"
+              [clearable]="true"
+              class="w-full p-0"
+              [(ngModel)]="modalDetails.RecevierSelectId"
+              placeholder="{{ 'Chose' | translate }}"
+            >
+            </ng-select>
+          </div>
+          <div class="form-group">
+            <label for="date" class=""
+              >{{ "Collaborative office" | translate
+              }}<span class="text-danger">*</span></label
+            >
+            <input
+              class="form-control"
+              disabled=""
+              type="text"
+              id="OfficeName"
+              autocomplete="off"
+              name="OfficeName"
+              placeholder="{{ 'Collaborative office' | translate }}  "
+              [(ngModel)]="modalDetails.OfficeName"
+              [ngModelOptions]="{ standalone: true }"
+            />
+          </div>
+          <div class="form-group">
+            <label for="date" class=""
+              >{{ "license number" | translate
+              }}<span class="text-danger">*</span></label
+            >
+            <input
+              class="form-control"
+              disabled=""
+              type="text"
+              id="LicenseNumber"
+              name="LicenseNumber"
+              placeholder="{{ 'license number' | translate }}  "
+              [(ngModel)]="modalDetails.LicenseNumber"
+              [ngModelOptions]="{ standalone: true }"
+            />
+          </div>
+          <div class="form-group">
+            <label for="date" class=""
+              >{{ "No. planned" | translate
+              }}<span class="text-danger">*</span></label
+            >
+            <input
+              class="form-control"
+              disabled=""
+              type="text"
+              id="OutlineNo"
+              name="OutlineNo"
+              placeholder="{{ 'No. planned' | translate }}  "
+              [(ngModel)]="modalDetails.OutlineNo"
+              [ngModelOptions]="{ standalone: true }"
+            />
+          </div>
+          <div class="form-group">
+            <label for="date" class=""
+              >{{ "piece number" | translate
+              }}<span class="text-danger">*</span></label
+            >
+            <input
+              class="form-control"
+              disabled=""
+              type="text"
+              id="PieceNo"
+              autocomplete="off"
+              name="PieceNo"
+              placeholder="  {{ 'piece number' | translate }}"
+              [(ngModel)]="modalDetails.PieceNo"
+              [ngModelOptions]="{ standalone: true }"
+            />
+          </div>
+          <div class="form-group">
+            <label for="date" class=""
+              >{{ "honesty" | translate
+              }}<span class="text-danger">*</span></label
+            >
+            <ng-select
+              [ngModelOptions]="{ standalone: true }"
+              [items]="load_MunicipalsSelect"
+              bindLabel="name"
+              bindValue="id"
+              [clearable]="true"
+              class="w-full p-0"
+              [(ngModel)]="modalDetails.MunicipalSelectId"
+              placeholder="{{ 'Chose' | translate }}"
+            >
+            </ng-select>
+          </div>
+          <div class="form-group">
+            <label for="date" class=""
+              >{{ "Municipal" | translate
+              }}<span class="text-danger">*</span></label
+            >
+            <ng-select
+              [ngModelOptions]="{ standalone: true }"
+              [items]="load_SubMunicipalitysSelect"
+              bindLabel="name"
+              bindValue="id"
+              [clearable]="true"
+              class="w-full p-0"
+              [(ngModel)]="modalDetails.SubMunicipalitySelectId"
+              placeholder="{{ 'Chose' | translate }}"
+            >
+            </ng-select>
+          </div>
+          <div class="form-group">
+            <label for="date" class=""
+              >{{ "construction type" | translate
+              }}<span class="text-danger">*</span></label
+            >
+            <ng-select
+              [ngModelOptions]="{ standalone: true }"
+              [items]="load_BuildTypeSelect"
+              bindLabel="name"
+              bindValue="id"
+              [clearable]="true"
+              class="w-full p-0"
+              [(ngModel)]="modalDetails.ProBuildingTypeSelectId"
+              placeholder="{{ 'Chose' | translate }}"
+            >
+            </ng-select>
+          </div>
+          <div class="form-group">
+            <label for="date" class=""
+              >{{ "Construction description" | translate
+              }}<span class="text-danger">*</span></label
+            >
+            <input
+              class="form-control"
+              type="text"
+              id="ProBuildingDisc"
+              autocomplete="off"
+              name="ProBuildingDisc"
+              placeholder="{{ 'Construction description' | translate }}  "
+              [(ngModel)]="modalDetails.ProBuildingDisc"
+              [ngModelOptions]="{ standalone: true }"
+            />
+          </div>
+          <div class="form-group">
+            <label for="date" class=""
+              >{{ "Neighborhood" | translate
+              }}<span class="text-danger">*</span></label
+            >
+            <input
+              class="form-control"
+              disabled=""
+              type="text"
+              id="DistrictName"
+              autocomplete="off"
+              name="DistrictName"
+              placeholder="{{ 'Neighborhood' | translate }}"
+              [(ngModel)]="modalDetails.DistrictName"
+              [ngModelOptions]="{ standalone: true }"
+            />
+          </div>
+          <div class="form-group">
+            <label for="date" class=""
+              >{{ "The number of turns" | translate
+              }}<span class="text-danger">*</span></label
+            >
+            <input
+              class="form-control"
+              disabled=""
+              type="text"
+              id="AdwARid"
+              autocomplete="off"
+              name="AdwARid"
+              placeholder="  {{ 'The number of turns' | translate }}"
+              [(ngModel)]="modalDetails.AdwARid"
+              [ngModelOptions]="{ standalone: true }"
+            />
+          </div>
+        </div>
+      </form>
+      <div class="border-t pt-2 mt-3 border-neutral-300">
+        <div class="flex gap-2 justify-end">
+          <button
+            [disabled]="disableButtonSave_Supervision"
+            class="btn bg-base text-white"
+            (click)="SupervisionAvailability(dataModal)"
+          >
+            {{ "Save" | translate }}
+          </button>
+          <button (click)="dataModal.hide()" class="btn btn-secondary">
+            {{ "Back" | translate }}
+          </button>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>
+
+<div
+  class="modal fade ngxModal"
+  bsModal
+  #fileTypeModal="bs-modal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="dialog-static-name2"
+>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="m-0">
+      <span class="text-2xl"> {{ "New supervision stage" | translate }} </span>
+    </h4>
+    <button
+      type="button"
+      class="text-2xl text-white m-0"
+      (click)="fileTypeModal?.hide()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body text-center">
+    <form #addFileType="ngForm" class="grid grid-cols-1 md:grid-cols-2 gap-2">
+      <div class="form-group">
+        <label for="CustomerNameArtxt3" class="col-form-label block">
+          {{ "nameAr" | translate }}
+          <span class="text-danger">*</span></label
+        >
+        <input
+          required
+          #NameAr="ngModel"
+          ngModel
+          [(ngModel)]="data.phases.nameAr"
+          [ngModelOptions]="{ standalone: true }"
+          class="form-control"
+          type="text"
+          autocomplete="off"
+          [placeholder]="('Write' | translate) + ' ' + ('nameAr' | translate)"
+        />
+      </div>
+      <div class="form-group">
+        <label for="CustomerNameEntxt3" class="col-form-label block">
+          {{ "nameEn" | translate }}
+          <span class="text-danger">*</span></label
+        >
+        <div style="display: inline-flex; width: 100%">
+          <input
+            required
+            #NameEnValue
+            #NameEn="ngModel"
+            [(ngModel)]="data.phases.nameEn"
+            [ngModelOptions]="{ standalone: true }"
+            ngModel
+            class="form-control"
+            type="text"
+            autocomplete="off"
+            [placeholder]="('Write' | translate) + ' ' + ('nameEn' | translate)"
+          />
+          <a
+            class="btn"
+            id="CopyName2"
+            (click)="data.phases.nameEn = data.phases.nameAr"
+            ><i class="fa fa-copy"></i
+          ></a>
+        </div>
+      </div>
+    </form>
+    <div class="max-h-80 overflow-auto px-2 mt-4">
+      <table class="table table-hover">
+        <thead class="bg-base text-white">
+          <tr>
+            <th style="max-width: 300px">{{ "nameAr" | translate }}</th>
+            <th>{{ "nameEn" | translate }}</th>
+            <th
+              [translate]="'name'"
+              [translateParams]="{
+                ar: 'خيارات',
+                en: 'Operations'
+              }"
+            ></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let type of data.superPhases">
+            <td style="max-width: 300px">{{ type.name }}</td>
+            <td>{{ type.nameEn }}</td>
+            <td class="flex gap-2 justify-center">
+              <button
+                class="p-2 bg-orange-100 hover:bg-orange-500 rounded-lg duration-300 hover:text-white aspect-square w-10"
+                (click)="
+                  data.phases.id = type.id;
+                  data.phases.nameAr = type.name;
+                  data.phases.nameEn = type.nameEn
+                "
+              >
+                <i class="fa-regular fa-pen-to-square"></i>
+              </button>
+              <button
+                (click)="deleteSupervision.show(); getSuperPhaseRow(type)"
+                class="p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white aspect-square w-10"
+              >
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="flex gap-2 justify-end s mt-3 pt-3 border-t border-neutral-300">
+      <button
+        class="btn bg-base text-white"
+        type="submit"
+        [disabled]="addFileType.invalid"
+        (click)="saveSuperPhases()"
+      >
+        {{ "Save" | translate }}
+      </button>
+      <button (click)="fileTypeModal?.hide()" class="btn btn-secondary">
+        {{ "Back" | translate }}
+      </button>
+      <button (click)="resetSuperPhases()" class="btn bg-base text-white">
+        {{ "جديد" | translate }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade ngxModal center"
+  bsModal
+  #deleteSupervision="bs-modal"
+  tabindex="-1"
+  role="dialog"
+>
+  <div class="modal-body text-center">
+    <p
+      [translate]="'name'"
+      [translateParams]="{
+        ar: 'هل تريد بالتأكيد حذف هذا الصف',
+        en: 'Are you sure to delete this row ?'
+      }"
+    ></p>
+    <div class="flex gap-2 justify-center">
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="confirmSuperPhasesDelete(); deleteSupervision.hide()"
+      >
+        {{ "Yes" | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="deleteSupervision.hide()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "No" | translate }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade ngxModal"
+  bsModal
+  #editphasedetails="bs-modal"
+  tabindex="-1"
+  role="dialog"
+>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="m-0">
+      <span class="text-2xl">{{ "Oversight flight details" | translate }}</span>
+    </h4>
+    <button
+      type="button"
+      class="text-2xl text-white m-0"
+      (click)="editphasedetails?.hide()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="flex gap-2 justify-start">
+      <button
+        *ngIf="modalDetails.PhaseId > 13"
+        class="btn btn-primary"
+        (click)="addNewRow_AddSup()"
+        [translate]="'name'"
+        [translateParams]="{
+          ar: 'اضافة بند',
+          en: 'Add New Condition'
+        }"
+      ></button>
+    </div>
+    <div class="overflow-auto max-h-96 mt-4 px-2">
+      <table class="w-full">
+        <tr class="bg-base text-white">
+          <th>{{ "receiving stage" | translate }}</th>
+          <td
+            *ngIf="modalDetails.PhaseId > 13"
+            [translate]="'name'"
+            [translateParams]="{
+              ar: 'خيارات',
+              en: 'Options'
+            }"
+          ></td>
+        </tr>
+        <tr *ngFor="let phase of load_AllSuperPhaseDet">
+          <td>
+            <textarea
+              class="resize-none focus:outline-0 w-full min-w-max"
+              type="text"
+              [(ngModel)]="phase.nameAr"
+            >
+            </textarea>
+          </td>
+          <td *ngIf="modalDetails.PhaseId > 13">
+            <button
+              class="p-2 rounded-lg text-red-500 bg-red-50"
+              (click)="deleteRow_AddSup(phase.phaseDetailesId)"
+            >
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <div class="modal-footer gap-2">
+    <button
+      *ngIf="modalDetails.PhaseId > 13"
+      type="button"
+      mat-raised-button
+      color="primary"
+      (click)="SaveSuperDet_AddSup(editphasedetails)"
+    >
+      {{ "Save" | translate }}
+    </button>
+    <button
+      type="button"
+      (click)="editphasedetails.hide()"
+      mat-raised-button
+      color="basic"
+    >
+      {{ "Back" | translate }}
+    </button>
+  </div>
+</div>
+
+<!-- <div
+  class="modal fade ngxModal"
+  bsModal
+  #editphasedetails="bs-modal"
+  tabindex="-1"
+  role="dialog"
+>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="m-0">
+      <span class="text-2xl">{{ "Oversight flight details" | translate }}</span>
+    </h4>
+    <button
+      type="button"
+      class="text-2xl text-white m-0"
+      (click)="editphasedetails?.hide()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="overflow-auto max-h-96 mt-4 px-2">
+      <table>
+        <tr class="bg-base text-white">
+          <th>{{ "stage items" | translate }}</th>
+        </tr>
+        <tr *ngFor="let phasedet of load_AllSuperPhaseDet">
+          <td>{{ phasedet.nameAr }}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="modal-footer gap-2">
+    <button
+      type="button"
+      (click)="editphasedetails.hide()"
+      mat-raised-button
+      color="basic"
+    >
+      {{ "Back" | translate }}
+    </button>
+  </div>
+</div> -->
+
+<div
+  class="modal fade ngxModal"
+  bsModal
+  #phasedetails="bs-modal"
+  tabindex="-1"
+  role="dialog"
+>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="m-0">
+      <span class="text-2xl">{{ "Oversight flight details" | translate }}</span>
+    </h4>
+    <button
+      type="button"
+      class="text-2xl text-white m-0"
+      (click)="phasedetails?.hide()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="flex gap-2 justify-end">
+      <div>
+        <span class="text-base">{{ "Customer Name" | translate }} : </span>
+        <span> {{ PhaseDetailsGrid.customerName }}</span>
+      </div>
+      <div>
+        <span class="text-base">{{ "stage name" | translate }} :</span>
+        <span>{{ PhaseDetailsGrid.phaseName }}</span>
+      </div>
+    </div>
+    <div class="flex gap-2 justify-start">
+      <button
+        *ngIf="PhaseDetailsGrid.phaseId > 13"
+        class="btn btn-primary"
+        (click)="addNewRow()"
+        [translate]="'name'"
+        [translateParams]="{
+          ar: 'اضافة بند',
+          en: 'Add New Condition'
+        }"
+      ></button>
+    </div>
+    <div class="overflow-auto max-h-96 mt-4 px-2">
+      <table class="w-full">
+        <tr class="bg-base text-white">
+          <th>{{ "receiving stage" | translate }}</th>
+          <th>{{ "Notes" | translate }}</th>
+          <th>{{ "status" | translate }}</th>
+          <th>{{ "show" | translate }}</th>
+          <td
+            *ngIf="PhaseDetailsGrid.phaseId > 13"
+            [translate]="'name'"
+            [translateParams]="{
+              ar: 'خيارات',
+              en: 'Options'
+            }"
+          ></td>
+        </tr>
+        <tr *ngFor="let phase of PhaseDetailsGrid.DetailsList">
+          <td>
+            <textarea
+              class="resize-none focus:outline-0 w-full min-w-max"
+              type="text"
+              [(ngModel)]="phase.nameAr"
+            >
+            </textarea>
+          </td>
+          <td>
+            <input
+              class="focus:outline-0 max-w-fit"
+              type="text"
+              [(ngModel)]="phase.note"
+            />
+          </td>
+          <td>
+            <div
+              class="p-1 rounded-lg {{
+                phase.isRead == 2
+                  ? 'text-neutral-500  '
+                  : phase.isRead == 1
+                  ? '  text-green-500'
+                  : '  text-red-500'
+              }}"
+            >
+              <i *ngIf="phase.isRead == 0" class="fa-solid fa-circle-xmark"></i>
+              <i *ngIf="phase.isRead == 1" class="fa-solid fa-circle-check"></i>
+              <i *ngIf="phase.isRead == 2" class="fa-solid fa-book-open"></i>
+            </div>
+          </td>
+          <td>
+            <a (click)="downloadFile(phase)" class="text-neutral-500">
+              <i *ngIf="phase.imageUrl" class="fa-solid fa-eye"></i>
+            </a>
+          </td>
+          <td *ngIf="PhaseDetailsGrid.phaseId > 13">
+            <button
+              class="p-2 rounded-lg text-red-500 bg-red-50"
+              (click)="deleteRow(phase.superDetId)"
+            >
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <div class="modal-footer gap-2">
+    <button
+      *ngIf="PhaseDetailsGrid.phaseId > 13"
+      type="button"
+      mat-raised-button
+      color="primary"
+      (click)="SaveSuperDet(phasedetails)"
+    >
+      {{ "Save" | translate }}
+    </button>
+    <button
+      type="button"
+      (click)="phasedetails.hide()"
+      mat-raised-button
+      color="basic"
+    >
+      {{ "Back" | translate }}
+    </button>
+  </div>
+</div>
+
+<div
+  class="modal fade ngxModal center"
+  bsModal
+  #emailModal="bs-modal"
+  tabindex="-1"
+  role="dialog"
+>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="m-0">
+      <span class="text-2xl">{{
+        "Do you want to send an email?" | translate
+      }}</span>
+    </h4>
+    <button
+      type="button"
+      class="text-2xl text-white m-0"
+      (click)="emailModal.hide()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form action="">
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          id="checkedClientW"
+          [(ngModel)]="checkedClient"
+          [ngModelOptions]="{ standalone: true }"
+        />
+        <label class="form-check-label" for="flexCheckCheckedasd">
+          {{ "Client" | translate }}
+        </label>
+      </div>
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          id="checkedContW"
+          [(ngModel)]="checkedCont"
+          [ngModelOptions]="{ standalone: true }"
+        />
+        <label class="form-check-label" for="flexCheckChecked22">
+          {{ "contractor" | translate }}
+        </label>
+      </div>
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          id="checkedOfficeW"
+          [(ngModel)]="checkedOffice"
+          [ngModelOptions]="{ standalone: true }"
+        />
+        <label class="form-check-label" for="flexCheckChecked12">
+          {{ "cooperating office" | translate }}
+        </label>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer gap-2">
+    <button
+      type="button"
+      mat-raised-button
+      color="primary"
+      (click)="SendMSupervision(); emailModal.hide()"
+    >
+      {{ "Send" | translate }}
+    </button>
+    <button
+      type="button"
+      (click)="emailModal.hide()"
+      mat-raised-button
+      color="basic"
+    >
+      {{ "Back" | translate }}
+    </button>
+  </div>
+</div>
+
+<div
+  class="modal fade ngxModal center"
+  bsModal
+  #whatsModal="bs-modal"
+  tabindex="-1"
+  role="dialog"
+>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="m-0">
+      <span class="text-2xl">{{
+        "Do you want to send WhatsApp?" | translate
+      }}</span>
+    </h4>
+    <button
+      type="button"
+      class="text-2xl text-white m-0"
+      (click)="whatsModal.hide()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form #WhatsAppForm="ngForm" action="">
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          id="checkedClientW"
+          [(ngModel)]="checkedClient"
+          [ngModelOptions]="{ standalone: true }"
+        />
+        <label class="form-check-label" for="flexCheckCheckedasd">
+          {{ "Client" | translate }}
+        </label>
+      </div>
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          id="checkedContW"
+          [(ngModel)]="checkedCont"
+          [ngModelOptions]="{ standalone: true }"
+        />
+        <label class="form-check-label" for="flexCheckChecked22">
+          {{ "contractor" | translate }}
+        </label>
+      </div>
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          id="checkedOfficeW"
+          [(ngModel)]="checkedOffice"
+          [ngModelOptions]="{ standalone: true }"
+        />
+        <label class="form-check-label" for="flexCheckChecked12">
+          {{ "cooperating office" | translate }}
+        </label>
+      </div>
+      <div class="upload col-span-1 md:col-span-2">
+
+        <p style="text-align: center;color: red;font-weight: bold; " class="p-1 bg-red-100">
+          {{ "يرجي تحميل طلعة الإشراف PDF و ارفاقها هنا لكي تصل الي العميل بالشكل الجديد" | translate }}
+        </p>
+
+        <file-upload [(ngModel)]="uploadedFiles" name="files"></file-upload>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer gap-2">
+    <button
+      type="button"
+      mat-raised-button
+      color="primary"
+      (click)="SendWSupervision(WhatsAppForm.value,whatsModal);"
+    >
+      {{ "Send" | translate }}
+    </button>
+    <button
+      type="button"
+      (click)="whatsModal.hide()"
+      mat-raised-button
+      color="basic"
+    >
+      {{ "Back" | translate }}
+    </button>
+  </div>
+</div>
+
+
+
+<ng-template #PrintSupervisionBaseModal let-modal>
+  <div class="modal-body">
+    <div id="report" [ngStyle]="{ direction: 'rtl' }">
+      <!--Header-->
+      <div
+        class="report-header"
+        style="
+          display: flex;
+          align-items: center;
+          gap: 100px;
+          padding: 3px 0px;
+          margin-bottom: 20px;
+        "
+      >
+        <div class="headerNe-right-side">
+          <img
+            *ngIf="CustomDataPrintBase.OrgImg"
+            src="{{ CustomDataPrintBase.OrgImg }}"
+            alt="logo"
+            style="
+              height: 150px;
+              width: 200px;
+              max-width: 200px;
+              object-fit: fill;
+            "
+          />
+        </div>
+
+        <div class="headerNe-lefy-side" style="width: 100%">
+          <h1
+            style="
+              letter-spacing: 0.25px;
+              font-size: 20px;
+              margin: 0;
+              margin-bottom: 1px;
+            "
+          >
+            {{ SupervisionPrintBase?.org_VD?.nameAr }}
+          </h1>
+          <h1
+            style="
+              letter-spacing: 0.25px;
+              font-size: 20px;
+              margin: 0;
+              margin-bottom: 4px;
+            "
+          >
+            {{ SupervisionPrintBase?.org_VD?.nameEn }}
+          </h1>
+          <div class="line" style="position: relative; padding: 5px 0px 10px">
+            <span
+              style="
+                position: absolute;
+                right: 0;
+                width: 100%;
+                height: 2px;
+                background-color: #e5e5e5;
+                z-index: 1;
+              "
+            ></span>
+            <span
+              style="
+                position: absolute;
+                right: 0;
+                width: 70%;
+                height: 2px;
+                background-color: #ec1c24;
+                z-index: 2;
+              "
+            ></span>
+          </div>
+
+          <h3
+            style="
+              margin-bottom: 0;
+              font-size: 22px;
+              color: #0c8191;
+              margin-bottom: 0;
+              margin-top: 10px;
+              font-weight: 500;
+            "
+            [translate]="'name'"
+            [translateParams]="{
+              ar: 'طلعة اشراف',
+              en: 'supervision'
+            }"
+          ></h3>
+        </div>
+      </div>
+      <!--/Header-->
+
+      <div class="info" style="overflow: auto; margin-bottom: 20px">
+        <table
+          class="table table-bordered m-0"
+          style="
+            width: 100%;
+            color: white;
+            text-align: center;
+            vertical-align: middle;
+            min-width: max-content;
+          "
+        >
+          <tr>
+            <td
+              style="
+                padding-inline: 0px !important;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+                border: 1px solid #dce0e4;
+              "
+              [translate]="'name'"
+              [translateParams]="{ ar: 'العميل', en: 'customer name' }"
+            ></td>
+            <td
+              style="
+                padding-inline: 0px !important;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+                border: 1px solid #dce0e4;
+              "
+            >
+              {{ SupervisionPrintBase?.supervision[0]?.customerName }}
+            </td>
+          </tr>
+          <tr>
+            <td
+              style="
+                padding-inline: 0px !important;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+                border: 1px solid #dce0e4;
+              "
+              [translate]="'name'"
+              [translateParams]="{ ar: 'رقم المشروع', en: 'project number' }"
+            ></td>
+            <td
+              style="
+                padding-inline: 0px !important;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+                border: 1px solid #dce0e4;
+              "
+            >
+              {{ SupervisionPrintBase?.supervision[0]?.projectNo }}
+            </td>
+          </tr>
+          <tr>
+            <td
+              style="
+                padding-inline: 0px !important;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+                border: 1px solid #dce0e4;
+              "
+              [translate]="'name'"
+              [translateParams]="{ ar: 'اسم المرحلة', en: 'phase name' }"
+            ></td>
+            <td
+              style="
+                padding-inline: 0px !important;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+                border: 1px solid #dce0e4;
+              "
+            >
+              {{ SupervisionPrintBase?.supervision[0]?.phaseName }}
+            </td>
+          </tr>
+          <tr>
+            <td
+              style="
+                padding-inline: 0px !important;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+                border: 1px solid #dce0e4;
+              "
+              [translate]="'name'"
+              [translateParams]="{
+                ar: 'رقم الاشراف',
+                en: 'supervision number'
+              }"
+            ></td>
+            <td
+              style="
+                padding-inline: 0px !important;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+                border: 1px solid #dce0e4;
+              "
+            >
+              {{ SupervisionPrintBase?.supervision[0]?.supervisionNumber }}
+            </td>
+          </tr>
+          <tr>
+            <td
+              style="
+                padding-inline: 0px !important;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+                border: 1px solid #dce0e4;
+              "
+              [translate]="'name'"
+              [translateParams]="{ ar: 'تاريخه', en: 'date' }"
+            ></td>
+            <td
+              style="
+                padding-inline: 0px !important;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+                border: 1px solid #dce0e4;
+              "
+            >
+              {{ SupervisionPrintBase?.supervision[0]?.date }}
+            </td>
+          </tr>
+          <tr>
+            <td
+              style="
+                padding-inline: 0px !important;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+                border: 1px solid #dce0e4;
+              "
+              [translate]="'name'"
+              [translateParams]="{ ar: 'المقاول', en: 'Contractor' }"
+            ></td>
+            <td
+              style="
+                padding-inline: 0px !important;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+                border: 1px solid #dce0e4;
+              "
+            >
+              {{ SupervisionPrintBase?.supervision[0]?.contractorName }}
+            </td>
+          </tr>
+          <tr>
+            <td
+              style="
+                padding-inline: 0px !important;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+                border: 1px solid #dce0e4;
+              "
+              [translate]="'name'"
+              [translateParams]="{ ar: 'المكلف بها', en: 'Received UserName' }"
+            ></td>
+            <td
+              style="
+                padding-inline: 0px !important;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+                border: 1px solid #dce0e4;
+              "
+            >
+              {{ SupervisionPrintBase?.supervision[0]?.receivedUserName }}
+            </td>
+          </tr>
+          <tr>
+            <td
+              style="
+                padding-inline: 0px !important;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+                border: 1px solid #dce0e4;
+              "
+              [translate]="'name'"
+              [translateParams]="{ ar: 'رقم الرخصه', en: 'license number' }"
+            ></td>
+            <td
+              style="
+                padding-inline: 0px !important;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+                border: 1px solid #dce0e4;
+              "
+            >
+              {{ SupervisionPrintBase?.supervision[0]?.licenseNo }}
+            </td>
+          </tr>
+          <tr>
+            <td
+              style="
+                padding-inline: 0px !important;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+                border: 1px solid #dce0e4;
+              "
+              [translate]="'name'"
+              [translateParams]="{ ar: 'رقم المخطط', en: 'Outline number' }"
+            ></td>
+            <td
+              style="
+                padding-inline: 0px !important;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+                border: 1px solid #dce0e4;
+              "
+            >
+              {{ SupervisionPrintBase?.supervision[0]?.outlineNo }}
+            </td>
+          </tr>
+          <tr>
+            <td
+              style="
+                padding-inline: 0px !important;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+                border: 1px solid #dce0e4;
+              "
+              [translate]="'name'"
+              [translateParams]="{ ar: 'رقم القطعة', en: 'Piece No' }"
+            ></td>
+            <td
+              style="
+                padding-inline: 0px !important;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+                border: 1px solid #dce0e4;
+              "
+            >
+              {{ SupervisionPrintBase?.supervision[0]?.contractorName }}
+            </td>
+          </tr>
+          <tr>
+            <td
+              style="
+                padding-inline: 0px !important;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+                border: 1px solid #dce0e4;
+              "
+              [translate]="'name'"
+              [translateParams]="{ ar: 'مكتب المتعاون', en: 'Office Name' }"
+            ></td>
+            <td
+              style="
+                padding-inline: 0px !important;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+                border: 1px solid #dce0e4;
+              "
+            >
+              {{ SupervisionPrintBase?.supervision[0]?.officeName }}
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="services" style="width: 100%; margin-bottom: 20px">
+        <div class="content">
+          <table
+            style="text-align: center; vertical-align: middle; width: 100%"
+          >
+            <thead>
+              <td
+                [translate]="'name'"
+                [translateParams]="{
+                  ar: 'اسم مرحلة الاستلام',
+                  en: 'phase name'
+                }"
+                style="
+                  font-size: 16px;
+                  background-color: #fff;
+                  padding: 14px 4px;
+                  text-align: center;
+                  color: #272727;
+                  word-wrap: break-word;
+                  border-inline-start: 1px dashed #0c8191;
+                  border: 1px dashed #272727;
+                  font-weight: 600;
+                "
+              ></td>
+              <td
+                [translate]="'name'"
+                [translateParams]="{ ar: 'الحالة', en: 'status' }"
+                style="
+                  font-size: 16px;
+                  background-color: #fff;
+                  padding: 14px 4px;
+                  text-align: center;
+                  color: #272727;
+                  word-wrap: break-word;
+                  border-inline-start: 1px dashed #0c8191;
+                  border: 1px dashed #272727;
+                  font-weight: 600;
+                "
+              ></td>
+              <td
+                [translate]="'name'"
+                [translateParams]="{ ar: 'ملاحظات', en: 'notes' }"
+                style="
+                  font-size: 16px;
+                  background-color: #f7f7f7;
+                  padding: 14px 4px;
+                  text-align: center;
+                  color: #272727;
+                  word-wrap: break-word;
+                  border-inline-start: 1px dashed #0c8191;
+                  border: 1px dashed #272727;
+                  font-weight: 600;
+                "
+              ></td>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of SupervisionPrintBase?.supervision">
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 0px;
+                    color: #272727;
+                    border-inline-start: 1px dashed #272727;
+                    border-bottom: 1px dashed #272727;
+                  "
+                >
+                  {{ item.nameAr }}
+                </td>
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 0px;
+                    color: #272727;
+                    border-inline-start: 1px dashed #272727;
+                    border-bottom: 1px dashed #272727;
+                  "
+                >
+                  {{ GetStatusName(item) }}
+                </td>
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 0px;
+                    color: #272727;
+                    border-inline-start: 1px dashed #272727;
+                    border-bottom: 1px dashed #272727;
+                  "
+                >
+                  {{ item.note }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button
+      (click)="printDiv('report')"
+      class="min-w-max p-2 bg-sky-100 hover:bg-sky-500 rounded-lg duration-300 hover:text-white aspect-square w-10"
+    >
+      <i class="fa fa-print"></i>
+    </button>
+    <button
+      type="button"
+      (click)="modal.dismiss()"
+      mat-raised-button
+      color="basic"
+    >
+      {{ "No" | translate }}
+    </button>
+  </div>
+</ng-template>

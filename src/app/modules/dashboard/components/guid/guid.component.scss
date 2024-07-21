@@ -1,0 +1,147 @@
+.btns {
+  button {
+    @apply flex;
+  }
+}
+
+.side-buttons {
+  button {
+    @apply font-semibold text-lg px-3 py-2 border-b w-full text-start bg-white;
+
+    &:hover,
+    &.active {
+      @apply text-white bg-blue-500;
+    }
+  }
+}
+
+.guide {
+
+  ul {
+    padding-inline-start: 15px;
+    padding-inline-end: 0px;
+    padding-bottom: 10px;
+    list-style: disc;
+
+    li {
+      padding: 5px;
+      padding-inline-end: 15px;
+
+
+      h4 {
+        cursor: pointer;
+        min-width: 150px;
+        transition: all 0.3s ease-in-out;
+        color: var(--main-color);
+        font-weight: 400;
+        font-size: 17px;
+        text-wrap: balance;
+        margin-bottom: 0;
+
+        &:hover {
+          text-decoration: underline;
+          color: var(--main-color);
+          transform: translateX(-5px);
+        }
+      }
+    }
+  }
+
+
+}
+
+::ng-deep {
+  .accordion {
+    .card-body {
+      color: #000;
+      visibility: visible;
+    }
+  }
+}
+
+.guide-box {
+  --tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1),
+    0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color),
+    0 4px 6px -4px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
+    var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+
+  h2 {
+    font-weight: 700;
+    font-size: 24px;
+  }
+
+  p {
+    max-width: 800px;
+    margin-inline: auto;
+    font-weight: 600;
+    text-wrap: balance;
+    font-size: 15px;
+    letter-spacing: 0.25px;
+
+    @media (max-width: 768px) {
+      max-width: 90%;
+    }
+  }
+
+  form {
+    width: 100%;
+
+    @media (max-width: 768px) {
+      width: 90%;
+    }
+  }
+
+
+}
+
+.guide-info {
+  border-radius: 1rem;
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+  padding: 0rem;
+  --tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1),
+    0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color),
+    0 4px 6px -4px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
+    var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+
+  h3 {
+    padding: 16px;
+    background: var(--base-color);
+    color: #fff;
+    margin-bottom: 10px;
+    border-radius: 1rem 1rem 0 0;
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: 0.25px;
+  }
+
+}
+
+.liBtns {
+  &.accrd {
+    position: absolute;
+    inset-inline-end: 5px;
+    top: 18px;
+  }
+
+  button {
+    width: 20px !important;
+    height: 20px !important;
+    font-size: 14px !important;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: green;
+
+    &:last-of-type {
+      color: #d63384;
+    }
+  }
+}

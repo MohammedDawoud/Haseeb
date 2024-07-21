@@ -1,0 +1,1372 @@
+<div class="general-journal">
+  <app-navigator [title]="title"></app-navigator>
+  <!-- inputs -->
+  <div class="container-fluid">
+    <form #form="ngForm" class="bg-blue-100 p-4 mt-3 rounded-lg">
+      <div class="row align-items-center">
+      <div class="col-xxl-3 col-md-4 col-sm-6 mb-3">
+        <button class="btn btn-primary" (click)="data.filter.enable = !data.filter.enable;CheckDate(null)" [translate]="'name'"
+          [translateParams]="{
+                    ar: 'فلترة بالوقت',
+                    en: 'Time Filter'
+                  }"></button>
+        <div class="form-group timeInput" *ngIf="data.filter.enable">
+          <input placeholder="{{ 'Chose Date' | translate }}"
+          [ngModelOptions]="{standalone: true}" [(ngModel)]="data.filter.date" type="text" (ngModelChange)="CheckDate($event)"
+            class="form-control" bsDaterangepicker #dpr="bsDaterangepicker" />
+        </div>
+      </div>
+        <div class="col-xxl-3 col-md-4 col-sm-6 mb-3">
+          <div class="form-group">
+            <ng-select class="w-full p-0" style="min-width: 250px !important" (change)="RefreshData();" placeholder="{{ 'choose level' | translate }}"
+            [ngModelOptions]="{standalone: true}"
+            [(ngModel)]="data.filter.choseid" name="Chose">
+              <ng-option *ngFor="let user of ChoseList" [value]="user.id">{{
+                user.name
+                }}</ng-option>
+            </ng-select>
+          </div>
+        </div>
+        <div class="col-xxl-3 col-md-4 col-sm-6 mb-3">
+          <div class="form-group" >
+            <ng-select class="w-full p-0" style="min-width: 250px !important"
+            [ngModelOptions]="{standalone: true}"[(ngModel)]="data.filter.filteringType"placeholder="{{ 'Filter type' | translate }}"
+              (change)="FillFilteringSelect();">
+              <ng-option *ngFor="let user of filteringTypeList" [value]="user.id">{{
+                user.name
+                }}</ng-option>
+            </ng-select>
+          </div>
+
+        </div>
+        <div class="col-xxl-3 col-md-4 col-sm-6 mb-3">
+          <div class="form-group">
+            <ng-select class="w-full p-0" style="min-width: 250px !important" (change)="RefreshData();"
+            [ngModelOptions]="{standalone: true}" [multiple]="true"
+            [(ngModel)]="data.filter.FilteringTypeStr">
+              <ng-option *ngFor="let user of FilteringTypeStrList" [value]="user.id">{{
+                user.name
+                }}</ng-option>
+            </ng-select>
+          </div>
+        </div>
+        <div class="col-xxl-3 col-md-4 col-sm-6 mb-3">
+          <div class="form-group">
+            <!-- <label class="col-form-label"> {{ "accountName" | translate }}</label> -->
+            <ng-select
+              class="w-full p-0"
+              placeholder="{{ 'accountName' | translate }}"
+              [ngModelOptions]="{standalone: true}"
+              [(ngModel)]="data.filter.search_accountId"
+              name="accountName"
+              (change)="RefreshData()"
+            >
+              <ng-option *ngFor="let user of load_accountIds" [value]="user.id">{{
+                user.name
+              }}</ng-option>
+            </ng-select>
+          </div>
+        </div>
+        <div class="col-xxl-3 col-md-4 col-sm-6 mb-3">
+          <div class="form-group">
+              <ng-select
+              class="w-full p-0"
+              placeholder="{{ 'Chose' | translate }}"
+              [ngModelOptions]="{standalone: true}"
+              [(ngModel)]="data.filter.costCenter"
+              name="withCostCenter"
+              (change)="RefreshData()"
+            >
+              <ng-option *ngFor="let user of load_costCenters" [value]="user.id">{{user.name}}</ng-option>
+            </ng-select>
+          </div>
+        </div>
+        <div class="col-xxl-3 col-md-4 col-sm-6 mb-3">
+          <div class="form-group">
+            <!-- <label class="col-form-label"> {{ "search" | translate }}</label> -->
+
+            <input type="text "
+            placeholder="{{ 'search' | translate }}"
+            class="w-full p-2 inputType"autocomplete="off" name="search" (keyup)="applyFilter($event)"/>
+          </div>
+        </div>
+
+        <div class="col-xxl-3 col-md-4 col-sm-6 mb-3">
+          <div class="form-check form-switch position-relative mb-2">
+            <input
+              class="form-check-input position-absolute end-25"
+              type="checkbox"
+              role="switch"
+              [checked]="showTable"
+              id="flexSwitchCheckDefault"
+              (change)="showTable = !showTable"
+            />
+            <label
+              class="form-check-label me-5"
+              for="flexSwitchCheckDefault"
+              style="width: max-content"
+            >
+              {{ "monitor" | translate }}
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </label>
+          </div>
+        </div>
+
+        <div class="col-xxl-3 col-md-4 col-sm-6 mb-3">
+          <div class="form-check form-switch position-relative mb-2">
+            <input
+              class="form-check-input position-absolute end-25"
+              type="checkbox"
+              role="switch"
+              [checked]="showTablezeroCheck"
+              id="flexSwitchCheckDefault3"
+              (change)="showTablezeroCheck = !showTablezeroCheck;RefreshData()"
+            />
+            <label
+              class="form-check-label me-5"
+              for="flexSwitchCheckDefault3"
+              style="width: max-content"
+            >
+              {{ "DoNotShowZeroAccounts" | translate }}
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="head flex gap-2 flex-wrap items-end justify-between">
+        <!-- all buttons  -->
+        <div class="btns w-100">
+          <div class="row d-md-flex justify-content-center">
+            <button
+              type="button"
+              class="flex gap-1 btn btn-outline-secondary col-md-2"
+              (click)="RefreshData()"
+              >
+              {{ "search" | translate }}
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+
+            <button
+              type="button"
+              class="flex gap-1 btn btn-outline-secondary border-0 col-md-2"
+              (click)="reset()"
+            >
+              <i class="fa-solid fa-rotate-right"></i>
+              {{ "Reset" | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <div>
+      <h2 class="text-center mt-3">{{ "TrialBalance" | translate }}</h2>
+      <div class="btns mb-3 w-100">
+        <div class="row d-md-flex">
+          <button
+            type="button"(click)="getPrintdata('report')"
+            class="flex gap-1 btn btn-outline-secondary mb-3 col-md-2"
+          >
+            {{ "TrialBalancePrinting" | translate }}
+            <i class="fa-solid fa-print"></i>
+          </button>
+
+          <button
+            type="button"
+            class="flex gap-1 btn btn-success mb-3 col-md-2" (click)="exportData()"
+          >
+            {{ "exportExcel" | translate }}
+          </button>
+
+          <button *ngIf="userG?.userPrivileges.includes(131809)"
+            type="button"
+            class="flex gap-1 btn bg-base text-white mb-3 col-md-2"
+            (click)="open(DifferenceCreditorDebtorModal)"
+          >
+            {{ "DifferenceBetweenCreditorDebtor" | translate }}
+          </button>
+        </div>
+      </div>
+
+      <!-- table -->
+      <div class="overflow-auto mt-4">
+        <table class="w-100 bg-gray-100">
+          <thead>
+            <tr>
+              <th class="px-4 py-2"></th>
+              <th class="px-4 py-2 text-center text-base fw-bold" colspan="2">
+                {{ "InitialBalance" | translate }}
+              </th>
+              <th class="px-4 py-2 text-center text-base fw-bold" colspan="2">
+                {{ "theMovement" | translate }}
+              </th>
+              <th class="px-4 py-2 text-center text-base fw-bold" colspan="2">
+                {{ "netTraffic" | translate }}
+              </th>
+              <th class="px-4 py-2 text-center text-base fw-bold" colspan="2">
+                {{ "closingBalance" | translate }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="px-4 py-2 w-25 text-base text-center fw-bold">
+                {{ "account" | translate }}
+              </td>
+              <td class="border px-4 py-2 text-center bg-green-100">
+                {{ "debtor" | translate }}
+              </td>
+              <td class="border px-4 py-2 text-center bg-red-100">
+                {{ "Creditor" | translate }}
+              </td>
+              <td class="border px-4 py-2 text-center bg-green-100">
+                {{ "debtor" | translate }}
+              </td>
+              <td class="border px-4 py-2 text-center bg-red-100">
+                {{ "Creditor" | translate }}
+              </td>
+              <td class="border px-4 py-2 text-center bg-green-100">
+                {{ "debtor" | translate }}
+              </td>
+              <td class="border px-4 py-2 text-center bg-red-100">
+                {{ "Creditor" | translate }}
+              </td>
+              <td class="border px-4 py-2 text-center bg-green-100">
+                {{ "debtor" | translate }}
+              </td>
+              <td class="border px-4 py-2 text-center bg-red-100">
+                {{ "Creditor" | translate }}
+              </td>
+            </tr>
+            <tr *ngFor="let entry of projectsDataSource">
+            <ng-container *ngIf="entry.accountId!=0">
+              <td class="border px-4 py-2 fw-bold">{{entry.accCode}}-{{ entry.acc_NameAr }}</td>
+              <td class="border px-4 py-2" [ngClass]="{ 'monitorClick': showTable == true}"(click)="GetDetailsMonitor(entry,1)">{{ entry.opDipet }}</td>
+              <td class="border px-4 py-2" [ngClass]="{ 'monitorClick': showTable == true}"(click)="GetDetailsMonitor(entry,2)">{{ entry.opCredit }}</td>
+              <td class="border px-4 py-2" [ngClass]="{ 'monitorClick': showTable == true}"(click)="GetDetailsMonitor(entry,3)">{{ entry.debitTotal }}</td>
+              <td class="border px-4 py-2" [ngClass]="{ 'monitorClick': showTable == true}"(click)="GetDetailsMonitor(entry,4)">{{ entry.creditTotal }}</td>
+              <td class="border px-4 py-2" [ngClass]="{ 'monitorClick': showTable == true}"(click)="GetDetailsMonitor(entry,5)">{{ entry.netDebitTotal }}</td>
+              <td class="border px-4 py-2" [ngClass]="{ 'monitorClick': showTable == true}"(click)="GetDetailsMonitor(entry,6)">{{ entry.netCreditTotal }}</td>
+              <td class="border px-4 py-2" [ngClass]="{ 'monitorClick': showTable == true}"(click)="GetDetailsMonitor(entry,7)">{{ entry.totalDebitEnd }}</td>
+              <td class="border px-4 py-2" [ngClass]="{ 'monitorClick': showTable == true}"(click)="GetDetailsMonitor(entry,8)">{{ entry.totalCriditEnd }}</td>
+            </ng-container>
+            </tr>
+            <!-- <tr *ngIf="projectsDataSource.length != 0" class="bg-blue-100 text-center">
+              <td class="border px-4 py-2">{{ "total" | translate }}</td>
+              <td class="border px-4 py-2">{{sumopDipet| number:'1.2-2' }}</td>
+              <td class="border px-4 py-2">{{sumopCredit| number:'1.2-2' }}</td>
+              <td class="border px-4 py-2">{{sumdebitTotal| number:'1.2-2' }}</td>
+              <td class="border px-4 py-2">{{sumcreditTotal| number:'1.2-2' }}</td>
+              <td class="border px-4 py-2">{{sumnetDebitTotal| number:'1.2-2' }}</td>
+              <td class="border px-4 py-2">{{sumnetCreditTotal| number:'1.2-2' }}</td>
+              <td class="border px-4 py-2">{{sumtotalDebitEnd| number:'1.2-2' }}</td>
+              <td class="border px-4 py-2">{{sumtotalCriditEnd| number:'1.2-2' }}</td>
+            </tr> -->
+            <ng-container *ngFor="let entry of projectsDataSource">
+              <ng-container *ngIf="entry.accountId==0">
+                <tr class="bg-blue-100 text-center">
+                  <td class="border px-4 py-2">{{ "total" | translate }}</td>
+                  <td class="border px-4 py-2">{{entry.opDipet | number:'1.2-2' }}</td>
+                  <td class="border px-4 py-2">{{entry.opCredit | number:'1.2-2' }}</td>
+                  <td class="border px-4 py-2">{{entry.debitTotal | number:'1.2-2' }}</td>
+                  <td class="border px-4 py-2">{{entry.creditTotal | number:'1.2-2' }}</td>
+                  <td class="border px-4 py-2">{{entry.netDebitTotal | number:'1.2-2' }}</td>
+                  <td class="border px-4 py-2">{{entry.netCreditTotal | number:'1.2-2' }}</td>
+                  <td class="border px-4 py-2">{{entry.totalDebitEnd | number:'1.2-2' }}</td>
+                  <td class="border px-4 py-2">{{entry.totalCriditEnd | number:'1.2-2' }}</td>
+                </tr>
+              </ng-container>
+            </ng-container>
+            <tr *ngIf="projectsDataSource.length === 0">
+              <td colspan="9" class="text-center p-2">No data available</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <mat-paginator [pageSizeOptions]="[10, 25]"> </mat-paginator>
+    </div>
+  </div>
+  <div id="report" [ngStyle]="{ direction: lang == 'ar' ? 'rtl' : 'ltr' }" style="position: absolute;">
+    <!--Header-->
+    <div
+      class="report-header"
+      style="
+        display: flex;
+        align-items: center;
+        gap: 100px;
+        padding: 3px 0px;
+        margin-bottom: 20px;
+      "
+    >
+      <div class="headerNe-right-side">
+        <img
+        src="{{environmentPho}}"
+          alt="logo"
+          style="height: 200px; width: 200px; max-width: 200px; object-fit: fill"
+        />
+      </div>
+
+      <div class="headerNe-lefy-side" style="width: 100%">
+        <h1
+          style="
+            letter-spacing: 0.25px;
+            font-size: 23px;
+            margin: 0;
+            margin-bottom: 5px;
+          "
+        >
+        {{OrganizationData?.nameAr}}
+        </h1>
+        <h1
+          style="
+            letter-spacing: 0.25px;
+            font-size: 23px;
+            margin: 0;
+            margin-bottom: 5px;
+          "
+        >
+        {{OrganizationData?.nameEn}}
+        </h1>
+        <div class="line" style="position: relative; padding: 5px 0px 10px">
+          <span
+            style="
+              position: absolute;
+              right: 0;
+              width: 100%;
+              height: 2px;
+              background-color: #e5e5e5;
+              z-index: 1;
+            "
+          ></span>
+          <span
+            style="
+              position: absolute;
+              right: 0;
+              width: 70%;
+              height: 2px;
+              background-color: #ec1c24;
+              z-index: 2;
+            "
+          ></span>
+        </div>
+
+        <h1
+          style="
+            margin-bottom: 0;
+            font-size: 34px;
+            color: #0c8191;
+            margin-bottom: 0;
+            margin-top: 30px;
+            font-weight: 500;
+          "
+          [translate]="'name'"
+          [translateParams]="{
+            ar: 'ميزان المراجعة',
+            en: 'Trial Balance'
+          }"
+        ></h1>
+      </div>
+    </div>
+    <!--/Header-->
+
+    <div style="margin-bottom: 10px">
+      <p>
+        <span
+          [translate]="'name'"
+          [translateParams]="{
+            ar: 'التاريخ: ',
+            en: 'Date: '
+          }"
+        ></span>
+        <span> {{dateprint}} </span>
+      </p>
+    </div>
+
+    <div style="margin-bottom: 10px ;text-align: center;"  *ngIf="data.filter.enable == true">
+      <p>
+        <span
+          [translate]="'name'"
+          [translateParams]="{
+            ar: 'من تاريخ: ',
+            en: 'From Date: '
+          }"
+        ></span>
+        <span> {{data.filter.DateFrom_P}} </span>
+        <span
+          [translate]="'name'"
+          [translateParams]="{
+            ar: 'الي تاريخ: ',
+            en: 'To Date: '
+          }"
+        ></span>
+        <span> {{data.filter.DateTo_P}} </span>
+      </p>
+    </div>
+    <!-- <div class="info" style="overflow: auto; margin-bottom: 20px">
+      <table
+        class="table table-bordered m-0"
+        style="
+          width: 100%;
+          color: white;
+          text-align: center;
+          vertical-align: middle;
+          min-width: max-content;
+        "
+      >
+        <tr>
+          <td
+            style="
+              padding-inline: 0px !important;
+              background-color: #f7f7f7;
+              font-size: 18px;
+              color: #21403f;
+              font-weight: 600;
+              border: 1px solid #dce0e4;
+            "
+            [translate]="'name'"
+            [translateParams]="{ ar: 'اسم الحساب', en: 'account name' }"
+          ></td>
+          <td
+            style="
+              padding-inline: 0px !important;
+              background-color: #f7f7f7;
+              font-size: 18px;
+              color: #21403f;
+              font-weight: 600;
+              border: 1px solid #dce0e4;
+            "
+            [translate]="'name'"
+            [translateParams]="{ ar: 'كود الحساب', en: 'Account code' }"
+          ></td>
+          <td
+            style="
+              line-height: 0 !important;
+              padding: 0px !important;
+              background-color: #f7f7f7;
+              font-size: 18px;
+              color: #21403f;
+              font-weight: 600;
+              border: 1px solid #dce0e4;
+            "
+            colspan="2"
+          >
+            <span
+              style="
+                border: none;
+                display: inline-block;
+                padding: 10px 0px;
+                width: 100%;
+
+                line-height: 24px;
+              "
+              [translate]="'name'"
+              [translateParams]="{ ar: 'الرصيد', en: 'Balance' }"
+            ></span>
+            <div
+              style="
+                width: 100%;
+                border-top: 1px solid #dce0e4;
+                margin: 0px !important;
+                padding: 0px !important;
+              "
+            >
+              <p
+                class="mb-0"
+                style="
+                  line-height: 24px;
+                  display: inline-block;
+                  width: 50%;
+                  border-bottom: 1px solid #dce0e4;
+                  text-align: center;
+                  padding: 7px 0px 10px;
+                  background-color: #f7f7f7;
+                  font-size: 18px;
+                  color: #21403f;
+                  font-weight: 600;
+                  border-inline: 1px solid #dce0e4;
+                  margin: 0px !important;
+                  margin-bottom: 0px !important;
+                "
+                [translate]="'name'"
+                [translateParams]="{ ar: 'مدين', en: 'debtor' }"
+              ></p>
+              <p
+                class="mb-0"
+                style="
+                  line-height: 24px;
+                  display: inline-block;
+                  width: 50%;
+                  border-bottom: 1px solid #dce0e4;
+                  text-align: center;
+                  padding: 7px 0px 10px;
+                  background-color: #f7f7f7;
+                  font-size: 18px;
+                  color: #21403f;
+                  font-weight: 600;
+                  margin: 0px !important;
+                  margin-bottom: 0px !important;
+                  border-inline-end: 1px solid #dce0e4;
+                "
+                [translate]="'name'"
+                [translateParams]="{ ar: 'دائن', en: 'Creditor' }"
+              ></p>
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+          <td
+            style="
+              width: 25%;
+              padding-inline: 0px !important;
+              background-color: #f7f7f7;
+              font-size: 18px;
+              color: #21403f;
+              font-weight: 500;
+              border: 1px solid #dce0e4;
+              padding: 10px 0px;
+            "
+          >
+            الاصول
+          </td>
+          <td
+            style="
+              width: 25%;
+              padding-inline: 0px !important;
+              background-color: #f7f7f7;
+              font-size: 18px;
+              color: #21403f;
+              font-weight: 500;
+              border: 1px solid #dce0e4;
+              padding: 10px 0px;
+            "
+          >
+            32
+          </td>
+          <td
+            style="
+              width: 25%;
+              padding-inline: 0px !important;
+              background-color: #f7f7f7;
+              font-size: 18px;
+              color: #21403f;
+              font-weight: 500;
+              border: 1px solid #dce0e4;
+              padding: 10px 0px;
+            "
+          >
+            awdad
+          </td>
+          <td
+            style="
+              width: 25%;
+              padding-inline: 0px !important;
+              background-color: #f7f7f7;
+              font-size: 18px;
+              color: #21403f;
+              font-weight: 500;
+              border: 1px solid #dce0e4;
+              padding: 10px 0px;
+            "
+          >
+            awdaw
+          </td>
+        </tr>
+      </table>
+    </div> -->
+<div style="margin-bottom: 10px ;text-align: center;" >
+      <p>
+        <span
+          [translate]="'name'"
+          [translateParams]="{
+            ar: ' الفرع: ',
+            en: 'Branch: '
+          }"
+        ></span>
+        <span> {{BranchName}} </span>
+ 
+      </p>
+    </div>
+    <div class="services" style="width: 100%; margin-bottom: 20px">
+      <div class="content">
+        <table style="text-align: center; vertical-align: middle; width: 100%">
+          <thead>
+            <tr>
+            <td
+              style="
+                font-size: 16px;
+                background-color: #fff;
+                padding: 14px 4px;
+                text-align: center;
+                color: #272727;
+                word-wrap: break-word;
+                border-inline-start: 1px dashed #0c8191;
+                border: 1px dashed #272727;
+                font-weight: 600;
+              "
+            ></td>
+            <td
+            colspan="2"
+              style="
+                font-size: 16px;
+                background-color: #fff;
+                padding: 14px 4px;
+                text-align: center;
+                color: #272727;
+                word-wrap: break-word;
+                border-inline-start: 1px dashed #0c8191;
+                border: 1px dashed #272727;
+                font-weight: 600;
+              "
+            >{{ "InitialBalance" | translate }}</td>
+            <td
+            colspan="2"
+              style="
+                font-size: 16px;
+                background-color: #f7f7f7;
+                padding: 14px 4px;
+                text-align: center;
+                color: #272727;
+                word-wrap: break-word;
+                border-inline-start: 1px dashed #0c8191;
+                border: 1px dashed #272727;
+                font-weight: 600;
+              "
+            >{{ "theMovement" | translate }}</td>
+            <td
+            colspan="2"
+              style="
+                font-size: 16px;
+                background-color: #f7f7f7;
+                padding: 14px 4px;
+                text-align: center;
+                color: #272727;
+                word-wrap: break-word;
+                border-inline-start: 1px dashed #0c8191;
+                border: 1px dashed #272727;
+                font-weight: 600;
+              "
+            >{{ "netTraffic" | translate }}</td>
+            <td
+            colspan="2"
+              style="
+                font-size: 16px;
+                background-color: #fff;
+                padding: 14px 4px;
+                text-align: center;
+                color: #272727;
+                word-wrap: break-word;
+                border-inline-start: 1px dashed #0c8191;
+                border: 1px dashed #272727;
+                font-weight: 600;
+              "
+            >{{ "closingBalance" | translate }}</td>
+          </tr>
+          <tr>
+            <td
+            style="
+              font-size: 16px;
+              background-color: #fff;
+              padding: 14px 4px;
+              text-align: center;
+              color: #272727;
+              word-wrap: break-word;
+              border-inline-start: 1px dashed #0c8191;
+              border: 1px dashed #272727;
+              font-weight: 600;
+            "
+          >{{ "account" | translate }}</td>
+          <td
+            style="
+              font-size: 16px;
+              background-color: #fff;
+              padding: 14px 4px;
+              text-align: center;
+              color: #272727;
+              word-wrap: break-word;
+              border-inline-start: 1px dashed #0c8191;
+              border: 1px dashed #272727;
+              font-weight: 600;
+            "
+          >{{ "debtor" | translate }}</td>
+          <td
+            style="
+              font-size: 16px;
+              background-color: #f7f7f7;
+              padding: 14px 4px;
+              text-align: center;
+              color: #272727;
+              word-wrap: break-word;
+              border-inline-start: 1px dashed #0c8191;
+              border: 1px dashed #272727;
+              font-weight: 600;
+            "
+          >{{ "Creditor" | translate }}</td>
+          <td
+            style="
+              font-size: 16px;
+              background-color: #f7f7f7;
+              padding: 14px 4px;
+              text-align: center;
+              color: #272727;
+              word-wrap: break-word;
+              border-inline-start: 1px dashed #0c8191;
+              border: 1px dashed #272727;
+              font-weight: 600;
+            "
+          >{{ "debtor" | translate }}</td>
+          <td
+            style="
+              font-size: 16px;
+              background-color: #fff;
+              padding: 14px 4px;
+              text-align: center;
+              color: #272727;
+              word-wrap: break-word;
+              border-inline-start: 1px dashed #0c8191;
+              border: 1px dashed #272727;
+              font-weight: 600;
+            "
+          >{{ "Creditor" | translate }}</td>
+          <td
+            style="
+              font-size: 16px;
+              background-color: #fff;
+              padding: 14px 4px;
+              text-align: center;
+              color: #272727;
+              word-wrap: break-word;
+              border-inline-start: 1px dashed #0c8191;
+              border: 1px dashed #272727;
+              font-weight: 600;
+            "
+          >{{ "debtor" | translate }}</td>
+          <td
+            style="
+              font-size: 16px;
+              background-color: #fff;
+              padding: 14px 4px;
+              text-align: center;
+              color: #272727;
+              word-wrap: break-word;
+              border-inline-start: 1px dashed #0c8191;
+              border: 1px dashed #272727;
+              font-weight: 600;
+            "
+          >{{ "Creditor" | translate }}</td>
+          <td
+            style="
+              font-size: 16px;
+              background-color: #fff;
+              padding: 14px 4px;
+              text-align: center;
+              color: #272727;
+              word-wrap: break-word;
+              border-inline-start: 1px dashed #0c8191;
+              border: 1px dashed #272727;
+              font-weight: 600;
+            "
+          >{{ "debtor" | translate }}</td>
+           <td
+            style="
+              font-size: 16px;
+              background-color: #fff;
+              padding: 14px 4px;
+              text-align: center;
+              color: #272727;
+              word-wrap: break-word;
+              border-inline-start: 1px dashed #0c8191;
+              border: 1px dashed #272727;
+              font-weight: 600;
+            "
+          >{{ "Creditor" | translate }}</td>
+          </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of printprojectsDataSource">
+              <ng-container *ngIf="item.accountId!=0">
+
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  padding: 10px 0px;
+                  color: #272727;
+                  border-inline-start: 1px dashed #272727;
+                border: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+              >
+              {{item.accCode}}-{{ item.acc_NameAr }}
+              </td>
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  padding: 10px 0px;
+                  color: #272727;
+                  border-inline-start: 1px dashed #272727;
+                border: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+              >
+              {{item.opDipet}}
+              </td>
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  padding: 10px 0px;
+                  color: #272727;
+                  border-inline-start: 1px dashed #272727;
+                border: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+              >
+              {{item.opCredit}}
+              </td>
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  padding: 10px 0px;
+                  color: #272727;
+                  border-inline-start: 1px dashed #272727;
+                border: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+              >
+              {{item.debitTotal}}
+              </td>
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  padding: 10px 0px;
+                  color: #272727;
+                  border-inline-start: 1px dashed #272727;
+                border: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+              >
+              {{item.creditTotal}}
+              </td>
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  padding: 10px 0px;
+                  color: #272727;
+                  border-inline-start: 1px dashed #272727;
+                border: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+              >
+              {{item.netDebitTotal}}
+              </td>
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  padding: 10px 0px;
+                  color: #272727;
+                  border-inline-start: 1px dashed #272727;
+                border: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+              >
+              {{item.netCreditTotal}}
+              </td>
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  padding: 10px 0px;
+                  color: #272727;
+                  border-inline-start: 1px dashed #272727;
+
+                border: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+              >
+              {{item.totalDebitEnd}}
+              </td>
+              <td
+              style="
+                background-color: #fff;
+                font-size: 15px;
+                font-weight: 500;
+                padding: 10px 0px;
+                color: #272727;
+                border-inline-start: 1px dashed #272727;
+
+              border: 1px dashed #272727;
+                border-bottom: 1px dashed #272727;
+              "
+            >
+            {{item.totalCriditEnd}}
+            </td>
+          </ng-container>
+            </tr>
+
+            <ng-container *ngFor="let entry of printprojectsDataSource">
+              <ng-container *ngIf="entry.accountId==0">
+            <tr>
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  padding: 10px 0px;
+                  color: #272727;
+                  border-inline: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+              >{{ "total" | translate }}</td>
+            <td
+              style="
+                background-color: #fff;
+                font-size: 15px;
+                font-weight: 500;
+                padding: 10px 0px;
+                color: #272727;
+                border-inline-start: 1px dashed #272727;
+              border: 1px dashed #272727;
+                border-bottom: 1px dashed #272727;
+              "
+            >
+            {{entry.opDipet}}
+            </td>
+            <td
+              style="
+                background-color: #fff;
+                font-size: 15px;
+                font-weight: 500;
+                padding: 10px 0px;
+                color: #272727;
+                border-inline-start: 1px dashed #272727;
+              border: 1px dashed #272727;
+                border-bottom: 1px dashed #272727;
+              "
+            >
+            {{entry.opCredit}}
+            </td>
+            <td
+              style="
+                background-color: #fff;
+                font-size: 15px;
+                font-weight: 500;
+                padding: 10px 0px;
+                color: #272727;
+                border-inline-start: 1px dashed #272727;
+              border: 1px dashed #272727;
+                border-bottom: 1px dashed #272727;
+              "
+            >
+            {{entry.debitTotal}}
+            </td>
+            <td
+              style="
+                background-color: #fff;
+                font-size: 15px;
+                font-weight: 500;
+                padding: 10px 0px;
+                color: #272727;
+                border-inline-start: 1px dashed #272727;
+              border: 1px dashed #272727;
+                border-bottom: 1px dashed #272727;
+              "
+            >
+            {{entry.creditTotal}}
+            </td>
+            <td
+              style="
+                background-color: #fff;
+                font-size: 15px;
+                font-weight: 500;
+                padding: 10px 0px;
+                color: #272727;
+                border-inline-start: 1px dashed #272727;
+              border: 1px dashed #272727;
+                border-bottom: 1px dashed #272727;
+              "
+            >
+            {{entry.netDebitTotal}}
+            </td>
+            <td
+              style="
+                background-color: #fff;
+                font-size: 15px;
+                font-weight: 500;
+                padding: 10px 0px;
+                color: #272727;
+                border-inline-start: 1px dashed #272727;
+              border: 1px dashed #272727;
+                border-bottom: 1px dashed #272727;
+              "
+            >
+            {{entry.netCreditTotal}}
+            </td>
+            <td
+              style="
+                background-color: #fff;
+                font-size: 15px;
+                font-weight: 500;
+                padding: 10px 0px;
+                color: #272727;
+                border-inline-start: 1px dashed #272727;
+
+              border: 1px dashed #272727;
+                border-bottom: 1px dashed #272727;
+              "
+            >
+            {{entry.totalDebitEnd}}
+            </td>
+            <td
+            style="
+              background-color: #fff;
+              font-size: 15px;
+              font-weight: 500;
+              padding: 10px 0px;
+              color: #272727;
+              border-inline-start: 1px dashed #272727;
+
+            border: 1px dashed #272727;
+              border-bottom: 1px dashed #272727;
+            "
+          >
+          {{entry.totalCriditEnd}}
+          </td>
+            </tr>
+</ng-container>
+</ng-container>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <!-- DifferenceCreditorDebtorModal -->
+  <ng-template #DifferenceCreditorDebtorModal let-modal>
+    <div
+      style="background-color: var(--base-color)"
+      class="modal-header text-white flex justify-between items-center"
+    >
+      <h4 class="m-0">
+        <span class="text-2xl">{{ "DebitCreditDetails" | translate }}</span>
+      </h4>
+      <button
+        type="button"
+        class="text-2xl text-white m-0"
+        (click)="modal.dismiss()"
+      >
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <div class="max-h-100 overflow-x-scroll overflow-y-scroll p-4">
+      <table class="border border-gray-500 w-100">
+        <thead>
+          <tr>
+            <th class="px-4 py-2">{{ "Bond type" | translate }}</th>
+            <th class="px-4 py-2">{{ "Bond number" | translate }}</th>
+
+            <th class="px-4 py-2">{{ "Creditor" | translate }}</th>
+            <th class="px-4 py-2">{{ "debtor" | translate }}</th>
+            <th class="px-4 py-2">{{ "theDifference" | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let entry of accountingEntries">
+            <td class="border px-4 py-2">{{ entry.nameAr }}</td>
+            <td class="border px-4 py-2">{{ entry.invoiceNumber }}</td>
+            <td class="border px-4 py-2">{{ entry.credit }}</td>
+            <td class="border px-4 py-2">{{ entry.depit }}</td>
+            <td class="border px-4 py-2">
+              {{ entry.credit - entry.depit | number:'1.2-2'}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="flex justify-end p-3">
+      <button (click)="modal?.dismiss()" class="btn btn-secondary">
+        {{ "close" | translate }}
+      </button>
+    </div>
+  </ng-template>
+</div>
+  <!-- DetailsMonitorModal -->
+<ng-template #DetailsMonitorModal let-modal>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="m-0">
+      <span class="text-2xl">{{ MonitorName }}</span>
+    </h4>
+    <button
+      type="button"
+      class="text-2xl text-white m-0"
+      (click)="modal.dismiss()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="max-h-100 overflow-x-scroll overflow-y-scroll p-4">
+    <tabset>
+      <tab heading="  من العملاء">
+        <div class="content">
+        <div class="overflow-auto mt-4">
+          <table class="w-100 bg-gray-100">
+            <thead>
+              <tr>
+                <th class="px-4 py-2 text-center text-base fw-bold">
+                  {{ "Account" | translate }}
+                </th>
+                <th class="px-4 py-2 text-center text-base fw-bold">
+                  {{ "details" | translate }}
+                </th>
+                <th class="px-4 py-2 text-center text-base fw-bold" *ngIf="creditORdepit==true">
+                  {{ "Credit" | translate }}
+                </th>
+                <th class="px-4 py-2 text-center text-base fw-bold" *ngIf="creditORdepit==false">
+                  {{ "Debit" | translate }}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let entry of DetailsMonitorCustomer">
+                <td class="border px-4 py-2 fw-bold">{{entry.accountName}}</td>
+                <td class="border px-4 py-2">{{ entry.details }}</td>
+                <td class="border px-4 py-2">{{ entry.total }}</td>
+              </tr>
+              <tr *ngIf="DetailsMonitorCustomer.length === 0">
+                <td colspan="9" class="text-center p-2">No data available</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+     </tab>
+     <tab heading="   من المشاريع">
+       <div class="content">
+        <div class="overflow-auto mt-4">
+          <table class="w-100 bg-gray-100">
+            <thead>
+              <tr>
+                <th class="px-4 py-2 text-center text-base fw-bold">
+                  {{ "The project" | translate }}
+                </th>
+                <th class="px-4 py-2 text-center text-base fw-bold">
+                  {{ "details" | translate }}
+                </th>
+                <th class="px-4 py-2 text-center text-base fw-bold" *ngIf="creditORdepit==true">
+                  {{ "Credit" | translate }}
+                </th>
+                <th class="px-4 py-2 text-center text-base fw-bold"*ngIf="creditORdepit==false">
+                  {{ "Debit" | translate }}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let entry of DetailsMonitorProject">
+                <td class="border px-4 py-2 fw-bold">{{entry.projectNo}}</td>
+                <td class="border px-4 py-2">{{ entry.details }}</td>
+                <td class="border px-4 py-2">{{ entry.total }}</td>
+              </tr>
+              <tr *ngIf="DetailsMonitorProject.length === 0">
+                <td colspan="9" class="text-center p-2">No data available</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+     </tab>
+     <tab heading="من الموظفين">
+       <div class="content">
+        <div class="overflow-auto mt-4">
+          <table class="w-100 bg-gray-100">
+            <thead>
+              <tr>
+                <th class="px-4 py-2 text-center text-base fw-bold">
+                  {{ "Account" | translate }}
+                </th>
+                <th class="px-4 py-2 text-center text-base fw-bold">
+                  {{ "details" | translate }}
+                </th>
+                <th class="px-4 py-2 text-center text-base fw-bold" *ngIf="creditORdepit==true">
+                  {{ "Credit" | translate }}
+                </th>
+                <th class="px-4 py-2 text-center text-base fw-bold"*ngIf="creditORdepit==false">
+                  {{ "Debit" | translate }}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let entry of DetailsMonitorEmployee">
+                <td class="border px-4 py-2 fw-bold">{{entry.accountName}}</td>
+                <td class="border px-4 py-2">{{ entry.details }}</td>
+                <td class="border px-4 py-2">{{ entry.total }}</td>
+              </tr>
+              <tr *ngIf="DetailsMonitorEmployee.length === 0">
+                <td colspan="9" class="text-center p-2">No data available</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+     </tab>
+     <tab heading=" من الخدمات">
+       <div class="content">
+        <div class="overflow-auto mt-4">
+          <table class="w-100 bg-gray-100">
+            <thead>
+              <tr>
+                <th class="px-4 py-2 text-center text-base fw-bold">
+                  أسم الخدمة
+                </th>
+                <th class="px-4 py-2 text-center text-base fw-bold">
+                  {{ "details" | translate }}
+                </th>
+                <th class="px-4 py-2 text-center text-base fw-bold" *ngIf="creditORdepit==true">
+                  {{ "Credit" | translate }}
+                </th>
+                <th class="px-4 py-2 text-center text-base fw-bold"*ngIf="creditORdepit==false">
+                  {{ "Debit" | translate }}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let entry of DetailsMonitorService">
+                <td class="border px-4 py-2 fw-bold">{{entry.servicesName}}</td>
+                <td class="border px-4 py-2">{{ entry.details }}</td>
+                <td class="border px-4 py-2">{{ entry.total }}</td>
+              </tr>
+              <tr *ngIf="DetailsMonitorService.length === 0">
+                <td colspan="9" class="text-center p-2">No data available</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+     </tab>
+     <tab heading="من الموردين">
+       <div class="content">
+        <div class="overflow-auto mt-4">
+          <table class="w-100 bg-gray-100">
+            <thead>
+              <tr>
+                <th class="px-4 py-2 text-center text-base fw-bold">
+                  {{ "Account" | translate }}
+                </th>
+                <th class="px-4 py-2 text-center text-base fw-bold">
+                  {{ "details" | translate }}
+                </th>
+                <th class="px-4 py-2 text-center text-base fw-bold" *ngIf="creditORdepit==true">
+                  {{ "Credit" | translate }}
+                </th>
+                <th class="px-4 py-2 text-center text-base fw-bold"*ngIf="creditORdepit==false">
+                  {{ "Debit" | translate }}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let entry of DetailsMonitorSupplier">
+                <td class="border px-4 py-2 fw-bold">{{entry.accountName}}</td>
+                <td class="border px-4 py-2">{{ entry.details }}</td>
+                <td class="border px-4 py-2">{{ entry.total }}</td>
+                <td class="border px-4 py-2">{{ entry.opCredit }}</td>
+              </tr>
+              <tr *ngIf="DetailsMonitorSupplier.length === 0">
+                <td colspan="9" class="text-center p-2">No data available</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+     </tab>
+     <tab heading=" من السندات">
+       <div class="content">
+        <div class="overflow-auto mt-4">
+          <table class="w-100 bg-gray-100">
+            <thead>
+              <tr>
+                <th class="px-4 py-2 text-center text-base fw-bold">
+                  {{ "Voucher type" | translate }}
+                </th>
+                <th class="px-4 py-2 text-center text-base fw-bold">
+                  {{ "details" | translate }}
+                </th>
+                <th class="px-4 py-2 text-center text-base fw-bold" *ngIf="creditORdepit==true">
+                  {{ "Credit" | translate }}
+                </th>
+                <th class="px-4 py-2 text-center text-base fw-bold"*ngIf="creditORdepit==false">
+                  {{ "Debit" | translate }}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let entry of DetailsMonitorVoucher">
+                <td class="border px-4 py-2 fw-bold">{{entry.typeName}}</td>
+                <td class="border px-4 py-2">{{ entry.details }}</td>
+                <td class="border px-4 py-2">{{ entry.total }}</td>
+              </tr>
+              <tr *ngIf="DetailsMonitorVoucher.length === 0">
+                <td colspan="9" class="text-center p-2">No data available</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+     </tab>
+     <tab heading=" من الفروع">
+       <div class="content">
+        <div class="overflow-auto mt-4">
+          <table class="w-100 bg-gray-100">
+            <thead>
+              <tr>
+                <th class="px-4 py-2 text-center text-base fw-bold">
+                  {{ "branch name" | translate }}
+                </th>
+                <th class="px-4 py-2 text-center text-base fw-bold">
+                  {{ "details" | translate }}
+                </th>
+                <th class="px-4 py-2 text-center text-base fw-bold"*ngIf="creditORdepit==true">
+                  {{ "Credit" | translate }}
+                </th>
+                <th class="px-4 py-2 text-center text-base fw-bold"*ngIf="creditORdepit==false">
+                  {{ "Debit" | translate }}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let entry of DetailsMonitorBranch">
+                <td class="border px-4 py-2 fw-bold">{{ entry.branchName }}</td>
+                <td class="border px-4 py-2">{{ entry.details }}</td>
+                <td class="border px-4 py-2">{{ entry.total }}</td>
+              </tr>
+              <tr *ngIf="DetailsMonitorBranch.length === 0">
+                <td colspan="9" class="text-center p-2">No data available</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+     </tab>
+    </tabset>
+  </div>
+
+  <div class="flex justify-end p-3">
+    <button (click)="modal?.dismiss()" class="btn btn-secondary">
+      {{ "close" | translate }}
+    </button>
+  </div>
+</ng-template>

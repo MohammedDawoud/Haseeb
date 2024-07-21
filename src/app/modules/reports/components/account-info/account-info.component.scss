@@ -1,0 +1,9 @@
+#report {
+  .info {
+    .table > :not(caption) > * > * {
+      padding: 0;
+      border: auto;
+      box-shadow: none;
+    }
+  }
+}

@@ -1,0 +1,244 @@
+<!-- <div
+        class="header"
+        style="
+          display: flex;
+          background-color: #0f9c9b;
+          font-size: 20px;
+          width: 100%;
+          align-items: stretch;
+        "
+      >
+        <span
+          style="
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 10px;
+            color: #fff;
+            min-width: max-content;
+            width: 10%;
+            max-width: 10%;
+            word-wrap: break-word;
+          "
+          [translate]="'name'"
+          [translateParams]="{ ar: 'م', en: 'No.' }"
+        >
+        </span>
+        <span
+          style="
+            display: inline-block;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 10px;
+            color: #fff;
+            min-width: max-content;
+            width: 40%;
+            max-width: 40%;
+            word-wrap: break-word;
+          "
+          [translate]="'name'"
+          [translateParams]="{ ar: 'اسم الخدمة', en: 'Service Name' }"
+        >
+        </span>
+        <span
+          style="
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            text-align: center;
+            padding: 10px;
+            color: #fff;
+            min-width: max-content;
+
+            width: 7.5%;
+            max-width: 7.5%;
+            word-wrap: break-word;
+          "
+          [translate]="'name'"
+          [translateParams]="{ ar: '  الكميه', en: '  Amount' }"
+        ></span>
+        <span
+          style="
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            text-align: center;
+            padding: 10px;
+            color: #fff;
+            min-width: max-content;
+
+            width: 20%;
+            max-width: 20%;
+            word-wrap: break-word;
+          "
+          [translate]="'name'"
+          [translateParams]="{ ar: 'سعر  الوحدة', en: '  Unit Price' }"
+        >
+        </span>
+        <span
+          style="
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            text-align: center;
+            padding: 10px;
+            color: #fff;
+            min-width: max-content;
+
+            width: 7.5%;
+            max-width: 7.5%;
+            word-wrap: break-word;
+          "
+          [translate]="'name'"
+          [translateParams]="{ ar: 'الضريبة   ', en: '    Tax' }"
+        >
+        </span>
+        <span
+          style="
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            text-align: center;
+            padding: 10px;
+            color: #fff;
+            min-width: max-content;
+
+            width: 15%;
+            max-width: 15%;
+            word-wrap: break-word;
+          "
+          [translate]="'name'"
+          [translateParams]="{ ar: 'الإجمالي   ', en: '    Total' }"
+        >
+        </span>
+      </div> -->
+
+<!-- <div
+  class="service"
+  style="
+    background-color: #fff;
+    font-size: 20px;
+    width: 100%;
+    display: flex;
+    align-items: stretch;
+  "
+>
+  <span
+    style="
+      width: 40%;
+      max-width: 40%;
+      word-wrap: break-word;
+
+      display: inline-block;
+      align-items: center;
+      justify-content: center;
+
+      text-align: center;
+      padding: 10px;
+
+      color: #0c8191;
+      border-inline-start: 2px dashed #0c8191;
+      border-bottom: 2px dashed #0c8191;
+    "
+    >sfsdf sefsefs sefes
+    <ul
+      style="
+        list-style: none;
+        padding: 0px;
+        margin-inline-start: 10px;
+        text-align: center;
+        margin-top: 10px;
+        line-height: 23px;
+        font-size: 17px;
+      "
+    >
+      <li>- aadw awd aawd</li>
+      <li>- aadw awd aawd</li>
+      <li>- aadw awd aawd</li>
+    </ul>
+  </span>
+
+  <span
+    style="
+      width: 7.5%;
+      max-width: 7.5%;
+      word-wrap: break-word;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      text-align: center;
+      padding: 10px;
+
+      color: #0c8191;
+      border-inline-start: 2px dashed #0c8191;
+      border-bottom: 2px dashed #0c8191;
+    "
+    >2</span
+  >
+  <span
+    style="
+      width: 20%;
+      max-width: 20%;
+      word-wrap: break-word;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      text-align: center;
+      padding: 10px;
+
+      color: #0c8191;
+      border-inline-start: 2px dashed #0c8191;
+      border-bottom: 2px dashed #0c8191;
+    "
+    >12</span
+  >
+  <span
+    style="
+      width: 7.5%;
+      max-width: 7.5%;
+      word-wrap: break-word;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      text-align: center;
+      padding: 10px;
+
+      color: #0c8191;
+      border-inline-start: 2px dashed #0c8191;
+      border-bottom: 2px dashed #0c8191;
+    "
+    >23</span
+  >
+  <span
+    style="
+      width: 15%;
+      max-width: 15%;
+      word-wrap: break-word;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      text-align: center;
+      padding: 10px;
+      color: #0c8191;
+
+      border-inline-start: 2px dashed #0c8191;
+      border-bottom: 2px dashed #0c8191;
+      border-inline-end: 2px dashed #0c8191;
+    "
+    >322</span
+  >
+</div> -->

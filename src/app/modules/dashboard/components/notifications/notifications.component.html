@@ -1,0 +1,1554 @@
+<div>
+  <app-navigator [title]="title"></app-navigator>
+  <div class="mt-3">
+    <tabset>
+      <tab
+        (selectTab)="loadData(1)"
+        heading="{{ lang == 'ar' ? 'إشعارات واردة' : 'Notices in box' }}"
+        heading="Tab 1"
+      >
+        <div class="content">
+          <div class="flex justify-between gap-2 items-center my-3 flex-wrap">
+            <div class="w-fit">
+              <input
+                class="form-control"
+                placeholder="{{ 'search' | translate }}"
+                #input
+              />
+            </div>
+            <div class="flex gap-2 controler">
+              <button class="btn btn-primary">
+                <span
+                  class="text-sm"
+                  [translate]="'name'"
+                  [translateParams]="{
+                    ar: 'اشعارات جديدة ',
+                    en: 'New Notifications'
+                  }"
+                ></span>
+                <span class="text-xs rounded-full p-1 bg-white text-base">{{
+                  unreaded
+                }}</span>
+              </button>
+              <button class="btn btn-primary">
+                <span
+                  class="text-sm"
+                  [translate]="'name'"
+                  [translateParams]="{
+                    ar: 'اشعارات مقروؤه',
+                    en: 'Readed Notifications'
+                  }"
+                ></span>
+                <span class="text-xs rounded-full p-1 bg-white text-base">{{
+                  readed
+                }}</span>
+              </button>
+              <button
+                class="flex gap-1 btn btn-danger"
+                (click)="deleteallnot()"
+              >
+                <span
+                  class="hidden md:block"
+                  [translate]="'name'"
+                  [translateParams]="{
+                    en: 'Delete Selected',
+                    ar: 'حذف المحدده'
+                  }"
+                ></span>
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+          </div>
+          <div class="overflow-auto mt-3">
+            <table
+              matSort
+              #notifications_sort
+              mat-table
+              [dataSource]="data.notifications"
+              class="mat-elevation-z8 rounded-t-xl overflow-hidden"
+            >
+              <ng-container matColumnDef="select">
+                <th mat-header-cell *matHeaderCellDef>
+                  <mat-checkbox
+                    color="warn"
+                    (change)="$event ? toggleAllRows() : null"
+                    [checked]="
+                      selection.notifications.hasValue() && isAllSelected()
+                    "
+                    [indeterminate]="
+                      selection.notifications.hasValue() && !isAllSelected()
+                    "
+                    [aria-label]="checkboxLabel()"
+                  >
+                  </mat-checkbox>
+                </th>
+                <td mat-cell *matCellDef="let row">
+                  <mat-checkbox
+                    color="warn"
+                    (click)="$event.stopPropagation()"
+                    (change)="
+                      $event ? selection.notifications.toggle(row) : null
+                    "
+                    [checked]="selection.notifications.isSelected(row)"
+                    [aria-label]="checkboxLabel(row)"
+                  >
+                  </mat-checkbox>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="SendUserName">
+                <th mat-header-cell *matHeaderCellDef>
+                  {{ "SenderName" | translate }}
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <span *ngIf="element.sendUserId != 1">
+                    {{ element.sendUserName }}</span
+                  >
+                  <span *ngIf="element.sendUserId == 1"> SYSNOTIFACTION </span>
+                </td>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.sendUserName }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="Description">
+                <th mat-header-cell *matHeaderCellDef style="width: 320px">
+                  {{ "Text" | translate }}
+                </th>
+                ِ
+                <td mat-cell *matCellDef="let element">
+                  <span *ngIf="element.isRead == 1 || element['showOptions']">
+                    {{ element.description }}</span
+                  >
+                  <span *ngIf="element.isRead != 1 && !element['showOptions']">
+                    لديك اشعار جديد
+                  </span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="Date">
+                <th mat-header-cell *matHeaderCellDef>
+                  {{ "Date" | translate }}
+                </th>
+                <td mat-cell *matCellDef="let element">{{ element.date }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="ProjectNo">
+                <th mat-header-cell *matHeaderCellDef>
+                  {{ "Project Number" | translate }}
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.projectNo }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="operations">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  [translate]="'name'"
+                  [translateParams]="{
+                    ar: 'خيارات',
+                    en: 'Operations'
+                  }"
+                ></th>
+                <td mat-cell *matCellDef="let element">
+                  <div class="flex gap-1 justify-center items-center py-2">
+                    <button
+                      *ngIf="!element['showOptions'] && element.isRead != 1"
+                      class="min-w-max p-2 bg-sky-100 hover:bg-sky-500 rounded-lg duration-300 hover:text-white aspect-square w-10"
+                      (click)="showAction(element)"
+                    >
+                      <i class="fa-solid fa-eye"></i>
+                    </button>
+                    <button
+                      *ngIf="element['showOptions'] || element.isRead == 1"
+                      (click)="
+                        open(deleteModal, element, 'md', 'top', 'deletenote')
+                      "
+                      class="min-w-max p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white aspect-square w-10"
+                    >
+                      <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                    <button
+                      *ngIf="
+                        (element['showOptions'] || element.isRead == 1) &&
+                        element.attachmentUrl != null &&
+                        element.attachmentUrl != ''
+                      "
+                      (click)="downloadFile(element)"
+                      class="min-w-max p-2 bg-sky-100 hover:bg-sky-500 rounded-lg duration-300 hover:text-white aspect-square w-10"
+                    >
+                      <i class="fa-solid fa-eye"></i>
+                    </button>
+                    <button
+                      *ngIf="
+                        (element['showOptions'] &&
+                          element.projectId != null &&
+                          element.projectId != 0) ||
+                        (element.isRead == 1 &&
+                          element.projectId != null &&
+                          element.projectId != 0)
+                      "
+                      (click)="
+                        GetProjectById(element.projectId);
+                        open(
+                          projectDetailsModal,
+                          element,
+                          'xl',
+                          null,
+                          'details'
+                        )
+                      "
+                      class="min-w-max p-2 bg-blue-100 hover:bg-blue-500 rounded-lg duration-300 hover:text-white"
+                    >
+                      <span
+                        [translate]="'name'"
+                        [translateParams]="{
+                          ar: 'عرض المشروع',
+                          en: 'View Project'
+                        }"
+                      ></span>
+                    </button>
+
+                    <button
+                      *ngIf="
+                        (element['showOptions'] &&
+                          element.taskId != null &&
+                          element.taskId != 0) ||
+                        (element.isRead == 1 &&
+                          element.taskId != null &&
+                          element.taskId != 0)
+                      "
+                      (click)="
+                        open(
+                          taskDetailsModal,
+                          element,
+                          'xl',
+                          null,
+                          'newtaskpopupadmin'
+                        );
+                        selectTask(element)
+                      "
+                      class="min-w-max p-2 bg-blue-100 hover:bg-blue-500 rounded-lg duration-300 hover:text-white"
+                    >
+                      <span
+                        [translate]="'name'"
+                        [translateParams]="{
+                          ar: 'عرض المهمه',
+                          en: 'View Task'
+                        }"
+                      ></span>
+                    </button>
+                  </div>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="columns.notifications"></tr>
+              <tr
+                mat-row
+                *matRowDef="
+                  let row;
+                  let i = index;
+                  columns: columns.notifications
+                "
+                class="{{
+                  !row['showOptions'] && row.isRead != 1 ? 'bg-blue-100' : ''
+                }}"
+              ></tr>
+            </table>
+          </div>
+          <mat-paginator
+            #notifications_paginator
+            [length]="notificationsData.length"
+            (page)="onPageChange($event)"
+            [pageSize]="10"
+          >
+          </mat-paginator>
+        </div>
+      </tab>
+      <tab
+        (selectTab)="loadData(2)"
+        heading="{{ lang == 'ar' ? 'إشعارات صادره' : 'Issued notices' }}"
+        heading="Tab 2"
+      >
+        <div class="content">
+          <div class="flex justify-between gap-2 items-center my-3 flex-wrap">
+            <div class="w-fit">
+              <input
+                class="form-control"
+                placeholder="{{ 'search' | translate }}"
+                #input
+              />
+            </div>
+            <div class="flex gap-2 controler">
+              <button
+                class="flex gap-1 btn btn-primary"
+                (click)="open(sendNotifications, '', '', 'top')"
+              >
+                <span
+                  class="hidden md:block"
+                  [translate]="'name'"
+                  [translateParams]="{
+                    en: 'Send Notifications',
+                    ar: 'ارسال اشعار'
+                  }"
+                ></span>
+                <i class="fa-solid fa-paper-plane"></i>
+              </button>
+              <button
+                class="flex gap-1 btn btn-danger"
+                (click)="deleteallnot2()"
+              >
+                <span
+                  class="hidden md:block"
+                  [translate]="'name'"
+                  [translateParams]="{
+                    en: 'Delete Selected',
+                    ar: 'حذف المحدده'
+                  }"
+                ></span>
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+          </div>
+          <div class="overflow-auto mt-3">
+            <table
+              matSort
+              #notificationsent_sort
+              mat-table
+              [dataSource]="data.notificationsent"
+              class="mat-elevation-z8 rounded-t-xl overflow-hidden"
+            >
+              <ng-container matColumnDef="select">
+                <th mat-header-cell *matHeaderCellDef>
+                  <mat-checkbox
+                    color="warn"
+                    (change)="$event ? toggleAllRowsPro() : null"
+                    [checked]="
+                      selection.issued.hasValue() && isAllSelectedPro()
+                    "
+                    [indeterminate]="
+                      selection.issued.hasValue() && !isAllSelectedPro()
+                    "
+                    [aria-label]="checkboxLabelPro()"
+                  >
+                  </mat-checkbox>
+                </th>
+                <td mat-cell *matCellDef="let row">
+                  <mat-checkbox
+                    color="warn"
+                    (click)="$event.stopPropagation()"
+                    (change)="$event ? selection.issued.toggle(row) : null"
+                    [checked]="selection.issued.isSelected(row)"
+                    [aria-label]="checkboxLabelPro(row)"
+                  >
+                  </mat-checkbox>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="Description">
+                <th mat-header-cell *matHeaderCellDef>
+                  {{ "Text" | translate }}
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.description }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="ReceivedUserName">
+                <th mat-header-cell *matHeaderCellDef>
+                  {{ "To" | translate }}
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.receivedUserName }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="Date">
+                <th mat-header-cell *matHeaderCellDef>
+                  {{ "Date" | translate }}
+                </th>
+                <td mat-cell *matCellDef="let element">{{ element.date }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="IsRead">
+                <th mat-header-cell *matHeaderCellDef>
+                  {{ "Status" | translate }}
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <i
+                    class="fa-solid {{
+                      element.readingDate
+                        ? 'text-green-500 fa-check'
+                        : 'text-red-500 fa-xmark'
+                    }}"
+                  ></i>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="ProjectNo">
+                <th mat-header-cell *matHeaderCellDef>
+                  {{ "Project Number" | translate }}
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.projectNo }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="operations">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  [translate]="'name'"
+                  [translateParams]="{
+                    ar: 'خيارات',
+                    en: 'Operations'
+                  }"
+                ></th>
+                <td mat-cell *matCellDef="let element">
+                  <div class="flex gap-1 justify-center items-center py-2">
+                    <button
+                      class="min-w-max p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white aspect-square w-10"
+                    >
+                      <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                  </div>
+                </td>
+              </ng-container>
+
+              <tr
+                mat-header-row
+                *matHeaderRowDef="columns.notificationsent"
+              ></tr>
+              <tr
+                mat-row
+                *matRowDef="let row; columns: columns.notificationsent"
+                (click)="selection.issued.toggle(row)"
+              ></tr>
+            </table>
+          </div>
+
+          <mat-paginator
+            #notificationsent_paginator
+            [length]="notificationsData2.length"
+            (page)="onPageChange2($event)"
+            [pageSize]="10"
+          >
+          </mat-paginator>
+        </div>
+      </tab>
+    </tabset>
+  </div>
+</div>
+
+<!-- projectDetailsModal -->
+<!-- <ng-template #projectDetailsModal let-modal>
+  <div class="modal-header bg-base text-white">
+    <h4
+      class="modal-title mb-0"
+      id="modal-basic-title"
+      [translate]="'name'"
+      [translateParams]="{ ar: 'تفاصيل المشروع      ', en: 'Project Details' }"
+    ></h4>
+    <div class="flex items-center gap-12">
+      <p class="mb-0">
+        <span style="margin-inline-end: 10px">{{
+          "ProjectNumber" | translate
+        }}</span>
+        <span>{{projDet?.settingNoP}}</span>
+      </p>
+      <p class="mb-0">
+        <span style="margin-inline-end: 10px">{{
+          "projectDescription" | translate
+        }}</span>
+        <span>{{projDet?.settingNoteP }}</span>
+      </p>
+    </div>
+    <button type="button" class="m-0" (click)="modal.dismiss('Cross click')">
+      <i class="fa fa-close"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <app-project-details
+      [projectDetails]="projectDetails"
+    ></app-project-details>
+  </div>
+  <div class="modal-footer justify-content-end" style="border-top: none">
+    <button
+      type="button"
+      class="btn btn-light py-2 px-3 mt-0"
+      (click)="modal.dismiss('Cross click')"
+    >
+      {{ "close" | translate }}
+    </button>
+  </div>
+</ng-template> -->
+
+<!-- projectDetailsModal sendNotifications-->
+<ng-template #projectDetailsModal let-modal>
+  <div class="modal-header bg-base text-white">
+    <h4
+      class="modal-title mb-0"
+      id="modal-basic-title"
+      [translate]="'name'"
+      [translateParams]="{ ar: 'تفاصيل المشروع      ', en: 'Project Details' }"
+    ></h4>
+    <div class="flex items-center gap-12">
+      <p class="mb-0">
+        <span style="margin-inline-end: 10px">{{
+          "ProjectNumber" | translate
+        }}</span>
+        <span>"{{ projDet?.settingNoP }}"</span>
+      </p>
+      <p class="mb-0">
+        <span style="margin-inline-end: 10px">{{
+          "projectDescription" | translate
+        }}</span>
+        <span>{{ projDet?.settingNoteP }}</span>
+      </p>
+    </div>
+    <button type="button" class="m-0" (click)="modal.dismiss('Cross click')">
+      <i class="fa fa-close"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <app-project-details
+      [projectDetails]="projectDetails"
+    ></app-project-details>
+  </div>
+  <div class="modal-footer justify-content-end" style="border-top: none">
+    <button
+      type="button"
+      class="btn btn-light py-2 px-3 mt-0"
+      (click)="modal.dismiss('Cross click')"
+    >
+      {{ "close" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+<!--  sendNotifications-->
+<ng-template #sendNotifications let-modal>
+  <div class="modal-header bg-base text-white">
+    <h4
+      class="modal-title mb-0"
+      id="modal-basic-title"
+      [translate]="'name'"
+      [translateParams]="{ ar: 'ارسال اشعار', en: 'Send Notification' }"
+    ></h4>
+    <button type="button" class="m-0" (click)="modal.dismiss('Cross click')">
+      <i class="fa fa-close"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <!-- <button (click)="open()" [translate]="'name'" [translateParams]="{
+                          ar: 'تحديد المستلمين',
+                          en: 'Specify Reciever'
+                        }"></button> -->
+    <div class="grid gap-3">
+      <div>
+        <mat-slide-toggle
+          color="primary"
+          (change)="setNotificationOnProject($event)"
+          ><span
+            [translate]="'name'"
+            [translateParams]="{
+              ar: 'اشعار في مشروع',
+              en: 'Notification On Project'
+            }"
+          ></span
+        ></mat-slide-toggle>
+      </div>
+      <div *ngIf="NotificationOnProject">
+        <label class="col-form-label">
+          {{ "Project Number" | translate }}
+          <span class="text-danger">*</span></label
+        >
+        <!-- <ng-select [clearable]="true" class="w-full p-0" placeholder="{{ 'Project Number' | translate }}">
+          <ng-option>الكل</ng-option>
+          <ng-option>اختيار</ng-option>
+          <ng-option>اختيار</ng-option>
+        </ng-select> -->
+        <ng-select
+          [clearable]="true"
+          class="w-full p-0"
+          placeholder="{{ 'Project Number' | translate }}"
+          [(ngModel)]="notificationmodal.projectId"
+        >
+          <ng-option *ngFor="let user of Projectselect" [value]="user.id">{{
+            user.name
+          }}</ng-option>
+        </ng-select>
+      </div>
+      <div>
+        <label class="col-form-label">
+          {{ "Users" | translate }}
+          <span class="text-danger">*</span></label
+        >
+        <!-- <ng-select [multiple]="true" [clearable]="true" class="w-full p-0" placeholder="{{ 'Users' | translate }}">
+          <ng-option>الكل</ng-option>
+          <ng-option>اختيار</ng-option>
+          <ng-option>اختيار</ng-option>
+        </ng-select> -->
+
+        <ng-select
+          [multiple]="true"
+          [(ngModel)]="notificationmodal.users"
+          [clearable]="true"
+          class="w-full p-0"
+          placeholder="{{ 'Users' | translate }}"
+        >
+          <ng-option [value]="0"> الكل </ng-option>
+          <ng-option *ngFor="let user of usersselect" [value]="user.userId">{{
+            user.fullNameAr ?? user.fullName
+          }}</ng-option>
+        </ng-select>
+      </div>
+      <div>
+        <label class="col-form-label">
+          {{ "Text notification" | translate }}
+          <span class="text-danger">*</span></label
+        >
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="notificationmodal.description"
+        />
+      </div>
+      <div>
+        <label for="attachment23" class="col-form-label">{{
+          "Upload files" | translate
+        }}</label>
+        <input
+          class="form-control"
+          name="attachment23"
+          type="file"
+          id="attachment23"
+          (change)="onFileSelected($event)"
+        />
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer justify-content-end" style="border-top: none">
+    <button
+      type="button"
+      class="btn btn-light py-2 px-3 mt-0"
+      (click)="sendNotification()"
+    >
+      {{ "Send" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+<!-- confirm delete Modal -->
+<ng-template #deleteModal let-modal>
+  <div class="modal-body text-center">
+    <p
+      [translate]="'name'"
+      [translateParams]="{
+        ar: 'هل تريد بالتأكيد حذف هذا الصف',
+        en: 'Are you sure to delete this row ?'
+      }"
+    ></p>
+    <div class="flex gap-2 justify-center">
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="SetNotificationStatus(modal)"
+      >
+        {{ "Yes" | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "No" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- taskDetailsModal -->
+<ng-template #taskDetailsModal let-modal>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="modal-title mb-0" id="modal-basic-title">
+      <span
+        [translate]="'name'"
+        [translateParams]="{
+          ar: 'تفاصيل المهمة',
+          en: 'Task Details'
+        }"
+      >
+      </span>
+    </h4>
+    <button
+      type="button"
+      class="text-white m-0"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <i class="fa fa-close"></i>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <div *ngIf="selectedTask" class="tasks-page custome-task">
+      <p class="mb-4">
+        <span style="margin-inline-end: 20px"
+          >{{ "taskName" | translate }}
+        </span>
+        <!-- <span>{{ selectedTask?.customer }}</span> -->
+        <span>{{ TaskData.Obj?.descriptionAr }}</span>
+      </p>
+
+      <div class="d-flex items-center justify-between flex-wrap gap-8 fs-6">
+        <p class="mb-3">
+          <span style="margin-inline-end: 20px"
+            >{{ "status" | translate }}
+          </span>
+          <span>{{ TaskData.Obj?.statusName }}</span>
+        </p>
+        <p class="mb-4">
+          <span style="margin-inline-end: 20px"
+            >{{ "Duration" | translate }}
+          </span>
+          <span>{{ TaskData.Obj?.timeStr }}</span>
+
+          <span style="margin-inline-end: 20px"
+            >{{ "Project name/description" | translate }}
+          </span>
+          <span>{{ TaskData.Obj?.projectDescription }}</span>
+        </p>
+        <!-- <div class="chart mb-4" style="max-width: 150px">
+            <ngx-gauge
+              type="full"
+              value="{{ percentage }}"
+              label="progress"
+              append="%"
+              thick="10"
+              foregroundColor="#2980b9"
+            ></ngx-gauge>
+          </div> -->
+      </div>
+
+      <!-- <div class="mb-4">
+          <mat-progress-bar
+            mode="determinate"
+            value="41"
+            style="height: 12px"
+          ></mat-progress-bar>
+        </div> -->
+
+      <div class="table">
+        <div class="date flex items-center justify-between">
+          <p>
+            <span>{{ "From" | translate }}</span>
+            <span>{{ TaskData.TaskTimeFrom_Merge }}</span>
+          </p>
+          <p *ngIf="TaskData.notesStrVac"
+          style="text-align: center;color: red;" class="p-1 bg-red-100">
+            <span>{{ TaskData.notesStrVac }}</span>
+          </p>
+          <p>
+            <span>{{ "To" | translate }}</span>
+            <span>{{ TaskData.TaskTimeTo_Merge }}</span>
+          </p>
+        </div>
+
+        <table
+          class="table table-responsive table-striped table-bordered text-center"
+          style="vertical-align: middle; font-size: 14px"
+        >
+          <thead
+            class="bg-base text-white"
+            style="line-height: 30px; font-size: 13px"
+          >
+            <tr>
+              <th>{{ "Assigned to" | translate }}</th>
+              <th>{{ "Project Number" | translate }}</th>
+              <th>{{ "Customer Name" | translate }}</th>
+              <th>{{ "task status" | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{ TaskData.Obj?.userName }}</td>
+              <td>{{ TaskData.Obj?.projectNumber }}</td>
+              <td>{{ TaskData.Obj?.clientName }}</td>
+              <td>{{ TaskData.priorty }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="my-2 flex items-center justify-between flex-wrap">
+        <div class="flex justify-start items-center gap-4">
+          <button
+            [disabled]="
+              TaskData.Obj?.status == 1 ||
+              TaskData.Obj?.status == 3 ||
+              TaskData.Obj?.status == 4
+            "
+            type="button"
+            mat-button
+            mat-raise-button
+            class="bg-success text-white px-4 py-2"
+            style="
+              padding: 2px 14px !important;
+              width: max-content;
+              height: auto;
+            "
+            (click)="
+              open(endTaskModal, null, null, null, 'task'); setpopup(modal)
+            "
+          >
+            {{ "end task" | translate }}
+          </button>
+          <p class="flex items-center mb-0 relative">
+            {{ "Mission Completion Ratio" | translate }}
+            <input
+              [disabled]="
+                TaskData.Obj?.status == 1 ||
+                TaskData.Obj?.status == 3 ||
+                TaskData.Obj?.status == 4
+              "
+              type="number"
+              max
+              name="missionRatio"
+              class="form-control"
+              style="
+                max-width: 53px !important;
+                margin: 0px 10px !important;
+                padding: 5px !important;
+                text-align: center !important;
+              "
+              (keyup)="disablesavingpercentage()"
+              [(ngModel)]="percentage"
+            />
+            <span
+              class="percent absolute"
+              style="
+                top: 50%;
+                transform: translateY(-50%);
+                inset-inline-end: -6px;
+                font-weight: 600;
+                font-size: 20px;
+              "
+              >%</span
+            >
+          </p>
+
+          <button
+            [disabled]="
+              TaskData.Obj?.status == 1 ||
+              TaskData.Obj?.status == 3 ||
+              TaskData.Obj?.status == 4 ||
+              isdisabled == 0 ||
+              percentage == '' ||
+              percentage == null
+            "
+            type="button"
+            mat-button
+            mat-raise-button
+            class="bg-success text-white px-4 py-2"
+            style="
+              padding: 2px 14px !important;
+              width: max-content;
+              height: auto;
+            "
+            (click)="
+              open(PercentageTaskModal, 'savepercentage', null, null, 'task')
+            "
+          >
+            حفظ النسبه
+          </button>
+        </div>
+        <div class="flex justify-end items-center gap-2 taskBtns">
+          <button
+            [disabled]="
+              TaskData.Obj?.status == 1 ||
+              TaskData.Obj?.status == 3 ||
+              TaskData.Obj?.status == 4
+            "
+            class="btn btn-outline-success"
+            (click)="open(mapModal, null, null, null, 'task')"
+          >
+            <i class="fa fa-map-marker"></i>
+          </button>
+
+          <button
+            *ngIf="TaskData.Obj?.status == 2"
+            type="button"
+            class="btn btn-outline-secondary rounded-lg"
+            (click)="open(stopTaskModal, null, null, null, 'task')"
+          >
+            <i class="fa fa-pause"></i>
+          </button>
+          <button
+            *ngIf="TaskData.Obj?.status != 2"
+            [disabled]="TaskData.Obj?.status == 4"
+            type="button"
+            class="btn btn-outline-secondary p-2 rounded-lg w-10"
+            (click)="open(playTaskModal, null, null, null, 'task')"
+          >
+            <i class="fa fa-play"></i>
+          </button>
+
+          <button
+            *ngIf="TaskFilesCount > 0"
+            type="button"
+            class="min-w-max p-2 bg-sky-100 hover:bg-sky-500 rounded-lg duration-300 hover:text-white aspect-square w-10"
+            (click)="
+              GetAllProjectRequirementByTaskId(TaskData.Obj);
+              open(showtasksfiles, null, null, null, 'openfile')
+            "
+          >
+            <i class="fa-solid fa-eye"></i>
+          </button>
+
+          <button
+            [disabled]="
+              TaskData.Obj?.status == 1 ||
+              TaskData.Obj?.status == 3 ||
+              TaskData.Obj?.status == 4
+            "
+            type="button"
+            class="t-Uploading-Project btn btn-sm waves-effect p-0"
+            (click)="open(uploadFileModal, null, null, null, 'task')"
+            style="filter: grayscale(1)"
+          >
+            <img
+              src="/assets/icons/upload-cloud-line@2x.png"
+              alt="upload icon"
+              class="uploadingIcon"
+            />
+          </button>
+
+          <!-- <button
+              type="button"
+              class="btn btn-outline-secondary rounded-lg"
+              (click)="open(deleteTaskModal, 'infoAction')"
+            >
+              <i class="fa fa-trash"></i>
+            </button>
+
+              <i class="fa fa-clock"></i>
+            </button>-->
+          <button
+            *ngIf="IsadminTask == 1"
+            [disabled]="
+              TaskData.Obj?.status == 1 ||
+              TaskData.Obj?.status == 3 ||
+              TaskData.Obj?.status == 4
+            "
+            type="button"
+            class="btn btn-outline-secondary rounde mx-1d-lg"
+            (click)="open(extendTaskModal, null, null, null, 'task')"
+          >
+            <i class="fa fa-clock"></i>
+          </button>
+
+          <button
+            *ngIf="IsadminTask == 1"
+            [disabled]="
+              TaskData.Obj?.status == 1 ||
+              TaskData.Obj?.status == 3 ||
+              TaskData.Obj?.status == 4
+            "
+            type="button"
+            class="btn btn-outline-secondary rounded-lg mx-1"
+            (click)="
+              open(assignTaskModal, null, null, null, 'task');
+              Fillcustomerhavingoffer()
+            "
+          >
+            <i class="fa fa-backward"></i>
+          </button>
+        </div>
+      </div>
+      <div class="mt-3 flex items-center gap-8 flex-wrap">
+        <!-- <div style="max-width: 150px">
+            <div class="form-check form-switch">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                role="switch"
+                id="flexSwitchCheckDefault"
+              />
+              <label
+                class="form-check-label"
+                for="flexSwitchCheckDefault"
+                style="width: max-content"
+              >
+                {{ "achieve the goal" | translate }}
+              </label>
+            </div>
+          </div> -->
+
+        <!-- <div class="periority">
+            <mat-radio-group
+              aria-label="Select an option"
+              name="status"
+              style="display: flex; gap: 16px; align-items: center"
+            >
+              <mat-radio-button value="1" class="text-warning">{{
+                "low" | translate
+              }}</mat-radio-button>
+              <mat-radio-button value="2" class="text-success">{{
+                "middle" | translate
+              }}</mat-radio-button>
+              <mat-radio-button value="3" class="text-base">{{
+                "high" | translate
+              }}</mat-radio-button>
+              <mat-radio-button value="4" class="text-danger">{{
+                "urgent" | translate
+              }}</mat-radio-button>
+            </mat-radio-group>
+          </div> -->
+      </div>
+      <div class="info mt-2">
+        <label class="fs-6">{{
+          "Job Details Required for Mission" | translate
+        }}</label>
+        <textarea
+          [disabled]="
+            TaskData.Obj?.status == 1 ||
+            TaskData.Obj?.status == 3 ||
+            TaskData.Obj?.status == 4
+          "
+          name="info"
+          style="width: 100%; height: 50px; padding: 10px 15px"
+          placeholder="{{ 'task statement' | translate }}"
+        ></textarea>
+      </div>
+
+      <div class="users flex items-center justify-between flex-wrap mt-2">
+        <div>
+          <img
+            [src]="ShowImgAdded()"
+            alt="img"
+            class="img-fluid"
+            style="
+              width: 80px;
+              height: 80px;
+              border-radius: 50%;
+              margin-inline-end: 10px;
+            "
+          />
+          <span style="margin-inline-end: 10px">{{
+            "Created by" | translate
+          }}</span>
+          <span>{{ TaskData.Obj?.addedTaskName }}</span>
+        </div>
+        <div>
+          <img
+            [src]="ShowImgManager()"
+            alt="img"
+            class="img-fluid"
+            style="
+              width: 80px;
+              height: 80px;
+              border-radius: 50%;
+              margin-inline-end: 10px;
+            "
+          />
+          <span style="margin-inline-end: 10px">{{
+            "project manager" | translate
+          }}</span>
+          <span>{{ TaskData.Obj?.projectMangerName }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex items-center justify-end gap-3 mt-4">
+      <button (click)="modal?.dismiss()" class="btn btn-outline-secondary">
+        {{ "close" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- endTaskModal -->
+<ng-template #endTaskModal let-modal>
+  <div class="modal-body text-center">
+    <p>{{ "Do you want to finish the task?" | translate }}</p>
+    <div class="flex gap-2 justify-center mt-3">
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="confirm_endtask(modal); modal.dismiss()"
+      >
+        {{ "Yes" | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "No" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- stopTaskModal -->
+<ng-template #stopTaskModal let-modal>
+  <div class="modal-body text-center">
+    <p>{{ "Do you want to stop the task?" | translate }}</p>
+    <div class="flex gap-2 justify-center mt-3">
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="confirm_playandstoptask(3, modal); modal.dismiss()"
+      >
+        {{ "Yes" | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "No" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- stopTaskModal -->
+<ng-template #playTaskModal let-modal>
+  <div class="modal-body text-center">
+    <p>{{ "Do you want to play the task?" | translate }}</p>
+    <div class="flex gap-2 justify-center mt-3">
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="confirm_playandstoptask(2, modal); modal.dismiss()"
+      >
+        {{ "Yes" | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "No" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- extendTaskModal -->
+<ng-template #extendTaskModal let-modal>
+  <div class="modal-header bg-base text-white">
+    <h4
+      class="modal-title mb-0"
+      id="modal-basic-title"
+      [translate]="'name'"
+      [translateParams]="{ ar: 'تمديد المهمة', en: '  extended Task' }"
+    ></h4>
+    <button type="button" class="m-0" (click)="modal.dismiss('Cross click')">
+      <i class="fa fa-close"></i>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-lg-6 col-lg-4 mb-3 mb-lg-0">
+        <div class="form-group">
+          <label class="col-form-label"> {{ "Duration" | translate }}</label>
+          <ng-select
+            class="w-full p-0"
+            placeholder="{{ 'Chose' | translate }}"
+            [(ngModel)]="extendedData.selectedTaskType"
+            [ngModelOptions]="{ standalone: true }"
+            [clearable]="false"
+          >
+            <ng-option
+              *ngFor="let type of TaskType"
+              [value]="type.id"
+              [translate]="'name'"
+              [translateParams]="{ ar: type.name?.ar, en: type.name?.en }"
+            >
+            </ng-option>
+          </ng-select>
+        </div>
+      </div>
+
+      <div
+        class="col-lg-6 col-lg-4 mb-3 mb-lg-0"
+        *ngIf="extendedData.selectedTaskType == 1"
+      >
+        <div class="form-group">
+          <label for="to234" class="text-right col-form-label block">
+            {{ "Time" | translate }}
+          </label>
+          <input
+            #to234="ngModel"
+            [(ngModel)]="extendedData.TimeH"
+            ngModel
+            class="form-control"
+            type="number"
+            id="to234"
+            name="to234"
+            (keyup)="TimeHChange()"
+          />
+        </div>
+      </div>
+
+      <div
+        class="col-lg-6 col-lg-4 mb-3 mb-lg-0"
+        *ngIf="extendedData.selectedTaskType == 2"
+      >
+        <div class="form-group">
+          <label class="text-right col-form-label block">
+            {{ "From" | translate }} {{ " " }}{{ "Date" | translate }}
+          </label>
+          <div class="form-group timeInput">
+            <input
+              ngModel
+              name="from"
+              type="text"
+              class="form-control"
+              bsDatepicker
+              [(ngModel)]="extendedData.DateFrom"
+              disabled="disabled"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 col-lg-4" *ngIf="extendedData.selectedTaskType == 2">
+        <div class="form-group">
+          <label class="text-right col-form-label block">
+            {{ "To" | translate }} {{ " " }}{{ "Date" | translate }}
+          </label>
+          <div class="form-group timeInput">
+            <input
+              ngModel
+              name="to"
+              type="text"
+              class="form-control"
+              bsDatepicker
+              [(ngModel)]="extendedData.DateTo"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer justify-content-end" style="border-top: none">
+    <button
+      type="button"
+      class="btn py-2 px-3 mt-0 bg-base text-white"
+      (click)="modal.dismiss('Cross click'); confirm_changeTaskTime()"
+    >
+      {{ "confirem" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+<!-- assignTaskModal -->
+<ng-template #assignTaskModal let-modal>
+  <div class="modal-header bg-base text-white">
+    <h4
+      class="modal-title mb-0"
+      id="modal-basic-title"
+      [translate]="'name'"
+      [translateParams]="{
+        ar: 'تحويل المهمة      ',
+        en: '    Task Transformation '
+      }"
+    ></h4>
+    <button type="button" class="m-0" (click)="modal.dismiss('Cross click')">
+      <i class="fa fa-close"></i>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-12">
+        <div class="form-group">
+          <label class="col-form-label"> {{ "userName" | translate }}</label>
+          <ng-select
+            class="w-full p-0"
+            placeholder="{{ 'Chose' | translate }}"
+            [(ngModel)]="UsersSelectConvert"
+            [ngModelOptions]="{ standalone: true }"
+            [dropdownPosition]="'bottom'"
+          >
+            <ng-option
+              *ngFor="let user of load_UsersSelectConvert"
+              [value]="user.id"
+              >{{ user.name }}</ng-option
+            >
+          </ng-select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer justify-content-end" style="border-top: none">
+    <button
+      type="button"
+      class="btn py-2 px-3 mt-0 bg-base text-white"
+      (click)="modal.dismiss('Cross click'); confirm_converttask()"
+    >
+      {{ "confirem" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #uploadFileModal let-modal>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="m-0">
+      <span
+        class="text-2xl"
+        [translate]="'name'"
+        [translateParams]="{
+          ar: '  اضافة ملفات',
+          en: 'Add Files',
+        }"
+      >
+      </span>
+    </h4>
+    <button
+      type="button"
+      class="text-2xl text-white m-0"
+      (click)="modal.dismiss()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form>
+      <p class="w-max p-1 bg-red-100 mx-auto mb-3">
+        {{ "Verification service depends only on pdf files" | translate }}
+      </p>
+      <div class="upload">
+        <file-upload [control]="controlTask" style="min-height: 240px">
+          <ng-template
+            let-isFileDragDropAvailable="isFileDragDropAvailable"
+            #placeholder
+          >
+            <div *ngIf="controlTask.size === 0">
+              <div class="icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="1em"
+                  viewBox="0 0 640 512"
+                >
+                  <path
+                    d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-217c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l39-39V392c0 13.3 10.7 24 24 24s24-10.7 24-24V257.9l39 39c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0l-80 80z"
+                  />
+                </svg>
+              </div>
+              <div class="upload-text">{{ "Upload File" | translate }} 😶</div>
+            </div>
+          </ng-template>
+
+          <ng-template
+            let-i="index"
+            let-file="file"
+            let-control="controlTask"
+            #item
+          >
+            <div *ngIf="file">
+              <span
+                class="delete-button"
+                style="display: flex"
+                (click)="controlTask.removeFile(file)"
+              >
+                <span> حذف ❌ </span>
+                <svg viewBox="0 0 448 512">
+                  <path
+                    d="M32 464a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128H32zm272-256a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zM432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16z"
+                  ></path>
+                </svg>
+              </span>
+              <img
+                class="max-h-44"
+                *ngIf="controlTask.valid"
+                [src]="uploadedFile | async"
+              />
+
+              <section class="file-info">
+                <span style="font-size: 16px; font-weight: 700"
+                  >تفاصيل الملف</span
+                >
+                <hr />
+                <ul>
+                  <li><span style="color: red">Name: </span>{{ file.name }}</li>
+                  <li><span style="color: red">Type: </span>{{ file.type }}</li>
+                  <li>
+                    <span style="color: red">Size: </span>{{ file.size }} bytes
+                  </li>
+                </ul>
+              </section>
+              <section *ngIf="!(controlTask.size === 0)">
+                <p>
+                  تم تحديد الملف بنجاح، ولرفع الملف علي المشروع اضغط زر حفظ ✅
+                </p>
+              </section>
+            </div>
+          </ng-template>
+        </file-upload>
+      </div>
+      <mat-progress-bar
+        style="height: 12px"
+        mode="determinate"
+        value="{{ progress }}"
+      ></mat-progress-bar>
+      <p style="text-align: center; color: #950101" *ngIf="uploading">
+        جاري التحميل ... ⏳
+      </p>
+      <p style="font-weight: 700">يرجي الانتباه للاتي عند رفع ملف :</p>
+      <p>
+        <span style="color: red">أولا</span> : تأكد من فحص الملف بواسطة مكافح
+        الفيروسات والتأكد منه قبل رفعه علي النظام
+      </p>
+      <p>
+        <span style="color: red">ثانيا</span> : لا تقم برفع الملفات التي لا تخص
+        المشروع لتوفير مساحة تخزين علي السيرفر الخاص بك
+      </p>
+      <p>
+        <span style="color: red">ثالثا</span> : خدمة التحقق من الوثائق والتي
+        توفر للعميل معرفة مصدر الملف تتوفر بصيغة PDF فقط
+      </p>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-light" (click)="modal.dismiss()">
+      {{ "Back" | translate }}
+    </button>
+    <button
+      [disabled]="controlTask.size === 0 || disableButtonSave_File"
+      (click)="confirm_SaveFiles(modal)"
+      class="btn btn-primary"
+    >
+      {{ "Save" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #mapModal let-modal>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="m-0">
+      <span class="text-2xl">{{ "Location" | translate }} </span>
+    </h4>
+    <button
+      type="button"
+      class="text-2xl text-white m-0"
+      (click)="modal.dismiss()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="relative rounded-lg overflow-hidden">
+      <agm-map
+        (mapReady)="onMapReady($event)"
+        style="height: 60vh"
+        [latitude]="latitude"
+        [longitude]="longitude"
+        [zoom]="zoom"
+      >
+        <agm-marker
+          [markerDraggable]="true"
+          [latitude]="latitude"
+          [longitude]="longitude"
+          (dragEnd)="markerDragEnd($event)"
+        ></agm-marker>
+      </agm-map>
+      <button
+        class="bottom-[120px] right-[10px] shadow rounded-sm border-neutral-400 text-neutral-500 absolute h-10 w-10 bg-white flex justify-center items-center z-20"
+        (click)="setCurrentLocation()"
+      >
+        <i class="fa fa-map-marker"></i>
+      </button>
+    </div>
+    <div class="text-end mt-2">
+      <button (click)="modal?.dismiss()" class="btn btn-secondary">
+        {{ "close" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- endTask -->
+<ng-template #PercentageTaskModal let-modal>
+  <div class="modal-body text-center">
+    <p>هل تريد حفظ النسبة</p>
+    <div class="flex gap-2 justify-center mt-3">
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="finishTask(modal); modal.dismiss()"
+      >
+        {{ "Yes" | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "No" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+<ng-template #showtasksfiles let-modal>
+  <div class="model-body" style="padding: 30px; text-align: center">
+    <table
+      class="table table-responsive table-striped table-bordered text-center"
+      style="vertical-align: middle; font-size: 14px"
+    >
+      <thead
+        class="bg-base text-white"
+        style="line-height: 30px; font-size: 13px"
+      >
+        <tr>
+          <th>اسم الملف</th>
+          <th>خيارات</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of TaskFiles">
+          <td>{{ item.nameAr }}</td>
+          <td>
+            <button
+              type="button"
+              class="min-w-max p-2 bg-sky-100 hover:bg-sky-500 rounded-lg duration-300 hover:text-white aspect-square w-10"
+              (click)="downloadFile(item)"
+            >
+              <i class="fa-solid fa-eye"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="flex justify-center gap-3 mt-3">
+      <button mat-raised-button color="warn" (click)="modal.dismiss()">
+        {{ "close" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>

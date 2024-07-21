@@ -1,0 +1,485 @@
+<div class="profile py-5">
+  <!-- <h2 class="mb-5 px-3 confirm-msg">الملف الشخصي</h2> -->
+  <div class="container-fluid">
+    <form class="px-2 grid items-start md:grid-cols-2 gap-3" [formGroup]="userForm">
+      <div class="grid grid-cols-2 gap-x-1 gap-y-4">
+        <div class="flex flex-col items-center gap-1">
+          <ng-container  *ngIf="  this.userForm.controls['ImgUrl'].value != (null&&'') " >
+            <img class="w-1/2"src="{{ this.userForm.controls['ImgUrl'].value }}"alt="" />
+          </ng-container>
+        <ng-container *ngIf="  this.userForm.controls['ImgUrl'].value==null" >
+          <img class="w-1/2" src="{{imagePath}}"alt="" />
+        </ng-container>
+          <h3 class="font-bold m-0">{{lang == 'ar'?   this.userForm.controls['FullNameAr'].value:   this.userForm.controls['FullNameEn'].value}}</h3>
+          <span>{{this.userForm.controls['jobName'].value}}</span>
+          <label for="user-img" class="btn-primary btn mt-2" [translate]="'name'" [translateParams]="{
+              ar: 'تحميل صورة ',
+              en: 'Upload image'
+            }"></label>
+          <input hidden type="file" id="user-img" (change)="selectFile($event)"accept="image/*"/>
+        </div>
+
+        <div class="flex flex-col gap-2 items-center">
+          <label class="col-form-label w-100">{{ 'Link the application to an account. Slide the camera over the response code' | translate }}</label>
+          <ng-container *ngIf="  this.userForm.controls['qrCodeUrl'].value!=(null&&'')" >
+            <img class="w-1/2" src="{{ this.userForm.controls['qrCodeUrl'].value }}" alt="" />
+          </ng-container>
+          <a href="https://play.google.com/store/apps/details?id=bayanatech.tam" target="_blank">
+            <img src="assets/images/google-play.png" alt=""/>
+          </a>
+          <a href="https://apps.apple.com/us/app/taamer-cloud/id1665435495" target="_blank">
+            <img src="assets/images/app-store.png" alt=""/>
+          </a>
+        </div>
+
+        <div class="col-span-2 flex flex-col gap-3">
+          <div>
+            <mat-slide-toggle formControlName="AppearWelcome" color="primary"><span [translate]="'name'"
+               [translateParams]="{
+                  ar: 'اظهار شاشة الترحيب',
+                  en: 'Show welcome page'
+                }"></span></mat-slide-toggle>
+          </div>
+          <div>
+            <mat-slide-toggle  formControlName="AppearInInvoicePrint" color="primary"><span [translate]="'name'"
+              [translateParams]="{
+                  ar: 'عدم اظهار اسم المستخدم في طباعة الفاتورة',
+                  en: 'Hide user name on invoice print'
+                }"></span></mat-slide-toggle>
+          </div>
+          <div>
+            <mat-slide-toggle color="primary" (change)="updateAppActiveStatus($event)">
+              <span [translate]="'name'" [translateParams]="{
+                ar: 'حالة المستخدم فى التطبيق نشطه',
+                en: 'Activate user status on application'
+              }"></span>
+            </mat-slide-toggle>
+          </div>
+          <!-- <span class="font-bold" [translate]="'name'" [translateParams]="{
+              ar: 'عنوان السيرفر الخاص بك ',
+              en: 'Server IP'
+            }">
+          </span> -->
+          <!-- <div class="flex gap-1 text-xl font-bold items-center max-w-[250px]">
+            <input type="text" class="form-control aspect-square text-center" readonly value="192" />
+            .
+            <input type="text" class="form-control aspect-square text-center" readonly value="168" />
+            .
+            <input type="text" class="form-control aspect-square text-center" readonly value="2" />
+            .
+            <input type="text" class="form-control aspect-square text-center" readonly value="22" />
+          </div> -->
+        </div>
+
+        <h3 class="head-h3" [translate]="'name'" [translateParams]="{
+            ar: 'خطوات تحميل التطبيق ',
+            en: 'Application download steps'
+          }"></h3>
+        <ol type="1" class="col-span-2 flex flex-col gap-1 list-decimal" style="padding-inline-start: 16px">
+          <li [translate]="'name'" [translateParams]="{
+              ar: 'قم بتنزيل التطبيق من خلال المتجر ، وذلك البحث عن نظام تعمير السحابي',
+              en: 'Download the application through the store, by searching for the cloud reconstruction system'
+            }"></li>
+          <li [translate]="'name'" [translateParams]="{
+              ar: 'بعد التحميل اضغط على زر QR CODE',
+              en: 'After downloading, click on the QR CODE button'
+            }"></li>
+          <li [translate]="'name'" [translateParams]="{
+              ar: 'قم بتمرير الكامرة على الرمز المرئي الذي أمامك',
+              en: 'Pass the camera on the visible symbol in front of you'
+            }"></li>
+          <li [translate]="'name'" [translateParams]="{
+              ar: 'قم بتسجيل الخروج من المتصفح',
+              en: ' Log out of your browser'
+            }"></li>
+        </ol>
+        <span class="col-span-2 font-semibold customP" [translate]="'name'" [translateParams]="{
+            ar: 'ملاحظة: في حال الدخول من التطبيق تأكد من تسجيل الخروج من صفحة الويب ، لأن النظام يمنع ازدواجية الدخول ، حيث لا يمكن الدخول من التطبيق ومن المتصفح في آن واحد ، فلابد من الخروج من أحدهم ، فإما الدخول من التطبيق ، أو من المتصفح .',
+
+            en: 'Note: If you log in from the application, be sure to log out from the web page, because the system prevents double entry, as it is not possible to log in from the application and from the browser at the same time, so it is necessary to exit from one of them, either from the application, or from the browser.'
+          }">
+        </span>
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <!-- <div class="cusomeInput">
+          <label class="col-form-label"
+            >{{ "nameAr" | translate }}
+            <span class="text-danger">*</span></label
+          >
+          <input
+            type="text"
+            id="empNameArtxt"
+            name="empNameArtxt"
+            class="form-control"
+            placeholder="{{ 'nameAr' | translate }}"
+          />
+        </div> -->
+
+        <div class="cusomeInput">
+          <label class="col-form-label">{{ "nameAr" | translate }}
+            <span class="text-danger">*</span></label>
+          <input type="text" id="FullNameAr" name="FullNameAr" class="form-control" autocomplete="off"
+            placeholder="{{ 'nameAr' | translate }}" formControlName="FullNameAr" />
+
+          <div *ngIf="
+                  userForm.get('FullNameAr')?.hasError('required') &&
+                  userForm.get('FullNameAr')?.touched
+                " class="error-text">
+            This field is required.
+          </div>
+          <div *ngIf="
+                  userForm.get('FullNameAr')?.hasError('pattern') &&
+                  userForm.get('FullNameAr')?.touched
+                " class="error-text">
+            Invalid pattern.
+          </div>
+        </div>
+        <div class="cusomeInput">
+          <!-- <label class="col-form-label" for="empNameEntxt">{{
+            "nameEn" | translate
+          }}</label>
+          <input
+            type="text"
+            id="empNameEntxt"
+            name="empNameEntxt"
+            class="form-control"
+            placeholder="{{ 'nameEn' | translate }} "
+          /> -->
+
+          <label class="col-form-label" for="empNameEntxt">{{
+            "nameEn" | translate
+            }}</label>
+          <span class="text-danger">*</span>
+          <input type="text" id="FullName" name="FullName" class="form-control"
+            placeholder="{{ 'nameEn' | translate }} " formControlName="FullName" />
+          <div *ngIf="
+              userForm.get('FullName')?.hasError('required') &&
+              userForm.get('FullName')?.touched
+            " class="error-text">
+            This field is required.
+          </div>
+          <div *ngIf="
+              userForm.get('FullName')?.hasError('pattern') &&
+              userForm.get('FullName')?.touched
+            " class="error-text">
+            Invalid pattern.
+          </div>
+        </div>
+        <div class="cusomeInput">
+
+          <label class="col-form-label">{{ "UserName" | translate }}</label>
+          <span class="text-danger">*</span>
+          <input type="text" class="form-control disabled-like" placeholder="{{ 'UserName' | translate }} "
+            formControlName="UserName" readonly />
+          <!-- <input type="text" class="form-control" placeholder="{{ 'UserName' | translate }}" [(ngModel)]="userValue" />
+            {{userValue | json}} -->
+          <div *ngIf="
+                  userForm.get('UserName')?.hasError('required') &&
+                  userForm.get('UserName')?.touched
+                " class="error-text">
+            This field is required.
+          </div>
+          <div *ngIf="
+                  userForm.get('UserName')?.hasError('pattern') &&
+                  userForm.get('UserName')?.touched
+                " class="error-text">
+            Invalid pattern.
+          </div>
+        </div>
+        <div class="flex gap-2 items-end cusomeInput">
+          <div class="flex-grow">
+            <!-- <label class="col-form-label">
+              {{ "Email" | translate }}
+              <span class="text-danger">*</span></label
+            >
+            <input
+              type="email"
+              class="form-control"
+              name="email"
+              id="Emailtxt"
+              placeholder="you@email.com"
+              title="enter your email."
+            /> -->
+
+
+            <label class="col-form-label">{{ "Email" | translate }}</label>
+            <span class="text-danger">*</span>
+            <input type="Email" class="form-control disabled-like" placeholder="{{ 'Email' | translate }} "
+              formControlName="Email" readonly />
+            <div *ngIf="
+                  userForm.get('Email')?.hasError('required') &&
+                  userForm.get('Email')?.touched
+                " class="error-text">
+              This field is required.
+            </div>
+            <div *ngIf="
+                  userForm.get('Email')?.hasError('pattern') &&
+                  userForm.get('Email')?.touched
+                " class="error-text">
+              Invalid pattern.
+            </div>
+          </div>
+          <button (click)="openModal(changeEmail, '', '', '')" class="btn bg-base text-white mt-3" type="type">
+            <i class="fa fa-plus"></i>
+          </button>
+        </div>
+        <div class="flex gap-2 items-end cusomeInput">
+          <div class="flex-grow">
+
+            <label class="col-form-label">{{ "Mobile" | translate }}</label>
+            <input type="tel" class="form-control disabled-like" placeholder="{{ 'Mobile' | translate }} "
+              formControlName="Mobile" readonly />
+
+            <div *ngIf="
+                  userForm.get('Mobile')?.hasError('required') &&
+                  userForm.get('Mobile')?.touched
+                " class="error-text">
+              This field is required.
+            </div>
+            <div *ngIf="
+                  userForm.get('Mobile')?.hasError('pattern') &&
+                  userForm.get('Mobile')?.touched
+                " class="error-text">
+              Invalid pattern.
+            </div>
+          </div>
+          <button (click)="openModal(changePhone, '', '', '')" class="btn bg-base text-white mt-3" type="button">
+            <i class="fa fa-plus"></i>
+          </button>
+        </div>
+        <div class="flex gap-2 items-end cusomeInput">
+          <div class="flex-grow">
+
+            <label class="col-form-label">{{ "password" | translate }}</label>
+            <input type="password" class="form-control disabled-like" placeholder="{{ 'password' | translate }} "
+              formControlName="Password" readonly />
+            <div *ngIf="
+                  userForm.get('Password')?.hasError('required') &&
+                  userForm.get('Password')?.touched
+                " class="error-text">
+              This field is required.
+            </div>
+          </div>
+          <button (click)="openModal(changePassword, '', '', '')" class="btn bg-base text-white mt-3" type="button">
+            <i class="fa fa-plus"></i>
+          </button>
+        </div>
+        <div class="cusomeInput flex items-center justify-between">
+          <!-- <label class="col-form-label"
+            >{{ "Session time" | translate }}
+          </label>
+          <input
+            type="number"
+            class="form-control"
+            min="1"
+            max="20"
+            style="max-width: 80px"
+          /> -->
+
+          <input type="number" class="form-control" placeholder="{{ 'Session time' | translate }}"
+            formControlName="Session" min="1" max="20" style="max-width: 80px" />
+          <div *ngIf="userForm.get('Session')?.hasError('required') && userForm.get('Session')?.touched"
+            class="error-text">
+            This field is required.
+          </div>
+          <div *ngIf="userForm.get('Session')?.hasError('min') && userForm.get('Session')?.touched" class="error-text">
+            Minimum value is 1.
+          </div>
+          <div *ngIf="userForm.get('Session')?.hasError('max') && userForm.get('Session')?.touched" class="error-text">
+            Maximum value is 20.
+          </div>
+          <span class="text-danger text-sm" [translate]="'name'" [translateParams]="{
+              ar: 'الحد الاقصى لمدة الجلسه 20 دقيقة ',
+              en: 'Max session time is 20 min'
+            }">*</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <div class="flex justify-between items-center">
+            <span class="col-form-label font-lg font-bold">{{
+              "Engineer seal" | translate
+              }}</span>
+          </div>
+          <div class="p-3 rounded-lg m-2 bg-zinc-200">
+            <ng-container *ngIf="this.userForm.controls['StampUrl'].value !== (null&&'') ">
+              <img class="rounded-lg w-100"
+                src="{{ this.userForm.controls['StampUrl'].value }}" alt=""
+                style="max-height: 200px; object-fit: fill" />
+            </ng-container>
+            <ng-container *ngIf="this.userForm.controls['StampUrl'].value==null">
+              <img class="rounded-lg w-100"
+              src="{{imagePathStampUrl}}" alt=""
+              style="max-height: 200px; object-fit: fill" />
+            </ng-container>
+
+
+            <!-- <img class="rounded-lg w-100" [src]="imageQrUrl" alt="" style="max-height: 200px; object-fit: fill" /> -->
+
+          </div>
+          <div></div>
+
+          <label for="user-StampUrl" class="btn-primary btn mt-2">
+            {{ "Upload" | translate }}
+          </label>
+          <input hidden type="file" id="user-StampUrl" (change)="selectFileStampUrl($event)"accept="image/*" />
+        </div>
+        <div class="text-end">
+          <!-- [disabled]="!userForm.valid" -->
+          <button style="width: 200px" class="btn submit-btn" (click)="open(confirmAlert)" [translate]="'name'"
+            [translateParams]="{ ar: 'حفظ', en: 'save' }"></button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- confirm save -->
+<ng-template #confirmAlert let-modal>
+  <div class="modal-body text-center">
+    <h4 class="confirm-msg">هل تريد حفظ التغييرات؟</h4>
+  </div>
+  <div class="modal-footer justify-content-center" style="border-top: none">
+    <button type="button" class="btn btn-light py-2 px-3 mt-0" (click)="modal.dismiss('Cross click')">
+      اغلاق
+    </button>
+    <!-- (click)="changeInfo(userForm.value)" -->
+    <button type="button" class="btn submit-btn py-2 px-3 mt-0"
+      (click)="saveUserProfile();modal.dismiss('Cross click')">
+      تأكيد
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #changeEmail let-modal>
+  <div style="background-color: var(--base-color)" class="modal-header text-white flex justify-between items-center">
+    <h4 class="m-0">
+      <span class="text-2xl">
+        {{ "Change Email" | translate }}
+      </span>
+    </h4>
+    <button type="button" class="text-2xl text-white m-0" (click)="modal.dismiss()">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form class="modal-form" #form="ngForm" (ngSubmit)="saveEmail(form)">
+      <div class="grid md:grid-cols-2 gap-3">
+        <div class="form-group">
+          <label class="text-right col-form-label block">{{ "Email" | translate }} <span
+              class="text-danger">*</span></label>
+          <input class="form-control" type="text" name="email" ngModel required #emailInput="ngModel" />
+        </div>
+        <div class="form-group">
+          <label class="text-right col-form-label block">{{ "Confirm Email" | translate }}
+            <span class="text-danger">*</span></label>
+          <input class="form-control" type="text" name="confirmEmail" ngModel required #confirmEmailInput="ngModel" />
+        </div>
+      </div>
+      <div *ngIf="emailInput.value !== confirmEmailInput.value" class="text-danger">
+        Email and Confirm Email do not match.
+      </div>
+      <div class="flex gap-2 justify-end pt-3 border-t border-neutral-300 col-span-1 md:col-span-2 mt-2">
+        <button class="btn bg-base text-white" type="submit" [disabled]="
+            form.invalid || emailInput.value !== confirmEmailInput.value
+          " (click)="modal.dismiss()">
+          {{ "Save" | translate }}
+        </button>
+        <button (click)="modal.dismiss()" class="btn btn-secondary">
+          {{ "Back" | translate }}
+        </button>
+      </div>
+    </form>
+  </div>
+</ng-template>
+<ng-template #changePassword let-modal>
+  <div style="background-color: var(--base-color)" class="modal-header text-white flex justify-between items-center">
+    <h4 class="m-0">
+      <span class="text-2xl">
+        {{ "Change Password" | translate }}
+      </span>
+    </h4>
+    <button type="button" class="text-2xl text-white m-0" (click)="modal.dismiss()">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+
+    <form class="modal-form" #form="ngForm">
+      <div class="grid md:grid-cols-2 gap-3">
+        <div class="form-group">
+          <label class="text-right col-form-label block">{{ "Password" | translate }} <span
+              class="text-danger">*</span></label>
+          <input class="form-control" type="password" autocomplete="off" name="password" ngModel required #passwordInput="ngModel" />
+        </div>
+        <div class="form-group">
+          <label class="text-right col-form-label block">{{ "Confirm Password" | translate }}
+            <span class="text-danger">*</span></label>
+          <input class="form-control" type="password" name="confirmPassword" ngModel required  autocomplete="off" #confirmPasswordInput="ngModel" />
+        </div>
+      </div>
+      <div *ngIf="passwordInput.value !== confirmPasswordInput.value" class="text-danger">
+        Password and Confirm Password do not match.
+      </div>
+      <div class="flex gap-2 justify-end pt-3 border-t border-neutral-300 col-span-1 md:col-span-2 mt-2">
+        <button class="btn bg-base text-white" type="submit" [disabled]="
+            form.invalid || passwordInput.value !== confirmPasswordInput.value
+          " (click)="savePassword(form,modal)">
+          {{ "Save" | translate }}
+        </button>
+        <button (click)="modal.dismiss()" class="btn btn-secondary">
+          {{ "Back" | translate }}
+        </button>
+      </div>
+    </form>
+    <!-- <div
+      class="flex gap-2 justify-end pt-3 border-t border-neutral-300 col-span-1 md:col-span-2 mt-2"
+    >
+      <button class="btn bg-base text-white" type="submit">
+        {{ "Save" | translate }}
+      </button>
+      <button (click)="modal.dismiss()" class="btn btn-secondary">
+        {{ "Back" | translate }}
+      </button>
+    </div> -->
+  </div>
+</ng-template>
+<ng-template #changePhone let-modal>
+  <div style="background-color: var(--base-color)" class="modal-header text-white flex justify-between items-center">
+    <h4 class="m-0">
+      <span class="text-2xl">{{ "Change Phone" | translate }}</span>
+    </h4>
+    <button type="button" class="text-2xl text-white m-0" (click)="modal.dismiss()">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <form class="modal-form" #form="ngForm" (ngSubmit)="save(form)">
+      <div class="grid md:grid-cols-2 gap-3">
+        <div class="form-group">
+          <label class="text-right col-form-label block">{{ "Phone" | translate }} <span
+              class="text-danger">*</span></label>
+          <input class="form-control" type="text" name="phone" ngModel required #phoneInput="ngModel" />
+        </div>
+        <div class="form-group">
+          <label class="text-right col-form-label block">{{ "Confirm Phone" | translate }}
+            <span class="text-danger">*</span></label>
+          <input class="form-control" type="text" name="confirmPhone" ngModel required #confirmPhoneInput="ngModel" />
+        </div>
+      </div>
+      <div *ngIf="phoneInput.value !== confirmPhoneInput.value" class="text-danger">
+        Phone and Confirm Phone do not match.
+      </div>
+      <div class="flex gap-2 justify-end pt-3 border-t border-neutral-300 col-span-1 md:col-span-2 mt-2">
+        <button class="btn bg-base text-white" type="submit" [disabled]="
+            form.invalid || phoneInput.value !== confirmPhoneInput.value
+          " (click)="modal.dismiss()">
+          {{ "Save" | translate }}
+        </button>
+        <button (click)="modal.dismiss()" class="btn btn-secondary">
+          {{ "Back" | translate }}
+        </button>
+      </div>
+    </form>
+  </div>
+</ng-template>

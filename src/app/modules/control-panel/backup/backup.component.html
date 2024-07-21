@@ -1,0 +1,636 @@
+<div class="backup">
+  <app-navigator [title]="title"></app-navigator>
+  <div class="head flex flex-column gap-4 flex-wrap items-start justify-start">
+    <div class="btns">
+      <button
+        type="button"
+        class="btn bg-base text-white"
+        (click)="open(doBackupModal, null, 'addback')"
+      >
+        {{ "Make a backup" | translate }}
+      </button>
+
+      <button
+        type="button"
+        class="btn bg-base text-white"
+        (click)="open(notificationsModal, null, 'addnotification')"
+      >
+        {{ "Set alerts" | translate }}
+      </button>
+    </div>
+  </div>
+  <div class="tables-data mt-3 overflow-hidden">
+    <!-- table -->
+    <input
+      (keyup)="applyFilter($event)"
+      class="form-control mb-3"
+      style="max-width: 300px"
+      #input
+      placeholder="{{ 'search' | translate }}"
+    />
+    <div class="overflow-auto">
+      <table
+        mat-table
+        [dataSource]="dataSource"
+        matSort
+        class="mat-elevation-z8 rounded-t-lg overflow-hidden w-max"
+      >
+        <!-- backupId column -->
+        <ng-container matColumnDef="backupId">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "backupId" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <span>{{ element?.backupId }}</span>
+          </td>
+        </ng-container>
+        <!-- date column -->
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "date" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <span>{{ element?.date | date : "dd-MM-yyyy h:m:s" }}</span>
+          </td>
+        </ng-container>
+        <!-- user column -->
+        <ng-container matColumnDef="user">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "userName" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <span>{{ element?.userName }}</span>
+          </td>
+        </ng-container>
+        <!-- size column -->
+        <ng-container matColumnDef="size">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "Size" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <span>{{ element?.fileSize }}</span>
+          </td>
+        </ng-container>
+
+        <!-- operations Column -->
+        <ng-container matColumnDef="operations">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ "operations" | translate }}
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <div class="flex gap-1 justify-center py-2">
+              <button
+                class="p-2 bg-orange-100 hover:bg-orange-500 rounded-lg duration-300 hover:text-white w-10"
+                (click)="download(element)"
+              >
+                <i class="fa fa-download"></i>
+              </button>
+
+              <button
+                class="p-2 bg-sky-100 hover:bg-sky-500 rounded-lg duration-300 hover:text-white w-10"
+                (click)="
+                  filldata(element); open(doBackupModal, element, 'details')
+                "
+              >
+                <i class="fa fa-eye"></i>
+              </button>
+
+              <button
+                class="p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white w-10"
+                (click)="open(deleteModal, element, 'deleteback')"
+              >
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayedColumns"
+          class="duration-300 hover:bg-slate-100"
+        ></tr>
+
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="4">
+            {{ "noResult" | translate }} "{{ input.value }}"
+          </td>
+        </tr>
+      </table>
+    </div>
+    <mat-paginator [pageSizeOptions]="[10, 25]"> </mat-paginator>
+  </div>
+</div>
+
+<!-- doBackupModal -->
+<ng-template #doBackupModal let-modal>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="modal-title mb-0" id="modal-basic-title">
+      <span>{{
+        backupDetails
+          ? ("Version details" | translate)
+          : ("Backup statistics" | translate)
+      }}</span>
+    </h4>
+    <button
+      type="button"
+      class="text-white m-0"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <i class="fa fa-close"></i>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <div class="container-fluid dobackup">
+      <div class="row">
+        <div class="col-md-6 col-lg-8 mb-4 mb-md-0">
+          <h4>
+            {{
+              ("Backup statistics" | translate) +
+                " " +
+                ("on the date" | translate) +
+                " " +
+                (today | date : "dd-MM-yyyy")
+            }}
+          </h4>
+          <div class="content bg-yellow-100 rounded-lg">
+            <ul>
+              <li>
+                1-
+                <strong style="margin-inline-start: 5px">{{
+                  "Latest project no" | translate
+                }}</strong>
+                <strong class="text-base">{{
+                  BackupatisticsModel.lastProjectNo
+                }}</strong>
+              </li>
+              <li>
+                2-
+                <strong style="margin-inline-start: 5px">{{
+                  ("The last invoice with a number" | translate) + " "
+                }}</strong>
+                <strong style="margin-inline-start: 5px" class="text-base">{{
+                  BackupatisticsModel.lastInvoiceNumber
+                }}</strong>
+                <strong style="margin-inline-start: 5px">{{
+                  "by user" | translate
+                }}</strong>
+                <strong class="text-base">{{
+                  BackupatisticsModel.lastInvoiceAddUser
+                }}</strong>
+              </li>
+              <li>
+                3-
+                <strong style="margin-inline-start: 5px">{{
+                  ("Latest sales turnover with a number" | translate) + " "
+                }}</strong>
+                <strong style="margin-inline-start: 5px" class="text-base">{{
+                  BackupatisticsModel.lastInvoiceRetNumber
+                }}</strong>
+                <strong style="margin-inline-start: 5px">{{
+                  "by user" | translate
+                }}</strong>
+                <strong class="text-base">{{
+                  BackupatisticsModel.lastInvoiceRetAddUser
+                }}</strong>
+              </li>
+              <li>
+                4-
+                <strong style="margin-inline-start: 5px">{{
+                  ("The last receipt voucher with a number" | translate) + " "
+                }}</strong>
+                <strong style="margin-inline-start: 5px" class="text-base">{{
+                  BackupatisticsModel.lastRevoucernNumber
+                }}</strong>
+                <strong style="margin-inline-start: 5px">{{
+                  "by user" | translate
+                }}</strong>
+                <strong class="text-base">{{
+                  BackupatisticsModel.lastRevoucernAddUser
+                }}</strong>
+              </li>
+              <li>
+                5-
+                <strong style="margin-inline-start: 5px">{{
+                  ("The last exchange voucher with a number" | translate) + " "
+                }}</strong>
+                <strong style="margin-inline-start: 5px" class="text-base">{{
+                  BackupatisticsModel.lastpayvoucernNumber
+                }}</strong>
+                <strong style="margin-inline-start: 5px">{{
+                  "by user" | translate
+                }}</strong>
+                <strong class="text-base">{{
+                  BackupatisticsModel.lastpayvoucernAddUser
+                }}</strong>
+              </li>
+              <li>
+                6-
+                <strong style="margin-inline-start: 5px">{{
+                  ("The last journal entry with a number" | translate) + " "
+                }}</strong>
+                <strong style="margin-inline-start: 5px" class="text-base">{{
+                  BackupatisticsModel.lastEntyvoucherNumber
+                }}</strong>
+                <strong style="margin-inline-start: 5px">{{
+                  "by user" | translate
+                }}</strong>
+                <strong class="text-base">{{
+                  BackupatisticsModel.lastEntyvoucherAddUser
+                }}</strong>
+              </li>
+              <li>
+                7-
+                <strong style="margin-inline-start: 5px">{{
+                  ("The last contract was added with a number" | translate) +
+                    " "
+                }}</strong>
+                <strong style="margin-inline-start: 5px" class="text-base">{{
+                  BackupatisticsModel.lastEmpContractCode
+                }}</strong>
+                <strong style="margin-inline-start: 5px">{{
+                  "by user" | translate
+                }}</strong>
+                <strong class="text-base">{{
+                  BackupatisticsModel.lastEmpContractAddUsers
+                }}</strong>
+              </li>
+              <li>
+                8-
+                <strong style="margin-inline-start: 5px">{{
+                  ("The last customer added by name" | translate) + " "
+                }}</strong>
+                <strong style="margin-inline-start: 5px" class="text-base">{{
+                  BackupatisticsModel.lastCustomerName
+                }}</strong>
+                <strong style="margin-inline-start: 5px">{{
+                  "on a branch" | translate
+                }}</strong>
+
+                <strong class="text-base">{{
+                  BackupatisticsModel.lastCustomerbranchName
+                }}</strong>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <h4>{{ "totals" | translate }}</h4>
+          <div class="content">
+            <ul>
+              <li>
+                1-
+                <strong style="margin-inline-start: 5px">{{
+                  "Total number of projects under implementation" | translate
+                }}</strong>
+                <strong class="text-base">{{
+                  BackupatisticsModel.projectCount
+                }}</strong>
+              </li>
+              <li>
+                2-
+                <strong style="margin-inline-start: 5px">{{
+                  "Total number of archived projects" | translate
+                }}</strong>
+                <strong class="text-base">{{
+                  BackupatisticsModel.projectArchivedCount
+                }}</strong>
+              </li>
+              <li>
+                3-
+                <strong style="margin-inline-start: 5px">{{
+                  "Total number of clients" | translate
+                }}</strong>
+                <strong class="text-base">{{
+                  BackupatisticsModel.customercount
+                }}</strong>
+              </li>
+              <li>
+                4-
+                <strong style="margin-inline-start: 5px">{{
+                  "Total cost" | translate
+                }}</strong>
+                <strong class="text-base">{{
+                  BackupatisticsModel.totalDetailedExpensed
+                }}</strong>
+              </li>
+              <li>
+                5-
+                <strong style="margin-inline-start: 5px">{{
+                  "Total revenue" | translate
+                }}</strong>
+                <strong class="text-base">{{
+                  BackupatisticsModel.totalDetailedRevenu
+                }}</strong>
+              </li>
+              <li>
+                6-
+                <strong style="margin-inline-start: 5px">{{
+                  "The total number of branches" | translate
+                }}</strong>
+                <strong class="text-base">{{
+                  BackupatisticsModel.branchesCount
+                }}</strong>
+              </li>
+              <li>
+                7-
+                <strong style="margin-inline-start: 5px">{{
+                  "The total number of users" | translate
+                }}</strong>
+                <strong class="text-base">{{
+                  BackupatisticsModel.usersCount
+                }}</strong>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="text-red-500 fw-bold px-4 mt-3" *ngIf="backupDetails">
+      {{
+        "Note: This statistic was taken at the time of creating this version, and it may have been changed"
+          | translate
+      }}
+    </p>
+
+    <hr class="my-3" />
+
+    <div class="d-flex items-center justify-end gap-3 mt-4">
+      <div
+        *ngIf="isstarted"
+        class="flex justify-between gap-2 items-center my-3 flex-wrap"
+        style="font-size: small; margin-left: 250px"
+      >
+        <span
+          class="p-3 rounded-lg bg-red-200"
+          [translate]="'name'"
+          [translateParams]="{
+                  ar: 'جاري عملية النسخ فضلا انتظر ...قد يستغرق الوقت من 3-5 دقائق حسب حجم البيانات',
+                  en: 'جاري عملية النسخ فضلا انتظر ...قد يستغرق الوقت من 3-5 دقائق حسب حجم البيانات',
+                }"
+        >
+        </span>
+
+        <!-- <span>بمجرد فتح هذه الشاشة يظهر للادارة أن المستخدم اطلع علي التنبيه / او التعميم،كذلك فان حذفك للتعميم يخفيه من شاشتك فقط،لكنه يبقي في شاشة الادارة </span> -->
+      </div>
+
+      <button
+        *ngIf="!backupDetails && !isstarted"
+        type="button"
+        class="btn bg-base text-white"
+        (click)="SaveBackup()"
+      >
+        {{ "Copy all" | translate }}
+      </button>
+
+      <button
+        *ngIf="!backupDetails && !isstarted"
+        type="button"
+        class="btn bg-base text-white"
+        (click)="SaveDBackup_ActiveYear()"
+      >
+        {{ "Copy current year" | translate }}
+      </button>
+
+      <button mdbBtn color="primary" type="button" disabled *ngIf="isstarted">
+        <span
+          class="spinner-grow spinner-grow-sm"
+          role="status"
+          aria-hidden="true"
+        ></span>
+        <span
+          class="spinner-grow spinner-grow-sm"
+          role="status"
+          aria-hidden="true"
+        ></span>
+        <span
+          class="spinner-grow spinner-grow-sm"
+          role="status"
+          aria-hidden="true"
+        ></span>
+        Loading...
+      </button>
+
+      <button (click)="modal?.dismiss()" class="btn btn-outline-secondary">
+        {{ "close" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- notificationsModal -->
+<ng-template #notificationsModal let-modal>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="modal-title mb-0" id="modal-basic-title">
+      <span>{{ "Reminder notifications" | translate }}</span>
+    </h4>
+    <button
+      type="button"
+      class="text-white m-0"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <i class="fa fa-close"></i>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <div class="row mb-3">
+      <h3 class="flex items-center justify-start fw-bold">
+        {{ "addEmployee" | translate }}
+        <button
+          type="button "
+          class="add-btn mx-2"
+          (click)="addEmployee(employees?.length)"
+        >
+          <i class="fa fa-plus"></i>
+        </button>
+      </h3>
+
+      <div class="editable shadow mb-4">
+        <table
+          class="table table-responsive table-striped table-bordered text-center"
+          style="vertical-align: middle; font-size: 14px"
+        >
+          <thead
+            class="bg-base text-white"
+            style="line-height: 30px; font-size: 13px"
+          >
+            <tr>
+              <th>{{ "userName" | translate }}</th>
+              <th>{{ "email" | translate }}</th>
+              <th>{{ "Mobile" | translate }}</th>
+              <th>{{ "reminder time" | translate }}</th>
+              <th>{{ "action" | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let item of employees; let i = index"
+              style="line-height: 5px"
+            >
+              <td>
+                <ng-select
+                  name="username{{ i }}"
+                  [(ngModel)]="item.userId"
+                  (ngModelChange)="GetUserById(item.userId, i)"
+                >
+                  <ng-option *ngFor="let item of users" [value]="item?.id">
+                    {{ item.name }}
+                  </ng-option>
+                </ng-select>
+              </td>
+              <td>
+                <input
+                  type="text"
+                  name="email{{ i }}"
+                  [(ngModel)]="item.email"
+                  ngModel
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  name="phone{{ i }}"
+                  [(ngModel)]="item.mobile"
+                  ngModel
+                />
+              </td>
+              <td>
+                <ng-select
+                  name="reminderTime{{ i }}"
+                  [(ngModel)]="item.alertTimeType"
+                  ngModel
+                >
+                  <ng-option
+                    *ngFor="let item of remeberOptions"
+                    [value]="item?.value"
+                    [translate]="'name'"
+                    [translateParams]="{ ar: item?.ar, en: item?.en }"
+                  >
+                  </ng-option>
+                </ng-select>
+              </td>
+
+              <td>
+                <button
+                  class="p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white w-10"
+                  (click)="deleteEmployee(i, item.alertId)"
+                >
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="dobackup">
+      <h4>{{ "Important Notes" | translate }}</h4>
+      <div class="content">
+        <ul>
+          <li>
+            <i
+              class="fa fa-check text-green-500 fw-bold"
+              style="margin-inline-end: 7px"
+            ></i>
+            <strong>{{
+              "Make sure the recipients' email for the reminder is correct, so they always get the reminder"
+                | translate
+            }}</strong>
+          </li>
+          <li>
+            <i
+              class="fa fa-check text-green-500 fw-bold"
+              style="margin-inline-end: 7px"
+            ></i>
+            <strong>{{
+              "The system will send a reminder to back up the above list"
+                | translate
+            }}</strong>
+          </li>
+          <li>
+            <i
+              class="fa fa-check text-green-500 fw-bold"
+              style="margin-inline-end: 7px"
+            ></i>
+            <strong>{{
+              "The administrator should keep a backup in a safe place away from the current cloud hosting (server)."
+                | translate
+            }}</strong>
+          </li>
+          <li>
+            <i
+              class="fa fa-check text-green-500 fw-bold"
+              style="margin-inline-end: 7px"
+            ></i>
+            <strong>{{
+              "Make sure that you only grant backup permission to authorized personnel"
+                | translate
+            }}</strong>
+          </li>
+          <li></li>
+        </ul>
+      </div>
+    </div>
+
+    <hr class="my-3" />
+
+    <div class="d-flex items-center justify-end gap-3 mt-4">
+      <button
+        type="button"
+        class="btn bg-base text-white"
+        (click)="savebacupalert()"
+      >
+        {{ "Save" | translate }}
+      </button>
+
+      <button (click)="modal?.dismiss()" class="btn btn-outline-secondary">
+        {{ "close" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- deleteModal -->
+<ng-template #deleteModal let-modal>
+  <div class="modal-body text-center">
+    <p
+      [translate]="'name'"
+      [translateParams]="{
+        ar: 'هل تريد بالتأكيد حذف هذا الصف',
+        en: 'Are you sure to delete this row ?'
+      }"
+    ></p>
+    <div class="flex gap-2 justify-center">
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="Deletebackup(); modal.dismiss()"
+      >
+        {{ "Yes" | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "No" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>

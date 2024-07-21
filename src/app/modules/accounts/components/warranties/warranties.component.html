@@ -1,0 +1,360 @@
+<div class="warranties">
+  <app-navigator [title]="title"></app-navigator>
+
+  <!-- inputs -->
+
+  <div class="container-fluid">
+    <div class="row align-items-center">
+      <div class="col-xxl-3 col-md-4 col-sm-6 col-12 mb-3">
+        <div class="form-group">
+          <label for="securityNumber" class="text-right col-form-label block">
+            {{ "securityNumber" | translate }}
+            <span class="text-danger">*</span>
+          </label>
+          <input  placeholder="{{ 'securityNumber' | translate }}" #securityNumber="ngModel"
+
+          [(ngModel)]="modalEntryVoucher.number"
+          [ngModelOptions]="{standalone: true}" class="form-control" type="number" id="securityNumber"
+            name="securityNumber" />
+        </div>
+      </div>
+
+      <div class="col-xxl-3 col-md-4 col-sm-6 col-12 mb-3">
+        <div class="form-group">
+          <label for="EntityName" class="text-right col-form-label block">
+            {{ "EntityName" | translate }}
+            <span class="text-danger">*</span>
+          </label>
+          <input  placeholder="{{ 'EntityName' | translate }}" #EntityName="ngModel"
+
+          [(ngModel)]="modalEntryVoucher.customerName"
+          [ngModelOptions]="{standalone: true}"ngModel class="form-control" type="text" id="EntityName"
+            name="EntityName" />
+        </div>
+      </div>
+
+      <div class="col-xxl-3 col-md-4 col-sm-6 col-12 mb-3">
+        <div class="form-group">
+          <label for="Project Name" class="text-right col-form-label block">
+            {{ "Project Name" | translate }}
+            <span class="text-danger">*</span>
+          </label>
+          <input  placeholder="{{ 'Project Name' | translate }}" #Project Name="ngModel"
+
+          [(ngModel)]="modalEntryVoucher.projectName"
+          [ngModelOptions]="{standalone: true}" ngModel class="form-control" type="text" id="Project Name"
+            name="Project Name" />
+        </div>
+      </div>
+
+      <div class="col-xxl-3 col-md-4 col-sm-6 col-12 mb-3">
+        <div class="form-group">
+          <label for="collateralValue" class="text-right col-form-label block">
+            {{ "collateralValue" | translate }}
+            <span class="text-danger">*</span>
+          </label>
+          <input  placeholder="{{ 'collateralValue' | translate }}" #collateralValue="ngModel"
+
+          [(ngModel)]="modalEntryVoucher.value"
+          [ngModelOptions]="{standalone: true}" ngModel class="form-control" type="number" id="collateralValue"
+            name="collateralValue" />
+        </div>
+      </div>
+
+      <div class="col-xxl-3 col-md-4 col-sm-6 col-12 mb-3">
+        <div class="form-group">
+          <label for="BankName" class="text-right col-form-label block">
+            {{ "BankName" | translate }}
+            <span class="text-danger">*</span>
+          </label>
+          <input  placeholder="{{ 'BankName' | translate }}" #BankName="ngModel"
+
+          [(ngModel)]="modalEntryVoucher.bankName"
+          [ngModelOptions]="{standalone: true}" class="form-control" type="text" id="BankName"
+            name="BankName" />
+        </div>
+      </div>
+
+      <div class="col-xxl-3 col-md-4 col-sm-6 col-12 mb-3">
+        <div class="form-group">
+          <label class="text-right col-form-label block">
+            {{ "beginningWarranty" | translate }}
+            <span class="text-danger">*</span>
+          </label>
+          <div class="form-group timeInput">
+            <input placeholder="{{ 'Chose' | translate }}"
+            [(ngModel)]="modalEntryVoucher.startDate"
+            [ngModelOptions]="{standalone: true}"name="beginningWarranty"
+              type="text" class="form-control" bsDatepicker />
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xxl-3 col-md-4 col-sm-6 col-12 mb-3">
+        <div class="form-group">
+          <label for="WarrantyPeriodDays" class="text-right col-form-label block">
+            {{ "WarrantyPeriodDays" | translate }}
+            <span class="text-danger">*</span>
+          </label>
+          <input  placeholder="{{ 'WarrantyPeriodDays' | translate }}" #WarrantyPeriodDays="ngModel"
+
+          [(ngModel)]="modalEntryVoucher.period"
+          [ngModelOptions]="{standalone: true}"class="form-control" type="number"
+            id="WarrantyPeriodDays" name="WarrantyPeriodDays" />
+        </div>
+      </div>
+
+      <div class="col-xxl-3 col-md-4 col-sm-6 col-12 mb-3">
+        <label class="col-form-label" [translate]="'name'" [translateParams]="{
+                            ar: ' نوع الضمان',
+                            en: 'Warranty Type'
+                          }">
+        </label>
+        <span class="text-danger">*</span>
+        <ng-select class="w-full p-0" name="WarrantyType" placeholder=" {{ 'Chose' | translate }}"
+        [(ngModel)]="modalEntryVoucher.type"
+        [ngModelOptions]="{standalone: true}">
+          <ng-option [value]="1" [translate]="'name'" [translateParams]="{
+                            ar: ' ابتدائي',
+                            en: 'Primary'
+                          }">
+
+          </ng-option>
+          <ng-option [value]="1" [translate]="'name'" [translateParams]="{
+                            ar: ' نهائي',
+                            en: 'Final'
+                          }">
+
+          </ng-option>
+
+        </ng-select>
+      </div>
+
+
+      <div class="head flex gap-2 flex-wrap items-end justify-between">
+        <!-- all buttons  -->
+        <div class="btns mb-3 w-100">
+          <div class="row d-md-flex">
+            <button type="button" class="flex gap-1 btn bg-base text-white mb-3 col-md-2" (click)="rest()">
+              {{ "new" | translate }}
+            </button>
+
+            <button type="button" class="flex gap-1 btn btn-primary mb-3 col-md-2" (click)="SaveGurantee()"
+            [disabled]="
+             modalEntryVoucher.bankName == null ||
+             modalEntryVoucher.customerName == null ||
+             modalEntryVoucher.number == null ||
+             modalEntryVoucher.period == null ||
+             modalEntryVoucher.projectName == null ||
+             modalEntryVoucher.startDate == null ||
+             modalEntryVoucher.type == null ||
+             modalEntryVoucher.value == null
+            ">
+              {{ "save" | translate }}
+            </button>
+
+            <button type="button" class="flex gap-1 btn btn-secondary mb-3 col-md-2">
+              {{ "close" | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xxl-3 col-md-4 col-sm-6 col-12 mb-3">
+        <div class="form-group col-span-1 md:col-span-2">
+          <label for="formFile" class="form-label">
+            {{ "SelectPicture" | translate }}</label>
+
+          <div class="upload">
+            <file-upload [control]="control"class="logoUrlfile-uploadORG"
+                       [ngClass]="{ 'logoUrlchange': modalEntryVoucher.logoUrl ==null &&this.imageFileOutput != null }">
+                        <ng-template let-isFileDragDropAvailable="isFileDragDropAvailable" #placeholder let-file="file">
+                          <div *ngIf="control.size === 0 && modalEntryVoucher.logoUrl ==null">
+                            <div class="icon">
+                              <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 640 512">
+                                <path
+                                  d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-217c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l39-39V392c0 13.3 10.7 24 24 24s24-10.7 24-24V257.9l39 39c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0l-80 80z" />
+                              </svg>
+                            </div>
+
+                            <div class="upload-text">
+                              {{ "Add Image" | translate }}
+                            </div>
+                          </div>
+                          <div class="overlay" *ngIf=" modalEntryVoucher.logoUrl !=null">
+                            <span class="delete-button" (click)="control.clear(); modalEntryVoucher.logoUrl(null)">
+                              <svg viewBox="0 0 448 512">
+                                <path
+                                  d="M32 464a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128H32zm272-256a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zM432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16z">
+                                </path>
+                              </svg>
+                            </span>
+                            <img *ngIf=" modalEntryVoucher.logoUrl !=null"
+                              src="{{environmenturl + modalEntryVoucher.logoUrl }}" />
+                          </div>
+                        </ng-template>
+                        <ng-template let-i="index" *ngIf=" modalEntryVoucher.logoUrl ==null"
+                          let-file="file" let-control="control" #item>
+                          <div class="overlay">
+                            <span class="delete-button" (click)="control.clear()">
+                              <svg viewBox="0 0 448 512">
+                                <path
+                                  d="M32 464a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128H32zm272-256a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zM432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16z">
+                                </path>
+                              </svg>
+                            </span>
+                            <img *ngIf="control.valid" [src]="uploadedFile | async" />
+                          </div>
+                        </ng-template>
+                      </file-upload>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-3">
+    <label class="col-form-label"> {{ "search" | translate }} </label>
+    <input type="text" class="form-control" style="max-width: 300px" id="search"  (keyup)="applyFilter($event)"/>
+  </div>
+
+  <!-- table -->
+  <div class="overflow-auto mt-4">
+    <table mat-table [dataSource]="projectsDataSource" matSort
+      class="mat-elevation-z8 rounded-t-lg overflow-hidden w-max">
+      <ng-container matColumnDef="customerName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span>{{ "guaranteeParty" | translate }}</span>
+        </th>
+        <td mat-cell *matCellDef="let element" class="{{
+            element.status == 0
+              ? 'text-red-500 fw-bold'
+              : element.status == 5
+              ? 'text-warning-500 fw-bold'
+              : ''
+          }}">
+          {{ element.customerName }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="Project">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span>{{ "Project" | translate }}</span>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.Project }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="projectName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span>{{ "collateralValue" | translate }}</span>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.projectName }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="value">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span>{{ "warrantyPeriod" | translate }}</span>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.value }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="startDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span>{{ "beginningWarranty" | translate }}</span>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.startDate | date : "dd-MM-yyyy" }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="bankName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span>{{ "BankName" | translate }}</span>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.bankName }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="typeName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span>{{ "WarrantyType" | translate }}</span>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.typeName }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="statusName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span>{{ "loopback" | translate }}</span>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.statusName }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="operations">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span>{{ "operations" | translate }}</span>
+        </th>
+        <td mat-cell *matCellDef="let element">
+
+          <div class="child-btns">
+            <span class="dtr-data">
+              <!--تعديل  -->
+              <button type="button" id="68"
+                class="p-2 bg-orange-100 hover:bg-orange-500 rounded-lg duration-300 hover:text-white w-10 mx-1"
+                data-toggle="tooltip" data-placement="top" title=" تعديل " data-original-title="تعديل " (click)="EditGurantees(element)">
+                <i class="fa-regular fa-pen-to-square"></i>
+              </button>
+
+            </span>
+
+            <span class="dtr-data">
+              <!--حذف   -->
+
+              <button type="button" id="68"
+                class="p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white w-10 mx-1"
+                data-toggle="tooltip" data-placement="top" title=" حذف " data-original-title="حذف "
+                (click)="open(deleteModal,element,'deleteModal')">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+
+            </span>
+
+          </div>
+
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="projectDisplayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: projectDisplayedColumns"></tr>
+    </table>
+  </div>
+  <mat-paginator [pageSizeOptions]="[10, 25]"> </mat-paginator>
+</div>
+
+<!-- deleteModal -->
+<ng-template #deleteModal let-modal>
+  <div class="modal-body text-center">
+    <p [translate]="'name'" [translateParams]="{
+        ar: 'هل تريد حذف هذا العنصر ؟',
+        en: 'Do you want to delete this item?'
+      }"></p>
+    <div class="flex gap-2 justify-center">
+      <button type="button" (click)="modal.dismiss()" mat-raised-button color="basic">
+        {{ "close" | translate }}
+      </button>
+
+      <button type="button" mat-raised-button color="warn" (click)="DeleteGurantee(modal);">
+        {{ "confirem" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>

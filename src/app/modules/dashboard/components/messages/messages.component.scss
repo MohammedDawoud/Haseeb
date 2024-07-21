@@ -1,0 +1,6 @@
+.btn-group {
+  > label {
+    @apply flex gap-2 items-center rounded-lg w-fit;
+    border-radius: 8px !important;
+  }
+}

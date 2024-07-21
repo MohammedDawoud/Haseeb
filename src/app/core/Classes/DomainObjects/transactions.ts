@@ -1,0 +1,50 @@
+import { Auditable } from "./auditable";
+import { Invoices } from "./invoices";
+import { Accounts } from "./accounts";
+import { CostCenters } from "./costCenters";
+import { AccTransactionTypes } from "./accTransactionTypes";
+import { Customer } from "./customer";
+import { Contracts } from "./contracts";
+import { DiscountReward } from "./discountReward";
+
+
+export class Transactions extends Auditable {
+    transactionId: number;
+    lineNumber: number | null;
+    accountId: number | null;
+    invoiceId: number | null;
+    type: number | null;
+    transactionDate: string | null;
+    transactionHijriDate: string | null;
+    credit: number | null;
+    depit: number | null;
+    orderNumber: number | null;
+    details: string | null;
+    notes: string | null;
+    branchId: number | null;
+    isPost: boolean | null;
+    yearId: number | null;
+    invoiceReference: string | null;
+    currentBalance: number | null;
+    costCenterId: number | null;
+    contractId: number | null;
+    paymentId: number | null;
+    customerId: number | null;
+    accountType: number | null;
+    journalNo: number | null;
+    discountRewardId: number | null;
+    recycleYearTo: string | null;
+    recycleStatus: boolean | null;
+    accCalcExpen: boolean | null;
+    accCalcIncome: boolean | null;
+    accTransactionDate: string | null;
+    accTransactionHijriDate: string | null;
+    voucherDetailsId: number | null;
+    invoices: Invoices | null;
+    accounts: Accounts | null;
+    costCenters: CostCenters | null;
+    accTransactionTypes: AccTransactionTypes | null;
+    customer: Customer | null;
+    contracts: Contracts | null;
+    discountReward: DiscountReward | null;
+}

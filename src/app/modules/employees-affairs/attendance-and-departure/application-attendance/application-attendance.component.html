@@ -1,0 +1,157 @@
+<div class="pb-4 attendance-app">
+  <app-navigator [title]="title"></app-navigator>
+  <div class="flex gap-2">
+    <button
+      (click)="changeperiod(1)"
+      class="btn  {{
+        data.period == 1 ? 'btn-primary' : 'btn-outline-primary'
+      }}"
+    >
+      {{ "Period One" | translate }}
+    </button>
+    <button
+      (click)="changeperiod(2)"
+      class="btn  {{
+        data.period == 2 ? 'btn-primary' : 'btn-outline-primary'
+      }}"
+    >
+      {{ "Period Two" | translate }}
+    </button>
+  </div>
+  <div class="grid grid-cols-3 items-start mt-4 gap-4">
+    <div
+      class="lg:col-span-1 col-span-4 p-4 min-w-[370px] bg-white shadow-2xl rounded-lg flex flex-col gap-3"
+    >
+      <div class="text-base font-semibold text-center">
+        <!-- {{ toLocal(data.date) }} -->
+      </div>
+      <div class="form-group timeInput">
+        <label class="col-form-label">{{ "Period" | translate }} </label>
+        <input
+          placeholder="{{ 'Chose Date' | translate }}"
+          type="text"
+          class="form-control"
+          bsDaterangepicker
+          name="date"
+          [(ngModel)]="data.date"
+          (ngModelChange)="CheckDate($event)"
+          #dpr="bsDaterangepicker"
+        />
+      </div>
+      <div>
+        <label class="col-form-label">{{ "Branch" | translate }} </label>
+        <ng-select
+          class="w-full p-0"
+          placeholder="{{ 'Chose' | translate }}"
+          [(ngModel)]="data.branchid"
+          (ngModelChange)="getData()"
+          [ngModelOptions]="{ standalone: true }"
+        >
+          <ng-option *ngFor="let user of branchesSelect" [value]="user.id">{{
+            user.name
+          }}</ng-option>
+        </ng-select>
+      </div>
+      <!-- user  -->
+      <div
+        class="grid grid-cols-2 gap-2 p-3 max-h-screen overflow-auto shadow-2xl rounded-2xl"
+      >
+        <div
+          class="duration-300 rounded-2xl flex flex-col gap-2 p-2  items-center text-center {{
+            modalDetails?.empId == employee?.empId &&
+            modalDetails?.maxser == employee?.maxser
+              ? 'text-white bg-base'
+              : 'bg-neutral-50 text-base'
+          }}"
+          *ngFor="let employee of data.employees"
+          (click)="GetEmployeeTotal(employee?.empId); setlocation(employee)"
+        >
+          <img
+            class="rounded-full w-2/3 aspect-square object-cover"
+            src="{{ environmenturl + employee.photoUrl }}"
+          />
+          <span class="font-bold">{{ employee.fullName }}</span>
+          <span>{{ employee.jobName }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="lg:col-span-2 col-span-4 bg-white shadow-2xl rounded-lg p-4">
+      <!-- statics -->
+      <div class="flex flex-wrap gap-4 font-bold" *ngIf="modalDetails?.name">
+        <div class="flex gap-2 items-center">
+          <span class="text-base">{{ "Employee" | translate }}</span>
+          <div>
+            {{ modalDetails?.name }}
+          </div>
+        </div>
+
+        <div class="flex gap-2 items-center">
+          <span>{{ "Total Attend Dayes" | translate }}</span>
+          <div class="font-light px-2 py-1 rounded-md bg-success text-white">
+            {{ employeetotal.attend ?? 0 }}
+            {{ "Day" | translate }}
+          </div>
+        </div>
+        <div class="flex gap-2 items-center">
+          <span>{{ "Total Absence Dayes" | translate }}</span>
+          <div class="font-light px-2 py-1 rounded-md bg-red-500 text-white">
+            {{ employeetotal.abcence ?? 0 }}
+            {{ "Day" | translate }}
+          </div>
+        </div>
+        <div class="flex gap-2 items-center">
+          <span>{{ "Late" | translate }}</span>
+          <div class="font-light px-2 py-1 rounded-md bg-warning text-white">
+            {{ employeetotal.Late ?? 0 }}
+            {{ "Hours" | translate }}
+          </div>
+        </div>
+      </div>
+      <!-- <div>
+        <agm-map
+          [latitude]="lat"
+          [longitude]="lng"
+          [zoom]="zoom"
+          [disableDefaultUI]="false"
+          (mapClick)="mapClicked($event)"
+        >
+          <agm-marker
+            *ngIf="show == 1"
+            [latitude]="lat"
+            [longitude]="lng"
+            [iconUrl]="icon"
+            [className]="'custom-marker'"
+          >
+            <agm-info-window [isOpen]="true" *ngIf="show == 1">
+              <p>{{ empname }}</p>
+              <p>{{ jobname }}</p>
+              <p *ngIf="data.period == 1">تسجيل حضور الفترة الاولي</p>
+              <p *ngIf="data.period == 2">تسجيل حضور الفترة الثانية</p>
+
+              <p>{{ timejoin }}</p>
+              <p>{{ timeleave }}</p>
+              <p>{{ dateday }}</p>
+              <p>
+                <i
+                  class="fa-solid fa-location-dot"
+                  style="margin-inline-end: 10px"
+                ></i>
+                <span> {{ branchname }} </span>
+              </p>
+            </agm-info-window>
+          </agm-marker>
+        </agm-map>
+      </div> -->
+
+      <div>
+        <div
+          *ngIf="setMapReq"
+          style="height: 600px"
+          leaflet
+          [leafletOptions]="mapOptions"
+          (leafletMapReady)="onMapReady($event)"
+        ></div>
+      </div>
+    </div>
+  </div>
+</div>

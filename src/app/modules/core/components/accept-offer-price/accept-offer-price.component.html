@@ -1,0 +1,207 @@
+<div class="accept-offer-price">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-5 mb-4 mb-lg-0">
+        <div class="info text-center">
+          <img *ngIf="OrganizationData?.logoUrl"
+            src="{{environmentPho}}"
+            alt="logo"
+            class="d-inline-block mb-3 img-fluid"
+          />
+          <h2>{{OrganizationData?.nameAr}}</h2>
+          <h2>{{OrganizationData?.nameEn}}</h2>
+        </div>
+      </div>
+      <div class="col-lg-7">
+        <div class="services">
+          <h2>{{ "Acceptance of the price offer" | translate }}</h2>
+          <p>
+            {{
+              "Dear customer, to confirm your approval of the offer presented to you, please fill in the following data, based on the details sent to you via e-mail"
+                | translate
+            }}
+          </p>
+          <form #checkForm="ngForm" class="row">
+            <div class="form-input col-lg-6">
+              <img src="/assets/images/id.svg"
+               alt="user icon" />
+
+              <input
+                type="text"
+                name="id"
+                placeholder="{{ 'ID Number' | translate }} / {{ 'Commercial Register' | translate }}   "
+                [(ngModel)]="DataObj.NationalId"
+                [ngModelOptions]="{ standalone: true }"
+                #id="ngModel"
+                required
+                autocomplete="off"
+              />
+              <span
+                class="text-danger"
+                *ngIf="id.hasError('required') && id.touched"
+                >{{ "requiredError" | translate }}
+              </span>
+            </div>
+
+            <div class="form-input col-lg-6">
+              <img src="/assets/images/id.svg" alt="user icon" />
+
+              <input
+                type="text"
+                name="projectNumber"
+                placeholder="{{ 'Reference Number' | translate }}   "
+                [(ngModel)]="DataObj.OfferId"
+                [ngModelOptions]="{ standalone: true }"
+                #projectNumber="ngModel"
+                required
+                autocomplete="off"
+              />
+              <span
+                class="text-danger"
+                *ngIf="
+                  projectNumber.hasError('required') && projectNumber.touched
+                "
+                >{{ "requiredError" | translate }}
+              </span>
+            </div>
+
+            <div class="form-input col-lg-6">
+              <img src="/assets/images/barcode.svg" alt="user icon" />
+
+              <input
+                type="text"
+                name="digitCode"
+                placeholder="{{ 'Enter the 4-digit code' | translate }}   "
+                [(ngModel)]="DataObj.ActivationCode"
+                [ngModelOptions]="{ standalone: true }"
+                #digitCode="ngModel"
+                required
+                autocomplete="off"
+              />
+              <span
+                class="text-danger"
+                *ngIf="digitCode.hasError('required') && digitCode.touched"
+                >{{ "requiredError" | translate }}
+              </span>
+            </div>
+
+            <!-- <div class="form-input col-lg-6">
+              <img src="/assets/images/barcode.svg" alt="user icon" />
+
+              <input
+                type="text"
+                name="code"
+                placeholder="{{ 'code' | translate }}   "
+                [(ngModel)]="DataObj.VisualCode"
+                [ngModelOptions]="{ standalone: true }"
+                #code="ngModel"
+                required
+                autocomplete="off"
+              />
+              <span
+                class="text-danger"
+                *ngIf="code.hasError('required') && code.touched"
+                >{{ "requiredError" | translate }}
+              </span>
+            </div> -->
+
+            <div class="row qr m-0 position-relative form-input col-lg-6">
+              <div class="col-7 col-lg-8 mb-0 ps-0">
+                <div class="form-input">
+                  <img
+                    src="/assets/images/qr-code-scan.png"
+                    alt="qr-code icon"
+                  />
+
+                  <input
+                    type="text"
+                    name="parCode"
+                    placeholder="{{ 'code' | translate }}"
+                    [(ngModel)]="DataObj.VisualCode"
+                    [ngModelOptions]="{ standalone: true }"
+                    #parCode="ngModel"
+                    required
+                    minlength="4"
+                    autocomplete="off"
+                  />
+                </div>
+              </div>
+              <div class="col-5 col-lg-4 mb-0 pe-0">
+                <div class="qrcode d-flex align-items-center">
+                  <div class="qrcode-value">
+                    <span>{{ qrCodeCheckValue[0] }}</span>
+                    <span>{{ qrCodeCheckValue[1] }}</span>
+                    <span>{{ qrCodeCheckValue[2] }}</span>
+                    <span>{{ qrCodeCheckValue[3] }}</span>
+                  </div>
+                  <i
+                    style="cursor: pointer"
+                    class="fa fa-refresh"
+                    (click)="refreshQrCode(); parCode.reset()"
+                  ></i>
+                </div>
+              </div>
+
+              <!-- <span
+                class="text-danger"
+                style="bottom: 4px"
+                *ngIf="!parCode.value && parCode.touched"
+                >{{ "requiredError" | translate }}</span
+              > -->
+              <span
+                class="text-danger"
+                style="bottom: 4px"
+                *ngIf="
+                  parCode.value != qrCodeCheckValue &&
+                  parCode.touched &&
+                  parCode.dirty
+                "
+                >{{ "codeError" | translate }}</span
+              >
+            </div>
+
+
+            <button
+              class="btn btn-outline-secondary check-btn"
+              [disabled]="checkForm.invalid || parCode.value != qrCodeCheckValue"
+              (click)="check()"
+            >
+              {{ "send" | translate }}
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #pinCodeModal let-modal>
+  <div class="modal-body text-center">
+    <div class="pin-code">
+      <div class="pin-code-info rounded bg-body">
+        <div class="head text-center">
+          <h2>
+            {{
+              "Please enter the confirmation code for your approval of the price offer"
+                | translate
+            }}
+          </h2>
+        </div>
+        <form #form="ngForm">
+          <ng-otp-input
+            (onInputChange)="onOtpChange($event)"
+            [config]="{ length: 4 }"
+          ></ng-otp-input>
+
+          <button
+            class="btn btn-outline-secondary pin-code-btn"
+            [disabled]="pinCode?.length < 4"
+            (click)="checkPinCode()"
+          >
+            ارسال
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>

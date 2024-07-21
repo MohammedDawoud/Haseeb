@@ -1,0 +1,37 @@
+export class OffersPricesVM {
+    offersPricesId: number;
+    offerNo: string | null;
+    offerDate: string | null;
+    offerHijriDate: string | null;
+    userId: number | null;
+    customerId: number | null;
+    customerName: string | null;
+    department: string | null;
+    offerValue: number;
+    offerValueTxt: string | null;
+    offerStatus: number | null;
+    customerStatus: number | null;
+    serviceId: number | null;
+    branchId: number | null;
+    presenter: string | null;
+    presenterEN: string | null;
+    rememberDate: string | null;
+    iSsent: number | null;
+    offerAlarmCheck: boolean | null;
+    servQty: number | null;
+    customerName2: string | null;
+    offerNoType: number | null;
+    projectno: string | null;
+    projecttime: string | null;
+    isContainLogo: boolean | null;
+    isContainSign: boolean | null;
+    printBankAccount: boolean | null;
+    customerEmail: string | null;
+    customerphone: string | null;
+    cUstomerName_EN: string | null;
+    isEnglish: number | null;
+    nickName: string | null;
+    description: string | null;
+    introduction: string | null;
+    setIntroduction: number | null;
+}

@@ -1,0 +1,42 @@
+import { Auditable } from "./auditable";
+import { FileType } from "./fileType";
+import { Project } from "./project";
+import { Users } from "./users";
+import { ProjectPhasesTasks } from "./projectPhasesTasks";
+
+export class ProjectFiles extends Auditable {
+    fileId: number;
+    fileName: string | null;
+    fileUrl: string | null;
+    fileSize: number;
+    extension: string | null;
+    typeId: number | null;
+    notes: string | null;
+    isCertified: boolean | null;
+    projectId: number | null;
+    taskId: number | null;
+    brand: string | null;
+    notificationId: number | null;
+    userId: number | null;
+    branchId: number | null;
+    type: string | null;
+    deleteUrl: string | null;
+    thumbnailUrl: string | null;
+    deleteType: string | null;
+    uploadDate: string | null;
+    barcodeFileNum: string | null;
+    companyTaxNo: string | null;
+    isShare: boolean | null;
+    viewShare: boolean | null;
+    donwloadShare: boolean | null;
+    timeShare: number | null;
+    timeTypeShare: number | null;
+    timeShareDate: string | null;
+    fileUrlW: string | null;
+    customeComment: string | null;
+    pageInsert: number | null;
+    fileType: FileType | null;
+    project: Project | null;
+    users: Users | null;
+    projectPhasesTasks: ProjectPhasesTasks | null;
+}

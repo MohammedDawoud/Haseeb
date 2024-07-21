@@ -1,0 +1,199 @@
+<div class="contact-us {{ lang == 'ar' ? 'rtl' : 'ltr' }}">
+  <div class="container">
+    <h2
+      [translate]="'name'"
+      [translateParams]="{ ar: 'فروعنا', en: 'Our branches' }"
+    ></h2>
+    <div
+      class="row align-items-start mb-4"
+      *ngFor="let contact of contacts; let i = index"
+    >
+      <div class="col-lg-8">
+        <div class="info">
+          <h2>
+            <i class="fa fa-location-dot"></i>
+            <span
+              [translate]="'name'"
+              [translateParams]="{
+                ar: contact?.branchName,
+                en: contact?.branchName
+              }"
+            ></span>
+          </h2>
+          <h4>
+            <span>{{ i + 1 }}</span>
+            <span
+              [translate]="'name'"
+              [translateParams]="{
+                ar: contact?.branchAddress,
+                en: contact?.branchAddress
+              }"
+            ></span>
+          </h4>
+          <ul class="list-unstyled">
+            <li>
+              <strong
+                [translate]="'name'"
+                [translateParams]="{ ar: 'مسؤول الفرع: ', en: 'Branch Admin:' }"
+              ></strong>
+              <span>{{ contact.branchCS }}</span>
+            </li>
+            <li>
+              <strong
+                [translate]="'name'"
+                [translateParams]="{
+                  ar: 'خدمة العملاء :',
+                  en: 'customers service :'
+                }"
+              ></strong>
+              <span>{{ contact?.branchPhone }}</span>
+            </li>
+            <li>
+              <strong
+                [translate]="'name'"
+                [translateParams]="{ ar: 'البريد الالكتروني:', en: 'E-mail:' }"
+              ></strong>
+              <span>{{ contact?.branchEmail }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="contact-form">
+          <form #form="ngForm">
+            <div class="form-input">
+              <img
+                src="/assets/images/ic_perm_identity_24px.png"
+                alt="phone icon"
+              />
+
+              <input
+                type="text"
+                name="phone"
+                placeholder="{{ 'Mobile Numbe' | translate }}"
+                ngModel
+                #phone="ngModel"
+                required
+                autocomplete="off"
+              />
+              <span
+                class="text-danger"
+                *ngIf="phone.hasError('required') && phone.touched"
+                >{{ "requiredError" | translate }}</span
+              >
+            </div>
+
+            <div class="form-input">
+              <img
+                src="/assets/images/ic_perm_identity_24px.png"
+                alt="user icon"
+              />
+
+              <input
+                type="text"
+                name="user_name"
+                placeholder="{{ 'userName' | translate }}"
+                ngModel
+                #name="ngModel"
+                required
+                minlength="4"
+                autocomplete="off"
+              />
+              <span
+                class="text-danger"
+                *ngIf="name.hasError('required') && name.touched"
+                >{{ "requiredError" | translate }}</span
+              >
+              <span
+                class="text-danger"
+                *ngIf="
+                  name.hasError('minlength') &&
+                  !name.hasError('required') &&
+                  name.touched
+                "
+                >{{ "userNameError" | translate }}</span
+              >
+            </div>
+
+            <div class="form-input">
+              <textarea
+                name="subject"
+                placeholder="{{ 'subject' | translate }}"
+                ngModel
+                #subject="ngModel"
+                required
+              ></textarea>
+              <span
+                class="text-danger"
+                *ngIf="subject.hasError('required') && subject.touched"
+                >{{ "requiredError" | translate }}</span
+              >
+            </div>
+
+            <div class="row qr m-0 position-relative">
+              <div class="col-7 col-lg-8 mb-0 ps-0">
+                <div class="form-input">
+                  <img
+                    src="/assets/images/qr-code-scan.png"
+                    alt="qr-code icon"
+                  />
+
+                  <input
+                    type="text"
+                    name="parCode"
+                    placeholder="{{ 'code' | translate }}"
+                    ngModel
+                    #parCode="ngModel"
+                    required
+                    minlength="4"
+                    autocomplete="off"
+                  />
+                </div>
+              </div>
+              <div class="col-5 col-lg-4 mb-0 pe-0">
+                <div class="qrcode d-flex align-items-center">
+                  <div class="qrcode-value">
+                    <span>{{ qrCodeCheckValue[i][0] }}</span>
+                    <span>{{ qrCodeCheckValue[i][1] }}</span>
+                    <span>{{ qrCodeCheckValue[i][2] }}</span>
+                    <span>{{ qrCodeCheckValue[i][3] }}</span>
+                  </div>
+                  <i
+                    style="cursor: pointer"
+                    class="fa fa-refresh"
+                    (click)="refreshQrCode(i); parCode.reset()"
+                  ></i>
+                </div>
+              </div>
+
+              <span
+                class="text-danger"
+                style="bottom: 4px"
+                *ngIf="!parCode.value && parCode.touched"
+                >{{ "requiredError" | translate }}</span
+              >
+              <span
+                class="text-danger"
+                style="bottom: 4px"
+                *ngIf="
+                  parCode.value != qrCodeCheckValue[i] &&
+                  parCode.touched &&
+                  parCode.dirty
+                "
+                >{{ "codeError" | translate }}</span
+              >
+            </div>
+
+            <button
+              class="btn btn-outline-secondary login-btn"
+              [disabled]="form.invalid || parCode.value != qrCodeCheckValue[i]"
+              (click)="sendContact(form.value, contact.branch_id)"
+            >
+              {{ "send" | translate }}
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

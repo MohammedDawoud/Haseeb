@@ -1,0 +1,37 @@
+.statics {
+  @apply flex flex-wrap gap-4;
+  > div {
+    @apply rounded-lg bg-base bg-opacity-20 p-3 flex items-center gap-4 flex-grow;
+    i {
+      @apply text-2xl;
+      color: rgb(10 109 202);
+    }
+  }
+}
+.modal-form {
+  @apply max-h-[65vh] p-2 overflow-auto;
+
+  hr {
+    @apply my-3;
+  }
+}
+.separator-title {
+  @apply my-3  bg-base bg-opacity-10 text-xl font-bold rounded-lg px-3 py-2;
+  color: rgb(10 109 202);
+}
+
+::ng-deep {
+  .mat-paginator-container {
+    justify-content: space-between !important;
+    padding: 15px 10px 0px !important;
+  }
+  .mat-paginator-range-actions {
+    direction: inherit !important;
+  }
+  .mat-paginator-range-label {
+    direction: initial;
+  }
+  .mat-tab-group {
+    padding-bottom: 15px;
+  }
+}

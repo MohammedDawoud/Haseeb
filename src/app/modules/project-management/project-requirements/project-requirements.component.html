@@ -1,0 +1,311 @@
+<div class="project-requirements">
+  <app-navigator [title]="title"></app-navigator>
+  <div class="head flex gap-2 flex-wrap items-end justify-between">
+    <div class="btns">
+      <button
+        type="button"
+        class="flex gap-1 btn bg-base text-white"
+        (click)="open(addRequirmentModal, null, 'add')"
+      >
+        {{ "add" | translate }}
+      </button>
+    </div>
+  </div>
+
+  <!-- table -->
+  <div class="overflow-auto">
+    <input
+      (keyup)="applyFilter($event)"
+      placeholder="{{ 'search' | translate }}"
+      #input
+      class="form-control d-block my-4 w-25 p-2"
+    />
+
+    <table
+      mat-table
+      [dataSource]="projectRequirmentsDataSource"
+      matSort
+      class="mat-elevation-z8 rounded-t-lg overflow-hidden w-max"
+    >
+      <ng-container matColumnDef="projectType">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span>{{ "Project Type" | translate }}</span>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.projectTypesName }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="subProjectType">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span>{{ "Subproject type" | translate }}</span>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.projectSubTypeName }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="fileName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span>{{ "File Name" | translate }}</span>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.nameAr }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="cost">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span>{{ "cost" | translate }}</span>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.cost }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="operations">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span>{{ "operations" | translate }}</span>
+        </th>
+
+        <td mat-cell *matCellDef="let element">
+          <button *ngIf="element.attachmentUrl"
+            class="p-2 bg-sky-100 hover:bg-sky-500 rounded-lg duration-300 hover:text-white w-10 mx-1"
+            (click)="downloadFile(element)"
+          >
+            <i class="fa-solid fa-eye"></i>
+          </button>
+          <button
+            class="p-2 bg-orange-100 hover:bg-orange-500 rounded-lg duration-300 hover:text-white w-10 mx-1"
+            (click)="open(addRequirmentModal, element, 'edit')"
+          >
+            <i class="fa-regular fa-pen-to-square"></i>
+          </button>
+          <button
+            class="p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white w-10 mx-1"
+            (click)="open(deleteModal, element, 'delete')"
+          >
+            <i class="fa-solid fa-trash-can"></i>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr
+        mat-header-row
+        *matHeaderRowDef="projectRequirmentsDisplayedColumns"
+      ></tr>
+
+      <tr
+        mat-row
+        *matRowDef="let row; columns: projectRequirmentsDisplayedColumns"
+        class="duration-300 hover:bg-slate-100"
+      ></tr>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">
+          {{ "noResult" | translate }} "{{ input.value }}"
+        </td>
+      </tr>
+    </table>
+  </div>
+  <mat-paginator [pageSizeOptions]="[10, 25,100,projectRequirmentsDataSource.data.length]"> </mat-paginator>
+</div>
+
+<!-- add / edit -->
+<ng-template #addRequirmentModal let-modal>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="m-0">
+      <span class="text-2xl">
+        {{ modalDetails.requirementId ? ("edit" | translate) : ("add" | translate) }}
+      </span>
+    </h4>
+    <button
+      type="button"
+      class="text-2xl text-white m-0"
+      (click)="modal.dismiss()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form #form="ngForm">
+      <div class="row items-center">
+        <div class="col-md-6 col-lg-3 mb-3">
+          <div class="form-group">
+            <label class="col-form-label">
+              {{ "Project Type" | translate }}
+            </label>
+            <ng-select #projectTypeSelect
+            id="projectTypeSelect"
+            [items]="load_ProjectType"
+            bindLabel="name"
+            bindValue="id"
+            [clearable]="true"
+            placeholder="نوع المشروع"
+            [(ngModel)]="modalDetails.projectTypeId"
+            (change)="ProjectType_Change()"
+            class="w-full p-0"
+            name="projectType"
+            [ngModelOptions]="{standalone: true}"
+          >
+          </ng-select>
+
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3 mb-3">
+          <div class="form-group">
+            <label class="col-form-label">
+              {{ "Subproject type" | translate }}
+            </label>
+            <ng-select #projectSubTypeSelect
+            id="projectSubTypeSelect"
+            [items]="load_ProjectSubType"
+            bindLabel="name"
+            bindValue="id"
+            [clearable]="true"
+            placeholder="نوع المشروع الفرعي"
+            [(ngModel)]="modalDetails.projectSubTypeId"
+            class="w-full p-0"
+            name="projectSubType"
+            [ngModelOptions]="{standalone: true}"
+          >
+          </ng-select>
+
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3 mb-3">
+          <div class="form-group">
+            <label class="col-form-label">
+              {{ "nameAr" | translate }}
+            </label>
+            <input
+              name=" nameAr"
+              class="form-control"
+              [(ngModel)]="modalDetails.nameAr"
+              [disabled]="!modalDetails.projectSubTypeId || !modalDetails.projectSubTypeId"
+              [ngModelOptions]="{standalone: true}"
+              autocomplete="off"
+            />
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3 mb-3">
+          <div class="form-group">
+            <label class="col-form-label">
+              {{ "nameEn" | translate }}
+            </label>
+            <input
+              name=" nameEn"
+              class="form-control"
+              [(ngModel)]="modalDetails.nameEn"
+              [disabled]="!modalDetails.projectSubTypeId || !modalDetails.projectSubTypeId"
+              [ngModelOptions]="{standalone: true}"
+              autocomplete="off"
+
+            />
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3 mb-3">
+          <div style="max-width: 250px" class="mt-2">
+            <div class="form-check form-switch">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                role="switch"
+                id="flexSwitchCheckDefault"
+                [(ngModel)]="modalDetails.checkedmoney"
+                [disabled]="!modalDetails.projectSubTypeId || !modalDetails.projectSubTypeId"
+                [ngModelOptions]="{standalone: true}"
+
+              />
+              <label
+                class="form-check-label"
+                for="flexSwitchCheckDefault"
+                style="width: max-content"
+              >
+                {{ "with the amount of money?" | translate }}
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3 mb-3"*ngIf="modalDetails.checkedmoney">
+          <div class="form-group">
+            <label class="col-form-label">
+              {{ "amount" | translate }}
+            </label>
+            <input
+              name=" cost"
+              class="form-control"
+              [(ngModel)]="modalDetails.cost"
+              [disabled]="!modalDetails.projectSubTypeId || !modalDetails.projectSubTypeId"
+              [ngModelOptions]="{standalone: true}"
+            />
+          </div>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <div class="col-span-1 md:col-span-2">
+            <label for="formFile" class="form-label">
+              {{ "Upload File" | translate }}</label
+            >
+            <input class="form-control" type="file" id="formFile"
+            [(ngModel)]="uploadedFiles"
+            [ngModelOptions]="{standalone: true}"
+            (change)="selectFile($event)"
+            />
+          </div>
+        </div>
+      </div>
+    </form>
+    <div
+      class="flex gap-2 justify-end pt-3 border-t border-neutral-300 col-span-1 md:col-span-2 mt-2"
+    >
+      <button
+        class="btn bg-base text-white"
+        type="submit"
+        (click)="
+          modalDetails.requirementId ? SaveProjectRequirement('edit') : SaveProjectRequirement('add')
+        "
+        [disabled]="tempname==modalDetails.nameAr"
+      >
+        {{ modalDetails.requirementId ? ("edit" | translate) : ("add" | translate) }}
+      </button>
+      <button (click)="modal?.dismiss()" class="btn btn-secondary">
+        {{ "close" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- deleteModal -->
+<ng-template #deleteModal let-modal>
+  <div class="modal-body text-center">
+    <p
+      [translate]="'name'"
+      [translateParams]="{
+        ar: 'هل تريد بالتأكيد حذف هذا الصف',
+        en: 'Are you sure to delete this row ?'
+      }"
+    ></p>
+    <div class="flex gap-2 justify-center">
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="confirmDelete(); modal.dismiss()"
+      >
+        {{ "Yes" | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "No" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>

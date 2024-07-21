@@ -1,0 +1,2251 @@
+<div class="track-missions">
+  <app-navigator [title]="title"></app-navigator>
+
+  <div class="btns">
+    <button
+      *ngIf="
+        userG?.userPrivileges.includes(1702010102) ||
+        userG?.userPrivileges.includes(1702010103)
+      "
+      type="button"
+      style="margin-inline-end: 10px"
+      class="mb-3 btn btn-outline-primary"
+      (click)="open(ConvertVac, 'ConvertVac')"
+    >
+      {{ "trackTaskBtn1" | translate }}
+    </button>
+    <button
+      *ngIf="
+        userG?.userPrivileges.includes(1702010102) ||
+        userG?.userPrivileges.includes(1702010103)
+      "
+      type="button"
+      style="margin-inline-end: 10px"
+      class="mb-3 btn btn-outline-secondary"
+      (click)="open(Converttouser, 'Converttouser')"
+    >
+      {{ "trackTaskBtn2" | translate }}
+    </button>
+    <button
+      type="button"
+      style="margin-inline-end: 10px"
+      class="mb-3 btn btn-warning"
+      (click)="openSearch = !openSearch; LoadSelectSearch()"
+    >
+      {{ "search" | translate }}
+    </button>
+    <button
+      *ngIf="userG?.userPrivileges.includes(111310)"
+      type="button"
+      class="mb-3 btn bg-base text-white"
+      (click)="open(addNewTaskModal, 'addNewTask')"
+    >
+      {{ "addNewTask" | translate }}
+    </button>
+  </div>
+
+  <p class="wrn-msg">{{ "trackTaskMsg" | translate }}</p>
+
+  <div
+    class="search-box d-flex items-center justify-start gap-8 flex-wrap mb-5"
+    *ngIf="openSearch"
+  >
+    <div>
+      <label class="col-form-label"> {{ "Customer" | translate }}</label>
+      <ng-select
+        class="w-full p-0"
+        placeholder="{{ 'Chose' | translate }}"
+        (change)="SearchCustomerFilter()"
+        [(ngModel)]="Searchdata.customerId_S"
+        [ngModelOptions]="{ standalone: true }"
+      >
+        <ng-option
+          *ngFor="let user of customerIdSelectIdFilter"
+          [value]="user.id"
+          >{{ user.name }}</ng-option
+        >
+      </ng-select>
+    </div>
+
+    <div>
+      <label class="col-form-label"> {{ "Project" | translate }}</label>
+      <ng-select
+        class="w-full p-0"
+        placeholder="{{ 'Chose' | translate }}"
+        [(ngModel)]="Searchdata.projectId_S"
+        [ngModelOptions]="{ standalone: true }"
+        (change)="SearchFilter()"
+      >
+        <ng-option
+          *ngFor="let user of projectSelectIdFilter"
+          [value]="user.id"
+          >{{ user.name }}</ng-option
+        >
+      </ng-select>
+    </div>
+
+    <div>
+      <label class="col-form-label"> {{ "userName" | translate }}</label>
+      <ng-select
+        class="w-full p-0"
+        placeholder="{{ 'Chose' | translate }}"
+        [(ngModel)]="Searchdata.userId_S"
+        [ngModelOptions]="{ standalone: true }"
+        (change)="SearchFilter()"
+      >
+        <ng-option *ngFor="let user of UserSelectIdFilter" [value]="user.id">{{
+          user.name
+        }}</ng-option>
+      </ng-select>
+    </div>
+  </div>
+
+  <div class="container-fluid">
+    <div class="row" *ngIf="TaskData.selected || TaskDataLate.selected">
+      <div class="col-md-6 selectedTask1 mb-5">
+        <ng-container *ngIf="TaskData.selected">
+          <p class="mb-4">
+            <span style="margin-inline-end: 20px"
+              >{{ "taskName" | translate }}
+            </span>
+            <span>{{ TaskData.Obj?.descriptionAr }}</span>
+          </p>
+
+          <div class="d-flex items-center justify-between flex-wrap gap-8 fs-6">
+            <p class="mb-3">
+              <span style="margin-inline-end: 20px"
+                >{{ "status" | translate }}
+              </span>
+              <span>{{ TaskData.Obj?.statusName }}</span>
+            </p>
+            <p class="mb-4">
+              <span style="margin-inline-end: 20px"
+                >{{ "Duration" | translate }}
+              </span>
+              <span>{{ TaskData.Obj?.timeStr }}</span>
+              -
+              <span style="margin-inline-end: 20px"
+                >{{ "Project name/description" | translate }}
+              </span>
+              <span>{{ TaskData.Obj?.projectDescription }}</span>
+            </p>
+
+            <span style="margin-right: 10px" *ngIf="!TaskData.Obj?.settingId"
+              >مهمة يدوية بواسطة :
+            </span>
+            <span *ngIf="!TaskData.Obj?.settingId">
+              {{ TaskData.Obj?.addedTaskName }}</span
+            >
+            <span style="margin-right: 10px" *ngIf="TaskData.Obj?.settingId">{{
+              TaskData.Obj?.settingName
+            }}</span>
+            <!-- <span *ngIf="TaskData.Obj?.settingId" title="مهمة في سير"
+              ><i class="fa fa-signal fa-2xl" aria-hidden="true"></i
+            ></span> -->
+            <div class="chart mb-4" style="max-width: 150px">
+              <apx-chart
+                [series]="chartOptions.series"
+                [chart]="chartOptions.chart"
+                [labels]="chartOptions.labels"
+                [responsive]="chartOptions.responsive"
+              ></apx-chart>
+
+              <!-- <ngx-gauge [type]="gaugeType"
+              [value]="gaugeValue"
+              [label]="gaugeLabel"
+              [append]="gaugeAppendText">
+              </ngx-gauge> -->
+
+              <!-- <ngx-gauge
+              type="full"
+              value="50"
+              label="progress"
+              append="%"
+              thick="10"
+              foregroundColor="#2980b9"
+            ></ngx-gauge> -->
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <mat-progress-bar
+              mode="determinate"
+              value="{{ TaskData.Obj?.execPercentage ?? 0 }}"
+              style="height: 12px"
+            ></mat-progress-bar>
+          </div>
+
+          <div class="table">
+            <div class="date flex items-center justify-between">
+              <p>
+                <span>{{ "From" | translate }}</span>
+                <span style="unicode-bidi: plaintext">{{
+                  TaskData.TaskTimeFrom_Merge
+                }}</span>
+              </p>
+              <p *ngIf="TaskData.notesStrVac"
+              style="text-align: center;color: red;" class="p-1 bg-red-100">
+                <span>{{ TaskData.notesStrVac }}</span>
+              </p>
+              <p>
+                <span>{{ "To" | translate }}</span>
+                <span style="unicode-bidi: plaintext">{{
+                  TaskData.TaskTimeTo_Merge
+                }}</span>
+              </p>
+            </div>
+
+            <table
+              class="table table-responsive table-striped table-bordered text-center"
+              style="vertical-align: middle; font-size: 14px"
+            >
+              <thead
+                class="bg-base text-white"
+                style="line-height: 30px; font-size: 13px"
+              >
+                <tr>
+                  <th>{{ "Assigned to" | translate }}</th>
+                  <th>{{ "Project Number" | translate }}</th>
+                  <th>{{ "اسم المرحلة" | translate }}</th>
+                  <th>{{ "Customer Name" | translate }}</th>
+                  <th>{{ "task status" | translate }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{{ TaskData.Obj?.userName }}</td>
+                  <td>{{ TaskData.Obj?.projectNumber }}</td>
+                  <!-- <td>{{ TaskData.Obj?.mainPhaseName }}</td> -->
+                  <td>{{ TaskData.Obj?.subPhaseName }}</td>
+
+                  <td>{{ TaskData.Obj?.clientName }}</td>
+                  <td>{{ TaskData.priorty }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="my-2 flex items-center justify-between flex-wrap">
+            <div class="flex justify-start items-center gap-4">
+              <button
+                *ngIf="userG?.userPrivileges.includes(111315)"
+                type="button"
+                mat-button
+                mat-raise-button
+                class="bg-success text-white px-4 py-2"
+                style="
+                  padding: 2px 14px !important;
+                  width: max-content;
+                  height: auto;
+                "
+                (click)="open(endTaskModal, 'task')"
+              >
+                {{ "end task" | translate }}
+              </button>
+              <p class="flex items-center mb-0">
+                {{ "Mission Completion Ratio" | translate }}
+                <span class="value">{{
+                  TaskData.Obj?.execPercentage ?? 0
+                }}</span>
+                <span>%</span>
+              </p>
+            </div>
+            <div
+              class="flex justify-end items-center gap-2 taskBtns mt-2 mt-lg-0"
+            >
+              <button
+                class="btn btn-outline-success"
+                (click)="open(mapModal, 'mapModal')"
+              >
+                <i class="fa fa-map-marker"></i>
+              </button>
+              <button
+                *ngIf="TaskData.Obj?.status == 2"
+                type="button"
+                class="btn btn-outline-secondary"
+                (click)="open(stopTaskModal, 'task')"
+              >
+                <i class="fa fa-pause"></i>
+              </button>
+              <button
+                *ngIf="TaskData.Obj?.status != 2"
+                type="button"
+                class="btn btn-outline-secondary"
+                (click)="open(playTaskModal, 'task')"
+              >
+                <i class="fa fa-play"></i>
+              </button>
+              <button
+                *ngIf="TaskData.Obj?.status == 2"
+                type="button"
+                class="btn btn-outline-secondary"
+                (click)="open(uploadFileModal, 'task')"
+                style="filter: grayscale(1)"
+              >
+                <i class="fa fa-cloud-upload" aria-hidden="true"></i>
+              </button>
+              <button
+                *ngIf="userG?.userPrivileges.includes(111313)"
+                type="button"
+                class="btn btn-outline-secondary"
+                (click)="open(deleteTaskModal, 'task')"
+              >
+                <i class="fa fa-trash"></i>
+              </button>
+              <button
+                *ngIf="
+                  userG?.userPrivileges.includes(111311) &&
+                  TaskData.Obj?.status == 2
+                "
+                [ngStyle]="
+                  TaskData?.Obj?.plusTime == true
+                    ? { color: 'red' }
+                    : { color: '#6c757d' }
+                "
+                type="button"
+                class="btn btn-outline-secondary"
+                (click)="open(extendTaskModal, 'task')"
+              >
+                <i class="fa fa-clock"></i>
+              </button>
+              <button
+                *ngIf="
+                  userG?.userPrivileges.includes(111314) &&
+                  TaskData.Obj?.status == 2
+                "
+                [ngStyle]="
+                  TaskData?.Obj?.isConverted == 1
+                    ? { color: 'red' }
+                    : { color: '#6c757d' }
+                "
+                type="button"
+                class="btn btn-outline-secondary"
+                (click)="
+                  open(assignTaskModal, 'task'); Fillcustomerhavingoffer()
+                "
+              >
+                <i class="fa fa-backward"></i>
+              </button>
+            </div>
+          </div>
+
+          <div style="max-width: 150px" class="mt-2">
+            <div class="form-check form-switch">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                role="switch"
+                id="flexSwitchCheckDefault"
+                [(ngModel)]="TaskData.goalcheck"
+                (change)="open(projectgoal, 'projectgoal')"
+              />
+              <label
+                class="form-check-label"
+                for="flexSwitchCheckDefault"
+                style="width: max-content"
+              >
+                {{ "achieve the goal" | translate }}
+              </label>
+            </div>
+          </div>
+
+          <div class="periority mt-4 mb-2">
+            <mat-radio-group
+              aria-label="Select an option"
+              name="status"
+              [(ngModel)]="phasePriValue"
+            >
+              <mat-radio-button value="1" class="text-warning">{{
+                "low" | translate
+              }}</mat-radio-button>
+              <mat-radio-button value="2" class="text-success">{{
+                "middle" | translate
+              }}</mat-radio-button>
+              <mat-radio-button value="3" class="text-base">{{
+                "high" | translate
+              }}</mat-radio-button>
+              <mat-radio-button value="4" class="text-danger">{{
+                "urgent" | translate
+              }}</mat-radio-button>
+            </mat-radio-group>
+            <button
+              style="margin-top: -5px !important"
+              *ngIf="phasePriValueTemp != phasePriValue"
+              type="button"
+              class="btn py-1 px-4 mt-0 bg-base text-white"
+              (click)="ChangePriorityTask('task')"
+            >
+              {{ "confirem" | translate }}
+            </button>
+          </div>
+
+          <div class="info">
+            <label class="fs-6">{{
+              "Job Details Required for Mission" | translate
+            }}</label>
+            <textarea
+              [(ngModel)]="taskLongDesc"
+              name="info"
+              style="width: 100%; height: 100px; padding: 15px"
+              placeholder="{{ 'task statement' | translate }}"
+            ></textarea>
+            <button
+              style="margin-top: -5px !important"
+              *ngIf="taskLongDescTemp != taskLongDesc"
+              type="button"
+              class="btn py-1 px-4 mt-0 bg-base text-white"
+              (click)="SaveTaskLongDesc('task')"
+            >
+              {{ "confirem" | translate }}
+            </button>
+          </div>
+
+          <div class="users flex items-center justify-between flex-wrap mt-2">
+            <div>
+              <img
+                [src]="ShowImgAdded()"
+                alt="img"
+                class="img-fluid"
+                style="
+                  width: 80px;
+                  height: 80px;
+                  border-radius: 50%;
+                  margin-inline-end: 20px;
+                "
+              />
+              <span style="margin-inline-end: 10px">{{
+                "Created by" | translate
+              }}</span>
+              <span *ngIf="!TaskData.Obj?.settingId">{{
+                TaskData.Obj?.addedTaskName
+              }}</span>
+              <span *ngIf="TaskData.Obj?.settingId" title="مهمة في سير"
+                ><i class="fa fa-signal fa-2xl" aria-hidden="true"></i
+              ></span>
+            </div>
+            <div>
+              <img
+                [src]="ShowImgManager()"
+                alt="img"
+                class="img-fluid"
+                style="
+                  width: 80px;
+                  height: 80px;
+                  border-radius: 50%;
+                  margin-inline-end: 20px;
+                "
+              />
+              <span style="margin-inline-end: 10px">{{
+                "project manager" | translate
+              }}</span>
+              <span>{{ TaskData.Obj?.projectMangerName }}</span>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+
+      <div class="col-md-6 selectedTask2 mb-5">
+        <ng-container *ngIf="TaskDataLate.selected">
+          <p class="mb-4">
+            <span style="margin-inline-end: 20px"
+              >{{ "taskName" | translate }}
+            </span>
+            <span>{{ TaskDataLate.Obj?.descriptionAr }}</span>
+          </p>
+
+          <div class="d-flex items-center justify-between flex-wrap gap-8 fs-6">
+            <p class="mb-3">
+              <span style="margin-inline-end: 20px"
+                >{{ "status" | translate }}
+              </span>
+              <span>{{ TaskDataLate.Obj?.statusName }}</span>
+            </p>
+            <p class="mb-4">
+              <span style="margin-inline-end: 20px"
+                >{{ "Duration" | translate }}
+              </span>
+              <span>{{ TaskDataLate.Obj?.timeStr }}</span>
+              -
+              <span style="margin-inline-end: 20px"
+                >{{ "Project name/description" | translate }}
+              </span>
+              <span>{{ TaskDataLate.Obj?.projectDescription }}</span>
+            </p>
+            <!-- <span *ngIf="TaskDataLate.Obj?.settingId" title="مهمة في سير"
+              ><i class="fa fa-signal fa-2xl" aria-hidden="true"></i
+            ></span> -->
+
+            <span style="margin-right: 10px" *ngIf="!TaskData.Obj?.settingId"
+              >مهمة يدوية بواسطة :
+            </span>
+            <span *ngIf="!TaskData.Obj?.settingId">
+              {{ TaskData.Obj?.addedTaskName }}</span
+            >
+            <span style="margin-right: 10px" *ngIf="TaskData.Obj?.settingId">{{
+              TaskData.Obj?.settingName
+            }}</span>
+            <div class="chart mb-4" style="max-width: 150px">
+              <apx-chart
+                [series]="chartOptionsLate.series"
+                [chart]="chartOptionsLate.chart"
+                [labels]="chartOptionsLate.labels"
+                [responsive]="chartOptionsLate.responsive"
+              ></apx-chart>
+
+              <!-- <ngx-gauge
+              type="full"
+              value="20"
+              label="progress"
+              append="%"
+              thick="10"
+              foregroundColor="#2980b9"
+            ></ngx-gauge> -->
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <mat-progress-bar
+              mode="determinate"
+              value="{{ TaskDataLate.Obj?.execPercentage ?? 0 }}"
+              style="height: 12px"
+            ></mat-progress-bar>
+          </div>
+
+          <div class="table">
+            <div class="date flex items-center justify-between">
+              <p>
+                <span>{{ "From" | translate }}</span>
+                <span style="unicode-bidi: plaintext">{{
+                  TaskDataLate.TaskTimeFrom_Merge
+                }}</span>
+              </p>
+              <p *ngIf="TaskDataLate.notesStrVac"
+              style="text-align: center;color: red;" class="p-1 bg-red-100">
+                <span>{{ TaskDataLate.notesStrVac }}</span>
+              </p>
+              <p>
+                <span>{{ "To" | translate }}</span>
+                <span style="unicode-bidi: plaintext">{{
+                  TaskDataLate.TaskTimeTo_Merge
+                }}</span>
+              </p>
+            </div>
+
+            <table
+              class="table table-responsive table-striped table-bordered text-center"
+              style="vertical-align: middle; font-size: 14px"
+            >
+              <thead
+                class="bg-base text-white"
+                style="line-height: 30px; font-size: 13px"
+              >
+                <tr>
+                  <th>{{ "Assigned to" | translate }}</th>
+                  <th>{{ "Project Number" | translate }}</th>
+                  <th>{{ "اسم المرحلة" | translate }}</th>
+
+                  <th>{{ "Customer Name" | translate }}</th>
+                  <th>{{ "task status" | translate }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{{ TaskDataLate.Obj?.userName }}</td>
+                  <td>{{ TaskDataLate.Obj?.projectNumber }}</td>
+                  <!-- <td>{{ TaskDataLate.Obj?.mainPhaseName }}</td> -->
+                  <td>{{ TaskDataLate.Obj?.subPhaseName }}</td>
+
+                  <td>{{ TaskDataLate.Obj?.clientName }}</td>
+                  <td>{{ TaskDataLate.priorty }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="my-2 flex items-center justify-between flex-wrap">
+            <div class="flex justify-start items-center gap-4">
+              <button
+                *ngIf="userG?.userPrivileges.includes(111315)"
+                type="button"
+                mat-button
+                mat-raise-button
+                class="bg-success text-white px-4 py-2"
+                style="
+                  padding: 2px 14px !important;
+                  width: max-content;
+                  height: auto;
+                "
+                (click)="open(endTaskModal, 'latetask')"
+              >
+                {{ "end task" | translate }}
+              </button>
+              <p class="flex items-center mb-0">
+                {{ "Mission Completion Ratio" | translate }}
+                <span class="value">{{
+                  TaskDataLate.Obj?.execPercentage ?? 0
+                }}</span>
+                <span>%</span>
+              </p>
+            </div>
+            <div
+              class="flex justify-end items-center gap-2 taskBtns mt-2 mt-lg-0"
+            >
+              <button
+                class="btn btn-outline-success"
+                (click)="open(mapModal, 'mapModal')"
+              >
+                <i class="fa fa-map-marker"></i>
+              </button>
+              <button
+                *ngIf="TaskDataLate.Obj?.status == 2"
+                type="button"
+                class="btn btn-outline-secondary"
+                (click)="open(stopTaskModal, 'latetask')"
+              >
+                <i class="fa fa-pause"></i>
+              </button>
+              <button
+                *ngIf="TaskDataLate.Obj?.status != 2"
+                type="button"
+                class="btn btn-outline-secondary"
+                (click)="open(playTaskModal, 'latetask')"
+              >
+                <i class="fa fa-play"></i>
+              </button>
+
+              <button
+                *ngIf="TaskDataLate.Obj?.status == 2"
+                type="button"
+                class="btn btn-outline-secondary"
+                (click)="open(uploadFileModal, 'latetask')"
+                style="filter: grayscale(1)"
+              >
+                <i class="fa fa-cloud-upload" aria-hidden="true"></i>
+              </button>
+              <button
+                *ngIf="userG?.userPrivileges.includes(111313)"
+                type="button"
+                class="btn btn-outline-secondary"
+                (click)="open(deleteTaskModal, 'latetask')"
+              >
+                <i class="fa fa-trash"></i>
+              </button>
+              <button
+                *ngIf="
+                  userG?.userPrivileges.includes(111311) &&
+                  TaskDataLate.Obj?.status == 2 &&
+                  TaskDataLate?.Obj?.plusTime == true
+                "
+                [ngStyle]="
+                  TaskDataLate?.Obj?.plusTime == true
+                    ? { color: 'red' }
+                    : { color: '#6c757d' }
+                "
+                type="button"
+                class="btn btn-outline-secondary p-2 rounded-lg w-10"
+                (click)="open(extendTaskModal, 'latetask')"
+              >
+                <i class="fa fa-clock"></i>
+              </button>
+              <button
+                *ngIf="
+                  userG?.userPrivileges.includes(111314) &&
+                  TaskDataLate.Obj?.status == 2 &&
+                  TaskDataLate?.Obj?.isConverted == 1
+                "
+                [ngStyle]="
+                  TaskDataLate?.Obj?.isConverted == 1
+                    ? { color: 'red' }
+                    : { color: '#6c757d' }
+                "
+                type="button"
+                class="btn btn-outline-secondary p-2 rounded-lg w-10"
+                (click)="
+                  open(assignTaskModal, 'latetask'); Fillcustomerhavingoffer()
+                "
+              >
+                <i class="fa fa-backward"></i>
+              </button>
+            </div>
+          </div>
+
+          <div style="max-width: 150px" class="mt-2">
+            <div class="form-check form-switch">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                role="switch"
+                id="flexSwitchCheckDefault"
+                [(ngModel)]="TaskDataLate.goalcheck"
+                (change)="open(projectgoal, 'projectgoalLate')"
+              />
+              <label
+                class="form-check-label"
+                for="flexSwitchCheckDefault"
+                style="width: max-content"
+              >
+                {{ "achieve the goal" | translate }}
+              </label>
+            </div>
+          </div>
+
+          <div class="periority mt-4 mb-2">
+            <mat-radio-group
+              aria-label="Select an option"
+              name="statuss"
+              [(ngModel)]="phasePriValueLate"
+            >
+              <mat-radio-button value="1" class="text-warning">{{
+                "low" | translate
+              }}</mat-radio-button>
+              <mat-radio-button value="2" class="text-success">{{
+                "middle" | translate
+              }}</mat-radio-button>
+              <mat-radio-button value="3" class="text-base">{{
+                "high" | translate
+              }}</mat-radio-button>
+              <mat-radio-button value="4" class="text-danger">{{
+                "urgent" | translate
+              }}</mat-radio-button>
+            </mat-radio-group>
+            <button
+              style="margin-top: -5px !important"
+              *ngIf="phasePriValueTempLate != phasePriValueLate"
+              type="button"
+              class="btn py-1 px-4 mt-0 bg-base text-white"
+              (click)="ChangePriorityTask('latetask')"
+            >
+              {{ "confirem" | translate }}
+            </button>
+          </div>
+
+          <div class="info">
+            <label class="fs-6">{{
+              "Job Details Required for Mission" | translate
+            }}</label>
+            <textarea
+              [(ngModel)]="taskLongDescLate"
+              name="info"
+              style="width: 100%; height: 100px; padding: 15px"
+              placeholder="{{ 'task statement' | translate }}"
+            ></textarea>
+            <button
+              style="margin-top: -5px !important"
+              *ngIf="taskLongDescTempLate != taskLongDescLate"
+              type="button"
+              class="btn py-1 px-4 mt-0 bg-base text-white"
+              (click)="SaveTaskLongDesc('latetask')"
+            >
+              {{ "confirem" | translate }}
+            </button>
+          </div>
+
+          <div class="users flex items-center justify-between flex-wrap mt-2">
+            <div>
+              <img
+                [src]="ShowImgAddedLate()"
+                alt="img"
+                class="img-fluid"
+                style="
+                  width: 80px;
+                  height: 80px;
+                  border-radius: 50%;
+                  margin-inline-end: 20px;
+                "
+              />
+              <span style="margin-inline-end: 10px">{{
+                "Created by" | translate
+              }}</span>
+              <!-- <span>{{TaskDataLate.Obj?.addedTaskName}}</span> -->
+              <span *ngIf="!TaskDataLate.Obj?.settingId">{{
+                TaskDataLate.Obj?.addedTaskName
+              }}</span>
+              <span *ngIf="TaskDataLate.Obj?.settingId" title="مهمة في سير"
+                ><i class="fa fa-signal fa-2xl" aria-hidden="true"></i
+              ></span>
+            </div>
+            <div>
+              <img
+                [src]="ShowImgManagerLate()"
+                alt="img"
+                class="img-fluid"
+                style="
+                  width: 80px;
+                  height: 80px;
+                  border-radius: 50%;
+                  margin-inline-end: 20px;
+                "
+              />
+              <span style="margin-inline-end: 10px">{{
+                "project manager" | translate
+              }}</span>
+              <span>{{ TaskDataLate.Obj?.projectMangerName }}</span>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-6 mb-5 mb-lg-0">
+        <h3
+          class="px-3 py-2 rounded bg-success text-white"
+          [translate]="'name'"
+          [translateParams]="{
+            ar: 'مهام ضمن المدة الزمنية المحددة',
+            en: 'tasks within the specified time period'
+          }"
+        ></h3>
+        <div class="tree">
+          <!-- <button (click)="tree.collapseAll()">collapseAll</button>
+          <button (click)="tree.expandAll()">expandAll</button> -->
+          <tree-ngx
+            #tree
+            [nodeItems]="loadPrivTreeObj"
+            class="{{ 'dir' | translate }}"
+            (selectedItems)="selectedTask1 = $event"
+            [options]="options"
+            (click)="selectTask()"
+          >
+            <ng-template #nodeCollapsibleTemplate let-expanded="expanded">
+              <span *ngIf="!expanded">
+                <i class="fa-solid fa-folder-plus tree-icon"></i>
+              </span>
+              <span *ngIf="expanded">
+                <i class="fa-solid fa-folder-minus tree-icon"></i>
+              </span>
+            </ng-template>
+          </tree-ngx>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <h3
+          class="px-3 py-2 rounded bg-danger text-white"
+          [translate]="'name'"
+          [translateParams]="{ ar: 'مهام متأخرة', en: 'overdue tasks' }"
+        ></h3>
+        <div class="tree">
+          <tree-ngx
+            #treelate
+            [nodeItems]="loadPrivTreeLateObj"
+            class="{{ 'dir' | translate }}"
+            (selectedItems)="selectedTask2 = $event"
+            [options]="options"
+            (click)="selectTask_Late()"
+          >
+            <ng-template #nodeCollapsibleTemplate let-expanded="expanded">
+              <span *ngIf="!expanded">
+                <i class="fa-solid fa-folder-plus tree-icon"></i>
+              </span>
+              <span *ngIf="expanded">
+                <i class="fa-solid fa-folder-minus tree-icon"></i>
+              </span>
+            </ng-template>
+          </tree-ngx>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--  addNewTaskModal -->
+<ng-template #addNewTaskModal let-modal>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="m-0">
+      <span class="text-2xl">{{ "addNewTask" | translate }}</span>
+    </h4>
+    <button
+      type="button"
+      class="text-2xl text-white m-0"
+      (click)="modal?.dismiss()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <ng-container>
+      <form class="relative" #addForm="ngForm">
+        <div class="info absolute d-flex gap-8" style="inset-inline-end: 0">
+          <div class="form-group d-flex gap-3 items-center">
+            <label style="width: max-content; font-size: 14px; margin: 0">
+              {{ "expected project duration" | translate }}
+            </label>
+            <div class="form-group" style="max-width: 120px">
+              <input
+                name="expected_project_duration"
+                type="text"
+                [(ngModel)]="RemTimeProjData.produrationexpect"
+                class="form-control"
+                [readOnly]="true"
+                disabled="true"
+              />
+            </div>
+          </div>
+          <div class="form-group d-flex gap-3 items-center">
+            <label style="width: max-content; font-size: 14px; margin: 0">
+              {{ "expected end date" | translate }}
+            </label>
+            <div class="form-group" style="max-width: 120px">
+              <input
+                name="expected_end_date"
+                type="text"
+                [(ngModel)]="RemTimeProjData.prendexpect"
+                class="form-control"
+                [readOnly]="true"
+                disabled="true"
+              />
+            </div>
+          </div>
+        </div>
+
+        <tabset>
+          <tab heading="{{ 'Who should get it done?' | translate }}" id="tab1">
+            <div class="content">
+              <div class="row items-center">
+                <div class="col-md-6 col-lg-4 mb-3">
+                  <div class="form-group">
+                    <label class="col-form-label flex">
+                      {{ "assigned" | translate }}
+                      <div
+                        class="form-check form-switch position-relative p-0"
+                        style="padding-right: 20px !important"
+                      >
+                        <input
+                          class="form-check-input position-absolute end-25"
+                          type="checkbox"
+                          role="switch"
+                          id="flexSwitchCheckDefault"
+                          [(ngModel)]="AddTaskData.departmentCheck"
+                          [ngModelOptions]="{ standalone: true }"
+                          (change)="ChangedepartSwitch()"
+                        />
+                        <label
+                          class="form-check-label me-5 mb-0"
+                          for="flexSwitchCheckDefault"
+                          style="width: max-content"
+                        >
+                          {{ "depart" | translate }}
+                        </label>
+                      </div>
+                    </label>
+                    <ng-select
+                      *ngIf="!AddTaskData.departmentCheck"
+                      class="w-full p-0"
+                      placeholder="{{ 'Chose' | translate }}"
+                      [(ngModel)]="AddTaskData.userid"
+                      [ngModelOptions]="{ standalone: true }"
+                      (change)="ChangeUser()"
+                    >
+                      <ng-option
+                        *ngFor="let user of AddTaskData.loaduserid"
+                        [value]="user.id"
+                        >{{ user.name }}</ng-option
+                      >
+                    </ng-select>
+                    <ng-select
+                      *ngIf="AddTaskData.departmentCheck"
+                      class="w-full p-0"
+                      placeholder="{{ 'Chose' | translate }}"
+                      [(ngModel)]="AddTaskData.departmentId"
+                      [ngModelOptions]="{ standalone: true }"
+                    >
+                      <ng-option
+                        *ngFor="let user of AddTaskData.loaddepartmentId"
+                        [value]="user.id"
+                        >{{ user.name }}</ng-option
+                      >
+                    </ng-select>
+                  </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4 mb-3">
+                  <div class="form-group">
+                    <label class="col-form-label">
+                      {{ "Choose the task" | translate }}</label
+                    >
+                    <div class="flex">
+                      <ng-select
+                        [items]="AddTaskData.loadtasktype"
+                        bindLabel="name"
+                        bindValue="id"
+                        [clearable]="true"
+                        class="w-full p-0"
+                        [(ngModel)]="AddTaskData.tasktype"
+                        [ngModelOptions]="{ standalone: true }"
+                        placeholder="{{ 'Chose' | translate }}"
+                        (change)="updateTasktype($event)"
+                      >
+                      </ng-select>
+
+                      <button
+                        type="button"
+                        class="btn bg-base text-white"
+                        style="padding: 5px 10px"
+                        (click)="open(AddOption, 'addtasktype')"
+                      >
+                        <i class="fa fa-plus"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4 mb-3">
+                  <div class="form-group">
+                    <label class="text-right col-form-label block">
+                      {{ "Mission name (Arabic)" | translate }}
+                    </label>
+                    <div class="form-group">
+                      <input
+                        name="taskNameAr"
+                        type="text"
+                        ngModel
+                        class="form-control"
+                        [(ngModel)]="AddTaskData.tasknamear"
+                        autocomplete="off"
+                        disabled="disabled"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4 mb-3">
+                  <div class="form-group">
+                    <label class="text-right col-form-label block">
+                      {{ "Task name (English)" | translate }}
+                    </label>
+                    <div class="form-group">
+                      <input
+                        name="taskNameEn"
+                        type="text"
+                        ngModel
+                        class="form-control"
+                        [(ngModel)]="AddTaskData.tasknameen"
+                        autocomplete="off"
+                        disabled="disabled"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4 mb-3">
+                  <div class="form-group">
+                    <label class="col-form-label">
+                      {{ "Customer" | translate }}</label
+                    >
+                    <ng-select
+                      class="w-full p-0"
+                      placeholder="{{ 'Chose' | translate }}"
+                      [(ngModel)]="AddTaskData.customerid"
+                      [ngModelOptions]="{ standalone: true }"
+                      (change)="FillProjectSelectByCustomerId()"
+                    >
+                      <ng-option
+                        *ngFor="let user of AddTaskData.loadcustomer"
+                        [value]="user.id"
+                        >{{ user.name }}</ng-option
+                      >
+                    </ng-select>
+                  </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4 mb-3">
+                  <div class="form-group">
+                    <label class="col-form-label">
+                      {{ "Project" | translate }}</label
+                    >
+                    <ng-select
+                      class="w-full p-0"
+                      placeholder="{{ 'Chose' | translate }}"
+                      [(ngModel)]="AddTaskData.projectid"
+                      [ngModelOptions]="{ standalone: true }"
+                      (change)="ChangeProject()"
+                    >
+                      <ng-option
+                        *ngFor="let user of AddTaskData.loadproject"
+                        [value]="user.id"
+                        >{{ user.name }}</ng-option
+                      >
+                    </ng-select>
+                  </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4 mb-3">
+                  <div class="form-group">
+                    <label class="col-form-label">
+                      {{ "main stage" | translate }}</label
+                    >
+                    <ng-select
+                      class="w-full p-0"
+                      placeholder="{{ 'Chose' | translate }}"
+                      [(ngModel)]="AddTaskData.phaseid"
+                      [ngModelOptions]="{ standalone: true }"
+                      (change)="FillSubPhases()"
+                    >
+                      <ng-option
+                        *ngFor="let user of AddTaskData.loadphases"
+                        [value]="user.id"
+                        >{{ user.name }}</ng-option
+                      >
+                    </ng-select>
+                  </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4 mb-3">
+                  <div class="form-group">
+                    <label class="col-form-label">
+                      {{ "sub stage" | translate }}</label
+                    >
+                    <ng-select
+                      class="w-full p-0"
+                      placeholder="{{ 'Chose' | translate }}"
+                      [(ngModel)]="AddTaskData.subphaseid"
+                      [ngModelOptions]="{ standalone: true }"
+                    >
+                      <ng-option
+                        *ngFor="let user of AddTaskData.loadsubphases"
+                        [value]="user.id"
+                        >{{ user.name }}</ng-option
+                      >
+                    </ng-select>
+                  </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4 mb-3">
+                  <div class="form-group">
+                    <label class="col-form-label">
+                      {{ "Duration" | translate }}</label
+                    >
+                    <ng-select
+                      class="w-full p-0"
+                      placeholder="{{ 'Chose' | translate }}"
+                      [(ngModel)]="AddTaskData.timetypeid"
+                      [ngModelOptions]="{ standalone: true }"
+                      (change)="changetimetype()"
+                    >
+                      <ng-option
+                        *ngFor="let type of TaskType"
+                        [value]="type.id"
+                        [translate]="'name'"
+                        [translateParams]="{
+                          ar: type.name?.ar,
+                          en: type.name?.en
+                        }"
+                      >
+                      </ng-option>
+                    </ng-select>
+                  </div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <div class="row">
+                    <div
+                      class="col-lg-6 mb-3 mb-lg-0"
+                      *ngIf="AddTaskData.timetypeid == 2"
+                    >
+                      <div class="form-group">
+                        <label class="text-right col-form-label block">
+                          {{ "From" | translate }} {{ " "
+                          }}{{ "Date" | translate }}
+                        </label>
+                        <div class="form-group timeInput">
+                          <input
+                            ngModel
+                            name="from"
+                            type="text"
+                            class="form-control"
+                            bsDatepicker
+                            [(ngModel)]="AddTaskData.datefrom"
+                            [ngModelOptions]="{ standalone: true }"
+                            autocomplete="off"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-lg-6" *ngIf="AddTaskData.timetypeid == 2">
+                      <div class="form-group">
+                        <label class="text-right col-form-label block">
+                          {{ "To" | translate }} {{ " "
+                          }}{{ "Date" | translate }}
+                        </label>
+                        <div class="form-group timeInput">
+                          <input
+                            ngModel
+                            name="to"
+                            type="text"
+                            class="form-control"
+                            bsDatepicker
+                            [(ngModel)]="AddTaskData.dateto"
+                            [ngModelOptions]="{ standalone: true }"
+                            autocomplete="off"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-lg-6" *ngIf="AddTaskData.timetypeid == 1">
+                      <div class="form-group">
+                        <label class="text-right col-form-label block">
+                          {{ "عدد الساعات" | translate }}
+                        </label>
+                        <div class="form-group">
+                          <input
+                            name="AddTaskData.hourTime"
+                            type="number"
+                            placeholder="{{ 'عدد الساعات' | translate }}"
+                            [(ngModel)]="AddTaskData.hourTime"
+                            [ngModelOptions]="{ standalone: true }"
+                            class="form-control"
+                            (keyup)="ChangehourTime()"
+                            (change)="ChangehourTime()"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <div class="row">
+                    <div class="col-lg-6 mb-3 mb-lg-0">
+                      <div class="form-group">
+                        <label class="text-right col-form-label block">
+                          {{ "from the hour" | translate }}
+                        </label>
+                        <span style="padding-right: 27%; color: #cd2a2a">{{
+                          "minute" | translate
+                        }}</span>
+                        <span style="padding-right: 13%; color: #cd2a2a">{{
+                          "hour" | translate
+                        }}</span>
+                        <div class="form-group timeInput">
+                          <timepicker
+                            [(ngModel)]="AddTaskData.timefrom"
+                            style="direction: ltr"
+                            [ngModelOptions]="{ standalone: true }"
+                            name="fromTime"
+                            autocomplete="off"
+                            (ngModelChange)="Changetimefrom()"
+                          ></timepicker>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-lg-6">
+                      <div class="form-group">
+                        <label class="text-right col-form-label block">
+                          {{ "to the hour" | translate }}
+                        </label>
+                        <span style="padding-right: 27%; color: #cd2a2a">{{
+                          "minute" | translate
+                        }}</span>
+                        <span style="padding-right: 13%; color: #cd2a2a">{{
+                          "hour" | translate
+                        }}</span>
+                        <div class="form-group timeInput">
+                          <timepicker
+                            [(ngModel)]="AddTaskData.timeto"
+                            style="direction: ltr"
+                            [ngModelOptions]="{ standalone: true }"
+                            name="toTime"
+                            autocomplete="off"
+                            (ngModelChange)="Changetimeto()"
+                          ></timepicker>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-12 mb-3 form-group" style="display: flex">
+                  <div class="col-md-5">
+                    <div class="form-check form-switch col-md-7">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        role="switch"
+                        id="flexSwitchCheckDefault"
+                        [(ngModel)]="AddTaskData.taskgoal"
+                        [ngModelOptions]="{ standalone: true }"
+                        (change)="Changeorgisreq()"
+                      />
+                      <label
+                        class="form-check-label"
+                        for="flexSwitchCheckDefault"
+                        style="width: max-content"
+                      >
+                        {{
+                          "When the task is completed, the goal is achieved"
+                            | translate
+                        }}
+                      </label>
+                    </div>
+                    <h3 class="mb-3 mt-2">{{ "Importance" | translate }}</h3>
+                    <mat-radio-group
+                      aria-label="Select an option"
+                      name="status"
+                      [(ngModel)]="AddTaskData.priorty"
+                      [ngModelOptions]="{ standalone: true }"
+                    >
+                      <mat-radio-button value="1" class="text-warning">{{
+                        "low" | translate
+                      }}</mat-radio-button>
+                      <mat-radio-button value="2" class="text-success">{{
+                        "middle" | translate
+                      }}</mat-radio-button>
+                      <mat-radio-button value="3" class="text-base">{{
+                        "high" | translate
+                      }}</mat-radio-button>
+                      <mat-radio-button value="4" class="text-danger">{{
+                        "urgent" | translate
+                      }}</mat-radio-button>
+                    </mat-radio-group>
+
+                    <div  class="col-md-2" style="text-align: center; color: red">
+                      <span *ngIf="AddTaskData.projectgoalstxt"
+                        ><p> {{ AddTaskData.projectgoalstxt }}</p></span
+                      >
+                    </div>
+
+                  </div>
+
+
+                  <div class="form-check form-switch col-md-2">
+                    <input
+                      class="form-check-input" type="checkbox" role="switch" id="notVacCalc"
+                      [(ngModel)]="AddTaskData.notVacCalc" [ngModelOptions]="{ standalone: true }"/>
+                    <label
+                      class="form-check-label" for="notVacCalc" style="width: max-content">
+                      {{
+                        "عدم احتساب الأجازات"
+                          | translate
+                      }}
+                    </label>
+                  </div>
+
+                  <div class="col-md-5" *ngIf="Atttable?.length">
+                    <table
+                      class="table table-hover"
+                      style="text-align-last: center"
+                    >
+                      <thead>
+                        <tr>
+                          <th colspan="2">
+                            {{
+                              "اوقات دوام الموظف أو القسم الذي تريد تكليفة بالمهمة"
+                                | translate
+                            }}
+                          </th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <tr
+                          *ngFor="let item of Atttable"
+                          style="display: inline-grid"
+                        >
+                          <td>{{ GetDayName(item) }}</td>
+                          <td>{{ GetShift(item) }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <p
+                  *ngIf="RemTimeProjData.footerdetails"
+                  style="text-align: center; color: red; font-weight: bold"
+                  class="p-1 bg-red-100"
+                >
+                  {{ RemTimeProjData.footerdetails }}
+                </p>
+              </div>
+            </div>
+          </tab>
+          <tab heading="{{ 'Add attachments' | translate }}" id="tab2">
+            <div class="content">
+              <div class="upload row-span-2">
+                <file-upload class="h-full" [control]="control">
+                  <ng-template
+                    let-isFileDragDropAvailable="isFileDragDropAvailable"
+                    #placeholder
+                  >
+                    <div *ngIf="control.size === 0">
+                      <div class="icon">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          height="1em"
+                          viewBox="0 0 640 512"
+                        >
+                          <path
+                            d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-217c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l39-39V392c0 13.3 10.7 24 24 24s24-10.7 24-24V257.9l39 39c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0l-80 80z"
+                          />
+                        </svg>
+                      </div>
+
+                      <div
+                        class="upload-text"
+                        style="width: max-content; padding: 0px 20px"
+                      >
+                        {{ "Add Image" | translate }}
+                      </div>
+                    </div>
+                  </ng-template>
+
+                  <ng-template
+                    let-i="index"
+                    let-file="file"
+                    let-control="control"
+                    #item
+                  >
+                    <div class="overlay">
+                      <span
+                        class="delete-button"
+                        (click)="control.removeFile(file)"
+                      >
+                        <svg viewBox="0 0 448 512">
+                          <path
+                            d="M32 464a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128H32zm272-256a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zM432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16z"
+                          ></path>
+                        </svg>
+                      </span>
+                      <img
+                        class="max-h-44"
+                        *ngIf="control.valid"
+                        [src]="uploadedFile | async"
+                      />
+                    </div>
+                  </ng-template>
+                </file-upload>
+              </div>
+            </div>
+          </tab>
+          <tab heading="{{ 'task priority' | translate }}" id="tab3">
+            <div class="content">
+              <app-go-diagram
+                [model]="model2"
+                (nodeClicked)="setSelectedNode($event)"
+              ></app-go-diagram>
+            </div>
+          </tab>
+        </tabset>
+      </form>
+      <div
+        class="flex flex-wrap items-end border-t justify-end pt-2 border-neutral-300"
+      >
+        <div class="flex gap-2 items-end justify-end">
+          <div>
+            <p class="p-1 bg-red-100">{{ "Caution" | translate }}</p>
+          </div>
+
+          <div class="actions=btns flex gap-2">
+            <button
+              class="btn btn-secondary text-white"
+              (click)="addForm.reset()"
+            >
+              {{ "new" | translate }}
+            </button>
+            <button
+              [disabled]="RemTimeProjData.statusLate == 1"
+              (click)="addNewTask(modal)"
+              class="btn bg-base text-white"
+            >
+              {{ "Saving data" | translate }}
+            </button>
+            <button (click)="modal?.dismiss()" class="btn btn-secondary">
+              {{ "close" | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</ng-template>
+
+<!-- Add option -->
+<ng-template #AddOption let-modal>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="m-0">
+      <span class="text-2xl"> نوع مهمة جديدة </span>
+    </h4>
+    <button
+      type="button"
+      class="text-2xl text-white m-0"
+      (click)="modal?.dismiss()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body text-center">
+    <form #addTaskType="ngForm" class="grid grid-cols-1 md:grid-cols-2 gap-2">
+      <div class="form-group">
+        <label for="TaskNameArtxt3" class="text-right col-form-label block">
+          {{ "nameAr" | translate }}
+          <span class="text-danger">*</span></label
+        >
+        <input
+          required
+          #TaskNameAr="ngModel"
+          ngModel
+          [(ngModel)]="AddTaskData.tasktypedata.namear"
+          class="form-control"
+          type="text"
+          id="TaskNameArtxt3"
+          name="TaskNameArtxt3"
+          autocomplete="off"
+          [placeholder]="('Write' | translate) + ' ' + ('nameAr' | translate)"
+        />
+      </div>
+      <div class="form-group">
+        <label for="TaskNameEntxt3" class="text-right col-form-label block">
+          {{ "nameEn" | translate }}
+          <span class="text-danger">*</span></label
+        >
+        <div style="display: inline-flex; width: 100%">
+          <input
+            required
+            #TaskNameEnValue
+            #TaskNameEn="ngModel"
+            [(ngModel)]="AddTaskData.tasktypedata.nameen"
+            ngModel
+            class="form-control"
+            type="text"
+            id="TaskNameEntxt3"
+            name="TaskNameEntxt3"
+            autocomplete="off"
+            [placeholder]="('Write' | translate) + ' ' + ('nameEn' | translate)"
+          />
+          <a
+            class="btn"
+            id="CopyTaskName2"
+            (click)="
+              AddTaskData.tasktypedata.nameen = AddTaskData.tasktypedata.namear
+            "
+            ><i class="fa fa-copy"></i
+          ></a>
+        </div>
+      </div>
+    </form>
+    <div class="max-h-80 overflow-auto px-2">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>{{ "nameAr" | translate }}</th>
+            <th>{{ "nameEn" | translate }}</th>
+            <th
+              [translate]="'name'"
+              [translateParams]="{
+                ar: 'خيارات',
+                en: 'Operations'
+              }"
+            ></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let type of AddTaskData.loadtasktype"
+            (dblclick)="setTaskTypeInSelect(type, modal)"
+          >
+            <td>{{ type.name }}</td>
+            <td>{{ type.nameE }}</td>
+            <td class="flex gap-2 justify-center">
+              <button
+                class="p-2 bg-orange-100 hover:bg-orange-500 rounded-lg duration-300 hover:text-white aspect-square w-10"
+                (click)="
+                  AddTaskData.tasktypedata.id = type.id;
+                  AddTaskData.tasktypedata.namear = type.name;
+                  AddTaskData.tasktypedata.nameen = type.nameE
+                "
+              >
+                <i class="fa-regular fa-pen-to-square"></i>
+              </button>
+              <button
+                (click)="
+                  open(
+                    deleteTaskType,
+                    'deletetasktype',
+                    AddTaskData.tasktypedata
+                  )
+                "
+                class="p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white aspect-square w-10"
+              >
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="flex gap-2 mt-3 pt-3 border-t border-neutral-300">
+      <button
+        class="btn bg-base text-white"
+        type="submit"
+        [disabled]="!AddTaskData.tasktypedata.namear"
+        (click)="saveTaskType()"
+      >
+        {{ "Save" | translate }}
+      </button>
+      <button (click)="modal.dismiss()" class="btn btn-secondary">
+        {{ "Back" | translate }}
+      </button>
+      <button (click)="resetTaskType()" class="btn bg-base text-white">
+        {{ "جديد" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- deleteTaskTypeModal -->
+<ng-template #deleteTaskType let-modal>
+  <div class="modal-body text-center">
+    <p
+      [translate]="'name'"
+      [translateParams]="{
+        ar: 'هل تريد بالتأكيد حذف هذا الصف',
+        en: 'Are you sure to delete this row ?'
+      }"
+    ></p>
+    <div class="flex gap-2 justify-center mt-3">
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="confirmTasktypeDelete(); modal.dismiss()"
+      >
+        {{ "Yes" | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "No" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- endTaskModal -->
+<ng-template #endTaskModal let-modal>
+  <div class="modal-body text-center">
+    <p>{{ "Do you want to finish the task?" | translate }}</p>
+    <div class="flex gap-2 justify-center mt-3">
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="confirm_endtask(); modal.dismiss()"
+      >
+        {{ "Yes" | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "No" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- stopTaskModal -->
+<ng-template #stopTaskModal let-modal>
+  <div class="modal-body text-center">
+    <p>{{ "Do you want to play the task?" | translate }}</p>
+    <div class="flex gap-2 justify-center mt-3">
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="confirm_playandstoptask(3); modal.dismiss()"
+      >
+        {{ "Yes" | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "No" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- stopTaskModal -->
+<ng-template #playTaskModal let-modal>
+  <div class="modal-body text-center">
+    <p>{{ "Do you want to play the task?" | translate }}</p>
+    <div class="flex gap-2 justify-center mt-3">
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="confirm_playandstoptask(2); modal.dismiss()"
+      >
+        {{ "Yes" | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "No" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- deleteTaskModal -->
+<ng-template #deleteTaskModal let-modal>
+  <div class="modal-body text-center">
+    <p
+      [translate]="'name'"
+      [translateParams]="{
+        ar: 'هل تريد بالتأكيد حذف هذا الصف',
+        en: 'Are you sure to delete this row ?'
+      }"
+    ></p>
+    <div class="flex gap-2 justify-center mt-3">
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="confirm_deletetask(); modal.dismiss()"
+      >
+        {{ "Yes" | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "No" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- extendTaskModal -->
+<ng-template #extendTaskModal let-modal>
+  <div class="modal-header bg-base text-white">
+    <h4
+      class="modal-title mb-0"
+      id="modal-basic-title"
+      [translate]="'name'"
+      [translateParams]="{ ar: 'تمديد المهمة', en: '  extended Task' }"
+    ></h4>
+    <button type="button" class="m-0" (click)="modal.dismiss('Cross click')">
+      <i class="fa fa-close"></i>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-lg-6 col-lg-4 mb-3 mb-lg-0">
+        <div class="form-group">
+          <label class="col-form-label"> {{ "Duration" | translate }}</label>
+          <ng-select
+            class="w-full p-0"
+            placeholder="{{ 'Chose' | translate }}"
+            [(ngModel)]="extendedData.selectedTaskType"
+            [ngModelOptions]="{ standalone: true }"
+            [clearable]="false"
+          >
+            <ng-option
+              *ngFor="let type of TaskType"
+              [value]="type.id"
+              [translate]="'name'"
+              [translateParams]="{ ar: type.name?.ar, en: type.name?.en }"
+            >
+            </ng-option>
+          </ng-select>
+        </div>
+      </div>
+
+      <div
+        class="col-lg-6 col-lg-4 mb-3 mb-lg-0"
+        *ngIf="extendedData.selectedTaskType == 1"
+      >
+        <div class="form-group">
+          <label for="to234" class="text-right col-form-label block">
+            {{ "The number of hours" | translate }}
+          </label>
+          <input
+            #to234="ngModel"
+            [(ngModel)]="extendedData.TimeH"
+            ngModel
+            class="form-control"
+            type="number"
+            id="to234"
+            name="to234"
+            (keyup)="TimeHChange()"
+          />
+        </div>
+      </div>
+
+      <div
+        class="col-lg-6 col-lg-4 mb-3 mb-lg-0"
+        *ngIf="extendedData.selectedTaskType == 2"
+      >
+        <div class="form-group">
+          <label class="text-right col-form-label block">
+            {{ "From" | translate }} {{ " " }}{{ "Date" | translate }}
+          </label>
+          <div class="form-group timeInput">
+            <input
+              ngModel
+              name="from"
+              type="text"
+              class="form-control"
+              bsDatepicker
+              [(ngModel)]="extendedData.DateFrom"
+              disabled="disabled"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 col-lg-4" *ngIf="extendedData.selectedTaskType == 2">
+        <div class="form-group">
+          <label class="text-right col-form-label block">
+            {{ "To" | translate }} {{ " " }}{{ "Date" | translate }}
+          </label>
+          <div class="form-group timeInput">
+            <input
+              ngModel
+              name="to"
+              type="text"
+              class="form-control"
+              bsDatepicker
+              [(ngModel)]="extendedData.DateTo"
+              autocomplete="off"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer justify-content-end" style="border-top: none">
+    <button
+      type="button"
+      class="btn py-2 px-3 mt-0 bg-base text-white"
+      (click)="modal.dismiss('Cross click'); confirm_changeTaskTime()"
+    >
+      {{ "confirem" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+<!-- assignTaskModal -->
+<ng-template #assignTaskModal let-modal>
+  <div class="modal-header bg-base text-white">
+    <h4
+      class="modal-title mb-0"
+      id="modal-basic-title"
+      [translate]="'name'"
+      [translateParams]="{
+        ar: 'تحويل المهمة      ',
+        en: '    Task Transformation '
+      }"
+    ></h4>
+    <button type="button" class="m-0" (click)="modal.dismiss('Cross click')">
+      <i class="fa fa-close"></i>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-12">
+        <div class="form-group">
+          <label class="col-form-label"> {{ "userName" | translate }}</label>
+          <ng-select
+            class="w-full p-0"
+            placeholder="{{ 'Chose' | translate }}"
+            [(ngModel)]="UsersSelectConvert"
+            [ngModelOptions]="{ standalone: true }"
+          >
+            <ng-option
+              *ngFor="let user of load_UsersSelectConvert"
+              [value]="user.id"
+              >{{ user.name }}</ng-option
+            >
+          </ng-select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer justify-content-end" style="border-top: none">
+    <button
+      type="button"
+      class="btn py-2 px-3 mt-0 bg-base text-white"
+      (click)="modal.dismiss('Cross click'); confirm_converttask()"
+    >
+      {{ "confirem" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #ConvertVac let-modal>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="m-0">
+      <span class="text-2xl">
+        {{ "تحويل جميع المهام إلى مستخدم آخر " | translate }}
+      </span>
+    </h4>
+    <button
+      type="button"
+      class="text-2xl text-white m-0"
+      (click)="modal.dismiss()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form #form="ngForm">
+      <div class="row items-center">
+        <div class="col-md-6 mb-3">
+          <div class="form-group">
+            <label class="col-form-label">
+              {{ "From" | translate }}
+            </label>
+            <ng-select
+              name="from_project_type"
+              class="w-full p-0"
+              placeholder="{{ 'المهام' | translate }}"
+              [(ngModel)]="VacTaskdata.task_V"
+            >
+              <ng-option *ngFor="let pro of TasksVacation" [value]="pro.id">{{
+                pro.name
+              }}</ng-option>
+            </ng-select>
+          </div>
+        </div>
+        <div class="col-md-6 mb-3">
+          <div class="form-group">
+            <label class="col-form-label">
+              {{ "الي المستخدم" | translate }}
+            </label>
+            <ng-select
+              name="to_project_type"
+              class="w-full p-0"
+              placeholder="{{ 'Chose' | translate }}"
+              [(ngModel)]="VacTaskdata.userId_V"
+            >
+              <ng-option *ngFor="let pro of ConverVacUser" [value]="pro.id">{{
+                pro.name
+              }}</ng-option>
+            </ng-select>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div>
+      سيقوم النظام بفحص المهام التي (لم تبدأ/قيد التشغيل ) فقط حسب تاريخ الإجازة
+      المقدمة
+    </div>
+    <div
+      class="flex gap-2 justify-center pt-3 border-t border-neutral-300 col-span-1 md:col-span-2 mt-2"
+    >
+      <button
+        class="btn bg-base text-white"
+        type="submit"
+        (click)="ConvertUserTasksSome(modal)"
+      >
+        {{ "save" | translate }}
+      </button>
+      <button (click)="modal?.dismiss()" class="btn btn-secondary">
+        {{ "Back" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #Converttouser let-modal>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="m-0">
+      <span class="text-2xl">
+        {{ "تحويل جميع المهام إلى مستخدم آخر" | translate }}
+      </span>
+    </h4>
+    <button
+      type="button"
+      class="text-2xl text-white m-0"
+      (click)="modal.dismiss()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form #form="ngForm">
+      <div class="row items-center">
+        <div class="col-md-6 mb-3">
+          <div class="form-group">
+            <label class="col-form-label">
+              {{ "الي المستخدم" | translate }}
+            </label>
+            <ng-select
+              name="from_project_type"
+              class="w-full p-0"
+              placeholder="{{ 'Chose' | translate }}"
+              [(ngModel)]="AllTaskdata.userId_a"
+            >
+              <ng-option *ngFor="let pro of ConvertAllUser" [value]="pro.id">{{
+                pro.name
+              }}</ng-option>
+            </ng-select>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div
+      class="flex gap-2 justify-center pt-3 border-t border-neutral-300 col-span-1 md:col-span-2 mt-2"
+    >
+      <button
+        class="btn bg-base text-white"
+        type="submit"
+        (click)="ConvertUserTasksAll(modal)"
+      >
+        {{ "save" | translate }}
+      </button>
+      <button (click)="modal?.dismiss()" class="btn btn-secondary">
+        {{ "Back" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #uploadFileModal let-modal>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="m-0">
+      <span
+        class="text-2xl"
+        [translate]="'name'"
+        [translateParams]="{
+          ar: '  اضافة ملفات',
+          en: 'Add Files',
+        }"
+      >
+      </span>
+    </h4>
+    <button
+      type="button"
+      class="text-2xl text-white m-0"
+      (click)="modal.dismiss()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form>
+      <p class="w-max p-1 bg-red-100 mx-auto mb-3">
+        {{ "Verification service depends only on pdf files" | translate }}
+      </p>
+      <div class="upload">
+        <file-upload [control]="controlTask" style="min-height: 240px">
+          <ng-template
+            let-isFileDragDropAvailable="isFileDragDropAvailable"
+            #placeholder
+          >
+            <div *ngIf="controlTask.size === 0">
+              <div class="icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="1em"
+                  viewBox="0 0 640 512"
+                >
+                  <path
+                    d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-217c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l39-39V392c0 13.3 10.7 24 24 24s24-10.7 24-24V257.9l39 39c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0l-80 80z"
+                  />
+                </svg>
+              </div>
+              <div class="upload-text">{{ "Upload File" | translate }} 😶</div>
+            </div>
+          </ng-template>
+
+          <ng-template
+            let-i="index"
+            let-file="file"
+            let-control="control"
+            #item
+          >
+            <div *ngIf="file">
+              <span
+                class="delete-button"
+                style="display: flex"
+                (click)="controlTask.removeFile(file)"
+              >
+                <span> حذف ❌ </span>
+                <svg viewBox="0 0 448 512">
+                  <path
+                    d="M32 464a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128H32zm272-256a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zM432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16z"
+                  ></path>
+                </svg>
+              </span>
+              <img
+                class="max-h-44"
+                *ngIf="controlTask.valid"
+                [src]="uploadedFile | async"
+              />
+
+              <section class="file-info">
+                <span style="font-size: 16px; font-weight: 700"
+                  >تفاصيل الملف</span
+                >
+                <hr />
+                <ul>
+                  <li><span style="color: red">Name: </span>{{ file.name }}</li>
+                  <li><span style="color: red">Type: </span>{{ file.type }}</li>
+                  <li>
+                    <span style="color: red">Size: </span>{{ file.size }} bytes
+                  </li>
+                </ul>
+              </section>
+              <section *ngIf="!(controlTask.size === 0)">
+                <p>
+                  تم تحديد الملف بنجاح، ولرفع الملف علي المشروع اضغط زر حفظ ✅
+                </p>
+              </section>
+            </div>
+          </ng-template>
+        </file-upload>
+      </div>
+      <mat-progress-bar
+        style="height: 12px"
+        mode="determinate"
+        value="{{ progress }}"
+      ></mat-progress-bar>
+      <p style="text-align: center; color: #950101" *ngIf="uploading">
+        جاري التحميل ... ⏳
+      </p>
+      <p style="font-weight: 700">يرجي الانتباه للاتي عند رفع ملف :</p>
+      <p>
+        <span style="color: red">أولا</span> : تأكد من فحص الملف بواسطة مكافح
+        الفيروسات والتأكد منه قبل رفعه علي النظام
+      </p>
+      <p>
+        <span style="color: red">ثانيا</span> : لا تقم برفع الملفات التي لا تخص
+        المشروع لتوفير مساحة تخزين علي السيرفر الخاص بك
+      </p>
+      <p>
+        <span style="color: red">ثالثا</span> : خدمة التحقق من الوثائق والتي
+        توفر للعميل معرفة مصدر الملف تتوفر بصيغة PDF فقط
+      </p>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-light" (click)="modal.dismiss()">
+      {{ "Back" | translate }}
+    </button>
+    <button
+      [disabled]="controlTask.size === 0 || disableButtonSave_File"
+      (click)="confirm_SaveFiles(modal)"
+      class="btn btn-primary"
+    >
+      {{ "Save" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #projectgoal let-modal>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="m-0">
+      <span class="text-2xl">
+        {{ "اهداف المشروع" | translate }}
+      </span>
+    </h4>
+    <button
+      type="button"
+      class="text-2xl text-white m-0"
+      (click)="modal.dismiss()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form #form="ngForm">
+      <div class="row items-center">
+        <div class="col-md-6 mb-3">
+          <div class="form-group">
+            <label class="col-form-label">
+              {{ "الهدف" | translate }}
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              id="goalname"
+              name="goalname"
+              [(ngModel)]="TaskData.goalname"
+            />
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+<ng-template #mapModal let-modal>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="m-0">
+      <span class="text-2xl">{{ "Location" | translate }} </span>
+    </h4>
+    <button
+      type="button"
+      class="text-2xl text-white m-0"
+      (click)="modal.dismiss()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="relative rounded-lg overflow-hidden">
+      <agm-map
+        (mapReady)="onMapReady($event)"
+        style="height: 60vh"
+        [latitude]="latitude"
+        [longitude]="longitude"
+        [zoom]="zoom"
+      >
+        <agm-marker
+          [markerDraggable]="true"
+          [latitude]="latitude"
+          [longitude]="longitude"
+          (dragEnd)="markerDragEnd($event)"
+        ></agm-marker>
+      </agm-map>
+      <button
+        class="bottom-[120px] right-[10px] shadow rounded-sm border-neutral-400 text-neutral-500 absolute h-10 w-10 bg-white flex justify-center items-center z-20"
+        (click)="setCurrentLocation()"
+      >
+        <i class="fa fa-map-marker"></i>
+      </button>
+    </div>
+    <div class="text-end mt-2">
+      <button (click)="modal?.dismiss()" class="btn btn-secondary">
+        {{ "close" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>

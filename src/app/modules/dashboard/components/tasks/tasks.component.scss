@@ -1,0 +1,133 @@
+.project-box {
+  @apply bg-base bg-opacity-5 text-base rounded-lg p-2 duration-300 hover:bg-opacity-100 hover:bg-white;
+}
+::ng-deep {
+  .apexcharts-legend {
+    display: none !important;
+  }
+}
+::ng-deep {
+  .node-name {
+    color: var(--gray-color);
+    letter-spacing: 0.5px;
+    font-size: 16px;
+    padding: 6px 14px !important;
+    cursor: pointer;
+
+    &.markSelected {
+      border: none !important;
+      @apply bg-green-100 text-base;
+    }
+  }
+
+  .collapsible-wrapper {
+    border-inline-start: 1px dashed #ccc;
+    margin-inline-start: 6px;
+    .node-name {
+      font-size: 14px;
+      color: var(--gray-color);
+      letter-spacing: 0.5px;
+      cursor: pointer;
+
+      &.markSelected {
+        border: none !important;
+        @apply bg-green-100 text-base;
+      }
+    }
+    node-icon-wrapper {
+      position: relative;
+
+      &::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        inset-inline-start: 0;
+        width: 90%;
+        height: 1px;
+        border: 1px dashed #ccc;
+      }
+    }
+  }
+}
+.btn.flex {
+  display: flex;
+}
+
+.tasks-page textarea {
+  border: 1px solid #ccc;
+}
+
+.taskBtns {
+  button {
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    display: block;
+    padding: 0px !important;
+
+    font-size: 14px;
+  }
+}
+
+::ng-deep {
+  .ngx-gauge-meter {
+    width: 100px !important;
+    height: 100px !important;
+    canvas {
+      width: 100px;
+      height: 100px;
+    }
+    .reading-block {
+      font-size: 26px !important;
+      transform: translateY(-50%) !important;
+      top: 50%;
+      color: var(--base-color) !important;
+    }
+    .reading-label {
+      display: none !important;
+    }
+  }
+}
+.custome-task {
+  .form-control {
+    max-width: 45px !important;
+    margin: 0px 10px !important;
+    padding: 5px !important;
+    text-align: center !important;
+  }
+}
+
+.percent {
+  top: 50%;
+  transform: translateY(-50%);
+  inset-inline-end: -6px;
+  font-weight: 600;
+  font-size: 20px;
+}
+
+.uploadingIcon {
+  width: 30px;
+  height: 28px;
+  object-fit: contain;
+  padding: 5px;
+  display: block !important;
+  border: 1px solid var(--base-color);
+  border-radius: 0.25rem;
+}
+
+span {
+  &.value {
+    width: 30px;
+    height: 30px;
+    margin: 0px 10px;
+    background-color: #a5a5a521;
+    color: var(--base-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 2px;
+  }
+}
+

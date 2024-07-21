@@ -1,0 +1,42 @@
+import { Auditable } from "./auditable";
+import { Banks } from "./banks";
+import { Acc_Services_Price } from "./acc_Services_Price";
+import { Acc_Categories } from "./acc_Categories";
+import { Invoices } from "./invoices";
+import { Accounts } from "./accounts";
+import { CostCenters } from "./costCenters";
+
+export class VoucherDetails extends Auditable {
+    voucherDetailsId: number;
+    invoiceId: number | null;
+    lineNumber: number | null;
+    accountId: number | null;
+    taxType: number | null;
+    amount: number | null;
+    taxAmount: number | null;
+    totalAmount: number | null;
+    toAccountId: number | null;
+    referenceNumber: string | null;
+    costCenterId: number | null;
+    payType: number | null;
+    description: string | null;
+    tFK: string | null;
+    qty: number | null;
+    checkNo: string | null;
+    checkDate: string | null;
+    moneyOrderNo: number | null;
+    moneyOrderDate: string | null;
+    bankId: number | null;
+    servicesPriceId: number | null;
+    categoryId: number | null;
+    isRetrieve: number | null;
+    discountPercentage_Det: number | null;
+    discountValue_Det: number | null;
+    banks: Banks | null;
+    servicesPrice: Acc_Services_Price | null;
+    categories: Acc_Categories | null;
+    invoices: Invoices | null;
+    accounts: Accounts | null;
+    toAccounts: Accounts | null;
+    costCenters: CostCenters | null;
+}

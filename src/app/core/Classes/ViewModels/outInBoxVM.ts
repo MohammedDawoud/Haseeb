@@ -1,0 +1,38 @@
+export class OutInBoxVM {
+    outInBoxId: number;
+    number: string | null;
+    date: string | null;
+    hijriDate: string | null;
+    typeId: number | null;
+    sideFromId: number | null;
+    sideToId: number | null;
+    innerId: number | null;
+    topic: string | null;
+    archiveFileId: number | null;
+    relatedToId: number | null;
+    type: number | null;
+    outInType: number | null;
+    fileCount: number | null;
+    attachmentUrl: string | null;
+    projectId: number | null;
+    branchId: number | null;
+    priority: number | null;
+    customerName: string | null;
+    customerName_W: string | null;
+    outInTypeName: string | null;
+    outInBoxTypeName: string | null;
+    outInBoxSerialCode: string | null;
+    sideFromName: string | null;
+    sideToName: string | null;
+    archiveFilesName: string | null;
+    priorityName: string | null;
+    innerOutInDate: string | null;
+    relatedToSideTo: string | null;
+    relatedToTopic: string | null;
+    relatedToDate: string | null;
+    numberType: number | null;
+    relatedToName: string | null;
+    projectNumber: string | null;
+    dateFrom: string | null;
+    dateTo: string | null;
+}

@@ -1,0 +1,7 @@
+.separator-title {
+  @apply my-3 mt-10 bg-base bg-opacity-10 text-xl font-bold rounded-lg px-3 py-2;
+  color: rgb(10 109 202);
+}
+.modal-form {
+  @apply max-h-[65vh] p-2 overflow-auto;
+}

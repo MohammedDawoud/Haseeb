@@ -1,0 +1,1723 @@
+<div class="modal-body text-center">
+  <div class="content">
+    <mat-stepper linear #stepper>
+      <!-- 1 -->
+      <mat-step [stepControl]="FormGroup01">
+        <ng-template matStepLabel>{{
+          "Contract data" | translate
+        }}</ng-template>
+        <form [formGroup]="FormGroup01">
+          <div class="step-content">
+            <div class="row align-items-end mb-4">
+              <div class="col-sm-6 col-md-4 mb-0 mb-sm-3">
+                <div class="form-group">
+                  <label
+                    for="ContractNo"
+                    class="text-right col-form-label block"
+                  >
+                    {{ "contract number" | translate }}
+                  </label>
+                  <input
+                    #ContractNo
+                    type="text"
+                    id="ContractNo"
+                    name="ContractNo"
+                    formControlName="ContractNo"
+                    autocomplete="off"
+                    class="form-control {{
+                      ContractNo.value==null
+                        ? 'errorInput'
+                        : ''
+                    }}"
+                  />
+                </div>
+              </div>
+              <div class="col-sm-6 col-md-4 mb-0 mb-sm-3">
+                <div class="form-group">
+                  <label for="ContractDate" class="text-right col-form-label block">
+                    {{ "Date of contract" | translate }}
+                  </label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    id="ContractDate"
+                    name="ContractDate"
+                    formControlName="ContractDate"
+                    bsDatepicker
+                    autocomplete="off"
+                    [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}"
+                    (ngModelChange)="ChangeContractGre($event)"
+
+                  />
+                </div>
+              </div>
+              <div class="col-sm-6 col-md-4 mb-0 mb-sm-3">
+                <div class="form-group">
+                  <label
+                    for="ContractHijriDate"
+                    class="text-right col-form-label block"
+                  >
+                    {{ "Contract date (Hijri) *" | translate }}
+                  </label>
+                  <hijri-gregorian-datepicker
+                    [(selectedDate)]="selectedHijriDate"
+                    [isRequired]="true"
+                    [hijriLabel]="'Hijri'"
+                    [selectedDateType]="selectedDateType"
+                    [dir]="'dir' | translate"
+                    autocomplete="off"
+                    (selectedDateChange)="ChangeContractHijri($event)"
+                  >
+                  </hijri-gregorian-datepicker>
+                </div>
+              </div>
+              <div class="col-sm-6 col-md-6 mb-0 mb-sm-3">
+                <div class="form-group">
+                  <label
+                    for="Org_CompanyName"
+                    class="text-right col-form-label block"
+                  >
+                    {{
+                      "The first party / the name of the office" | translate
+                    }}
+                  </label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    id="Org_CompanyName"
+                    name="Org_CompanyName"
+                    formControlName="Org_CompanyName"
+                    autocomplete="off"
+                  />
+                </div>
+              </div>
+              <div class="col-sm-6 col-md-3 mb-0 mb-sm-3">
+                <div class="form-group">
+                  <label class="text-right col-form-label block">
+                    {{ "and represents it" | translate }}</label
+                  >
+                  <ng-select
+                  #OrgEmpId
+                    class="w-full p-0"
+                    placeholder="{{ 'Chose' | translate }}"
+                    name="OrgEmpId"
+                    id="OrgEmpId"
+                    formControlName="OrgEmpId"
+                    (change)="GetEmployeeJob()"
+                  >
+                    <ng-option
+                      *ngFor="let user of LoadEmployeeSelect"
+                      [value]="user.id"
+                      >{{ user.name }}</ng-option
+                    >
+                  </ng-select>
+                </div>
+              </div>
+              <div class="col-sm-6 col-md-3 mb-0 mb-sm-3">
+                <div class="form-group">
+                  <label for="OrgEmpJob" class="text-right col-form-label block">
+                    {{ "as" | translate }}
+                  </label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    id="OrgEmpJob"
+                    name="OrgEmpJob"
+                    formControlName="OrgEmpJob"
+                  />
+                </div>
+              </div>
+
+              <div class="col-sm-6 mb-0 mb-sm-3">
+                <div class="form-group">
+                  <label
+                    for="Engineering_License"
+                    class="text-right col-form-label block"
+                  >
+                    {{ "engineeringLicence" | translate }}
+                  </label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    id="Engineering_License"
+                    name="Engineering_License"
+                    formControlName="Engineering_License"
+                  />
+                </div>
+              </div>
+              <div class="col-sm-6 mb-0 mb-sm-3">
+                <div class="form-group">
+                  <label for="Engineering_LicenseDate" class="text-right col-form-label block">
+                    {{ "IssuedOn*" | translate }}
+                  </label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    id="Engineering_LicenseDate"
+                    name="Engineering_LicenseDate"
+                    formControlName="Engineering_LicenseDate"
+                    bsDatepicker
+                  />
+                </div>
+              </div>
+
+              <div class="col-sm-6 col-md-6 mb-0 mb-sm-3">
+                <div class="form-group">
+                  <label
+                    for="ContractCustSelectId"
+                    class="text-right col-form-label block"
+                  >
+                    {{ "The second party / customer" | translate }}
+                  </label>
+                  <ng-select
+                    class="w-full p-0"
+                    placeholder="{{ 'Chose' | translate }}"
+                    name="ContractCustSelectId"
+                    formControlName="ContractCustSelectId"
+                    (change)="ChangeCustomerSelect()"
+                  >
+                    <ng-option
+                      *ngFor="let user of LoadCustomerSelectWProC"
+                      [value]="user.id"
+                      >{{ user.name }}</ng-option
+                    >
+                  </ng-select>
+                </div>
+              </div>
+              <div class="col-sm-6 col-md-3 mb-0 mb-sm-3">
+                <div class="form-group">
+                  <label for="ContractProjSelectId" class="text-right col-form-label block">
+                    {{ "The project" | translate }}</label
+                  >
+                  <ng-select
+                    class="w-full p-0"
+                    placeholder="{{ 'Chose' | translate }}"
+                    name="ContractProjSelectId"
+                    id="ContractProjSelectId"
+                    formControlName="ContractProjSelectId"
+                    (change)="GetInvoiceIDByProjectID();GetProjectData();"
+
+                  >
+                    <ng-option
+                      *ngFor="let user of Loadprojects"
+                      [value]="user.id"
+                      >{{ user.name }}</ng-option
+                    >
+                  </ng-select>
+                </div>
+              </div>
+              <div class="col-sm-6 col-md-3 mb-0 mb-sm-3">
+                <div class="form-group">
+                  <label
+                    for="customerIdtxt"
+                    class="text-right col-form-label block"
+                  >
+                    {{ "ID Number" | translate }}
+                  </label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    id="customerIdtxt"
+                    name="customerIdtxt"
+                    formControlName="customerIdtxt"
+                  />
+                </div>
+              </div>
+
+              <div
+                *ngIf="offerPriceChecked"
+                class="col-sm-6 col-md-3 mb-0 mb-sm-3"
+              >
+                <div class="form-group">
+                  <label  for="OfferSelectid" class="col-form-label block">
+                    {{ "Offer Price" | translate }}</label
+                  >
+                  <ng-select
+                    class="w-full p-0"
+                    placeholder="{{ 'Chose' | translate }}"
+                    name="OfferSelectid"
+                    formControlName="OfferSelectid"
+                  >
+                    <ng-option
+                      *ngFor="let user of LoadofferPrice"
+                      [value]="user.id"
+                      >{{ user.name }}</ng-option
+                    >
+                  </ng-select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex justify-end w-100">
+            <button mat-button matStepperNext class="bg-base text-white">
+              {{ "Next" | translate }}
+            </button>
+          </div>
+          <p
+          class="bg-red-100 p-1"
+          style="width: max-content; margin: 15px auto"
+        >
+          {{
+            "The second party: only clients who have projects appear"
+              | translate
+          }}
+        </p>
+        </form>
+      </mat-step>
+      <!-- 2 -->
+      <mat-step [stepControl]="FormGroup02">
+        <form [formGroup]="FormGroup02">
+          <ng-template matStepLabel>{{
+            "DesignServices" | translate
+          }}</ng-template>
+          <div class="step-content">
+            <div class="row mb-3">
+              <div class="col-12 mb-0 mb-sm-3" *ngIf="ContractModalCustom.InvoiceNumDiv">
+                <div class="form-group">
+                  <label
+                    for="InvoiceAmount"
+                    class="text-right col-form-label block"
+                  >
+                    {{ "invoiceRegistered" | translate }} {{ContractModalCustom.InvoiceNumber}}
+                  </label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    id="InvoiceAmount"
+                    name="InvoiceAmount"
+                    formControlName="InvoiceAmount"
+                    autocomplete="off"
+                  />
+                </div>
+              </div>
+
+              <h3 class="flex items-center justify-start fw-bold">
+                {{ "services" | translate }}
+                <button
+                  type="button "
+                  class="add-btn mx-2"
+                  (click)="addServiceContractNew()"
+                  >
+                  <i class="fa fa-plus"></i>
+                </button>
+              </h3>
+
+              <div class="editable shadow mb-4">
+                <table
+                  class="table table-responsive table-striped table-bordered text-center"
+                  style="vertical-align: middle; font-size: 14px"
+                >
+                  <thead
+                    class="bg-base text-white"
+                    style="line-height: 30px; font-size: 13px"
+                  >
+                  <tr>
+                      <th>{{ "ServiceNo" | translate }}</th>
+                      <th style="width: 30% !important;">{{ "ServiceName" | translate }}</th>
+                      <th>{{ "Unit" | translate }}</th>
+                      <th>{{ "Quantity" | translate }}</th>
+                      <th>{{ "price" | translate }}</th>
+                      <th>{{ "VATTax" | translate }}</th>
+                      <th>{{ "netTax" | translate }}</th>
+                      <th>{{ "action" | translate }}</th>
+                        </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                    *ngFor="let item of ContractNewServices; let i = index"
+                    style="line-height: 5px"
+                  >
+                    <td>{{ item.idRow }}</td>
+                    <td (click)="open(servicesListModal_Contract, null, 'servicesList_Contract', item.idRow)">
+                      <input
+                        type="text"
+                        name="os-name{{ item.idRow }}"
+                        [(ngModel)]="item.accountJournaltxt"
+                        [ngModelOptions]="{standalone: true}"
+                        readonly
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        name="os-unit{{ item.idRow  }}"
+                        [(ngModel)]="item.UnitConst"
+                        [ngModelOptions]="{standalone: true}"
+                        readonly
+                      />
+                    </td>
+
+                    <td>
+                      <input
+                        type="text"
+                        name="os-amount{{ item.idRow  }}"
+                        [(ngModel)]="item.QtyConst"
+                        [ngModelOptions]="{standalone: true}"
+                        (keyup)="CalculateTotal_ContractNew()"
+                      />
+                    </td>
+
+                    <td>
+                      <div class="flex">
+                        <input
+                        type="number"
+                        name="os-price{{ item.idRow  }}"
+                        [(ngModel)]="item.Amounttxt"
+                        [ngModelOptions]="{standalone: true}"
+                        (keyup)="CalculateTotal_ContractNew()"
+                      />
+                      <span *ngIf="item.Amounttxt" style="align-self: center;">ر.س</span>
+                      </div>
+                    </td>
+
+                    <td>
+                      <div class="flex">
+                        <input
+                        type="number"
+                        name="os-vatTax{{ item.idRow  }}"
+                        [(ngModel)]="item.taxAmounttxt"
+                        [ngModelOptions]="{standalone: true}"
+                        readonly
+                      />
+                      <span *ngIf="item.taxAmounttxt" style="align-self: center;">ر.س</span>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="flex">
+                        <input
+                        type="number"
+                        name="os-taxes{{ item.idRow  }}"
+                        [(ngModel)]="item.TotalAmounttxt"
+                        [ngModelOptions]="{standalone: true}"
+                        readonly
+                      />
+                      <span *ngIf="item.TotalAmounttxt" style="align-self: center;">ر.س</span>
+                      </div>
+                    </td>
+                    <td class="flex">
+                      <button
+                        title=""
+                        class="p-2 bg-orange-100 hover:bg-orange-500 rounded-lg duration-300 hover:text-white w-10"
+                        style="margin-inline-end: 6px"
+                        (click)="open(serviceDetailsModal, item, 'serviceDetails')"
+                      >
+                        <i class="fa-solid fa-info"></i>
+                      </button>
+                      <button
+                        class="p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white w-10"
+                        (click)="deleteServiceContractNew(item.idRow)"
+                      >
+                        <i class="fa-solid fa-trash-can"></i>
+                      </button>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="boxContainer w-80 py-3 px-3">
+                <div class="row">
+                  <div class="col-md-2">
+                    <label for="tax type" class=" " for="tax type">
+                      {{ "tax type" | translate }}
+                    </label>
+                  </div>
+                  <div class="col-md-10">
+                    <ng-select
+                      class="w-100"
+                      placeholder="{{ 'Chose' | translate }}"
+                      name="include_tax"
+                      [(ngModel)]="modalDetailsContractNew.taxtype"
+                      [ngModelOptions]="{standalone: true}"
+                      (change)="CalculateTotal_ContractNew()"
+                      [clearable]="false"
+                    >
+                      <ng-option [value]="2">{{
+                        "Excluding tax" | translate
+                      }}</ng-option>
+                      <ng-option [value]="3">{{
+                        "Taxes included" | translate
+                      }}</ng-option>
+                    </ng-select>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="col-md-2">
+                      <label
+                        for="Total amount"
+                        class="text-gren"
+                        for="Total amount"
+                      >
+                        {{ "Total amount" | translate }}
+                      </label>
+                    </div>
+                    <div class="col-md-10">
+                      <input
+                        id="Total amount"
+                        class="form-control text-center"
+                        type="number"
+                        [(ngModel)]="modalDetailsContractNew.total_amount"
+                        [ngModelOptions]="{standalone: true}"
+                        readonly
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="col-md-2">
+                      <label
+                        for="total in writing"
+                        class="text-orange"
+                        for="total in writing"
+                      >
+                        {{ "total in writing" | translate }}
+                      </label>
+                    </div>
+                    <div class="col-md-10">
+                      <input
+                        id="total in writing"
+                        class="form-control text-center"
+                        type="text"
+                        [(ngModel)]="modalDetailsContractNew.total_amount_text"
+                        [ngModelOptions]="{standalone: true}"
+                        readonly
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="contractWithInstallments" class="row mb-3">
+              <h3 class="flex items-center justify-start fw-bold">
+                {{ "Installments Details" | translate }}
+                <button
+                  type="button "
+                  class="add-btn mx-2"
+                  (click)="open(addInstallmentModal)"
+                >
+                  <i class="fa fa-plus"></i>
+                </button>
+              </h3>
+
+              <div class="overflow-auto mt-3">
+                <table
+                  class="min-w-max overflow-hidden rounded-t-lg table table-bordered table-striped"
+                >
+                  <thead>
+                    <tr class="bg-base text-white">
+                      <th class="uppercase text-center">
+                        {{ "batch number" | translate }}
+                      </th>
+                      <th class="uppercase text-center">
+                        {{ "Batch date" | translate }}
+                      </th>
+                      <th class="uppercase text-center">
+                        {{ "Batch Date (Hijri)" | translate }}
+                      </th>
+                      <th class="uppercase text-center">
+                        {{ "the amount" | translate }}
+                      </th>
+                      <th class="uppercase text-center">
+                        {{ "Tax" | translate }}
+                      </th>
+                      <th class="uppercase text-center">
+                        {{ "Payment total" | translate }}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody id="tabledetails">
+                    <tr
+                      class="text-black text-center"
+                      *ngFor="let installment of installments"
+                    >
+                      <td>{{ installment.batchNumber }}</td>
+                      <td>{{ installment.BatchDate }}</td>
+                      <td>{{ installment.BatchDateHijri }}</td>
+                      <td>{{ installment.amount }}</td>
+                      <td>{{ installment.Tax }}</td>
+                      <td>{{ installment.total }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex w-100 justify-between items-center">
+            <button
+              mat-button
+              matStepperPrevious
+              class="btn btn-outline-secondary"
+            >
+              {{ "Previous" | translate }}
+            </button>
+            <button
+              mat-button
+              matStepperNext
+              class="btn bg-base text-white"
+            >
+              {{ "Next" | translate }}
+            </button>
+          </div>
+        </form>
+      </mat-step>
+      <!-- 3 -->
+      <mat-step [stepControl]="FormGroup03">
+        <form [formGroup]="FormGroup03">
+          <ng-template matStepLabel>{{
+            "ContractDocuments" | translate
+          }}</ng-template>
+          <div class="step-content"></div>
+
+          <div class="row align-items-end mb-4">
+            <div class="col-sm-6 mb-0 mb-sm-3">
+              <div class="form-group">
+                <label
+                  for="Appr_LetterDate"
+                  class="text-right col-form-label block"
+                >
+                  {{ "DateLetter*" | translate }}
+                </label>
+                <input
+                  class="form-control"
+                  type="text"
+                  id="Appr_LetterDate"
+                  name="Appr_LetterDate"
+                  formControlName="Appr_LetterDate"
+                  bsDatepicker
+                  autocomplete="off"
+                />
+              </div>
+            </div>
+
+            <div class="col-sm-6 mb-0 mb-sm-3">
+              <div class="form-group">
+                <label
+                  for="EngServ_OfferDate"
+                  class="text-right col-form-label block"
+                >
+                  {{ "serviceDate*" | translate }}
+                </label>
+                <input
+                  class="form-control"
+                  type="text"
+                  id="EngServ_OfferDate"
+                  name="EngServ_OfferDate"
+                  formControlName="EngServ_OfferDate"
+                  bsDatepicker
+                  autocomplete="off"
+                />
+              </div>
+            </div>
+
+            <div class="flex items-center justify-center w-100 my-3 gap-8">
+              <div class="upload w-100">
+                <file-upload [control]="control">
+                  <ng-template
+                    let-isFileDragDropAvailable="isFileDragDropAvailable"
+                    #placeholder
+                  >
+                    <div *ngIf="control.size === 0">
+                      <div class="icon">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          height="1em"
+                          viewBox="0 0 640 512"
+                        >
+                          <path
+                            d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-217c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l39-39V392c0 13.3 10.7 24 24 24s24-10.7 24-24V257.9l39 39c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0l-80 80z"
+                          />
+                        </svg>
+                      </div>
+
+                      <div
+                        class="upload-text"
+                        style="width: max-content; padding: 0px 20px"
+                      >
+                        {{ "chooseFile" | translate }}
+                      </div>
+                    </div>
+                  </ng-template>
+
+                  <ng-template
+                    let-i="index"
+                    let-file="file"
+                    let-control="control"
+                    #item
+                  >
+                    <div class="overlay">
+                      <span
+                        class="delete-button"
+                        (click)="control.removeFile(file)"
+                      >
+                        <svg viewBox="0 0 448 512">
+                          <path
+                            d="M32 464a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128H32zm272-256a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zM432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16z"
+                          ></path>
+                        </svg>
+                      </span>
+                      <img
+                        *ngIf="control.valid"
+                        [src]="uploadedFile | async"
+                      />
+                    </div>
+                  </ng-template>
+                </file-upload>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-between items-center flex-wrap">
+            <button
+              mat-button
+              matStepperPrevious
+              class="btn btn-outline-secondary"
+            >
+              {{ "Previous" | translate }}
+            </button>
+            <button mat-button matStepperNext class="bg-base text-white">
+              {{ "Next" | translate }}
+            </button>
+          </div>
+        </form>
+      </mat-step>
+      <!-- 4 -->
+      <mat-step [stepControl]="FormGroup04">
+        <form [formGroup]="FormGroup04">
+          <ng-template matStepLabel>{{
+            "ConditionsContract" | translate
+          }}</ng-template>
+          <div class="step-content">
+            <p class="text-danger fw-bold text-decoration-underline">
+              {{ "project data" | translate }}
+            </p>
+            <div class="row align-items-end mb-4">
+              <div class="col-sm-6 col-md-3 mb-0 mb-sm-3">
+                <div class="form-group">
+                  <label
+                    for="ProjName"
+                    class="text-right col-form-label block"
+                  >
+                    {{ "Project Name" | translate }}
+                  </label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    id="ProjName"
+                    name="ProjName"
+                    formControlName="ProjName"
+                    autocomplete="off"
+                  />
+                </div>
+              </div>
+              <div class="col-sm-6 col-md-3 mb-0 mb-sm-3">
+                <div class="form-group">
+                  <label
+                    for="ProjLocation"
+                    class="text-right col-form-label block"
+                  >
+                    {{ "projectLocation" | translate }}
+                  </label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    id="ProjLocation"
+                    name="ProjLocation"
+                    formControlName="ProjLocation"
+                    autocomplete="off"
+                  />
+                </div>
+              </div>
+
+              <div class="col-sm-6 col-md-3 mb-0 mb-sm-3">
+                <div class="form-group">
+                  <label
+                    for="ProjBriefDesc"
+                    class="text-right col-form-label block"
+                  >
+                    {{ "BriefNatureProject" | translate }}
+                  </label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    id="ProjBriefDesc"
+                    name="ProjBriefDesc"
+                    formControlName="ProjBriefDesc"
+                    autocomplete="off"
+                  />
+                </div>
+              </div>
+
+              <div class="col-sm-6 col-md-3 mb-0 mb-sm-3">
+                <div class="form-group">
+                  <label
+                    for="ContPeriod"
+                    class="text-right col-form-label block"
+                  >
+                    {{ "DurationContract" | translate }}
+                  </label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    id="ContPeriod"
+                    name="ContPeriod"
+                    formControlName="ContPeriod"
+                    autocomplete="off"
+                  />
+                </div>
+              </div>
+
+              <p
+                *ngIf="ContractModalCustom?.ContractType == 4"
+                class="text-danger fw-bold text-decoration-underline"
+              >
+                {{ "mainContract" | translate }}
+              </p>
+              <div
+                *ngIf="ContractModalCustom?.ContractType == 4"
+                class="col-sm-6 mb-0 mb-sm-3"
+              >
+                <div class="form-group">
+                  <label
+                    for="ContractorName"
+                    class="text-right col-form-label block"
+                  >
+                    {{ "Contractor's name" | translate }}
+                  </label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    id="ContractorName"
+                    name="ContractorName"
+                    formControlName="ContractorName"
+                    autocomplete="off"
+                  />
+                </div>
+              </div>
+
+              <div
+                *ngIf="ContractModalCustom?.ContractType == 4"
+                class="col-sm-6 mb-0 mb-sm-3"
+              >
+                <div class="form-group">
+                  <label
+                    for="ContDate"
+                    class="text-right col-form-label block"
+                  >
+                    {{ "ContractDate" | translate }}
+                  </label>
+                  <input
+                    name="date"
+                    type="text"
+                    class="form-control"
+                    bsDatepicker
+                    #dpr="bsDatepicker"
+                    formControlName="ContDate"
+                    autocomplete="off"
+                  />
+                </div>
+              </div>
+
+              <div class="col-sm-6 mb-0 mb-sm-3">
+                <div class="form-group">
+                  <label
+                    for="MaxPay"
+                    class="text-right col-form-label block"
+                  >
+                    {{ "maxCompensation" | translate }}
+                  </label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    id="MaxPay"
+                    name="MaxPay"
+                    formControlName="MaxPay"
+                    autocomplete="off"
+                  />
+                </div>
+              </div>
+
+              <div class="col-sm-6 mb-0 mb-sm-3">
+                <div class="form-group">
+                  <label
+                    for="ContractDurCommit"
+                    class="text-right col-form-label block"
+                  >
+                    {{ "periodCommitment" | translate }}
+                  </label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    id="ContractDurCommit"
+                    name="ContractDurCommit"
+                    formControlName="ContractDurCommit"
+                    autocomplete="off"
+                  />
+                </div>
+              </div>
+
+              <div class="col-sm-6 mb-0 mb-sm-3">
+                <div class="form-group">
+                  <label
+                    for="Design_Consultant_Rep"
+                    class="text-right col-form-label block"
+                  >
+                    {{ "consultantRepresent" | translate }}
+                  </label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    id="Design_Consultant_Rep"
+                    name="Design_Consultant_Rep"
+                    formControlName="Design_Consultant_Rep"
+                    autocomplete="off"
+                  />
+                </div>
+              </div>
+
+              <div class="col-sm-6 mb-0 mb-sm-3">
+                <div class="form-group">
+                  <label
+                    for="Owner"
+                    class="text-right col-form-label block"
+                  >
+                    {{ "RepresentOwner" | translate }}
+                  </label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    id="Owner"
+                    name="Owner"
+                    formControlName="Owner"
+                    autocomplete="off"
+                  />
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <div class="flex justify-between items-center flex-wrap">
+            <button
+              mat-button
+              matStepperPrevious
+              class="btn btn-outline-secondary"
+            >
+              {{ "Previous" | translate }}
+            </button>
+            <button mat-button matStepperNext class="bg-base text-white">
+              {{ "Next" | translate }}
+            </button>
+          </div>
+        </form>
+      </mat-step>
+      <!-- 5 -->
+      <mat-step>
+        <ng-template matStepLabel>{{
+          "ConditionsContract" | translate
+        }}</ng-template>
+        <div class="step-content">
+          <div class="editable shadow mb-4">
+            <table
+              class="table table-responsive table-striped table-bordered text-center"
+              style="vertical-align: middle; font-size: 14px"
+            >
+              <thead
+                class="bg-base text-white"
+                style="line-height: 30px; font-size: 13px"
+              >
+                <tr>
+                  <th>{{ "M" | translate }}</th>
+                  <th>{{ "TeamWorkCategories" | translate }}</th>
+                  <th>{{ "Specialization" | translate }}</th>
+                  <th>{{ "Number" | translate }}</th>
+                  <th>{{ "Notes" | translate }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="line-height: 5px">
+                  <td rowspan="3">1</td>
+                  <td rowspan="3">
+                    {{"مهندس"}}
+                  </td>
+                  <td>
+                    {{"كهرباء"}}
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      name="TeamWork_Num1"
+                      id="TeamWork_Num1"
+                      [(ngModel)]="ContractModalCustom.TeamWork_Num1"
+                      [ngModelOptions]="{standalone: true}"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      name="TeamWork_Note1"
+                      id="TeamWork_Note1"
+                      [(ngModel)]="ContractModalCustom.TeamWork_Note1"
+                      [ngModelOptions]="{standalone: true}"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    {{"ميكانيكا"}}
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      name="TeamWork_Num2"
+                      id="TeamWork_Num2"
+                      [(ngModel)]="ContractModalCustom.TeamWork_Num2"
+                      [ngModelOptions]="{standalone: true}"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      name="TeamWork_Note2"
+                      id="TeamWork_Note2"
+                      [(ngModel)]="ContractModalCustom.TeamWork_Note2"
+                      [ngModelOptions]="{standalone: true}"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    {{"معمار"}}
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      name="TeamWork_Num3"
+                      id="TeamWork_Num3"
+                      [(ngModel)]="ContractModalCustom.TeamWork_Num3"
+                      [ngModelOptions]="{standalone: true}"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      name="TeamWork_Note3"
+                      id="TeamWork_Note3"
+                      [(ngModel)]="ContractModalCustom.TeamWork_Note3"
+                      [ngModelOptions]="{standalone: true}"
+                    />
+                  </td>
+                </tr>
+                <tr style="line-height: 5px">
+                  <td rowspan="3">2</td>
+                  <td rowspan="3">
+                    {{"فني"}}
+                  </td>
+                  <td>
+                    {{"كهرباء"}}
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      name="TeamWork_Num4"
+                      id="TeamWork_Num4"
+                      [(ngModel)]="ContractModalCustom.TeamWork_Num4"
+                      [ngModelOptions]="{standalone: true}"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      name="TeamWork_Note4"
+                      id="TeamWork_Note4"
+                      [(ngModel)]="ContractModalCustom.TeamWork_Note4"
+                      [ngModelOptions]="{standalone: true}"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    {{"ميكانيكا"}}
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      name="TeamWork_Num5"
+                      id="TeamWork_Num5"
+                      [(ngModel)]="ContractModalCustom.TeamWork_Num5"
+                      [ngModelOptions]="{standalone: true}"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      name="TeamWork_Note5"
+                      id="TeamWork_Note5"
+                      [(ngModel)]="ContractModalCustom.TeamWork_Note5"
+                      [ngModelOptions]="{standalone: true}"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    {{"معمار"}}
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      name="TeamWork_Num6"
+                      id="TeamWork_Num6"
+                      [(ngModel)]="ContractModalCustom.TeamWork_Num6"
+                      [ngModelOptions]="{standalone: true}"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      name="TeamWork_Note6"
+                      id="TeamWork_Note6"
+                      [(ngModel)]="ContractModalCustom.TeamWork_Note6"
+                      [ngModelOptions]="{standalone: true}"
+                    />
+                  </td>
+                </tr>
+                <tr style="line-height: 5px">
+                  <td>3</td>
+                  <td>
+                    {{"إداري"}}
+                  </td>
+                  <td>
+
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      name="TeamWork_Num7"
+                      id="TeamWork_Num7"
+                      [(ngModel)]="ContractModalCustom.TeamWork_Num7"
+                      [ngModelOptions]="{standalone: true}"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      name="TeamWork_Note7"
+                      id="TeamWork_Note7"
+                      [(ngModel)]="ContractModalCustom.TeamWork_Note7"
+                      [ngModelOptions]="{standalone: true}"
+                    />
+                  </td>
+                </tr>
+                <tr style="line-height: 5px">
+                  <td>4</td>
+                  <td>
+                    {{"مشرف"}}
+                  </td>
+                  <td>
+
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      name="TeamWork_Num8"
+                      id="TeamWork_Num8"
+                      [(ngModel)]="ContractModalCustom.TeamWork_Num8"
+                      [ngModelOptions]="{standalone: true}"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      name="TeamWork_Note8"
+                      id="TeamWork_Note8"
+                      [(ngModel)]="ContractModalCustom.TeamWork_Note8"
+                      [ngModelOptions]="{standalone: true}"
+                    />
+                  </td>
+                </tr>
+                <tr style="line-height: 5px">
+                  <td>5</td>
+                  <td>
+                    {{"محاسب"}}
+                  </td>
+                  <td>
+
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      name="TeamWork_Num9"
+                      id="TeamWork_Num9"
+                      [(ngModel)]="ContractModalCustom.TeamWork_Num9"
+                      [ngModelOptions]="{standalone: true}"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      name="TeamWork_Note9"
+                      id="TeamWork_Note9"
+                      [(ngModel)]="ContractModalCustom.TeamWork_Note9"
+                      [ngModelOptions]="{standalone: true}"
+                    />
+                  </td>
+                </tr>
+                <tr style="line-height: 5px">
+                  <td>6</td>
+                  <td>
+                    {{"عمالة"}}
+                  </td>
+                  <td>
+
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      name="TeamWork_Num10"
+                      id="TeamWork_Num10"
+                      [(ngModel)]="ContractModalCustom.TeamWork_Num10"
+                      [ngModelOptions]="{standalone: true}"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      name="TeamWork_Note10"
+                      id="TeamWork_Note10"
+                      [(ngModel)]="ContractModalCustom.TeamWork_Note10"
+                      [ngModelOptions]="{standalone: true}"
+                    />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="flex justify-between items-center flex-wrap">
+          <button
+            mat-button
+            matStepperPrevious
+            class="btn btn-outline-secondary"
+          >
+            {{ "Previous" | translate }}
+          </button>
+          <button mat-button matStepperNext class="bg-base text-white">
+            {{ "Next" | translate }}
+          </button>
+        </div>
+      </mat-step>
+      <!-- 6 -->
+      <mat-step>
+        <ng-template matStepLabel
+          >{{ "ConditionsContract" | translate }}
+        </ng-template>
+        <div class="step-content">
+          <div class="row mb-3">
+            <div class="row mb-3">
+              <h3 class="flex items-center justify-start fw-bold">
+                {{ "Add a new stage" | translate }}
+                <button
+                  type="button "
+                  class="add-btn mx-2"
+                  (click)="addStage()"
+                >
+                  <i class="fa fa-plus"></i>
+                </button>
+              </h3>
+              <div class="editable shadow mb-4">
+                <table
+                  class="table table-responsive table-striped table-bordered text-center"
+                  style="vertical-align: middle; font-size: 14px"
+                >
+                  <thead
+                    class="bg-base text-white"
+                    style="line-height: 30px; font-size: 13px"
+                  >
+                    <tr>
+                      <th>{{ "M" | translate }}</th>
+                      <th>{{ "stage" | translate }}</th>
+                      <th>{{ "description" | translate }}</th>
+                      <th>{{ "BeginningPeriod" | translate }}</th>
+                      <th>{{ "periodEnd" | translate }}</th>
+                      <th>{{ "action" | translate }}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      *ngFor="let item of stage; let i = index"
+                      style="line-height: 5px"
+                    >
+                      <td>{{  item.idRow }}</td>
+
+                      <td>
+                        <input
+                          type="text"
+                          name="stage{{ item.idRow }}"
+                          [(ngModel)]="item.stage"
+                          [ngModelOptions]="{standalone: true}"
+                          autocomplete="off"
+                          />
+                      </td>
+
+                      <td>
+                        <input
+                          type="text"
+                          name="description{{ item.idRow }}"
+                          [(ngModel)]="item.description"
+                          [ngModelOptions]="{standalone: true}"
+                          autocomplete="off"
+                        />
+                      </td>
+
+                      <td>
+                        <input
+                          placeholder="{{ 'BeginningPeriod' | translate }}"
+                          name="BeginningPeriod{{ item.idRow }}"
+                          type="text"
+                          class="form-control"
+                          bsDatepicker
+                          #dpr="bsDatepicker"
+                          [(ngModel)]="item.BeginningPeriod"
+                          [ngModelOptions]="{standalone: true}"
+                          autocomplete="off"
+                        />
+                      </td>
+
+                      <td>
+                        <input
+                          placeholder="{{ 'periodEnd' | translate }}"
+                          name="periodEnd {{ item.idRow }}"
+                          type="text"
+                          class="form-control"
+                          bsDatepicker
+                          #dpr="bsDatepicker"
+                          [(ngModel)]="item.periodEnd"
+                          [ngModelOptions]="{standalone: true}"
+                          autocomplete="off"
+                        />
+                      </td>
+
+                      <td>
+                        <button
+                          class="p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white w-10"
+                          (click)="deleteStage(item.idRow)"
+                        >
+                          <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex justify-between items-center flex-wrap">
+          <button
+            mat-button
+            matStepperPrevious
+            class="btn btn-outline-secondary"
+          >
+            {{ "Previous" | translate }}
+          </button>
+          <button mat-button matStepperNext class="bg-base text-white">
+            {{ "Next" | translate }}
+          </button>
+        </div>
+      </mat-step>
+      <!-- 7 -->
+      <mat-step [stepControl]="FormGroup07">
+        <form [formGroup]="FormGroup07">
+          <ng-template matStepLabel>{{
+            "FeesPayment" | translate
+          }}</ng-template>
+          <div class="step-content">
+            <div class="row align-items-end mb-4">
+              <div class="col-sm-6 col-md-4 mb-0 mb-sm-3">
+                <div class="form-group">
+                  <label
+                    for="Cons_TotalFees"
+                    class="text-right col-form-label block"
+                  >
+                    {{ "totalFees" | translate }}
+                  </label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    id="Cons_TotalFees"
+                    name="Cons_TotalFees"
+                    formControlName="Cons_TotalFees"
+                    autocomplete="off"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-between items-center flex-wrap">
+            <button
+              mat-button
+              matStepperPrevious
+              class="btn btn-outline-secondary"
+            >
+              {{ "Previous" | translate }}
+            </button>
+            <button  [disabled]="disableButtonSave_Contract"
+            (click)="saveContractbtn();"
+             mat-button class="bg-base text-white">
+              {{ "save" | translate }}
+            </button>
+          </div>
+        </form>
+      </mat-step>
+    </mat-stepper>
+  </div>
+  </div>
+
+
+
+  <!-- serviceDetails -->
+  <ng-template #serviceDetailsModal let-modal>
+    <div
+      style="background-color: var(--base-color)"
+      class="modal-header text-white flex justify-between items-center"
+    >
+      <h4 class="m-0">
+        <span class="text-2xl">{{ "serviceDetails" | translate }}</span>
+      </h4>
+      <button
+        type="button"
+        class="text-2xl text-white m-0"
+        (click)="modal.dismiss()"
+      >
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <ul class="service_item_details">
+        <li *ngFor="let item of serviceDetails">
+          <i
+          class="fa fa-check text-success"></i>
+         <span class="text-base mx-2">{{ item?.name }}</span>
+        </li>
+      </ul>
+      <!-- <div
+        class="flex gap-2 pt-3 border-t border-neutral-300 col-span-1 md:col-span-2 mt-2"
+      >
+        <button (click)="modal?.dismiss()" class="btn btn-secondary">
+          {{ "Back" | translate }}
+        </button>
+      </div> -->
+    </div>
+  </ng-template>
+
+  <!-- servicesListModal_Contract -->
+<ng-template #servicesListModal_Contract let-modal>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="m-0">
+      <span class="text-2xl">{{ "servicesList" | translate }}</span>
+    </h4>
+    <button
+      type="button"
+      class="text-2xl text-white m-0"
+      (click)="modal.dismiss()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body" style="overflow-y: scroll;max-height: 600px;">
+    <mat-form-field class="w-full">
+      <mat-label>{{ "search" | translate }}</mat-label>
+      <input matInput (keyup)="applyFilterServiceList_ContractNew($event)" #input />
+    </mat-form-field>
+
+    <div class="table">
+      <table
+        mat-table
+        [dataSource]="serviceListDataSource_ContractNew"
+        class="mat-elevation-z8 table table-responsive table-striped table-bordered text-center"
+        style="vertical-align: middle; font-size: 14px"
+      >
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ "ServiceName" | translate }}
+          </th>
+          <td mat-cell *matCellDef="let element">{{ element.servicesName }}</td>
+        </ng-container>
+
+        <!-- price Column -->
+        <ng-container matColumnDef="price">
+          <th mat-header-cell *matHeaderCellDef>{{ "price" | translate }}</th>
+          <td mat-cell *matCellDef="let element">{{ element.amount }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="servicesListdisplayedColumns"></tr>
+        <tr
+          mat-row
+          *matRowDef="
+            let row;
+            let i = index;
+            columns: servicesListdisplayedColumns
+          "
+          (dblclick)="setServiceRowValue_ContractNew(row); modal.dismiss()"
+        ></tr>
+
+        <!-- Row shown when there is no matching data. -->
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="4">
+            {{ "noResult" | translate }} "{{ input.value }}"
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="text-end mt-2">
+      <button (click)="modal?.dismiss()" class="btn btn-secondary">
+        {{ "Back" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+  <!-- addInstallment -->
+  <ng-template #addInstallmentModal let-modal>
+    <div
+      style="background-color: var(--base-color)"
+      class="modal-header text-white flex justify-between items-center"
+    >
+      <h4 class="m-0">
+        <span class="text-2xl">{{ "AddInstallments" | translate }}</span>
+      </h4>
+      <button
+        type="button"
+        class="text-2xl text-white m-0"
+        (click)="modal.dismiss()"
+      >
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form #form="ngForm">
+        <div class="row">
+          <div class="col-md-6 col-lg-3 mb-3">
+            <div class="form-group">
+              <label
+                for="ContractAmount"
+                class="text-right col-form-label block"
+              >
+                {{ "Contract amount" | translate }}
+              </label>
+              <input
+                ngModel
+                class="form-control"
+                type="number"
+                id="ContractAmount"
+                name="ContractAmount"
+              />
+            </div>
+          </div>
+
+          <div class="col-md-6 col-lg-3 mb-3">
+            <div class="form-group">
+              <label class="text-right col-form-label block">
+                {{ "The beginning of the installments" | translate }}
+              </label>
+              <div class="form-group timeInput">
+                <input
+                  ngModel
+                  name="installmentsStartDate"
+                  type="text"
+                  class="form-control"
+                  bsDatepicker
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-lg-3 mb-3">
+            <div class="form-group">
+              <label class="text-right col-form-label block">
+                {{ "Start of installments (Hijri)" | translate }}
+              </label>
+              <div class="form-group">
+                <hijri-gregorian-datepicker
+                  [(selectedDate)]="selectedDate"
+                  [hijriLabel]="'Hijri'"
+                  [selectedDateType]="selectedDateType"
+                  [dir]="'dir' | translate"
+                >
+                </hijri-gregorian-datepicker>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-lg-3 mb-3">
+            <div class="form-group">
+              <label for="payment" class="text-right col-form-label block">
+                {{ "Down payment value" | translate }}
+              </label>
+              <input
+                ngModel
+                class="form-control"
+                type="number"
+                id="payment"
+                name="payment"
+              />
+            </div>
+          </div>
+
+          <div class="periority mt-4 mb-2">
+            <label for="payment" class="text-right col-form-label block">
+              {{ "Basis for payment" | translate }}
+            </label>
+
+            <mat-radio-group
+              class="flex gap-4"
+              aria-label="Select an option"
+              name="status"
+            >
+              <mat-radio-button value="1" class="text-warning">{{
+                "Georgie" | translate
+              }}</mat-radio-button>
+              <mat-radio-button value="2" class="text-success">{{
+                "Hijri" | translate
+              }}</mat-radio-button>
+            </mat-radio-group>
+          </div>
+
+          <div class="periority mt-4 mb-2">
+            <label for="payment" class="text-right col-form-label block">
+              {{ "Method of Payment" | translate }}
+            </label>
+
+            <mat-radio-group
+              class="flex gap-4"
+              aria-label="Select an option"
+              name="status"
+            >
+              <mat-radio-button value="1" class="text-warning">{{
+                "Monthly" | translate
+              }}</mat-radio-button>
+              <mat-radio-button value="2" class="text-success">{{
+                "by duration" | translate
+              }}</mat-radio-button>
+              <mat-radio-button value="3" class="text-danger">{{
+                "period with the month" | translate
+              }}</mat-radio-button>
+            </mat-radio-group>
+          </div>
+
+          <div class="periority mt-4 mb-2">
+            <label for="payment" class="text-right col-form-label block">
+              {{ "Installment calculation method" | translate }}
+            </label>
+
+            <mat-radio-group
+              class="flex gap-4"
+              aria-label="Select an option"
+              name="status"
+            >
+              <mat-radio-button value="1" class="text-warning">{{
+                "Depending on the number of installments" | translate
+              }}</mat-radio-button>
+              <mat-radio-button value="2" class="text-success">{{
+                "Depending on the premium value" | translate
+              }}</mat-radio-button>
+            </mat-radio-group>
+          </div>
+
+          <div class="col-md-6 col-lg-4 mb-3">
+            <div class="form-group">
+              <label
+                for="monthlyInstallment"
+                class="text-right col-form-label block"
+              >
+                {{ "monthly installment" | translate }}
+              </label>
+              <input
+                ngModel
+                class="form-control"
+                type="number"
+                id="monthlyInstallment"
+                name="monthlyInstallment"
+              />
+            </div>
+          </div>
+
+          <div class="col-md-6 col-lg-4 mb-3">
+            <div class="form-group">
+              <label
+                for="numberOfInstallments"
+                class="text-right col-form-label block"
+              >
+                {{ "number of installments" | translate }}
+              </label>
+              <input
+                ngModel
+                class="form-control"
+                type="number"
+                id="numberOfInstallments"
+                name="numberOfInstallments"
+              />
+            </div>
+          </div>
+
+          <div class="col-md-6 col-lg-4 mb-3">
+            <div class="form-group">
+              <label
+                for="latestInstallment"
+                class="text-right col-form-label block"
+              >
+                {{ "latest installment" | translate }}
+              </label>
+              <input
+                ngModel
+                class="form-control"
+                type="number"
+                id="latestInstallment"
+                name="latestInstallment"
+              />
+            </div>
+          </div>
+        </div>
+      </form>
+      <div class="flex gap-2 pt-3 border-t border-neutral-300 justify-end">
+        <button
+          (click)="addInstallments(form.value); modal?.dismiss()"
+          class="btn bg-base text-white"
+        >
+          {{ "confirem" | translate }}
+        </button>
+
+        <button (click)="modal?.dismiss()" class="btn btn-secondary">
+          {{ "Back" | translate }}
+        </button>
+      </div>
+    </div>
+  </ng-template>
+
+  <!-- confirm MergeInvoiceDataModal Modal -->
+<ng-template #MergeInvoiceDataModal let-modal>
+  <div class="modal-body text-center">
+    <p [translate]="'name'" [translateParams]="{
+        ar: 'سيتم دمج الفاتورة الصادرة مسبقا علي المشروع من ضمن العقد و ترحيلها مباشرة',
+        en: 'The invoice previously issued for the project will be merged into the contract and posted directly'
+      }"></p>
+    <div class="flex gap-2 justify-center">
+      <button type="button" mat-raised-button color="warn" (click)="ConfirmMergeInvoice(2); modal.dismiss()">
+        {{ "Yes" | translate }}
+      </button>
+      <button type="button" (click)="modal.dismiss()" mat-raised-button color="basic">
+        {{ "No" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>

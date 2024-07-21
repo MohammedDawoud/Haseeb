@@ -1,0 +1,1340 @@
+<div class="services pb-4">
+  <app-navigator [title]="title"></app-navigator>
+  <div class="max-w-xs">
+    <label class="col-form-label"> {{ "Customer" | translate }}</label>
+
+    <!-- <ng-select class="w-full p-0" placeholder="{{ 'Chose' | translate }}" [(ngModel)]="select.selected"
+      (ngModelChange)="getCustomersAccount($event)" [ngModelOptions]="{ standalone: true }">
+      <ng-option *ngFor="let customer of select.mobileSelect" [value]="customer">{{ customer.Name }}</ng-option>
+    </ng-select> -->
+
+    <ng-select
+      #CustomerName
+      [items]="load_CustomerSelect2Mails"
+      bindLabel="name"
+      bindValue="id"
+      [clearable]="false"
+      class="w-full p-0"
+      [(ngModel)]="CustomerId"
+      [ngModelOptions]="{ standalone: true }"
+      (change)="getCustomers($event)"
+      placeholder="{{ 'Chose' | translate }}"
+    >
+    </ng-select>
+  </div>
+  <mat-tab-group animationDuration="400ms">
+    <mat-tab label="{{ 'Email Messages' | translate }}">
+      <!-- buttons -->
+      <div class="flex justify-between gap-2 items-center my-3 flex-wrap">
+        <div class="w-fit">
+          <input
+            class="form-control"
+            (keyup)="applyFilter($event)"
+            placeholder="{{ 'search' | translate }}"
+            #input
+          />
+        </div>
+        <div class="flex gap-2 controler flex-wrap">
+          <button
+            (click)="openModal(sendMessage, null, 'sendEmails')"
+            class="flex gap-1 btn btn-primary"
+            [disabled]="OrganizationData?.sendCustomerMail == false"
+          >
+            <span
+              [translate]="'name'"
+              [translateParams]="{
+                ar: 'ارسال لأكثر من شخص',
+                en: 'Send to Many'
+              }"
+            >
+            </span>
+            <i class="fa-solid fa-envelope-circle-check"></i>
+          </button>
+          <button
+            [disabled]="
+              !selectedCustomer.id || OrganizationData?.sendCustomerMail == false
+            "
+            (click)="openModal(sendMessage, null, 'sendEmail')"
+            class="flex gap-1 btn btn-primary"
+          >
+            <span
+              [translate]="'name'"
+              [translateParams]="{
+                ar: 'ارسال بريد',
+                en: 'Send Mail'
+              }"
+            ></span>
+            <i class="fa-solid fa-envelope"></i>
+          </button>
+        </div>
+      </div>
+      <!-- table -->
+      <div class="overflow-auto">
+        <table
+          mat-table
+          [dataSource]="data.mail"
+          matSort
+          #mailSort
+          class="mat-elevation-z8 rounded-t-lg overflow-hidden w-max"
+        >
+          <ng-container matColumnDef="date">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              <span
+                [translate]="'name'"
+                [translateParams]="{
+                  ar: 'التاريخ',
+                  en: 'Date'
+                }"
+              ></span>
+            </th>
+            <td mat-cell *matCellDef="let element">{{ element.date }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="sender">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              <span
+                [translate]="'name'"
+                [translateParams]="{
+                  ar: 'مرسل',
+                  en: 'Sender'
+                }"
+              ></span>
+            </th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.senderUserName }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="addressMessage">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              <span
+                [translate]="'name'"
+                [translateParams]="{
+                  ar: 'عنوان الرسالة',
+                  en: 'Address Message'
+                }"
+              ></span>
+            </th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.mailSubject }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="messageContain">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              <span
+                [translate]="'name'"
+                [translateParams]="{
+                  ar: 'محتوى الرسالة',
+                  en: 'Message Contain'
+                }"
+              ></span>
+            </th>
+            <td mat-cell *matCellDef="let element">{{ element.mailText }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="operations">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              [translate]="'name'"
+              [translateParams]="{
+                ar: 'خيارات',
+                en: 'Operations'
+              }"
+            ></th>
+            <td mat-cell *matCellDef="let element">
+              <div class="flex gap-1 justify-center py-2">
+                <button
+                  (click)="openModal(deleteEmail, element, 'delete')"
+                  class="p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white aspect-square w-10"
+                >
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns.email"></tr>
+          <tr
+            mat-row
+            *matRowDef="let row; columns: displayedColumns.email"
+            class="duration-300 hover:bg-slate-100"
+          ></tr>
+          <!-- Row shown when there is no matching data. -->
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">
+              {{ "No result found for " }} "{{ input.value }}"
+            </td>
+          </tr>
+        </table>
+      </div>
+      <mat-paginator #mailPaginator [pageSizeOptions]="[10, 25, 100]">
+      </mat-paginator>
+    </mat-tab>
+    <mat-tab label="{{ 'SMS Messages' | translate }}">
+      <!-- buttons -->
+      <div class="flex justify-between gap-2 items-center my-3 flex-wrap">
+        <div class="w-fit">
+          <input
+            class="form-control"
+            (keyup)="applyFilter($event)"
+            placeholder="{{ 'search' | translate }}"
+            #input
+          />
+        </div>
+        <div class="flex gap-2 controler flex-wrap">
+          <button
+            (click)="openModal(sendMessage, null, 'sendSmss')"
+            class="flex gap-1 btn btn-primary"
+            [disabled]="OrganizationData?.sendCustomerSMS == false"
+          >
+            <span
+              [translate]="'name'"
+              [translateParams]="{
+                ar: 'ارسال لأكثر من شخص',
+                en: 'Send to Many'
+              }"
+            >
+            </span>
+            <i class="fa-solid fa-envelope-circle-check"></i>
+          </button>
+          <button
+            [disabled]="
+              !selectedCustomer.id || OrganizationData?.sendCustomerSMS == false
+            "
+            (click)="openModal(sendMessage, null, 'sendSms')"
+            class="flex gap-1 btn btn-primary"
+          >
+            <span
+              [translate]="'name'"
+              [translateParams]="{
+                ar: 'ارسال SMS',
+                en: 'Send SMS'
+              }"
+            ></span>
+            <i class="fa-solid fa-envelope"></i>
+          </button>
+        </div>
+      </div>
+      <div class="overflow-auto">
+        <table
+          mat-table
+          [dataSource]="data.sms"
+          matSort
+          #smsSort
+          class="mat-elevation-z8 rounded-t-lg overflow-hidden w-max"
+        >
+          <ng-container matColumnDef="date">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              <span
+                [translate]="'name'"
+                [translateParams]="{
+                  ar: 'التاريخ',
+                  en: 'Date'
+                }"
+              ></span>
+            </th>
+            <td mat-cell *matCellDef="let element">{{ element.date }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="sender">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              <span
+                [translate]="'name'"
+                [translateParams]="{
+                  ar: 'مرسل',
+                  en: 'Sender'
+                }"
+              ></span>
+            </th>
+            <td mat-cell *matCellDef="let element">{{ element.sender }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="messageContain">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              <span
+                [translate]="'name'"
+                [translateParams]="{
+                  ar: 'محتوى الرسالة',
+                  en: 'Message Contain'
+                }"
+              ></span>
+            </th>
+            <td mat-cell *matCellDef="let element">{{ element.content }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="operations">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              [translate]="'name'"
+              [translateParams]="{
+                ar: 'خيارات',
+                en: 'Operations'
+              }"
+            ></th>
+            <td mat-cell *matCellDef="let element">
+              <div class="flex gap-1 justify-center py-2">
+                <button
+                  (click)="openModal(deleteEmail, element, 'delete')"
+                  class="p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white aspect-square w-10"
+                >
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Symbol Column -->
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns.sms"></tr>
+
+          <tr
+            mat-row
+            *matRowDef="let row; columns: displayedColumns.sms"
+            class="duration-300 hover:bg-slate-100"
+          ></tr>
+          <!-- Row shown when there is no matching data. -->
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">
+              {{ "No result found for " }} "{{ input.value }}"
+            </td>
+          </tr>
+        </table>
+      </div>
+      <mat-paginator #smsPaginator [pageSizeOptions]="[10, 25, 100]">
+      </mat-paginator>
+    </mat-tab>
+    <mat-tab label="{{ 'Current Projects' | translate }}">
+      <div class="w-fit my-3">
+        <input
+          class="form-control"
+          (keyup)="applyFilter($event)"
+          placeholder="{{ 'search' | translate }}"
+          #input
+        />
+      </div>
+      <div class="overflow-auto">
+        <table
+          mat-table
+          [dataSource]="data.currentProjects"
+          #currentProjectsSort
+          matSort
+          class="mat-elevation-z8 rounded-t-lg overflow-hidden w-max"
+        >
+          <ng-container matColumnDef="ProjectNumber">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              <span
+                [translate]="'name'"
+                [translateParams]="{
+                  ar: 'رقم المشروع',
+                  en: 'Project Number'
+                }"
+              ></span>
+            </th>
+            <td mat-cell *matCellDef="let element">{{ element.projectNo }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="Projecttype">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              <span
+                [translate]="'name'"
+                [translateParams]="{
+                  ar: 'نوع المشروع',
+                  en: 'Project Type'
+                }"
+              ></span>
+            </th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.projectTypesName }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="SubProjecttype">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              <span
+                [translate]="'name'"
+                [translateParams]="{
+                  ar: 'نوع المشروع الفرعي',
+                  en: 'Sub Project type'
+                }"
+              ></span>
+            </th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.projectSubTypeName }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="Site">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              [translate]="'name'"
+              [translateParams]="{
+                ar: 'الموقع',
+                en: 'Site'
+              }"
+            ></th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.generalLocation }}
+            </td>
+          </ng-container>
+
+          <!-- Symbol Column -->
+
+          <tr
+            mat-header-row
+            *matHeaderRowDef="displayedColumns.currentProjects"
+          ></tr>
+
+          <tr
+            mat-row
+            *matRowDef="let row; columns: displayedColumns.currentProjects"
+            class="duration-300 hover:bg-slate-100"
+          ></tr>
+          <!-- Row shown when there is no matching data. -->
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">
+              {{ "No result found for " }} "{{ input.value }}"
+            </td>
+          </tr>
+        </table>
+        <mat-paginator
+          #currentProjectsPaginator
+          [pageSizeOptions]="[10, 25, 100]"
+        >
+        </mat-paginator>
+      </div>
+    </mat-tab>
+    <mat-tab label="{{ 'Archived Projects' | translate }}">
+      <div class="my-3 w-fit">
+        <input
+          class="form-control"
+          (keyup)="applyFilter($event)"
+          placeholder="{{ 'search' | translate }}"
+          #input
+        />
+      </div>
+      <div class="overflow-auto">
+        <table
+          mat-table
+          [dataSource]="data.archievedProjects"
+          #archievedProjectsSort
+          matSort
+          class="mat-elevation-z8 rounded-t-lg overflow-hidden w-max"
+        >
+          <ng-container matColumnDef="date">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              <span
+                [translate]="'name'"
+                [translateParams]="{
+                  ar: 'التاريخ',
+                  en: 'Date'
+                }"
+              ></span>
+            </th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.dateOfFinish }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="ProjectNumber">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              <span
+                [translate]="'name'"
+                [translateParams]="{
+                  ar: 'رقم المشروع',
+                  en: 'Project Number'
+                }"
+              ></span>
+            </th>
+            <td mat-cell *matCellDef="let element">{{ element.projectNo }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="Projecttype">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              <span
+                [translate]="'name'"
+                [translateParams]="{
+                  ar: 'نوع المشروع',
+                  en: 'Project Type'
+                }"
+              ></span>
+            </th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.projectTypesName }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="SubProjecttype">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              <span
+                [translate]="'name'"
+                [translateParams]="{
+                  ar: 'نوع المشروع الفرعي',
+                  en: 'Sub Project type'
+                }"
+              ></span>
+            </th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.projectSubTypeName }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="Site">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              [translate]="'name'"
+              [translateParams]="{
+                ar: 'الموقع',
+                en: 'Site'
+              }"
+            ></th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.generalLocation }}
+            </td>
+          </ng-container>
+
+          <!-- Symbol Column -->
+
+          <tr
+            mat-header-row
+            *matHeaderRowDef="displayedColumns.archievedProjects"
+          ></tr>
+
+          <tr
+            mat-row
+            *matRowDef="let row; columns: displayedColumns.archievedProjects"
+            class="duration-300 hover:bg-slate-100"
+          ></tr>
+          <!-- Row shown when there is no matching data. -->
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">
+              {{ "No result found for " }} "{{ input.value }}"
+            </td>
+          </tr>
+        </table>
+      </div>
+      <mat-paginator
+        #archievedProjectsPaginator
+        [pageSizeOptions]="[10, 25, 100]"
+      >
+      </mat-paginator>
+    </mat-tab>
+    <mat-tab label="{{ 'Documents' | translate }}">
+      <div class="flex justify-between gap-2 items-center my-3 flex-wrap">
+        <div class="w-fit">
+          <input
+            class="form-control"
+            (keyup)="applyFilter($event)"
+            placeholder="{{ 'search' | translate }}"
+            #input
+          />
+        </div>
+        <div class="controler">
+          <button
+            [disabled]="!selectedCustomer.id"
+            (click)="open(addFile, null, 'addFile'); resetdatafile()"
+            class="flex gap-1 btn btn-primary"
+          >
+            <span
+              [translate]="'name'"
+              [translateParams]="{
+                ar: 'إضاقة مستند',
+                en: 'Add Document'
+              }"
+            ></span>
+            <i class="fa-solid fa-file-invoice"></i>
+          </button>
+        </div>
+      </div>
+      <div class="overflow-auto">
+        <table
+          mat-table
+          [dataSource]="data.files"
+          #filesSort
+          matSort
+          class="mat-elevation-z8 rounded-t-lg overflow-hidden w-max"
+        >
+          <ng-container matColumnDef="ModelName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              <span
+                [translate]="'name'"
+                [translateParams]="{
+                  ar: 'اسم الملف',
+                  en: 'Model Name'
+                }"
+              ></span>
+            </th>
+            <td mat-cell *matCellDef="let element">{{ element.fileName }}</td>
+          </ng-container>
+          <ng-container matColumnDef="Description">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              <span
+                [translate]="'name'"
+                [translateParams]="{
+                  ar: 'الوصف',
+                  en: 'Description'
+                }"
+              ></span>
+            </th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.description }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="User">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              <span
+                [translate]="'name'"
+                [translateParams]="{
+                  ar: 'المستخدم',
+                  en: 'User'
+                }"
+              ></span>
+            </th>
+            <td mat-cell *matCellDef="let element">{{ element.userName }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="UploadDate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              <span
+                [translate]="'name'"
+                [translateParams]="{
+                  ar: 'تاريخ الرفع',
+                  en: 'UploadDate'
+                }"
+              ></span>
+            </th>
+            <td mat-cell *matCellDef="let element">{{ element.uploadDate }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="FileType">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              <span
+                [translate]="'name'"
+                [translateParams]="{
+                  ar: 'نوع الملف',
+                  en: 'File Type'
+                }"
+              ></span>
+            </th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.fileTypeName }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="operations">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              [translate]="'name'"
+              [translateParams]="{
+                ar: 'خيارات',
+                en: 'Operations'
+              }"
+            ></th>
+            <td mat-cell *matCellDef="let element">
+              <div class="flex gap-1 justify-center py-2">
+                <a
+                  (click)="openNewWindow(element)"
+                  class="p-2 bg-sky-100 hover:bg-sky-500 text-center rounded-lg duration-300 hover:text-white aspect-square w-10"
+                >
+                  <i class="fa-solid fa-eye"></i>
+                </a>
+                <button
+                  (click)="openModal(deleteFile, element, 'delete')"
+                  class="p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white aspect-square w-10"
+                >
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Symbol Column -->
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns.files"></tr>
+
+          <tr
+            mat-row
+            *matRowDef="let row; columns: displayedColumns.files"
+            class="duration-300 hover:bg-slate-100"
+          ></tr>
+          <!-- Row shown when there is no matching data. -->
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">
+              {{ "No result found for " }} "{{ input.value }}"
+            </td>
+          </tr>
+        </table>
+      </div>
+      <mat-paginator #filesPaginator [pageSizeOptions]="[10, 25, 100]">
+      </mat-paginator>
+    </mat-tab>
+  </mat-tab-group>
+
+  <!-- modal -->
+  <!-- confirm delete -->
+  <ng-template #deleteFile>
+    <div class="modal-body text-center">
+      <p
+        [translate]="'name'"
+        [translateParams]="{
+          ar: 'هل تريد بالتأكيد حذف هذا الصف',
+          en: 'Are you sure to delete this row ?'
+        }"
+      ></p>
+      <div class="flex gap-2 justify-center">
+        <button
+          type="button"
+          mat-raised-button
+          color="warn"
+          (click)="deleteFiles()"
+        >
+          {{ "Yes" | translate }}
+        </button>
+        <button
+          type="button"
+          (click)="modal?.hide()"
+          mat-raised-button
+          color="basic"
+        >
+          {{ "No" | translate }}
+        </button>
+      </div>
+    </div>
+  </ng-template>
+
+  <!-- confirm deleteFileTypes -->
+  <ng-template #deleteFileTypes let-modal>
+    <div class="modal-body text-center">
+      <p
+        [translate]="'name'"
+        [translateParams]="{
+          ar: 'هل تريد بالتأكيد حذف هذا الصف',
+          en: 'Are you sure to delete this row ?'
+        }"
+      ></p>
+      <div class="flex gap-2 justify-center">
+        <button
+          type="button"
+          mat-raised-button
+          color="warn"
+          (click)="deleteFileType(); modal?.dismiss()"
+        >
+          {{ "Yes" | translate }}
+        </button>
+        <button
+          type="button"
+          (click)="modal?.hide()"
+          mat-raised-button
+          color="basic"
+        >
+          {{ "No" | translate }}
+        </button>
+      </div>
+    </div>
+  </ng-template>
+
+  <!-- confirm delete -->
+  <ng-template #deleteEmail>
+    <div class="modal-body text-center">
+      <p
+        [translate]="'name'"
+        [translateParams]="{
+          ar: 'هل تريد بالتأكيد حذف هذا الصف',
+          en: 'Are you sure to delete this row ?'
+        }"
+      ></p>
+      <div class="flex gap-2 justify-center">
+        <button
+          type="button"
+          mat-raised-button
+          color="warn"
+          (click)="deleteEmails()"
+        >
+          {{ "Yes" | translate }}
+        </button>
+        <button
+          type="button"
+          (click)="modal?.hide()"
+          mat-raised-button
+          color="basic"
+        >
+          {{ "No" | translate }}
+        </button>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #sendMessage>
+    <div
+      class="modal-header bg-base text-white flex justify-between items-center"
+    >
+      <h4 class="m-0">
+        <span class="text-2xl">{{ modalDetails.type | translate }}</span>
+      </h4>
+      <button
+        type="button"
+        class="text-2xl text-white m-0"
+        (click)="modal?.hide()"
+      >
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <ng-container>
+        <form
+          class="grid gap-3 grid-cols-1 md:grid-cols-2"
+          #messageForm="ngForm"
+        >
+          <div
+            class="form-group"
+            *ngIf="
+              modalDetails.type == 'sendEmails' ||
+              modalDetails.type == 'sendEmail'
+            "
+          >
+            <label for="from" class="text-right col-form-label block">
+              {{ "From" | translate }}
+            </label>
+            <input
+              required
+              #from="ngModel"
+              id="OrginzationEmail"
+              name="OrginzationEmail"
+              class="form-control"
+              type="text"
+              [(ngModel)]="getEmailOrgnize"
+              id="from"
+              name="from"
+              [ngModelOptions]="{ standalone: true }"
+              readonly
+            />
+          </div>
+          <div class="form-group" *ngIf="modalDetails.type == 'sendEmail'">
+            <label for="to234" class="text-right col-form-label block">
+              {{ "To" | translate }}
+            </label>
+            <input
+              required
+              #to234="ngModel"
+              [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="selectedCustomer.mail"
+              class="form-control"
+              type="text"
+              id="mail"
+              name="mail"
+              readonly
+            />
+          </div>
+
+          <div
+            class="form-group {{
+              modalDetails.type == 'sendEmails'
+                ? ''
+                : 'col-span-1 md:col-span-2'
+            }} "
+            *ngIf="
+              modalDetails.type == 'sendEmails' ||
+              modalDetails.type == 'sendEmail'
+            "
+          >
+            <label for="Subject" class="text-right col-form-label block">
+              {{ "subject" | translate }}
+            </label>
+            <input
+              required
+              #Subject="ngModel"
+              [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="modalDetails.mailSubject"
+              class="form-control"
+              autocomplete="off"
+              type="mailSubject"
+              id="mailSubject"
+              name="mailSubject"
+            />
+          </div>
+
+          <div class="form-group col-span-1 md:col-span-2">
+            <label for="Text32" class="text-right col-form-label block">
+              {{ "Text" | translate }}
+            </label>
+            <textarea
+              required
+              #Text32="ngModel"
+              [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="modalDetails.mailText"
+              class="form-control"
+              autocomplete="off"
+              type="mailText"
+              id="mailText"
+              name="text"
+            ></textarea>
+          </div>
+
+          <div
+            class="col-span-1 md:col-span-2"
+            *ngIf="
+              modalDetails.type == 'sendEmails' ||
+              modalDetails.type == 'sendEmail'
+            "
+          >
+            <label for="formFile" class="form-label">
+              {{ "Upload File" | translate }}</label
+            >
+            <input
+              class="form-control"
+              [ngModelOptions]="{ standalone: true }"
+              (change)="selectFile($event)"
+              [(ngModel)]="modalDetails.fileUrl"
+              type="file"
+              id="fileUrl"
+              name="fileUrl"
+            />
+          </div>
+
+          <div
+            class="col-span-1 md:col-span-2 px-2 max-h-96 overflow-auto"
+            *ngIf="
+              modalDetails.type == 'sendEmails' ||
+              modalDetails.type == 'sendSmss'
+            "
+          >
+            <table
+              mat-table
+              [dataSource]="load_CustomerSelect2Mails"
+              matSort
+              class="mat-elevation-z8 rounded-t-lg overflow-hidden w-max"
+            >
+              <!-- Checkbox Column -->
+              <ng-container matColumnDef="select">
+                <th mat-header-cell *matHeaderCellDef>
+                  <mat-checkbox
+                    color="warn"
+                    (change)="$event ? toggleAllRows() : null"
+                    [checked]="selection.hasValue() && isAllSelected()"
+                    [indeterminate]="selection.hasValue() && !isAllSelected()"
+                    [aria-label]="checkboxLabel()"
+                  >
+                  </mat-checkbox>
+                </th>
+                <td mat-cell *matCellDef="let row">
+                  <mat-checkbox
+                    color="warn"
+                    (click)="$event.stopPropagation()"
+                    (change)="$event ? selection.toggle(row) : null"
+                    [checked]="
+                      selection.isSelected(row) &&
+                      ((row.customerMail &&
+                        modalDetails.type == 'sendEmails') ||
+                        (row.customerMobile && modalDetails.type == 'sendSmss'))
+                    "
+                    [aria-label]="checkboxLabel(row)"
+                    [disabled]="
+                      !(
+                        (row.customerMail &&
+                          modalDetails.type == 'sendEmails') ||
+                        (row.customerMobile && modalDetails.type == 'sendSmss')
+                      )
+                    "
+                  >
+                  </mat-checkbox>
+                </td>
+              </ng-container>
+
+              <!-- Name Column -->
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>
+                  {{ "Customer Name" | translate }}
+                </th>
+                <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+              </ng-container>
+              <!-- email Column -->
+              <ng-container
+                matColumnDef="email"
+                *ngIf="modalDetails.type == 'sendEmails'"
+              >
+                <th mat-header-cell *matHeaderCellDef>
+                  <span *ngIf="modalDetails.type == 'sendEmails'">
+                    {{ "Email" | translate }}
+                  </span>
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.customerMail }}
+                </td>
+              </ng-container>
+              <ng-container
+                matColumnDef="mobile"
+                *ngIf="modalDetails.type == 'sendSmss'"
+              >
+                <th mat-header-cell *matHeaderCellDef>
+                  <span *ngIf="modalDetails.type == 'sendSmss'">
+                    {{ "Mobile Number" | translate }}
+                  </span>
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.customerMobile }}
+                </td>
+              </ng-container>
+
+              <tr
+                mat-header-row
+                *matHeaderRowDef="
+                  modalDetails.type == 'sendEmails'
+                    ? displayedColumns.usersMail
+                    : displayedColumns.usersMobile
+                "
+              ></tr>
+              <tr
+                mat-row
+                *matRowDef="
+                  let row;
+                  columns: modalDetails.type == 'sendEmails'
+                    ? displayedColumns.usersMail
+                    : displayedColumns.usersMobile
+                "
+              ></tr>
+            </table>
+          </div>
+
+          <div
+            class="flex gap-2 pt-3 border-t border-neutral-300 col-span-1 md:col-span-2 mt-2"
+          >
+            <button class="btn btn-primary" type="submit" (click)="sendEMAIL()">
+              {{ "Send" | translate }}
+            </button>
+            <button (click)="modal?.hide()" class="btn btn-secondary">
+              {{ "Back" | translate }}
+            </button>
+          </div>
+        </form>
+      </ng-container>
+    </div>
+  </ng-template>
+
+  <ng-template #fileTypeModal let-modal>
+    <div
+      style="background-color: var(--base-color)"
+      class="modal-header text-white flex justify-between items-center"
+    >
+      <h4 class="m-0">
+        <span class="text-2xl"> {{ "Add File Type" | translate }} </span>
+      </h4>
+      <button
+        type="button"
+        class="text-2xl text-white m-0"
+        (click)="modal?.dismiss()"
+      >
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <div class="modal-body text-center">
+      <form #addFileType="ngForm" class="grid grid-cols-1 md:grid-cols-2 gap-2">
+        <div class="form-group">
+          <label
+            for="CustomerNameArtxt3"
+            class="text-right col-form-label block"
+          >
+            {{ "nameAr" | translate }}
+            <span class="text-danger">*</span></label
+          >
+          <input
+            required
+            #CustomerNameAr="ngModel"
+            [ngModelOptions]="{ standalone: true }"
+            [(ngModel)]="data.fileType.nameAr"
+            class="form-control"
+            type="text"
+            id="CustomerNameArtxt3"
+            name="CustomerNameArtxt3"
+            autocomplete="off"
+            [placeholder]="('Write' | translate) + ' ' + ('nameAr' | translate)"
+          />
+        </div>
+        <div class="form-group">
+          <label
+            for="CustomerNameEntxt3"
+            class="text-right col-form-label block"
+          >
+            {{ "nameEn" | translate }}
+            <span class="text-danger">*</span></label
+          >
+          <div style="display: inline-flex; width: 100%">
+            <input
+              required
+              #CustomerNameEnValue
+              #CustomerNameEn="ngModel"
+              [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="data.fileType.nameEn"
+              ngModel
+              class="form-control"
+              type="text"
+              id="CustomerNameEntxt3"
+              name="CustomerNameEntxt3"
+              autocomplete="off"
+              [placeholder]="
+                ('Write' | translate) + ' ' + ('nameEn' | translate)
+              "
+            />
+            <a
+              class="btn"
+              id="CopyCustomerName2"
+              (click)="data.fileType.nameEn = data.fileType.nameAr"
+              ><i class="fa fa-copy"></i
+            ></a>
+          </div>
+        </div>
+      </form>
+      <div class="max-h-80 overflow-auto">
+        <table class="table table-hover mt-2">
+          <thead>
+            <tr>
+              <th>{{ "nameAr" | translate }}</th>
+              <th>{{ "nameEn" | translate }}</th>
+              <th
+                [translate]="'name'"
+                [translateParams]="{
+                  ar: 'خيارات',
+                  en: 'Operations'
+                }"
+              ></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let type of load_filesTypes"
+              (dblclick)="
+                setFileTypeInSelect(type, modal); modal.dismiss('Cross click')
+              "
+            >
+              <td>{{ type.nameAr }}</td>
+              <td>{{ type.nameEn }}</td>
+              <td class="flex gap-2 justify-center">
+                <button
+                  class="p-2 bg-orange-100 hover:bg-orange-500 rounded-lg duration-300 hover:text-white aspect-square w-10"
+                  (click)="
+                    data.fileType.nameAr = type.nameAr;
+                    data.fileType.nameEn = type.nameEn;
+                    data.fileType.id = type.fileTypeId
+                  "
+                >
+                  <i class="fa-regular fa-pen-to-square"></i>
+                </button>
+                <button
+                  (click)="getFileTypeRow(type); open(deleteFileTypes)"
+                  class="p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white aspect-square w-10"
+                >
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="flex gap-2 mt-3 pt-3 border-t border-neutral-300">
+        <button
+          class="btn bg-base text-white"
+          type="submit"
+          [disabled]="addFileType.invalid"
+          (click)="addNewFileType()"
+        >
+          {{ "Save" | translate }}
+        </button>
+        <button (click)="modal?.dismiss()" class="btn btn-secondary">
+          {{ "Back" | translate }}
+        </button>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #addFile let-modal>
+    <div
+      style="background-color: var(--base-color)"
+      class="modal-header text-white flex justify-between items-center"
+    >
+      <h4 class="m-0">
+        <span class="text-2xl">{{ "addFile" | translate }}</span>
+      </h4>
+      <button
+        type="button"
+        class="text-2xl text-white m-0"
+        (click)="modal?.dismiss()"
+      >
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <ng-container>
+        <form class="grid grid-cols-1 md:grid-cols-2" #addFileForm="ngForm">
+          <div>
+            <div class="form-group">
+              <label
+                for="FileDescription"
+                class="text-right col-form-label block"
+              >
+                {{ "File Description" | translate }}
+                <span class="text-danger">*</span></label
+              >
+              <input
+                required
+                #FileDescription="ngModel"
+                [ngModelOptions]="{ standalone: true }"
+                [(ngModel)]="filedata.desc"
+                class="form-control"
+                type="text"
+                id="FileDescription"
+                name="FileDescription"
+                autocomplete="off"
+                [placeholder]="
+                  ('Write' | translate) + ' ' + ('File Description' | translate)
+                "
+              />
+            </div>
+            <div class="flex gap-2 items-end">
+              <div class="flex-grow">
+                <label class="col-form-label">
+                  {{ "File Type" | translate }}</label
+                >
+                <ng-select
+                  class="w-full p-0"
+                  [required]="true"
+                  [ngModelOptions]="{ standalone: true }"
+                  #FileType="ngModel"
+                  [(ngModel)]="filedata.filetype"
+                  placeholder="{{ 'File Type' | translate }}"
+                  name="FileType"
+                >
+                  <ng-option
+                    *ngFor="let type of load_FileType"
+                    [value]="type"
+                    >{{ type.name }}</ng-option
+                  >
+                </ng-select>
+              </div>
+              <button
+                class="btn bg-base text-white mt-3"
+                type="type"
+                (click)="open(fileTypeModal); resetFileType()"
+              >
+                <i class="fa fa-plus"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="upload row-span-2">
+            <file-upload class="h-full" [control]="control">
+              <ng-template
+                let-isFileDragDropAvailable="isFileDragDropAvailable"
+                #placeholder
+              >
+                <div *ngIf="control.size === 0">
+                  <div class="icon">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      height="1em"
+                      viewBox="0 0 640 512"
+                    >
+                      <path
+                        d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-217c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l39-39V392c0 13.3 10.7 24 24 24s24-10.7 24-24V257.9l39 39c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0l-80 80z"
+                      />
+                    </svg>
+                  </div>
+
+                  <div class="upload-text">
+                    {{ "Add Image" | translate }}
+                  </div>
+                </div>
+              </ng-template>
+
+              <ng-template
+                let-i="index"
+                let-file="file"
+                let-control="control"
+                #item
+              >
+                <div class="overlay">
+                  <span
+                    class="delete-button"
+                    (click)="control.removeFile(file)"
+                  >
+                    <svg viewBox="0 0 448 512">
+                      <path
+                        d="M32 464a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128H32zm272-256a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zM432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16z"
+                      ></path>
+                    </svg>
+                  </span>
+                  <img
+                    class="max-h-44"
+                    *ngIf="control.valid"
+                    [src]="uploadedFile | async"
+                  />
+                </div>
+              </ng-template>
+            </file-upload>
+          </div>
+          <button
+            class="btn bg-base text-white mt-3"
+            type="type"
+            [disabled]="addFileForm.invalid"
+            (click)="addNewFile(addFileForm)"
+          >
+            {{ "Add" | translate }}
+          </button>
+          <div class="max-h-80 overflow-auto col-span-1 md:col-span-2">
+            <table
+              *ngIf="data.documents?.length"
+              class="table table-hover mt-2"
+            >
+              <thead>
+                <tr class="text-center" style="text-align: center !important">
+                  <th>{{ "File Description" | translate }}</th>
+                  <th>{{ "File Type" | translate }}</th>
+                  <th>{{ "File Name" | translate }}</th>
+                  <th
+                    [translate]="'name'"
+                    [translateParams]="{
+                      ar: 'خيارات',
+                      en: 'Operations'
+                    }"
+                  ></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let file of data.documents; let i = index">
+                  <td>{{ file.description }}</td>
+                  <td>{{ file.fileTypeName }}</td>
+                  <td>{{ file.fileName }}</td>
+                  <td class="flex gap-2 justify-center">
+                    <button
+                      (click)="data.documents.splice(i, 1)"
+                      class="p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white aspect-square w-10"
+                    >
+                      <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div
+            class="flex gap-2 pt-3 border-t border-neutral-300 col-span-1 md:col-span-2 mt-2"
+          >
+            <button
+              class="btn bg-base text-white"
+              type="submit"
+              (click)="addFilePost(modal)"
+            >
+              {{ "Save" | translate }}
+            </button>
+            <button (click)="modal?.dismiss()" class="btn btn-secondary">
+              {{ "Back" | translate }}
+            </button>
+          </div>
+        </form>
+      </ng-container>
+    </div>
+  </ng-template>
+</div>

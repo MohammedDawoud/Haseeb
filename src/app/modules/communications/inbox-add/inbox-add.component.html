@@ -1,0 +1,986 @@
+<div class="pb-4">
+  <div class="flex flex-wrap gap-4 justify-between">
+    <app-navigator [title]="title"></app-navigator>
+    <div class="flex justify-between gap-2 items-center flex-wrap">
+      <div class="flex gap-2 controler">
+        <button class="flex gap-1 btn " routerLink="/communications/Inbox">
+          <span class="hidden md:block" [translate]="'name'" [translateParams]="{
+                  ar: ' الخطابات الواردة',
+                  en: 'InBox'
+                }"></span>
+          <i class="fa-solid fa-envelope"></i>
+        </button>
+        <button class="flex gap-1 btn btn-primary" (click)="saveOutbox()">
+          <span class="hidden md:block">{{'Save'|translate}}</span>
+          <i class="fa-solid fa-floppy-disk"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="separator-title" [translate]="'name'" [translateParams]="{
+                      ar: 'بيانات الوارد',
+                      en: 'InBox Data'
+                    }">
+  </div>
+  <div class="grid md:grid-cols-2 lg:grid-cols-3  xl:grid-cols-5 gap-3">
+    <div>
+      <label class="col-form-label" [translate]="'name'" [translateParams]="{
+                          ar: 'رقم الوارد',
+                          en: 'InBox Number'
+                        }"> </label>
+      <input type="text" class="form-control" [(ngModel)]="OutboxObj.Number"name="Number"/>
+    </div>
+    <!-- sModal -->
+    <div class="flex gap-0.5 items-end">
+      <div class="flex-grow">
+        <label class="col-form-label" [translate]="'name'" [translateParams]="{
+                          ar: 'الكود',
+                          en: 'Code'
+                        }">
+
+        </label>
+       <ng-select class="w-full p-0"
+         placeholder="{{ 'Chose' | translate }}"
+         (change)="GenerateOutInBoxNumber()"
+         [(ngModel)]="OutboxObj.code"
+         name="code"
+         >
+           <ng-option
+                    *ngFor="let cod of codeList"
+                    [value]="cod.outInSerialId"
+                    >{{ cod.code }}</ng-option
+                  >
+                </ng-select>
+       
+      </div>
+      <button class="btn bg-base text-white mt-3" type="type" (click)="open(Code,'','lg','code')">
+        <!-- (click)="open(Code)" -->
+        <i class="fa fa-plus"></i>
+      </button>
+    </div>
+
+    <!-- nSelect -->
+    <div>
+      <label class="col-form-label" [translate]="'name'" [translateParams]="{
+                        ar: ' الوارد ',
+                        en: 'InBox '
+                      }">
+
+      </label>
+         <ng-select class="w-full p-0" placeholder="{{ 'Chose' | translate }}"
+      [(ngModel)]="OutboxObj.OutInType"name="OutInType">
+        <ng-option  value="1">داخلي</ng-option>
+        <ng-option  value="2">خارجي</ng-option>
+      </ng-select>
+    </div>
+    <div>
+      <label class="col-form-label" [translate]="'name'" [translateParams]="{
+                        ar: 'الأهمية',
+                        en: 'Priority'
+                      }">
+
+      </label>
+        <ng-select class="w-full p-0" placeholder="{{ 'Chose' | translate }}"
+      [(ngModel)]="OutboxObj.Priority"name="Priority">
+        <ng-option value="1">عادي</ng-option>
+        <ng-option value="2">سري</ng-option>
+      </ng-select>
+    </div>
+
+  <div class="form-group timeInput">
+          <label class="col-form-label" for="phone"
+            >{{ "National End Date" | translate }}
+          </label>
+          <input
+            placeholder="{{ 'Chose Date' | translate }}"
+            name="Date"
+            type="text"
+            class="form-control"
+            bsDatepicker
+            #dpr="bsDatepicker"
+            [(ngModel)]="OutboxObj.Date"
+            (ngModelChange)="ChangeemployeeGre($event)"
+          />
+        </div>
+
+        <div>
+          <div class="form-group timeInput hijri-gregorianReciept">
+            <label for="Corresponding" class="text-right col-form-label block">
+              {{ "Corresponding" | translate }}
+            </label>
+            <hijri-gregorian-datepicker
+              [(selectedDate)]="OutboxObj.HijriDate"
+              [hijriLabel]="'Hijri'"
+              [selectedDateType]="selectedDateType"
+              [dir]="'dir' | translate"
+              autocomplete="off"
+              [(ngModel)]="OutboxObj.HijriDate"
+              (selectedDateChange)="ChangeemployeeDateHijri($event)"
+            >
+            </hijri-gregorian-datepicker>
+          </div>
+        </div>
+
+
+    <!-- <hijri-gregorian-datepicker [placeHolder]="'سنة/شهر/يوم'" [label]="'Date'" [(selectedDate)]="selectedDate"
+      [isRequired]="true" [GregLabel]="'ميلادي'" [hijriLabel]="'هجري'" [selectedDateType]="selectedDateType"
+      #datePicker>
+    </hijri-gregorian-datepicker> -->
+
+    <div class="grid  md:col-span-2  lg:col-span-3   xl:col-span-4  ">
+      <label class="col-form-label" [translate]="'name'" [translateParams]="{
+                                ar: 'الموضوع',
+                                en: 'Topic'
+                              }"> </label>
+      <textarea class="form-control" rows="1" [(ngModel)]="OutboxObj.Topic"name="Topic"></textarea>
+    </div>
+
+    <div class="flex gap-0.5 items-end">
+      <div class="flex-grow">
+        <label class="col-form-label" [translate]="'name'" [translateParams]="{
+                              ar: 'وارد إلى',
+                              en: 'InBox To'
+                            }">
+
+        </label>
+       <ng-select class="w-full p-0" placeholder="{{ 'Chose' | translate }}"
+        [(ngModel)]="OutboxObj.SideToId"name="SideToId">
+        <ng-option
+                    *ngFor="let dept of DeptList"
+                    [value]="dept.id"
+                    >{{ dept.name }}</ng-option
+                  >
+        </ng-select>
+      </div>
+      <button class="btn bg-base text-white mt-3" type="type" (click)="open(InBoxTo,'','lg','department')">
+        <i class="fa fa-plus"></i>
+      </button>
+    </div>
+    <div class="flex gap-0.5 items-end">
+      <div class="flex-grow">
+        <label class="col-form-label" [translate]="'name'" [translateParams]="{
+                              ar: 'ملف الأرشيف',
+                              en: 'Archive File'
+                            }">
+
+        </label>
+   <ng-select class="w-full p-0" placeholder="{{ 'Chose' | translate }}"
+        [(ngModel)]="OutboxObj.ArchiveFileId"name="ArchiveFileId">
+             <ng-option
+                    *ngFor="let dept of ArchiveList"
+                    [value]="dept.id"
+                    >{{ dept.name }}</ng-option
+                  >
+        </ng-select>
+      </div>
+      <button class="btn bg-base text-white mt-3" type="type" (click)="open(fileArchive,'','lg','archfiles')">
+        <!-- (click)="open(Code)" -->
+        <i class="fa fa-plus"></i>
+      </button>
+    </div>
+    <div class="flex gap-0.5 items-end">
+      <div class="flex-grow">
+        <label class="col-form-label" [translate]="'name'" [translateParams]="{
+                              ar: 'نوع الوارد',
+                              en: 'InBox Type'
+                            }">
+
+        </label>
+              <ng-select class="w-full p-0" placeholder="{{ 'Chose' | translate }}"
+        [(ngModel)]="OutboxObj.TypeId"name="TypeId">
+               <ng-option
+                    *ngFor="let dept of outList"
+                    [value]="dept.id"
+                    >{{ dept.name }}</ng-option
+                  >
+        </ng-select>
+      </div>
+      <button class="btn bg-base text-white mt-3" (click)="open(InboxType,'','lg','outtype')" type="type">
+        <!-- -->
+        <i class="fa fa-plus"></i>
+      </button>
+    </div>
+    <div class="flex gap-0.5 items-end">
+      <div class="flex-grow">
+        <label class="col-form-label" [translate]="'name'" [translateParams]="{
+                              ar: 'جهة الإعداد',
+                              en: 'Setting Side'
+                            }">
+
+        </label>
+             <ng-select class="w-full p-0" placeholder="{{ 'Chose' | translate }}"
+          [(ngModel)]="OutboxObj.SideFromId"name="SideFromId">
+        <ng-option
+                    *ngFor="let dept of DeptList"
+                    [value]="dept.id"
+                    >{{ dept.name }}</ng-option
+                  >
+        </ng-select>
+      </div>
+      <button class="btn bg-base text-white mt-3" type="type" (click)="open(InBoxTo,'','lg','department')">
+        <!-- (click)="open(Code)" -->
+        <i class="fa fa-plus"></i>
+      </button>
+    </div>
+
+    <div>
+      <label class="col-form-label" [translate]="'name'" [translateParams]="{
+                              ar: 'رقم الوارد الداخلي',
+                              en: 'Internal outgoing number'
+                            }">
+
+      </label>
+         <ng-select class="w-full p-0" placeholder="{{ 'Chose' | translate }}"
+      [(ngModel)]="OutboxObj.InnerId"name="InnerId" [disabled]="!innerchecked" (change)="GetOutInboxById_outtype()">
+          <ng-option
+                    *ngFor="let dept of inboxtype"
+                    [value]="dept.id"
+                    >{{ dept.name }}</ng-option
+                  >
+      </ng-select>
+    </div>
+
+    <div class="form-group timeInput">
+      <label class="col-form-label">
+        {{'Date'|translate}}
+      </label>
+      <input 
+         placeholder="{{ 'Chose Date' | translate }}"
+            name="outtypedate"
+            type="text"
+            class="form-control"
+            bsDatepicker
+            #dpr="bsDatepicker"
+            [(ngModel)]="OutboxObj.outtypedate"
+            disabled/>
+    </div>
+
+    <div class=" flex items-end md:col-span-2 lg:col-span-3  xl:col-span-5">
+
+      <mat-slide-toggle color="primary" (change)="innerchecked=!innerchecked"><span [translate]="'name'"  [translateParams]="{
+                                                  ar: 'هل يحتاج إلى متابعة و رد؟',
+                                                  en: 'Follow Up And Respond'
+                                                }"></span></mat-slide-toggle>
+    </div>
+  </div>
+  <div class="separator-title" [translate]="'name'" [translateParams]="{
+                        ar: 'القيد المرتبط',
+                        en: 'Linked Constraint'
+                      }">
+  </div>
+  <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
+
+    <div class=" flex items-end md:col-span-2 lg:col-span-3">
+      <mat-slide-toggle color="primary" (change)="inboxchecked=!inboxchecked;clearinboxcheckeddata()"><span [translate]="'name'" [translateParams]="{
+                                                      ar: 'رد على وارد',
+                                                      en: 'Reply to in box'
+                                                    }"></span></mat-slide-toggle>
+    </div>
+    <div>
+      <label class="col-form-label" [translate]="'name'" [translateParams]="{
+                            ar: ' رقم القيد ',
+                            en: 'Enrollment Number '
+                          }">
+
+      </label>
+        <ng-select class="w-full p-0" placeholder="{{ 'Chose' | translate }}"
+      [(ngModel)]="OutboxObj.RelatedToId"name="RelatedToId" [disabled]="!inboxchecked" (change)="GetOutInboxById()">
+          <ng-option
+                    *ngFor="let dept of InboxType"
+                    [value]="dept.id"
+                    >{{ dept.name }}</ng-option
+                  >
+      </ng-select>
+    </div>
+    <div class="form-group timeInput">
+      <label class="col-form-label">
+        {{'Date'|translate}}
+      </label>
+      <input 
+         placeholder="{{ 'Chose Date' | translate }}"
+            name="relatedtodate"
+            type="text"
+            class="form-control"
+            bsDatepicker
+            #dpr="bsDatepicker"
+            [(ngModel)]="OutboxObj.relatedtodate"
+        disabled
+        />
+    </div>
+    <div>
+      <label class="col-form-label" [translate]="'name'" [translateParams]="{
+                                  ar: 'جهة الورود',
+                                  en: 'The hand of roses'
+                                }"> </label>
+      <input type="text" class="form-control" [(ngModel)]="OutboxObj.relatedsideto"name="relatedsideto"/>
+    </div>
+
+
+    <div class=" md:col-span-1  lg:col-span-3  ">
+      <label class="col-form-label" [translate]="'name'" [translateParams]="{
+                                    ar: 'موضوع القيد',
+                                    en: 'Inbox Topic'
+                                  }"> </label>
+      <textarea class="form-control" rows="1" [(ngModel)]="OutboxObj.relatedtotopic"name="relatedtotopic"></textarea>
+    </div>
+
+
+
+
+
+  </div>
+  <div class="separator-title" [translate]="'name'" [translateParams]="{
+                          ar: 'المعاملة',
+                          en: 'Treatment'
+                        }">
+  </div>
+  <div class="grid md:grid-cols-2  gap-3">
+
+
+    <div class=" flex items-end  md:col-span-2">
+      <mat-slide-toggle color="primary"  (click)="projectchecked =!projectchecked"><span [translate]="'name'" [translateParams]="{
+                                                      ar: 'الرقم مرتبط بمعاملة',
+                                                      en: 'Number Linked to treatment'
+                                                    }"></span></mat-slide-toggle>
+    </div>
+    <div>
+      <label class="col-form-label" [translate]="'name'" [translateParams]="{
+                                ar: ' رقم المعاملة ',
+                                en: 'Number Treatment'
+                              }">
+
+      </label>
+           <ng-select class="w-full p-0" placeholder="{{ 'Chose' | translate }}"
+      [(ngModel)]="OutboxObj.ProjectId" name="ProjectId" [disabled]="!projectchecked" (change)="GetProjectById()">
+          <ng-option
+                    *ngFor="let dept of ProjectSelec"
+                    [value]="dept.id"
+                    >{{ dept.name }}</ng-option
+                  >
+      </ng-select>
+    </div>
+
+
+    <div>
+      <label class="col-form-label" [translate]="'name'" [translateParams]="{
+                                      ar: 'الاسم',
+                                      en: 'Customer Name'
+                                    }"> </label>
+      <input type="text" class="form-control"   [(ngModel)]="OutboxObj.projectcustomer" name="projectcustomer"/>
+    </div>
+
+
+
+
+
+
+
+  </div>
+  <div class="separator-title" [translate]="'name'" [translateParams]="{
+                          ar: 'صورة الى',
+                          en: 'Image To'
+                        }">
+  </div>
+  <div class="grid md:grid-cols-2  gap-3">
+    <div class="flex gap-0.5 items-end">
+      <div class="flex-grow">
+        <label class="col-form-label" [translate]="'name'" [translateParams]="{
+                            ar: ' الجهات الداخلية ',
+                                en: 'Internal Bodies'
+                        }">
+
+        </label>
+         <ng-select class="w-full p-0" placeholder="{{ 'Chose' | translate }}"
+        [(ngModel)]="OutboxObj.InternalDep" name="InternalDep">
+        <ng-option
+                    *ngFor="let dept of DeptList1"
+                    [value]="dept.id"
+                    >{{ dept.name }}</ng-option
+                  >
+        </ng-select>
+      </div>
+      <button class="btn bg-base text-white mt-3" type="type"  (click)="open(InBoxTo,'','lg','department1')">
+        <!-- (click)="open(Code)" -->
+        <i class="fa fa-plus"></i>
+      </button>
+    </div>
+    <div class="flex gap-0.5 items-end">
+      <div class="flex-grow">
+        <label class="col-form-label" [translate]="'name'" [translateParams]="{
+                            ar: ' الجهات الخارجية ',
+                                en: 'External Bodies'
+                        }">
+
+        </label>
+        <ng-select class="w-full p-0" placeholder="{{ 'Chose' | translate }}"
+       [(ngModel)]="OutboxObj.ExternalDep" name="ExternalDep">
+        <ng-option
+                    *ngFor="let dept of DeptList2"
+                    [value]="dept.id"
+                    >{{ dept.name }}</ng-option
+                  >
+        </ng-select>
+      </div>
+      <button class="btn bg-base text-white mt-3"  (click)="open(InBoxTo,'','lg','department2')">
+        <!-- (click)="open(Code)" -->
+        <i class="fa fa-plus"></i>
+      </button>
+    </div>
+  </div>
+  <div class="separator-title" [translate]="'name'" [translateParams]="{
+                          ar: 'المرفقات',
+                          en: 'Attachments'
+                        }">
+  </div>
+  <div class="grid md:grid-cols-2 ">
+    <div class="upload">
+      <file-upload [control]="control">
+        <ng-template let-isFileDragDropAvailable="isFileDragDropAvailable" #placeholder>
+          <div *ngIf="control.size === 0">
+            <div class="icon">
+              <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 640 512">
+                <path
+                  d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-217c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l39-39V392c0 13.3 10.7 24 24 24s24-10.7 24-24V257.9l39 39c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0l-80 80z" />
+              </svg>
+            </div>
+
+            <div class="upload-text">
+              {{ "Add Image" | translate }}
+            </div>
+          </div>
+        </ng-template>
+
+        <ng-template let-i="index" let-file="file" let-control="control" #item>
+          <div class="overlay">
+            <span class="delete-button" (click)="control.removeFile(file)">
+              <svg viewBox="0 0 448 512">
+                <path
+                  d="M32 464a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128H32zm272-256a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zM432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16z">
+                </path>
+              </svg>
+            </span>
+            <img *ngIf="control.valid" [src]="uploadedFile | async" />
+          </div>
+        </ng-template>
+      </file-upload>
+    </div>
+  </div>
+</div>
+
+
+
+
+<!-- to InBoxTo   -->
+
+
+<ng-template #InBoxTo let-modal>
+  <div style="background-color: var(--base-color)" class="modal-header text-white flex justify-between items-center">
+    <h4 class="m-0">
+       <span class="text-2xl" [translate]="'name'" [translateParams]="{
+              ar: 'وارد إلى ',
+              en: 'InBox To'
+            }">
+
+      </span>
+    </h4>
+    <button type="button" class="text-2xl text-white m-0" (click)="modal.dismiss()">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form class="modal-form" #form="ngForm">
+      <div class="grid md:grid-cols-3 gap-3">
+        <div>
+          <label class="col-form-label" [translate]="'name'" [translateParams]="{
+                                  ar: 'الجهة',
+                    en: 'Side'
+                                  }">
+
+          </label>
+          <ng-select class="w-full p-0" placeholder="{{ 'Chose' | translate }}"
+          [(ngModel)]="department.Type" name="Type" (ngModelChange)="GetAllDepartmentbyType()">
+            <ng-option  [value]="1" >داخلي</ng-option>
+            <ng-option  [value]="2" >خارجي</ng-option>
+          </ng-select>
+        </div>
+        <div class="form-group">
+          <label class="text-right col-form-label block">
+            {{ "nameAr" | translate }}
+            <span class="text-danger">*</span></label>
+          <input class="form-control" type="text"
+          [(ngModel)]="department.DepartmentNameAr" name="DepartmentNameAr"
+            [placeholder]="('Write' | translate) + ' ' + ('nameAr' | translate)" />
+        </div>
+        <div class="form-group">
+          <label class="text-right col-form-label block">
+            {{ "nameEn" | translate }}
+            <span class="text-danger">*</span></label>
+          <input class="form-control" type="text"
+          [(ngModel)]="department.DepartmentNameEn" name="DepartmentNameEn"
+            [placeholder]="('Write' | translate) + ' ' + ('nameEn' | translate)" />
+        </div>
+      </div>
+
+
+      <div class="max-h-80 overflow-auto mt-4 col-span-1 md:col-span-2">
+        <table class="custome-table">
+          <thead>
+            <tr class="text-center">
+              <th [translate]="'name'" [translateParams]="{
+                    ar: 'الجهة',
+                    en: 'Side'
+                  }"> </th>
+              <th [translate]="'name'" [translateParams]="{
+                    ar: 'اسم الجهة عربي',
+                    en: 'Side Name AR'
+                  }"></th>
+              <th [translate]="'name'" [translateParams]="{
+                    ar: 'اسم الجهة انجليزي',
+                    en: 'Side Name EN'
+                  }"></th>
+              <th [translate]="'name'" [translateParams]="{
+                    ar: 'خيارات',
+                    en: 'Options'
+                  }"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of DepartmentList">
+              <td>{{item.typeName}}</td>
+              <td>{{item.departmentNameAr}}</td>
+              <td>{{item.departmentNameEn}}</td>
+              <td class="flex gap-2 justify-center">
+                <button (click)="DeleteDepartment(item.departmentId)"
+                  class="p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white aspect-square w-10">
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+                <button (click)="EditDepartment(item)"
+                  class="min-w-max p-2 bg-orange-100 hover:bg-orange-500 rounded-lg duration-300 hover:text-white aspect-square w-10">
+                  <i class="fa-regular fa-pen-to-square"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </form>
+
+
+    <div class="flex gap-2 justify-end pt-3 border-t border-neutral-300 col-span-1 md:col-span-2 mt-2">
+
+      <button class="btn bg-base text-white" type="submit" (click)="SaveDepartment()">
+        {{ "Save" | translate }}
+      </button>
+      <button (click)="modal.dismiss()" class="btn btn-secondary">
+        {{ "Back" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+<!-- to add side   -->
+<ng-template #sides let-modal>
+  <div style="background-color: var(--base-color)" class="modal-header text-white flex justify-between items-center">
+    <h4 class="m-0">
+      <span class="text-2xl" [translate]="'name'" [translateParams]="{
+              ar: 'جهة الإعداد ',
+              en: 'Sides'
+            }">
+
+      </span>
+    </h4>
+    <button type="button" class="text-2xl text-white m-0" (click)="modal.dismiss()">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form class="modal-form" #form="ngForm">
+      <div class="grid md:grid-cols-3 gap-3">
+        <div>
+          <label class="col-form-label" [translate]="'name'" [translateParams]="{
+                                  ar: 'الجهة',
+                    en: 'Side'
+                                  }">
+
+          </label>
+          <ng-select class="w-full p-0" placeholder="{{ 'Chose' | translate }}">
+            <ng-option>داخلي</ng-option>
+            <ng-option>خارجي</ng-option>
+          </ng-select>
+        </div>
+        <div class="form-group">
+          <label class="text-right col-form-label block">
+            {{ "nameAr" | translate }}
+            <span class="text-danger">*</span></label>
+          <input class="form-control" type="text"
+            [placeholder]="('Write' | translate) + ' ' + ('nameAr' | translate)" />
+        </div>
+        <div class="form-group">
+          <label class="text-right col-form-label block">
+            {{ "nameEn" | translate }}
+            <span class="text-danger">*</span></label>
+          <input class="form-control" type="text"
+            [placeholder]="('Write' | translate) + ' ' + ('nameEn' | translate)" />
+        </div>
+      </div>
+
+
+      <div class="max-h-80 overflow-auto mt-4 col-span-1 md:col-span-2">
+        <table class="custome-table">
+          <thead>
+            <tr class="text-center">
+              <th [translate]="'name'" [translateParams]="{
+                    ar: 'الجهة',
+                    en: 'Side'
+                  }"> </th>
+              <th [translate]="'name'" [translateParams]="{
+                    ar: 'اسم الجهة عربي',
+                    en: 'Side Name AR'
+                  }"></th>
+              <th [translate]="'name'" [translateParams]="{
+                    ar: 'اسم الجهة انجليزي',
+                    en: 'Side Name EN'
+                  }"></th>
+              <th [translate]="'name'" [translateParams]="{
+                    ar: 'خيارات',
+                    en: 'Options'
+                  }"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>داخلي</td>
+              <td>asdawdaw</td>
+              <td>2daawdaw</td>
+              <td class="flex gap-2 justify-center">
+                <button
+                  class="p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white aspect-square w-10">
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+                <button
+                  class="min-w-max p-2 bg-orange-100 hover:bg-orange-500 rounded-lg duration-300 hover:text-white aspect-square w-10">
+                  <i class="fa-regular fa-pen-to-square"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </form>
+
+
+    <div class="flex gap-2 justify-end pt-3 border-t border-neutral-300 col-span-1 md:col-span-2 mt-2">
+
+      <button class="btn bg-base text-white" type="submit">
+        {{ "Save" | translate }}
+      </button>
+      <button (click)="modal.dismiss()" class="btn btn-secondary">
+        {{ "Back" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+<!-- add code  -->
+<ng-template #Code let-modal>
+  <div style="background-color: var(--base-color)" class="modal-header text-white flex justify-between items-center">
+    <h4 class="m-0">
+      <span class="text-2xl" [translate]="'name'" [translateParams]="{
+                              ar: 'إعداد رقم الصادر',
+                              en: 'OutBox Number Setting'
+                            }">
+      </span>
+    </h4>
+    <button type="button" class="text-2xl text-white m-0" (click)="modal.dismiss()">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form class="modal-form" #form="ngForm">
+      <div class="grid md:grid-cols-2 gap-3">
+        <div class="form-group">
+          <label class="  col-form-label block" [translate]="'name'" [translateParams]="{
+                            ar: 'الكود',
+                          en: 'Code'
+                            }">
+
+          </label>
+          <input class="form-control"  [(ngModel)]="code.Code" name="Code" type="text" />
+        </div>
+        <div class="form-group">
+          <label class="  col-form-label block" [translate]="'name'" [translateParams]="{
+                            ar: 'اسم العميل',
+                          en: 'Customer Name'
+                            }"> </label>
+          <input class="form-control"  [(ngModel)]="code.Name" name="Name" type="text" />
+        </div>
+      </div>
+
+      <div class="max-h-80 overflow-auto col-span-1 md:col-span-2 mt-4">
+        <table class="custome-table">
+          <thead>
+            <tr class="text-center">
+              <th>الكود</th>
+              <th>اسم العميل</th>
+              <th [translate]="'name'" [translateParams]="{
+                  ar: 'خيارات',
+                  en: 'Operations'
+                }"></th>
+            </tr>
+          </thead>
+          <tbody>
+             <tr *ngFor="let item of codeList">
+              <td>{{item.code}}</td>
+              <td>{{item.name}}</td>
+        
+              <td class="flex gap-2 justify-center">
+                <button (click)="DeleteOutInBoxSerial(item.outInSerialId)"
+                  class="p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white aspect-square w-10">
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+                <button (click)="EditOutInBoxSerial(item)"
+                  class="min-w-max p-2 bg-orange-100 hover:bg-orange-500 rounded-lg duration-300 hover:text-white aspect-square w-10">
+                  <i class="fa-regular fa-pen-to-square"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </form>
+    <div class="flex gap-2 justify-end pt-3 border-t border-neutral-300 col-span-1 md:col-span-2 mt-2">
+      <button class="btn bg-base text-white" type="submit" (click)="SaveOutInBoxSerial()">
+        {{ "Save" | translate }}
+      </button>
+      <button (click)="modal.dismiss()" class="btn btn-secondary">
+        {{ "Back" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+<!-- add fileArchive  -->
+<ng-template #fileArchive let-modal>
+  <div style="background-color: var(--base-color)" class="modal-header text-white flex justify-between items-center">
+    <h4 class="m-0">
+      <span class="text-2xl" [translate]="'name'" [translateParams]="{
+                              ar: 'ملف الأرشيف',
+                              en: 'file Archive'
+                            }">
+      </span>
+    </h4>
+    <button type="button" class="text-2xl text-white m-0" (click)="modal.dismiss()">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form class="modal-form" #form="ngForm">
+      <div class="grid md:grid-cols-2 gap-3">
+        <div class="form-group">
+          <label class="text-right col-form-label block">
+            {{ "nameAr" | translate }}
+            <span class="text-danger">*</span></label>
+          <input class="form-control" type="text"
+            [placeholder]="('Write' | translate) + ' ' + ('nameAr' | translate)" 
+            [(ngModel)]="ArchiveFile.NameAr" name="NameAr" 
+            />
+        </div>
+        <div class="form-group">
+          <label class="text-right col-form-label block">
+            {{ "nameEn" | translate }}
+            <span class="text-danger">*</span></label>
+          <input class="form-control" type="text"
+            [placeholder]="('Write' | translate) + ' ' + ('nameEn' | translate)" 
+            [(ngModel)]="ArchiveFile.NameEn" name="NameEn" />
+        </div>
+      </div>
+
+      <div class="max-h-80 overflow-auto col-span-1 md:col-span-2 mt-4">
+        <table class="custome-table">
+          <thead>
+            <tr class="text-center">
+              <th>{{ "nameAr" | translate }}</th>
+              <th>{{ "nameEn" | translate }}</th>
+              <th [translate]="'name'" [translateParams]="{
+                  ar: 'خيارات',
+                  en: 'Operations'
+                }"></th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr *ngFor="let item of ArchiveFileList">
+              <td>{{item.nameAr}}</td>
+              <td>{{item.nameEn}}</td>
+              <td class="flex gap-2 justify-center">
+                <button (click)="DeleteArchiveFile(item.archiveFileId)"
+                  class="p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white aspect-square w-10">
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+                <button (click)="EditArchiveFile(item)"
+                  class="min-w-max p-2 bg-orange-100 hover:bg-orange-500 rounded-lg duration-300 hover:text-white aspect-square w-10">
+                  <i class="fa-regular fa-pen-to-square"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </form>
+    <div class="flex gap-2 justify-end pt-3 border-t border-neutral-300 col-span-1 md:col-span-2 mt-2">
+      <button class="btn bg-base text-white" type="submit" (click)="SaveArchiveFiles()">
+        {{ "Save" | translate }}
+      </button>
+      <button (click)="modal.dismiss()" class="btn btn-secondary">
+        {{ "Back" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+<!-- add InBox Type  -->
+<!-- <ng-template #InBoxType let-modal>
+  <div style="background-color: var(--base-color)" class="modal-header text-white flex justify-between items-center">
+    <h4 class="m-0">
+      <span class="text-2xl" [translate]="'name'" [translateParams]="{
+                          ar: 'نوع الوارد',
+                              en: 'InBox Type'
+                            }">
+      </span>
+    </h4>
+    <button type="button" class="text-2xl text-white m-0" (click)="modal.dismiss()">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form class="modal-form" #form="ngForm">
+      <div class="grid md:grid-cols-2 gap-3">
+        <div class="form-group">
+          <label class="text-right col-form-label block">
+            {{ "nameAr" | translate }}
+            <span class="text-danger">*</span></label>
+          <input class="form-control" type="text"
+            [placeholder]="('Write' | translate) + ' ' + ('nameAr' | translate)" />
+        </div>
+        <div class="form-group">
+          <label class="text-right col-form-label block">
+            {{ "nameEn" | translate }}
+            <span class="text-danger">*</span></label>
+          <input class="form-control" type="text"
+            [placeholder]="('Write' | translate) + ' ' + ('nameEn' | translate)" />
+        </div>
+      </div>
+
+      <div class="max-h-80 overflow-auto col-span-1 md:col-span-2 mt-4">
+        <table class="custome-table">
+          <thead>
+            <tr class="text-center">
+              <th>{{ "nameAr" | translate }}</th>
+              <th>{{ "nameEn" | translate }}</th>
+              <th [translate]="'name'" [translateParams]="{
+                  ar: 'خيارات',
+                  en: 'Operations'
+                }"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>الاسم العربي</td>
+              <td>Name English test</td>
+              <td class="flex gap-2 justify-center">
+                <button
+                  class="p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white aspect-square w-10">
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+                <button
+                  class="min-w-max p-2 bg-orange-100 hover:bg-orange-500 rounded-lg duration-300 hover:text-white aspect-square w-10">
+                  <i class="fa-regular fa-pen-to-square"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </form>
+    <div class="flex gap-2 justify-end pt-3 border-t border-neutral-300 col-span-1 md:col-span-2 mt-2">
+      <button class="btn bg-base text-white" type="submit">
+        {{ "Save" | translate }}
+      </button>
+      <button (click)="modal.dismiss()" class="btn btn-secondary">
+        {{ "Back" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template> -->
+<ng-template #InBoxType let-modal>
+  <div style="background-color: var(--base-color)" class="modal-header text-white flex justify-between items-center">
+    <h4 class="m-0">
+      <span class="text-2xl" [translate]="'name'" [translateParams]="{
+                          ar: 'نوع الوارد',
+                              en: 'InBox Type'
+                            }">
+      </span>
+    </h4>
+    <button type="button" class="text-2xl text-white m-0" (click)="modal.dismiss()">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form class="modal-form" #form="ngForm">
+      <div class="grid md:grid-cols-2 gap-3">
+        <div class="form-group">
+          <label class="text-right col-form-label block">
+            {{ "nameAr" | translate }}
+            <span class="text-danger">*</span></label>
+          <input class="form-control" type="text"
+            [placeholder]="('Write' | translate) + ' ' + ('nameAr' | translate)"
+            [(ngModel)]="outType.NameAr" name="NameAr" />
+        </div>
+        <div class="form-group">
+          <label class="text-right col-form-label block">
+            {{ "nameEn" | translate }}
+            <span class="text-danger">*</span></label>
+          <input class="form-control" type="text"
+            [placeholder]="('Write' | translate) + ' ' + ('nameEn' | translate)" 
+            [(ngModel)]="outType.NameEn" name="NameEn"/>
+        </div>
+      </div>
+
+      <div class="max-h-80 overflow-auto col-span-1 md:col-span-2 mt-4">
+        <table class="custome-table">
+          <thead>
+            <tr class="text-center">
+              <th>{{ "nameAr" | translate }}</th>
+              <th>{{ "nameEn" | translate }}</th>
+              <th [translate]="'name'" [translateParams]="{
+                  ar: 'خيارات',
+                  en: 'Operations'
+                }"></th>
+            </tr>
+          </thead>
+          <tbody>
+           <tr *ngFor="let item of outTypeList">
+              <td>{{item.nameAr}}</td>
+              <td>{{item.nameEn}}</td>
+              <td class="flex gap-2 justify-center">
+                <button (click)="DeleteOutInBoxType(item.typeId)"
+                  class="p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white aspect-square w-10">
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+                <button (click)="EditOutInBoxType(item)"
+                  class="min-w-max p-2 bg-orange-100 hover:bg-orange-500 rounded-lg duration-300 hover:text-white aspect-square w-10">
+                  <i class="fa-regular fa-pen-to-square"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </form>
+    <div class="flex gap-2 justify-end pt-3 border-t border-neutral-300 col-span-1 md:col-span-2 mt-2">
+      <button class="btn bg-base text-white" type="submit" (click)="SaveOutInBoxType()">
+        {{ "Save" | translate }}
+      </button>
+      <button (click)="modal.dismiss()" class="btn btn-secondary">
+        {{ "Back" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>

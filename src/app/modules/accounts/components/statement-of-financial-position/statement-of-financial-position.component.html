@@ -1,0 +1,513 @@
+<div class="statement-of-financial-position">
+  <app-navigator [title]="title"></app-navigator>
+
+    <!-- inputs -->
+    <div class="container-fluid">
+      <div class="row align-items-center">
+
+        <div class="col-xxl-3 col-md-4  col-sm-6 mb-3">
+
+      <div class="flex justify-content-center gap-3">
+        <button class="btn btn-primary" (click)="data.filter.enable = !data.filter.enable" [translate]="'name'"
+        [translateParams]="{
+                  ar: 'فلترة بالوقت',
+                  en: 'Time Filter'
+                }"></button>
+      <div class="form-group timeInput" *ngIf="data.filter.enable">
+        <input placeholder="{{ 'Chose Date' | translate }}" [(ngModel)]="data.filter.date" type="text" (ngModelChange)="CheckDate($event)"
+          class="form-control" bsDaterangepicker #dpr="bsDaterangepicker" />
+      </div>
+      </div>
+        </div>
+
+        <div class="col-xxl-3  col-md-4 col-sm-6 mb-0 mb-md-3">
+          <div class="form-group">
+            <label class="col-form-label"> {{ "costCenter" | translate }}</label>
+            <ng-select
+              class="w-full p-0"
+              placeholder="{{ 'Chose' | translate }}"
+              [(ngModel)]="data.filter.search_costCenterId"
+              name="costCenter"
+              (change)="RefreshData();"
+            >
+              <ng-option *ngFor="let user of load_costCenters" [value]="user.id">{{
+                user.name
+              }}</ng-option>
+            </ng-select>
+          </div>
+        </div>
+
+        <div class="col-xxl-3  col-md-4 col-sm-6 mb-0 mb-md-3">
+          <div class="form-group">
+            <label class="col-form-label"> {{ "accountLevel" | translate }}</label>
+            <ng-select
+              class="w-full p-0"
+              placeholder="{{ 'Chose' | translate }}"
+              (change)="RefreshData();"
+              [(ngModel)]="data.filter.lvlid"
+              name="accountLevel"
+            >
+              <ng-option *ngFor="let user of accountLevellist" [value]="user.id">{{
+                user.name
+              }}</ng-option>
+            </ng-select>
+          </div>
+        </div>
+
+        <div class="col-xxl-3 col-md-4  col-sm-6 mb-3">
+
+      <div class="form-group">
+        <label class="col-form-label"> {{ "search" | translate }}</label>
+
+        <input type="text " class="w-full p-2 inputType"autocomplete="off" name="search" (keyup)="applyFilter($event)" />
+      </div>
+        </div>
+
+    </div>
+
+    <div class="head flex gap-2 flex-wrap items-end justify-between ">
+      <!-- all buttons  -->
+      <div class="btns mb-3  w-100">
+
+        <div class="row d-md-flex justify-content-center">
+          <button
+            type="button"(click)="getPrintdata('report')"
+            class="flex gap-1 btn btn-success mb-3 col-md-2"
+          >
+            {{ "PrintStatementFinancial" | translate }}
+            <i class="fa-solid fa-print"></i>
+
+          </button>
+
+        </div>
+
+      </div>
+    </div>
+
+<!-- table -->
+    <div class="overflow-auto mt-4">
+      <div class="overflow-auto mt-4">
+        <table class=" w-100 ">
+          <thead>
+            <tr>
+              <th class=" border px-4 py-3 text-center  fw-bold" >{{ "account code" | translate }}</th>
+              <th class=" border px-4 py-3 text-center  fw-bold" >{{ "accountName" | translate }}    </th>
+              <th class=" border px-4 py-3 text-center  fw-bold" >{{ "balance" | translate }}</th>
+            </tr>
+          </thead>
+          <tbody >
+
+            <tr *ngFor="let entry of DataSource; let i = index" [ngClass]="{'bg-gray-100': i % 2 == 0, 'bg-white': i % 2 == 1}" [ngClass]="{'bg-white': entry.isfixed == '0', 'bg-red-100': entry.isfixed == '2', 'bg-green-100': entry.isfixed == '1'}">
+                <td class=" border px-4 text-center py-3"> {{ entry.accCode }}</td>
+                <td class=" border px-4 text-center py-3"> {{ entry.gbName }}</td>
+                <td class=" border px-4 text-center py-3"> {{ entry.gbBalance }}</td>
+            </tr>
+
+          </tbody>
+        </table>
+       </div>
+
+    </div>
+    <mat-paginator [pageSizeOptions]="[10, 25]"> </mat-paginator>
+
+    </div>
+    <div id="report" [ngStyle]="{ direction: lang == 'ar' ? 'rtl' : 'ltr' }" style="position: absolute;">
+      <!--Header-->
+      <div
+        class="report-header"
+        style="
+          display: flex;
+          align-items: center;
+          gap: 100px;
+          padding: 3px 0px;
+          margin-bottom: 20px;
+        "
+      >
+        <div class="headerNe-right-side">
+          <img
+          src="{{environmentPho}}"
+            alt="logo"
+            style="height: 200px; width: 200px; max-width: 200px; object-fit: fill"
+          />
+        </div>
+
+        <div class="headerNe-lefy-side" style="width: 100%">
+          <h1
+            style="
+              letter-spacing: 0.25px;
+              font-size: 23px;
+              margin: 0;
+              margin-bottom: 5px;
+            "
+          >
+          {{OrganizationData?.nameAr}}
+          </h1>
+          <h1
+            style="
+              letter-spacing: 0.25px;
+              font-size: 23px;
+              margin: 0;
+              margin-bottom: 5px;
+            "
+          >
+          {{OrganizationData?.nameEn}}
+          </h1>
+          <div class="line" style="position: relative; padding: 5px 0px 10px">
+            <span
+              style="
+                position: absolute;
+                right: 0;
+                width: 100%;
+                height: 2px;
+                background-color: #e5e5e5;
+                z-index: 1;
+              "
+            ></span>
+            <span
+              style="
+                position: absolute;
+                right: 0;
+                width: 70%;
+                height: 2px;
+                background-color: #ec1c24;
+                z-index: 2;
+              "
+            ></span>
+          </div>
+
+          <h1
+            style="
+              margin-bottom: 0;
+              font-size: 34px;
+              color: #0c8191;
+              margin-bottom: 0;
+              margin-top: 30px;
+              font-weight: 500;
+            "
+            [translate]="'name'"
+            [translateParams]="{
+              ar: 'قائمة المركز المالي',
+              en: 'Statement of financial position'
+            }"
+          ></h1>
+        </div>
+      </div>
+      <!--/Header-->
+
+      <div style="margin-bottom: 10px">
+        <p>
+          <span
+            [translate]="'name'"
+            [translateParams]="{
+              ar: 'التاريخ: ',
+              en: 'Date: '
+            }"
+          ></span>
+          <span> {{dateprint}} </span>
+        </p>
+      </div>
+
+      <div style="margin-bottom: 10px ;text-align: center;"  *ngIf="data.filter.enable == true">
+        <p>
+          <span
+            [translate]="'name'"
+            [translateParams]="{
+              ar: 'من تاريخ: ',
+              en: 'From Date: '
+            }"
+          ></span>
+          <span> {{data.filter.DateFrom_P}} </span>
+          <span
+            [translate]="'name'"
+            [translateParams]="{
+              ar: 'الي تاريخ: ',
+              en: 'To Date: '
+            }"
+          ></span>
+          <span> {{data.filter.DateTo_P}} </span>
+        </p>
+      </div>
+      <!-- <div class="info" style="overflow: auto; margin-bottom: 20px">
+        <table
+          class="table table-bordered m-0"
+          style="
+            width: 100%;
+            color: white;
+            text-align: center;
+            vertical-align: middle;
+            min-width: max-content;
+          "
+        >
+          <tr>
+            <td
+              style="
+                padding-inline: 0px !important;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+                border: 1px solid #dce0e4;
+              "
+              [translate]="'name'"
+              [translateParams]="{ ar: 'اسم الحساب', en: 'account name' }"
+            ></td>
+            <td
+              style="
+                padding-inline: 0px !important;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+                border: 1px solid #dce0e4;
+              "
+              [translate]="'name'"
+              [translateParams]="{ ar: 'كود الحساب', en: 'Account code' }"
+            ></td>
+            <td
+              style="
+                line-height: 0 !important;
+                padding: 0px !important;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+                border: 1px solid #dce0e4;
+              "
+              colspan="2"
+            >
+              <span
+                style="
+                  border: none;
+                  display: inline-block;
+                  padding: 10px 0px;
+                  width: 100%;
+
+                  line-height: 24px;
+                "
+                [translate]="'name'"
+                [translateParams]="{ ar: 'الرصيد', en: 'Balance' }"
+              ></span>
+              <div
+                style="
+                  width: 100%;
+                  border-top: 1px solid #dce0e4;
+                  margin: 0px !important;
+                  padding: 0px !important;
+                "
+              >
+                <p
+                  class="mb-0"
+                  style="
+                    line-height: 24px;
+                    display: inline-block;
+                    width: 50%;
+                    border-bottom: 1px solid #dce0e4;
+                    text-align: center;
+                    padding: 7px 0px 10px;
+                    background-color: #f7f7f7;
+                    font-size: 18px;
+                    color: #21403f;
+                    font-weight: 600;
+                    border-inline: 1px solid #dce0e4;
+                    margin: 0px !important;
+                    margin-bottom: 0px !important;
+                  "
+                  [translate]="'name'"
+                  [translateParams]="{ ar: 'مدين', en: 'debtor' }"
+                ></p>
+                <p
+                  class="mb-0"
+                  style="
+                    line-height: 24px;
+                    display: inline-block;
+                    width: 50%;
+                    border-bottom: 1px solid #dce0e4;
+                    text-align: center;
+                    padding: 7px 0px 10px;
+                    background-color: #f7f7f7;
+                    font-size: 18px;
+                    color: #21403f;
+                    font-weight: 600;
+                    margin: 0px !important;
+                    margin-bottom: 0px !important;
+                    border-inline-end: 1px solid #dce0e4;
+                  "
+                  [translate]="'name'"
+                  [translateParams]="{ ar: 'دائن', en: 'Creditor' }"
+                ></p>
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td
+              style="
+                width: 25%;
+                padding-inline: 0px !important;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 500;
+                border: 1px solid #dce0e4;
+                padding: 10px 0px;
+              "
+            >
+              الاصول
+            </td>
+            <td
+              style="
+                width: 25%;
+                padding-inline: 0px !important;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 500;
+                border: 1px solid #dce0e4;
+                padding: 10px 0px;
+              "
+            >
+              32
+            </td>
+            <td
+              style="
+                width: 25%;
+                padding-inline: 0px !important;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 500;
+                border: 1px solid #dce0e4;
+                padding: 10px 0px;
+              "
+            >
+              awdad
+            </td>
+            <td
+              style="
+                width: 25%;
+                padding-inline: 0px !important;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 500;
+                border: 1px solid #dce0e4;
+                padding: 10px 0px;
+              "
+            >
+              awdaw
+            </td>
+          </tr>
+        </table>
+      </div> -->
+    <div style="margin-bottom: 10px ;text-align: center;" >
+      <p>
+        <span
+          [translate]="'name'"
+          [translateParams]="{
+            ar: ' الفرع: ',
+            en: 'Branch: '
+          }"
+        ></span>
+        <span> {{BranchName}} </span>
+ 
+      </p>
+    </div>
+      <div class="services" style="width: 100%; margin-bottom: 20px">
+        <div class="content">
+          <table style="text-align: center; vertical-align: middle; width: 100%">
+            <thead>
+              <td
+                style="
+                  font-size: 16px;
+                  background-color: #fff;
+                  padding: 14px 4px;
+                  text-align: center;
+                  color: #272727;
+                  word-wrap: break-word;
+                  border-inline-start: 1px dashed #0c8191;
+                  border: 1px dashed #272727;
+                  font-weight: 600;
+                "
+              >{{ "account code" | translate }}</td>
+              <td
+                style="
+                  font-size: 16px;
+                  background-color: #fff;
+                  padding: 14px 4px;
+                  text-align: center;
+                  color: #272727;
+                  word-wrap: break-word;
+                  border-inline-start: 1px dashed #0c8191;
+                  border: 1px dashed #272727;
+                  font-weight: 600;
+                "
+              >{{ "accountName" | translate }}</td>
+              <td
+                style="
+                  font-size: 16px;
+                  background-color: #f7f7f7;
+                  padding: 14px 4px;
+                  text-align: center;
+                  color: #272727;
+                  word-wrap: break-word;
+                  border-inline-start: 1px dashed #0c8191;
+                  border: 1px dashed #272727;
+                  font-weight: 600;
+                "
+              >{{ "balance" | translate }}</td>
+            </thead>
+            <tbody>
+
+
+              <tr *ngFor="let item of printprojectsDataSource">
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 0px;
+                    color: #272727;
+                    border-inline-start: 1px dashed #272727;
+                  border: 1px dashed #272727;
+                    border-bottom: 1px dashed #272727;
+                  "
+                >
+                {{item.accCode}}
+                </td>
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 0px;
+                    color: #272727;
+                    border-inline-start: 1px dashed #272727;
+                  border: 1px dashed #272727;
+                    border-bottom: 1px dashed #272727;
+                  "
+                >
+                {{item.gbName}}
+                </td>
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 0px;
+                    color: #272727;
+                    border-inline-start: 1px dashed #272727;
+                  border: 1px dashed #272727;
+                    border-bottom: 1px dashed #272727;
+                  "
+                >
+                {{item.gbBalance}}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+

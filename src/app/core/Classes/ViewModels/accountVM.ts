@@ -1,0 +1,42 @@
+import { TransactionsVM } from "./transactionsVM";
+
+export class AccountVM {
+    accountId: number;
+    code: string | null;
+    accountName: string | null;
+    nameAr: string | null;
+    nameEn: string | null;
+    type: number | null;
+    nature: number | null;
+    parentId: number | null;
+    level: number | null;
+    currencyId: number | null;
+    classification: number | null;
+    halala: boolean | null;
+    active: boolean | null;
+    branchId: number | null;
+    isMain: boolean | null;
+    notes: string | null;
+    parentAccountCode: string | null;
+    parentAccountName: string | null;
+    depitOrCredit: string | null;
+    typeName: string | null;
+    classificationName: string | null;
+    totalCredit: number | null;
+    totalDepit: number | null;
+    totalCreditOpeningBalance: number | null;
+    totalDepitOpeningBalance: number | null;
+    totalCreditBalance: number | null;
+    totalDepitBalance: number | null;
+    totalBalance: number | null;
+    expensesAccId: number | null;
+    accountIdAhlak: number | null;
+    openAccCredit: number | null;
+    openAccDepit: number | null;
+    accountCodeNew: string | null;
+    publicRev: number | null;
+    otherRev: number | null;
+    childAccounts: AccountVM[] | null;
+    transactions: TransactionsVM[] | null;
+    costCenterTransactions: TransactionsVM[] | null;
+}

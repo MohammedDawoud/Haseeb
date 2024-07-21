@@ -1,0 +1,1048 @@
+<div class="billing-services">
+  <app-navigator [title]="title"></app-navigator>
+  <div class="head flex gap-2 flex-wrap items-end justify-between">
+    <!-- all buttons  -->
+    <div class="flex items-end gap-3 flex-wrap">
+      <div>
+        <label class="col-form-label"> {{ "search" | translate }} </label>
+        <input
+          type="text"
+          class="form-control"
+          style="max-width: 300px"
+          id="search"
+          name="search"
+          (keyup)="servicesearchtext($event)"
+        />
+      </div>
+
+      <div class="max-w-xs">
+        <label
+          class="col-form-label"
+          [translate]="'name'"
+          [translateParams]="{
+            ar: ' نوع البحث',
+            en: 'Search Type'
+          }"
+        >
+        </label>
+        <ng-select
+          class="w-full p-0"
+          [(ngModel)]="searchType"
+          name="searchType"
+          placeholder=" {{ 'Chose' | translate }}"
+          (change)="refreshsearch()"
+        >
+          <ng-option [value]="1">
+            {{ "Third party postpaid" | translate }}
+          </ng-option>
+          <ng-option [value]="2">
+            {{ "account name" | translate }}
+          </ng-option>
+          <ng-option [value]="3">
+            {{ "Date of publication AD" | translate }}
+          </ng-option>
+          <ng-option [value]="4">
+            {{ "Chapter date AD" | translate }}
+          </ng-option>
+        </ng-select>
+      </div>
+
+      <div class="max-w-xs" *ngIf="searchType == 1">
+        <label for="">{{ "Third party postpaid" | translate }}</label>
+        <ng-select
+          class="w-full p-0"
+          placeholder=" {{ 'Chose' | translate }}"
+          [(ngModel)]="FilterModel.departmentId"
+          name="departmentId"
+          (change)="searchservice()"
+        >
+          <ng-option
+            *ngFor="let item of departmentselectedlist"
+            [value]="item.id"
+          >
+            {{ item?.name }}
+          </ng-option>
+        </ng-select>
+      </div>
+
+      <div class="max-w-xs" *ngIf="searchType == 2">
+        <label for="">{{ "account name" | translate }}</label>
+        <ng-select
+          class="w-full p-0"
+          [(ngModel)]="FilterModel.accountId"
+          name="accountId"
+          placeholder=" {{ 'Chose' | translate }}"
+          (change)="searchservice()"
+        >
+          <ng-option *ngFor="let item of AccountSelectList" [value]="item.id">
+            {{ item?.name }}
+          </ng-option>
+        </ng-select>
+      </div>
+
+      <div class="max-w-xs" *ngIf="searchType == 3">
+        <label for="">{{ "Date of publication AD" | translate }}</label>
+        <input
+          placeholder="{{ 'Chose Date' | translate }} "
+          type="text"
+          class="form-control"
+          bsDatepicker
+          #dpr="bsDatepicker"
+          [(ngModel)]="FilterModel.date"
+          name="date"
+          (ngModelChange)="searchservice()"
+        />
+      </div>
+      <div class="max-w-xs" *ngIf="searchType == 4">
+        <label for="">{{ "Chapter date AD" | translate }}</label>
+        <input
+          placeholder="{{ 'Chose Date' | translate }} "
+          type="text"
+          class="form-control"
+          bsDatepicker
+          #dpr="bsDatepicker"
+          [(ngModel)]="FilterModel.expireDate"
+          name="expireDate"
+          (ngModelChange)="searchservice()"
+        />
+      </div>
+      <button
+        type="button"
+        class="btn bg-base text-white"
+        (click)="open(AddInvoiceModal, null, 'add')"
+      >
+        {{ "newService" | translate }}
+      </button>
+    </div>
+  </div>
+
+  <!-- table -->
+  <div class="overflow-auto mt-4">
+    <table
+      mat-table
+      [dataSource]="serviceList"
+      matSort
+      class="mat-elevation-z8 rounded-t-lg overflow-hidden w-max"
+    >
+      <ng-container matColumnDef="serviceNumber">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span>{{ "serviceNumber" | translate }}</span>
+        </th>
+        <td
+          mat-cell
+          *matCellDef="let element"
+          class="{{
+            element.expireDate != null && element.expireDate < today
+              ? 'text-red-300 fw-bold'
+              : element.expireDate != null && getnotidate(element) < todayy
+              ? 'text-yellow-200 fw-bold'
+              : ''
+          }}"
+        >
+          {{ element.number }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="postPaid">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span>{{ "postPaid" | translate }}</span>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.departmentName }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="DateOfPublicationAD">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span>{{ "DateOfPublicationAD" | translate }}</span>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.date }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="ChapterDateAD">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span>{{ "ChapterDateAD" | translate }}</span>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.expireDate }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="accountName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span>{{ "accountName" | translate }}</span>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.accountName }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="operations">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span>{{ "operations" | translate }}</span>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <div class="child-btns">
+            <button
+              *ngIf="
+                element.attachmentUrl != null && element.attachmentUrl != ''
+              "
+              (click)="downattach(element.attachmentUrl)"
+              class="min-w-max p-2 bg-sky-100 hover:bg-sky-500 rounded-lg duration-300 hover:text-white aspect-square w-10"
+            >
+              <i class="fa-solid fa-eye" title="عقد قوي"></i>
+            </button>
+
+            <span class="dtr-data">
+              <!--تعديل  -->
+              <button
+                type="button"
+                id="68"
+                class="p-2 bg-orange-100 hover:bg-orange-500 rounded-lg duration-300 hover:text-white w-10 mx-1"
+                data-toggle="tooltip"
+                data-placement="top"
+                title=" تعديل "
+                data-original-title="تعديل "
+                (click)="open(AddInvoiceModal, element, 'editservice')"
+              >
+                <i class="fa-regular fa-pen-to-square"></i>
+              </button>
+            </span>
+
+            <span class="dtr-data">
+              <!--حذف   -->
+
+              <button
+                type="button"
+                id="68"
+                class="p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white w-10 mx-1"
+                data-toggle="tooltip"
+                data-placement="top"
+                title=" حذف "
+                data-original-title="حذف "
+                (click)="open(deleteModal, element, 'deletedservice')"
+              >
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </span>
+          </div>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="projectDisplayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: projectDisplayedColumns"></tr>
+    </table>
+  </div>
+  <mat-paginator [pageSizeOptions]="[10, 25]"> </mat-paginator>
+</div>
+
+<!-- deleteModal -->
+<ng-template #deleteModal let-modal>
+  <div class="modal-body text-center">
+    <p
+      [translate]="'name'"
+      [translateParams]="{
+        ar: 'هل تريد حذف هذا العنصر ؟',
+        en: 'Do you want to delete this item?'
+      }"
+    ></p>
+    <div class="flex gap-2 justify-center">
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "close" | translate }}
+      </button>
+
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="Deleteservice(modal); modal.dismiss()"
+      >
+        {{ "confirem" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- AddInvoiceModal / edit -->
+<ng-template #AddInvoiceModal let-modal>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="m-0">
+      <span class="text-2xl">
+        <span *ngIf="modalDetails?.id">{{
+          "ModifyInvoice_Service" | translate
+        }}</span>
+
+        <span *ngIf="!modalDetails?.id">{{ "AddNewService" | translate }}</span>
+      </span>
+    </h4>
+    <button
+      type="button"
+      class="text-2xl text-white m-0"
+      (click)="modal.dismiss()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <!-- modal-body -->
+  <div class="modal-body">
+    <form #form="ngForm">
+      <div class="row items-center">
+        <div class="col-xxl-3 col-md-4 col-sm-6 mb-3">
+          <div class="form-group">
+            <label for="serviceNumber" class="text-right col-form-label block">
+              {{ "serviceNumber" | translate }}
+            </label>
+            <input
+              required
+              placeholder="{{ 'serviceNumber' | translate }}"
+              #serviceNumber="ngModel"
+              [(ngModel)]="modalDetails.number"
+              ngModel
+              class="form-control"
+              type="text"
+              id="serviceNumber"
+              name="serviceNumber"
+            />
+          </div>
+        </div>
+
+        <div class="col-xxl-3 col-md-4 col-sm-6 mb-3">
+          <div class="form-group row g-0">
+            <label class="text-right col-form-label block">
+              {{ "postPaid" | translate }}</label
+            >
+
+            <div class="col-md-11">
+              <ng-select
+                class="w-full p-0"
+                placeholder="{{ 'Chose' | translate }}"
+                [(ngModel)]="modalDetails.departmentId"
+                [ngModelOptions]="{ standalone: true }"
+                name="departmentId"
+              >
+                <ng-option
+                  *ngFor="let user of departmentselectedlist"
+                  [value]="user.id"
+                  >{{ user.name }}</ng-option
+                >
+              </ng-select>
+            </div>
+
+            <div class="col-md-1">
+              <button
+                type="button"
+                class="btn bg-base text-white"
+                style="padding: 5px 10px"
+                (click)="open(newItemModal, null, 'department')"
+              >
+                <i class="fa fa-plus"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Date -->
+        <div class="col-xxl-3 col-md-4 col-sm-6 mb-3">
+          <div class="form-group">
+            <label class="text-right col-form-label block">
+              {{ "DateOfPublicationAD" | translate }}
+            </label>
+            <div class="form-group timeInput">
+              <input
+                placeholder="{{ 'Chose' | translate }}"
+                [(ngModel)]="modalDetails.date"
+                name="DateOfPublicationAD"
+                type="text"
+                class="form-control"
+                bsDatepicker
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xxl-3 col-md-4 col-sm-6 mb-3">
+          <div class="form-group">
+            <label class="text-right col-form-label block">
+              {{ "ChapterDateAD" | translate }}
+            </label>
+            <div class="form-group timeInput">
+              <input
+                placeholder="{{ 'Chose' | translate }}"
+                [(ngModel)]="modalDetails.expireDate"
+                name="expireDate"
+                type="text"
+                class="form-control"
+                bsDatepicker
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xxl-3 col-md-4 col-sm-6 mb-3">
+          <div class="form-group">
+            <label class="col-form-label">
+              {{ "accountName" | translate }}</label
+            >
+            <ng-select
+              name="accountId"
+              class="w-full p-0"
+              placeholder="{{ 'Chose' | translate }}"
+              [(ngModel)]="modalDetails.accountId"
+              [ngModelOptions]="{ standalone: true }"
+            >
+              <ng-option
+                *ngFor="let user of AccountSelectList"
+                [value]="user.id"
+                >{{ user.name }}</ng-option
+              >
+            </ng-select>
+          </div>
+        </div>
+
+        <div class="col-xxl-3 col-md-4 col-sm-6 mb-3">
+          <div class="form-group row g-0">
+            <label class="text-right col-form-label block">
+              {{ "Bank" | translate }}</label
+            >
+
+            <div class="col-md-11">
+              <ng-select
+                class="w-full p-0"
+                placeholder="{{ 'Chose' | translate }}"
+                [(ngModel)]="modalDetails.bankId"
+                [ngModelOptions]="{ standalone: true }"
+              >
+                <ng-option
+                  *ngFor="let user of BankSelectList"
+                  [value]="user.id"
+                  >{{ user.name }}</ng-option
+                >
+              </ng-select>
+            </div>
+
+            <div class="col-md-1">
+              <button
+                type="button"
+                class="btn bg-base text-white"
+                style="padding: 5px 10px"
+                (click)="open(AddModalBanks, '', 'AddModalBanks')"
+              >
+                <i class="fa fa-plus"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xxl-3 col-md-4 col-sm-6 mb-3">
+          <div class="form-group">
+            <label class="col-form-label">
+              {{ "warningBefore" | translate }}</label
+            >
+            <input
+              name="notifyCount"
+              placeholder="{{ 'warningBefore' | translate }}"
+              type="text"
+              class="form-control"
+              [(ngModel)]="modalDetails.notifyCount"
+              [ngModelOptions]="{ standalone: true }"
+            />
+          </div>
+        </div>
+
+        <div class="col-xxl-3 col-md-4 col-sm-6 mb-3">
+          <div class="form-check form-switch position-relative mt-5 mb-2">
+            <input
+              class="form-check-input position-absolute end-25"
+              type="checkbox"
+              role="switch"
+              [checked]="showTable"
+              id="flexSwitchCheckDefault"
+              (change)="showTable = !showTable"
+            />
+            <label
+              class="form-check-label me-5"
+              for="flexSwitchCheckDefault"
+              style="width: max-content"
+            >
+              {{ "AlertRepeat" | translate }}
+            </label>
+          </div>
+        </div>
+
+        <div class="col-xxl-3 col-md-4 col-sm-6 mb-3" *ngIf="showTable">
+          <div class="form-group">
+            <label class="col-form-label">
+              {{ "recurrenceRate" | translate }}</label
+            >
+            <ng-select
+              name="recurrenceRateId"
+              class="w-full p-0"
+              placeholder="{{ 'Chose' | translate }}"
+              [(ngModel)]="modalDetails.recurrenceRateId"
+              [ngModelOptions]="{ standalone: true }"
+            >
+              <ng-option value="1">كل شهر </ng-option>
+              <ng-option value="2">كل 3 شهور</ng-option>
+              <ng-option value="3">كل 6 شهور</ng-option>
+              <ng-option value="4">كل سنة</ng-option>
+            </ng-select>
+          </div>
+        </div>
+
+        <div class="col-12 mb-3">
+          <div class="form-group">
+            <label for="WarningText" class="text-right col-form-label block">
+              {{ "WarningText" | translate }}
+            </label>
+            <textarea
+              name="notes"
+              id=""
+              class="w-100"
+              rows="5"
+              [(ngModel)]="modalDetails.notes"
+              placeholder="{{ 'WarningText' | translate }}"
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="col-sm-6 mb-3">
+          <div class="form-group col-span-1 md:col-span-2">
+            <label for="formFile" class="form-label">
+              {{ "Upload File" | translate }}</label
+            >
+
+            <!-- <div class="upload">
+              <file-upload [control]="control">
+                <ng-template
+                  let-isFileDragDropAvailable="isFileDragDropAvailable"
+                  #placeholder
+                >
+                  <div *ngIf="control.size === 0">
+                    <div class="icon">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        height="1em"
+                        viewBox="0 0 640 512"
+                      >
+                        <path
+                          d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-217c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l39-39V392c0 13.3 10.7 24 24 24s24-10.7 24-24V257.9l39 39c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0l-80 80z"
+                        />
+                      </svg>
+                    </div>
+
+                    <div class="upload-text">
+                      {{ "chooseFile" | translate }}
+                    </div>
+                  </div>
+                </ng-template>
+
+                <ng-template
+                  let-i="index"
+                  let-file="file"
+                  let-control="control"
+                  #item
+                >
+                  <div class="overlay">
+                    <span
+                      class="delete-button"
+                      (click)="control.removeFile(file)"
+                    >
+                      <svg viewBox="0 0 448 512">
+                        <path
+                          d="M32 464a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128H32zm272-256a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zM432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16z"
+                        ></path>
+                      </svg>
+                    </span>
+                    <img *ngIf="control.valid" [src]="uploadedFile | async" />
+                  </div>
+                </ng-template>
+              </file-upload>
+            </div> -->
+
+            <file-upload
+              class="w-full"
+              style="min-height: 80px"
+              [(ngModel)]="uploadedFiles"
+              name="files"
+            ></file-upload>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div
+      class="flex gap-2 justify-end pt-3 border-t border-neutral-300 col-span-1 md:col-span-2 mt-2"
+    >
+      <button
+        class="btn bg-base text-white"
+        type="submit"
+        (click)="Saveservice(modal)"
+      >
+        {{ "Save" | translate }}
+      </button>
+      <button (click)="modal?.dismiss()" class="btn btn-secondary">
+        {{ "close" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- newItemModal -->
+<!-- <ng-template #newItemModal let-modal>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="m-0">
+      <span class="text-2xl">
+        {{
+          modalDetails.id == 2
+            ? ("ModifyInvoice_Service" | translate)
+            : ("AddNewService" | translate)
+        }}
+      </span>
+    </h4>
+    <button
+      type="button"
+      class="text-2xl text-white m-0"
+      (click)="modal.dismiss()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body max-h-100 overflow-x-scroll overflow-y-scroll p-4">
+    <form class="" #smsForm="ngForm">
+      <div class="row align-items-end mb-4 mx-3">
+
+        <div class="col-sm-6 col-md-3 col-lg-6 mb-0 mb-sm-3">
+          <div class="form-group">
+            <label for="nameAr" class="text-right col-form-label block">
+              {{ "nameAr" | translate }}
+            </label>
+            <input required class="form-control" type="text" />
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-6 mb-0 mb-sm-3">
+          <div class="form-group">
+            <label for="nameEn" class="text-right col-form-label block">
+              {{ "nameEn" | translate }}
+            </label>
+            <input
+              name="dateCheck_transfer"
+              type="text"
+              class="form-control"
+              bsDatepicker
+              #dpr="bsDatepicker"
+            />
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-12 mb-0 mb-sm-3 text-center">
+          <button
+            type="button"
+            class="flex gap-1 btn text-white mb-3 col-md-2 me-3"
+            style="background-color: var(--base-color)"
+          >
+            {{ "save" | translate }}
+          </button>
+
+          <button
+            type="button"
+            class="flex gap-1 btn btn-secondary mb-3 col-md-2"
+          >
+            {{ "close" | translate }}
+          </button>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-12 mb-0 mb-sm-3 text-center">
+          <input
+            name="dateCheck_transfer"
+            placeholder="{{ 'search' | translate }}"
+            type="text"
+            class="form-control"
+            bsDatepicker
+            #dpr="bsDatepicker"
+          />
+        </div>
+      </div>
+
+      <div class="editable shadow mb-4">
+        <table
+          class="table table-responsive table-striped table-bordered text-center"
+          style="vertical-align: middle; font-size: 14px"
+        >
+          <thead
+            class="bg-base text-white"
+            style="line-height: 30px; font-size: 13px"
+          >
+            <tr>
+              <th>{{ "nameAr" | translate }}</th>
+              <th>{{ "nameEn" | translate }}</th>
+              <th>{{ "operations" | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let item of users; let i = index"
+              style="line-height: 5px"
+            >
+              <td>{{ item.id }}</td>
+              <td>
+                <input
+                  type="text"
+                  name="os-name{{ i }}"
+                  [(ngModel)]="item.Name"
+                  ngModel
+                />
+              </td>
+              <td>
+                <button
+                  class="p-2 bg-orange-100 hover:bg-orange-500 rounded-lg duration-300 hover:text-white w-10"
+                >
+                  <i class="fa-regular fa-pen-to-square"></i>
+                </button>
+
+                <button
+                  class="p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white w-10 me-3"
+                  (click)="open(deleteModal)"
+                >
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </form>
+  </div>
+
+  <div class="flex justify-end p-3">
+    <button
+      (click)="modal?.dismiss()"
+      class="btn text-white"
+      style="background-color: var(--base-color)"
+    >
+      {{ "save" | translate }}
+    </button>
+
+    <button class="btn me-2 btn-secondary">
+      {{ "close" | translate }}
+    </button>
+  </div>
+</ng-template> -->
+
+<!-- newItemModal -->
+<ng-template #newItemModal let-modal>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <button
+      type="button"
+      class="text-2xl text-white m-0"
+      (click)="modal.dismiss()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body max-h-100 overflow-x-scroll overflow-y-scroll p-4">
+    <form class="" #smsForm="ngForm">
+      <div class="row align-items-end mb-4 mx-3">
+        <!-- 1 line -->
+
+        <div class="col-sm-6 col-md-3 col-lg-6 mb-0 mb-sm-3">
+          <div class="form-group">
+            <label for="nameAr" class="text-right col-form-label block">
+              {{ "nameAr" | translate }}
+            </label>
+            <input
+              required
+              class="form-control"
+              type="text"
+              [(ngModel)]="departmentmodel.departmentNameAr"
+              name="departmentNameAr"
+            />
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-6 mb-0 mb-sm-3">
+          <div class="form-group">
+            <label for="nameEn" class="text-right col-form-label block">
+              {{ "nameEn" | translate }}
+            </label>
+            <input
+              name="dateCheck_transfer"
+              type="text"
+              class="form-control"
+              [(ngModel)]="departmentmodel.departmentNameEn"
+              name="departmentNameEn"
+            />
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-12 mb-0 mb-sm-3 text-center">
+          <button
+            type="button"
+            class="flex gap-1 btn text-white mb-3 col-md-2 me-3"
+            style="background-color: var(--base-color)"
+            (click)="SaveDepartment()"
+          >
+            {{ "save" | translate }}
+          </button>
+
+          <button
+            type="button"
+            class="flex gap-1 btn btn-secondary mb-3 col-md-2"
+            (click)="modal?.dismiss()"
+          >
+            {{ "close" | translate }}
+          </button>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-12 mb-0 mb-sm-3 text-center">
+          <input
+            name="dateCheck_transfer"
+            placeholder="{{ 'search' | translate }}"
+            type="text"
+            class="form-control"
+            [(ngModel)]="searchdepartment"
+            name="searchdepartment"
+            (keyup)="GetAllDepartmentbyType()"
+          />
+        </div>
+      </div>
+
+      <div class="editable shadow mb-4">
+        <table
+          class="table table-responsive table-striped table-bordered text-center"
+          style="vertical-align: middle; font-size: 14px"
+        >
+          <thead
+            class="bg-base text-white"
+            style="line-height: 30px; font-size: 13px"
+          >
+            <tr>
+              <th>{{ "DeptNameAR" | translate }}</th>
+              <th>{{ "DeptNameEN" | translate }}</th>
+              <th>{{ "operations" | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let item of departmentlist; let i = index"
+              style="line-height: 5px"
+            >
+              <td>{{ item.departmentNameAr }}</td>
+              <td>
+                <input
+                  type="text"
+                  name="os-name{{ i }}"
+                  [(ngModel)]="item.departmentNameEn"
+                />
+              </td>
+              <td>
+                <button
+                  class="p-2 bg-orange-100 hover:bg-orange-500 rounded-lg duration-300 hover:text-white w-10"
+                  (click)="setdatatoedit(item)"
+                >
+                  <i class="fa-regular fa-pen-to-square"></i>
+                </button>
+
+                <button
+                  class="p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white w-10 me-3"
+                  (click)="DeleteVoucher(item)"
+                >
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </form>
+  </div>
+
+  <div class="flex justify-end p-3">
+    <button
+      (click)="modal?.dismiss()"
+      class="btn text-white"
+      style="background-color: var(--base-color)"
+    >
+      {{ "save" | translate }}
+    </button>
+
+    <button class="btn me-2 btn-secondary" (click)="modal?.dismiss()">
+      {{ "close" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+<!-- AddModalBanks -->
+<ng-template #AddModalBanks let-modal>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="m-0">
+      <span class="text-2xl">{{ "Bank Name" | translate }}</span>
+    </h4>
+    <button
+      type="button"
+      class="text-2xl text-white m-0"
+      (click)="modal.dismiss()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="max-h-100 overflow-x-scroll overflow-y-scroll px-4">
+    <form class="" #smsForm="ngForm">
+      <div class="row align-items-end mb-4 mx-3">
+        <!-- 1 line -->
+
+        <div class="col-sm-6 col-md-3 col-lg-6 mb-0 mb-sm-3">
+          <div class="form-group">
+            <label for="nameAr" class="text-right col-form-label block">
+              {{ "nameAr" | translate }}
+            </label>
+            <input
+              class="form-control"
+              type="text"
+              [(ngModel)]="BanksNameEn"
+              [ngModelOptions]="{ standalone: true }"
+            />
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-6 mb-0 mb-sm-3">
+          <div class="form-group">
+            <label for="nameEn" class="text-right col-form-label block">
+              {{ "nameEn" | translate }}
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="BanksNameAr"
+              [ngModelOptions]="{ standalone: true }"
+            />
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-12 mb-0 mb-sm-3 text-center">
+          <button
+            type="button"
+            class="flex gap-1 btn text-white mb-3 col-md-2 me-3"
+            (click)="SaveBanks()"
+            style="background-color: var(--base-color)"
+          >
+            {{ "save" | translate }}
+          </button>
+
+          <button
+            type="button"
+            class="flex gap-1 btn btn-secondary mb-3 col-md-2"
+            (click)="modal?.dismiss()"
+          >
+            {{ "close" | translate }}
+          </button>
+        </div>
+
+        <!-- <div class="col-sm-6 col-md-3 col-lg-12 mb-0 mb-sm-3 text-center">
+          <input name="dateCheck_transfer" placeholder="{{ 'search' | translate }}" type="text" class="form-control"/>
+        </div> -->
+      </div>
+
+      <div class="editable shadow mb-4">
+        <table
+          class="table table-responsive table-striped table-bordered text-center"
+          style="vertical-align: middle; font-size: 14px"
+        >
+          <thead
+            class="bg-base text-white"
+            style="line-height: 30px; font-size: 13px"
+          >
+            <tr>
+              <th>{{ "BankName_ar" | translate }}</th>
+              <th>{{ "BankName_en" | translate }}</th>
+              <th>{{ "operations" | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let item of BanksList; let i = index"
+              style="line-height: 5px"
+            >
+              <td>{{ item.nameAr }}</td>
+              <td>{{ item.nameEn }}</td>
+              <td>
+                <button
+                  class="p-2 bg-orange-100 hover:bg-orange-500 rounded-lg duration-300 hover:text-white w-10"
+                  (click)="updateBanks(item)"
+                >
+                  <i class="fa-regular fa-pen-to-square"></i>
+                </button>
+
+                <button
+                  class="p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white w-10 me-3"
+                  (click)="open(deleteBank, item, 'deleteBank')"
+                >
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </form>
+  </div>
+  <!--
+  <div class="flex justify-end p-3">
+    <button class="btn me-2 btn-secondary" (click)="modal?.dismiss()">
+      {{ "close" | translate }}
+    </button>
+
+    <button (click)="modal?.dismiss()" class="btn text-white" style="background-color: var(--base-color)">
+      {{ "save" | translate }}
+    </button>
+  </div> -->
+</ng-template>
+
+<!-- deleteBank -->
+<ng-template #deleteBank let-modal>
+  <div class="modal-body text-center">
+    <p
+      [translate]="'name'"
+      [translateParams]="{
+        ar: 'هل تريد حذف هذا العنصر ؟',
+        en: 'Do you want to delete this item?'
+      }"
+    ></p>
+    <div class="flex gap-2 justify-center">
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "close" | translate }}
+      </button>
+
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="DeleteBank(modal)"
+      >
+        {{ "confirem" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>

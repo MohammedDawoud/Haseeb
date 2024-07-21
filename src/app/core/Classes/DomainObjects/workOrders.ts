@@ -1,0 +1,48 @@
+import { Auditable } from "./auditable";
+import { Project } from "./project";
+import { Users } from "./users";
+import { Customer } from "./customer";
+
+export class WorkOrders extends Auditable {
+    workOrderId: number;
+    orderNo: string | null;
+    userId: number | null;
+    orderDate: string | null;
+    orderHijriDate: string | null;
+    responsibleEng: number | null;
+    executiveEng: number | null;
+    customerId: number | null;
+    mediator: string | null;
+    required: string | null;
+    note: string | null;
+    orderValue: number | null;
+    orderPaid: number | null;
+    orderRemaining: number | null;
+    orderDiscount: number | null;
+    orderTax: number | null;
+    orderValueAfterTax: number | null;
+    discountReason: string | null;
+    sketch: string | null;
+    district: string | null;
+    location: string | null;
+    pieceNo: string | null;
+    instrumentNo: string | null;
+    executiveType: string | null;
+    contractNo: string | null;
+    agentId: string | null;
+    agentMobile: string | null;
+    social: string | null;
+    percentComplete: number | null;
+    branchId: number | null;
+    endDate: string | null;
+    wOStatus: number | null;
+    wOStatustxt: string | null;
+    attatchmentUrl: string | null;
+    noOfDays: number;
+    projectId: number | null;
+    project: Project | null;
+    user: Users | null;
+    responsibleEngineer: Users | null;
+    executiveEngineer: Users | null;
+    customer: Customer | null;
+}

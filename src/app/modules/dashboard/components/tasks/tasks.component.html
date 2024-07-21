@@ -1,0 +1,2330 @@
+<div class="tasks-page">
+  <app-navigator [title]="title"></app-navigator>
+  <div class="grid lg:grid-cols-2 gap-4">
+    <div>
+      <div class="mb-5">
+        <div
+          class="border border-base rounded-lg p-2 mb-4"
+          style="height: 400px"
+        >
+          <span
+            class="font-bold my-4 block"
+            [translate]="'name'"
+            [translateParams]="{
+              ar: 'المهام',
+              en: 'Tasks'
+            }"
+          ></span>
+          <div class="flex gap-1 flex-wrap">
+            <button
+              class="btn btn-warning flex gap-1 items-center"
+              (click)="TasksDayWeekMonthclick(1)"
+            >
+              <span
+                class="text-sm"
+                [translate]="'name'"
+                [translateParams]="{
+                  ar: 'مهام اليوم ',
+                  en: 'Todays Tasks'
+                }"
+              ></span>
+              <span class="text-xs rounded-lg w-5 p-1 bg-white text-base">{{
+                TaskDay
+              }}</span>
+            </button>
+            <button
+              class="btn btn-secondary flex gap-1 items-center"
+              (click)="TasksDayWeekMonthclick(2)"
+            >
+              <span
+                class="text-sm"
+                [translate]="'name'"
+                [translateParams]="{
+                  ar: 'مهام الاسبوع ',
+                  en: 'ًWeek'
+                }"
+              ></span>
+              <span class="text-xs rounded-lg w-5 p-1 bg-white text-base">{{
+                Taskmonth
+              }}</span>
+            </button>
+            <button
+              class="btn btn-primary flex gap-1 items-center"
+              (click)="TasksDayWeekMonthclick(3)"
+            >
+              <span
+                class="text-sm"
+                [translate]="'name'"
+                [translateParams]="{
+                  ar: 'مهام الشهر ',
+                  en: 'Month'
+                }"
+              ></span>
+              <span class="text-xs rounded-lg w-5 p-1 bg-white text-base">{{
+                TaskMonth
+              }}</span>
+            </button>
+          </div>
+          <div class="flex gap-1 flex-wrap my-4">
+            <button
+              class="flex gap-1 btn btn-light items-center"
+              (click)="GetTasksByUserIdUser(2)"
+            >
+              <span
+                class="hidden md:block"
+                [translate]="'name'"
+                [translateParams]="{
+        ar  : 'قيد التشغيل',
+        en : 'Running',
+                }"
+              ></span>
+              <i class="fa-solid fa-play"></i>
+            </button>
+            <button
+              class="flex gap-1 btn btn-light items-center"
+              (click)="GetTasksByUserIdUser(1)"
+            >
+              <span
+                class="hidden md:block"
+                [translate]="'name'"
+                [translateParams]="{
+        ar  : 'لم تبدأ',
+        en : 'Not Started',
+                }"
+              ></span>
+              <i class="fa-solid fa-hourglass-end"></i>
+            </button>
+            <button
+              class="flex gap-1 btn btn-light items-center"
+              (click)="GetTasksByUserIdUser(3)"
+            >
+              <span
+                class="hidden md:block"
+                [translate]="'name'"
+                [translateParams]="{
+        ar  : 'متوقفه',
+        en : 'Stopped',
+                }"
+              ></span>
+              <i class="fa-regular fa-circle-stop"></i>
+            </button>
+            <button
+              class="flex gap-1 btn btn-light items-center"
+              (click)="GetTasksByUserIdUser(0)"
+            >
+              <span
+                class="hidden md:block"
+                [translate]="'name'"
+                [translateParams]="{
+        ar  : 'الكل',
+        en : 'All',
+                }"
+              ></span>
+              <i class="fa-solid fa-border-all"></i>
+            </button>
+          </div>
+          <!---------------------------Tasks List-------------------------------------------->
+          <!-- (click)="(selectedTask1 = $event);" -->
+
+          <div class="flex flex-col gap-3 p-3 h-48 overflow-auto">
+            <div *ngFor="let item of TasksList">
+              <div class="project-box" (click)="selectTask(item)">
+                <span *ngIf="item.phasesTaskName != null">{{
+                  item.phasesTaskName + " - " + item.projectNumber
+                }}</span>
+                <span *ngIf="item.phasesTaskName == null">{{
+                  item.descriptionAr + " - " + item.projectNumber
+                }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- <div class="container-fluid">
+          <div class="row" *ngIf="TaskData.selected">
+            <div class="col-md-6 selectedTask1 mb-5">
+              <ng-container *ngIf="TaskData.selected">
+                <p class="mb-4">
+                  <span style="margin-inline-end: 20px"
+                    >{{ "taskName" | translate }}
+                  </span>
+                  <span>{{ TaskData.Obj?.descriptionAr }}</span>
+                </p>
+
+                <div class="d-flex items-center justify-between flex-wrap gap-8 fs-6">
+                  <p class="mb-3">
+                    <span style="margin-inline-end: 20px"
+                      >{{ "status" | translate }}
+                    </span>
+                    <span>{{ TaskData.Obj?.statusName }}</span>
+                  </p>
+                  <p class="mb-4">
+                    <span style="margin-inline-end: 20px"
+                      >{{ "Duration" | translate }}
+                    </span>
+                    <span>{{ TaskData.Obj?.timeStr }}</span>
+                    -
+                    <span style="margin-inline-end: 20px"
+                      >{{ "Project name/description" | translate }}
+                    </span>
+                    <span>{{ TaskData.Obj?.projectDescription }}</span>
+                  </p>
+                  <span *ngIf="TaskData.Obj?.settingId" title="مهمة في سير"><i class="fa fa-signal fa-2xl" aria-hidden="true"></i></span>
+                  <div class="chart mb-4" style="max-width: 150px">
+                    <apx-chart
+                      [series]="chartOptions.series"
+                      [chart]="chartOptions.chart"
+                      [labels]="chartOptions.labels"
+                      [responsive]="chartOptions.responsive"
+                    ></apx-chart>
+
+                    <ngx-gauge [type]="gaugeType"
+                    [value]="gaugeValue"
+                    [label]="gaugeLabel"
+                    [append]="gaugeAppendText">
+                    </ngx-gauge>
+
+
+                     <ngx-gauge
+                    type="full"
+                    value="50"
+                    label="progress"
+                    append="%"
+                    thick="10"
+                    foregroundColor="#2980b9"
+                  ></ngx-gauge>
+
+                  </div>
+                </div>
+
+                <div class="mb-4">
+                  <mat-progress-bar
+                    mode="determinate"
+                    value="{{TaskData.Obj?.execPercentage??0}}"
+                    style="height: 12px"
+                  ></mat-progress-bar>
+                </div>
+
+                <div class="table">
+                  <div class="date flex items-center justify-between">
+                    <p>
+                      <span>{{ "From" | translate }}</span>
+                      <span style="unicode-bidi: plaintext;">{{ TaskData.TaskTimeFrom_Merge}}</span>
+                    </p>
+                    <p>
+                      <span>{{ "To" | translate }}</span>
+                      <span style="unicode-bidi: plaintext;">{{ TaskData.TaskTimeTo_Merge}}</span>
+                    </p>
+                  </div>
+
+                  <table
+                    class="table table-responsive table-striped table-bordered text-center"
+                    style="vertical-align: middle; font-size: 14px"
+                  >
+                    <thead
+                      class="bg-base text-white"
+                      style="line-height: 30px; font-size: 13px"
+                    >
+                      <tr>
+                        <th>{{ "Assigned to" | translate }}</th>
+                        <th>{{ "Project Number" | translate }}</th>
+                        <th>{{ "Customer Name" | translate }}</th>
+                        <th>{{ "task status" | translate }}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>{{ TaskData.Obj?.userName }}</td>
+                        <td>{{ TaskData.Obj?.projectNumber }}</td>
+                        <td>{{ TaskData.Obj?.clientName }}</td>
+                        <td>{{ TaskData.priorty }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="actions my-2 flex items-center justify-between">
+                  <div class="flex justify-start items-center gap-4">
+                    <button
+                      type="button"
+                      mat-button
+                      mat-raise-button
+                      class="bg-success text-white px-4 py-2"
+                      style="
+                        padding: 2px 14px !important;
+                        width: max-content;
+                        height: auto;
+                      "
+                      (click)="open(endTaskModal, 'task')"
+                    >
+                      {{ "end task" | translate }}
+                    </button>
+                    <p class="flex items-center mb-0">
+                      {{ "Mission Completion Ratio" | translate }}
+                      <span class="value">{{TaskData.Obj?.execPercentage??0}}</span>
+                      <span>%</span>
+                    </p>
+                  </div>
+                  <div class="flex justify-end items-center gap-2 taskBtns mt-2 mt-lg-0">
+                    <button
+                    class="btn btn-outline-success"
+                    (click)="open(mapModal, 'mapModal')"
+                  >
+                    <i class="fa fa-map-marker"></i>
+                  </button>
+                    <button *ngIf="TaskData.Obj?.status==2"
+                      type="button"
+                      class="btn btn-outline-secondary p-2 rounded-lg w-10"
+                      (click)="open(stopTaskModal, 'task')"
+                    >
+                      <i class="fa fa-pause"></i>
+                    </button>
+                    <button *ngIf="TaskData.Obj?.status!=2"
+                    type="button"
+                    class="btn btn-outline-secondary p-2 rounded-lg w-10"
+                    (click)="open(playTaskModal, 'task')"
+                    >
+                    <i class="fa fa-play"></i>
+                   </button>
+                   <button
+                   type="button"
+                   class="btn btn-outline-secondary p-2 rounded-lg w-10"
+                   (click)="open(uploadFileModal, 'task')"
+                   style="filter: grayscale(1);"
+                 >
+                   <i class="fa fa-cloud-upload" aria-hidden="true"></i>
+                 </button>
+                    <button
+                      type="button"
+                      class="btn btn-outline-secondary p-2 rounded-lg w-10"
+                      (click)="open(deleteTaskModal, 'task')"
+                    >
+                      <i class="fa fa-trash"></i>
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-outline-secondary p-2 rounded-lg w-10"
+                      (click)="open(extendTaskModal, 'task')"
+                    >
+                      <i class="fa fa-clock"></i>
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-outline-secondary p-2 rounded-lg w-10"
+                      (click)="open(assignTaskModal, 'task');Fillcustomerhavingoffer();"
+                    >
+                      <i class="fa fa-backward"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <div style="max-width: 150px" class="mt-2">
+                  <div class="form-check form-switch">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      role="switch"
+                      id="flexSwitchCheckDefault"
+                      [(ngModel)]="TaskData.goalcheck"
+                      (change)="open(projectgoal, 'projectgoal')"
+                    />
+                    <label
+                      class="form-check-label"
+                      for="flexSwitchCheckDefault"
+                      style="width: max-content"
+                    >
+                      {{ "achieve the goal" | translate }}
+                    </label>
+                  </div>
+                </div>
+
+                <div class="periority mt-4 mb-2">
+                  <mat-radio-group aria-label="Select an option" name="status" [(ngModel)]="phasePriValue"            >
+                    <mat-radio-button value="1" class="text-warning">{{
+                      "low" | translate
+                    }}</mat-radio-button>
+                    <mat-radio-button value="2" class="text-success">{{
+                      "middle" | translate
+                    }}</mat-radio-button>
+                    <mat-radio-button value="3" class="text-base">{{
+                      "high" | translate
+                    }}</mat-radio-button>
+                    <mat-radio-button value="4" class="text-danger">{{
+                      "urgent" | translate
+                    }}</mat-radio-button>
+                  </mat-radio-group>
+                  <button style="margin-top: -5px !important;" *ngIf="phasePriValueTemp!=phasePriValue"
+                  type="button"
+                  class="btn py-1 px-4 mt-0 bg-base text-white"
+                  (click)="ChangePriorityTask('task')"
+                  >
+                    {{ "confirem" | translate }}
+                  </button>
+                </div>
+
+                <div class="info">
+                  <label class="fs-6">{{
+                    "Job Details Required for Mission" | translate
+                  }}</label>
+                  <textarea
+                    [(ngModel)]="taskLongDesc"
+                    name="info"
+                    style="width: 100%; height: 100px; padding: 15px"
+                    placeholder="{{ 'task statement' | translate }}"
+                  ></textarea>
+                  <button style="margin-top: -5px !important;" *ngIf="taskLongDescTemp!=taskLongDesc"
+                  type="button"
+                  class="btn py-1 px-4 mt-0 bg-base text-white"
+                  (click)="SaveTaskLongDesc('task')"
+                  >
+                    {{ "confirem" | translate }}
+                  </button>
+                </div>
+
+                <div class="users flex items-center justify-between flex-wrap mt-2">
+                  <div>
+                    <img
+                    [src]="ShowImgAdded()"
+                      alt="img"
+                      class="img-fluid"
+                      style="
+                        width: 80px;
+                        height: 80px;
+                        border-radius: 50%;
+                        margin-inline-end: 20px;
+                      "
+                    />
+                    <span style="margin-inline-end: 10px">{{
+                      "Created by" | translate
+                    }}</span>
+                    <span>{{TaskData.Obj?.addedTaskName}}</span>
+                  </div>
+                  <div>
+                    <img
+                      [src]="ShowImgManager()"
+                      alt="img"
+                      class="img-fluid"
+                      style="
+                        width: 80px;
+                        height: 80px;
+                        border-radius: 50%;
+                        margin-inline-end: 20px;
+                      "
+                    />
+                    <span style="margin-inline-end: 10px">{{
+                      "project manager" | translate
+                    }}</span>
+                    <span>{{TaskData.Obj?.projectMangerName}}</span>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+
+            <div class="col-md-6 selectedTask2 mb-5">
+              <ng-container *ngIf="TaskDataLate.selected">
+                <p class="mb-4">
+                  <span style="margin-inline-end: 20px"
+                    >{{ "taskName" | translate }}
+                  </span>
+                  <span>{{ TaskDataLate.Obj?.descriptionAr }}</span>
+                </p>
+
+                <div class="d-flex items-center justify-between flex-wrap gap-8 fs-6">
+                  <p class="mb-3">
+                    <span style="margin-inline-end: 20px"
+                      >{{ "status" | translate }}
+                    </span>
+                    <span>{{ TaskDataLate.Obj?.statusName }}</span>
+                  </p>
+                  <p class="mb-4">
+                    <span style="margin-inline-end: 20px"
+                      >{{ "Duration" | translate }}
+                    </span>
+                    <span>{{ TaskDataLate.Obj?.timeStr }}</span>
+                    -
+                    <span style="margin-inline-end: 20px"
+                      >{{ "Project name/description" | translate }}
+                    </span>
+                    <span>{{ TaskDataLate.Obj?.projectDescription }}</span>
+                  </p>
+                  <span *ngIf="TaskDataLate.Obj?.settingId" title="مهمة في سير"><i class="fa fa-signal fa-2xl" aria-hidden="true"></i></span>
+                  <div class="chart mb-4" style="max-width: 150px">
+                    <apx-chart
+                      [series]="chartOptionsLate.series"
+                      [chart]="chartOptionsLate.chart"
+                      [labels]="chartOptionsLate.labels"
+                      [responsive]="chartOptionsLate.responsive"
+                    ></apx-chart>
+
+
+                    <ngx-gauge
+                    type="full"
+                    value="20"
+                    label="progress"
+                    append="%"
+                    thick="10"
+                    foregroundColor="#2980b9"
+                  ></ngx-gauge>
+
+                  </div>
+                </div>
+
+                <div class="mb-4">
+                  <mat-progress-bar
+                    mode="determinate"
+                    value="{{TaskDataLate.Obj?.execPercentage??0}}"
+                    style="height: 12px"
+                  ></mat-progress-bar>
+                </div>
+
+                <div class="table">
+                  <div class="date flex items-center justify-between">
+                    <p>
+                      <span>{{ "From" | translate }}</span>
+                      <span style="unicode-bidi: plaintext;">{{ TaskDataLate.TaskTimeFrom_Merge}}</span>
+                    </p>
+                    <p>
+                      <span>{{ "To" | translate }}</span>
+                      <span style="unicode-bidi: plaintext;">{{ TaskDataLate.TaskTimeTo_Merge}}</span>
+                    </p>
+                  </div>
+
+                  <table
+                    class="table table-responsive table-striped table-bordered text-center"
+                    style="vertical-align: middle; font-size: 14px"
+                  >
+                    <thead
+                      class="bg-base text-white"
+                      style="line-height: 30px; font-size: 13px"
+                    >
+                      <tr>
+                        <th>{{ "Assigned to" | translate }}</th>
+                        <th>{{ "Project Number" | translate }}</th>
+                        <th>{{ "Customer Name" | translate }}</th>
+                        <th>{{ "task status" | translate }}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>{{ TaskDataLate.Obj?.userName }}</td>
+                        <td>{{ TaskDataLate.Obj?.projectNumber }}</td>
+                        <td>{{ TaskDataLate.Obj?.clientName }}</td>
+                        <td>{{ TaskDataLate.priorty }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="actions my-2 flex items-center justify-between">
+                  <div class="flex justify-start items-center gap-4">
+                    <button
+                      type="button"
+                      mat-button
+                      mat-raise-button
+                      class="bg-success text-white px-4 py-2"
+                      style="
+                        padding: 2px 14px !important;
+                        width: max-content;
+                        height: auto;
+                      "
+                      (click)="open(endTaskModal,'latetask')"
+                    >
+                      {{ "end task" | translate }}
+                    </button>
+                    <p class="flex items-center mb-0">
+                      {{ "Mission Completion Ratio" | translate }}
+                      <span class="value">{{TaskDataLate.Obj?.execPercentage??0}}</span>
+                      <span>%</span>
+                    </p>
+                  </div>
+                  <div class="flex justify-end items-center gap-2 taskBtns mt-2 mt-lg-0">
+                    <button
+                    class="btn btn-outline-success"
+                    (click)="open(mapModal, 'mapModal')"
+                  >
+                    <i class="fa fa-map-marker"></i>
+                  </button>
+                    <button *ngIf="TaskDataLate.Obj?.status==2"
+                      type="button"
+                      class="btn btn-outline-secondary p-2 rounded-lg w-10"
+                      (click)="open(stopTaskModal, 'latetask')"
+                    >
+                      <i class="fa fa-pause"></i>
+                    </button>
+                    <button *ngIf="TaskDataLate.Obj?.status!=2"
+                    type="button"
+                    class="btn btn-outline-secondary p-2 rounded-lg w-10"
+                    (click)="open(playTaskModal, 'latetask')"
+                    >
+                    <i class="fa fa-play"></i>
+                   </button>
+
+                   <button
+                   type="button"
+                   class="btn btn-outline-secondary p-2 rounded-lg w-10"
+                   (click)="open(uploadFileModal, 'latetask')"
+                   style="filter: grayscale(1);"
+                 >
+                 <i class="fa fa-cloud-upload" aria-hidden="true"></i>
+                  </button>
+                    <button
+                      type="button"
+                      class="btn btn-outline-secondary p-2 rounded-lg w-10"
+                      (click)="open(deleteTaskModal, 'latetask')"
+                    >
+                      <i class="fa fa-trash"></i>
+                    </button>
+                     <button
+                      type="button"
+                      class="btn btn-outline-secondary p-2 rounded-lg w-10"
+                      (click)="open(extendTaskModal, 'latetask')"
+                    >
+                      <i class="fa fa-clock"></i>
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-outline-secondary p-2 rounded-lg w-10"
+                      (click)="open(assignTaskModal, 'latetask');Fillcustomerhavingoffer();"
+                    >
+                      <i class="fa fa-backward"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <div style="max-width: 150px" class="mt-2">
+                  <div class="form-check form-switch">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      role="switch"
+                      id="flexSwitchCheckDefault"
+                      [(ngModel)]="TaskDataLate.goalcheck"
+                      (change)="open(projectgoal, 'projectgoalLate')"
+                    />
+                    <label
+                      class="form-check-label"
+                      for="flexSwitchCheckDefault"
+                      style="width: max-content"
+                    >
+                      {{ "achieve the goal" | translate }}
+                    </label>
+                  </div>
+                </div>
+
+                <div class="periority mt-4 mb-2">
+                  <mat-radio-group aria-label="Select an option" name="statuss" [(ngModel)]="phasePriValueLate"  >
+                    <mat-radio-button value="1" class="text-warning">{{
+                      "low" | translate
+                    }}</mat-radio-button>
+                    <mat-radio-button value="2" class="text-success">{{
+                      "middle" | translate
+                    }}</mat-radio-button>
+                    <mat-radio-button value="3" class="text-base">{{
+                      "high" | translate
+                    }}</mat-radio-button>
+                    <mat-radio-button value="4" class="text-danger">{{
+                      "urgent" | translate
+                    }}</mat-radio-button>
+                  </mat-radio-group>
+                  <button style="margin-top: -5px !important;" *ngIf="phasePriValueTempLate!=phasePriValueLate"
+                  type="button"
+                  class="btn py-1 px-4 mt-0 bg-base text-white"
+                  (click)="ChangePriorityTask('latetask')"
+                  >
+                    {{ "confirem" | translate }}
+                  </button>
+                </div>
+
+                <div class="info">
+                  <label class="fs-6">{{
+                    "Job Details Required for Mission" | translate
+                  }}</label>
+                  <textarea
+                  [(ngModel)]="taskLongDescLate"
+                    name="info"
+                    style="width: 100%; height: 100px; padding: 15px"
+                    placeholder="{{ 'task statement' | translate }}"
+                  ></textarea>
+                  <button style="margin-top: -5px !important;" *ngIf="taskLongDescTempLate!=taskLongDescLate"
+                  type="button"
+                  class="btn py-1 px-4 mt-0 bg-base text-white"
+                  (click)="SaveTaskLongDesc('latetask')"
+                  >
+                    {{ "confirem" | translate }}
+                  </button>
+                </div>
+
+                <div class="users flex items-center justify-between flex-wrap mt-2">
+                  <div>
+                    <img
+                    [src]="ShowImgAddedLate()"
+                      alt="img"
+                      class="img-fluid"
+                      style="
+                        width: 80px;
+                        height: 80px;
+                        border-radius: 50%;
+                        margin-inline-end: 20px;
+                      "
+                    />
+                    <span style="margin-inline-end: 10px">{{
+                      "Created by" | translate
+                    }}</span>
+                    <span>{{TaskDataLate.Obj?.addedTaskName}}</span>
+                  </div>
+                  <div>
+                    <img
+                      [src]="ShowImgManagerLate()"
+                      alt="img"
+                      class="img-fluid"
+                      style="
+                        width: 80px;
+                        height: 80px;
+                        border-radius: 50%;
+                        margin-inline-end: 20px;
+                      "
+                    />
+                    <span style="margin-inline-end: 10px">{{
+                      "project manager" | translate
+                    }}</span>
+                    <span>{{TaskDataLate.Obj?.projectMangerName}}</span>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+
+        </div> -->
+        <div *ngIf="TaskData.selected" class="tasks-page custome-task">
+          <p class="mb-4">
+            <span style="margin-inline-end: 20px"
+              >{{ "taskName" | translate }}
+            </span>
+            <span>{{ TaskData.Obj?.descriptionAr }}</span>
+          </p>
+
+          <div class="d-flex items-center justify-between flex-wrap gap-8 fs-6">
+            <p class="mb-3">
+              <span style="margin-inline-end: 20px"
+                >{{ "status" | translate }}
+              </span>
+              <span>{{ TaskData.Obj?.statusName }}</span>
+            </p>
+            <p>
+              <span style="margin-right: 10px" *ngIf="!TaskData.Obj?.settingId"
+                >مهمة يدوية بواسطة :
+              </span>
+              <span *ngIf="!TaskData.Obj?.settingId">
+                {{ TaskData.Obj?.addedTaskName }}</span
+              >
+              <span
+                style="margin-right: 10px"
+                *ngIf="TaskData.Obj?.settingId"
+                >{{ TaskData.Obj?.settingName }}</span
+              >
+            </p>
+            <p class="mb-4">
+              <span style="margin-inline-end: 20px"
+                >{{ "Duration" | translate }}
+              </span>
+              <span>{{ TaskData.Obj?.timeStr }}</span>
+              -
+              <span style="margin-inline-end: 20px"
+                >{{ "Project name/description" | translate }}
+              </span>
+              <span>{{ TaskData.Obj?.projectDescription }}</span>
+            </p>
+            <div class="chart mb-4" style="max-width: 150px">
+              <apx-chart
+                [series]="chartOptions.series"
+                [chart]="chartOptions.chart"
+                [labels]="chartOptions.labels"
+                [responsive]="chartOptions.responsive"
+              ></apx-chart>
+
+
+              <!-- <ngx-gauge
+                type="full"
+                value="68"
+                label="progress"
+                append="%"
+                thick="10"
+                foregroundColor="#2980b9"
+              ></ngx-gauge> -->
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <mat-progress-bar
+              mode="determinate"
+              value="{{ TaskData.Obj?.execPercentage ?? 0 }}"
+              style="height: 12px"
+            ></mat-progress-bar>
+          </div>
+
+          <div class="table">
+            <div class="date flex items-center justify-between">
+              <p>
+                <span>{{ "From" | translate }}</span>
+                <span style="unicode-bidi: plaintext">{{
+                  TaskData.TaskTimeFrom_Merge
+                }}</span>
+              </p>
+              <p *ngIf="TaskData.notesStrVac"
+              style="text-align: center;color: red;" class="p-1 bg-red-100">
+                <span>{{ TaskData.notesStrVac }}</span>
+              </p>
+              <p>
+                <span>{{ "To" | translate }}</span>
+                <span style="unicode-bidi: plaintext">{{
+                  TaskData.TaskTimeTo_Merge
+                }}</span>
+              </p>
+            </div>
+
+            <table
+              class="table table-responsive table-striped table-bordered text-center"
+              style="vertical-align: middle; font-size: 14px"
+            >
+              <thead
+                class="bg-base text-white"
+                style="line-height: 30px; font-size: 13px"
+              >
+                <tr>
+                  <th>{{ "Assigned to" | translate }}</th>
+                  <th>{{ "Project Number" | translate }}</th>
+                  <th>{{ "اسم المرحلة" | translate }}</th>
+
+                  <th>{{ "Customer Name" | translate }}</th>
+                  <th>{{ "task status" | translate }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{{ TaskData.Obj?.userName }}</td>
+                  <td>{{ TaskData.Obj?.projectNumber }}</td>
+                  <!-- <td>{{ TaskData.Obj?.mainPhaseName }}</td> -->
+                  <td>{{ TaskData.Obj?.subPhaseName }}</td>
+
+                  <td>{{ TaskData.Obj?.clientName }}</td>
+                  <td>{{ TaskData.priorty }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="my-2 flex items-center justify-between flex-wrap">
+            <div class="flex justify-start items-center gap-4">
+              <button
+                type="button"
+                mat-button
+                mat-raise-button
+                class="bg-success text-white px-4 py-2"
+                style="
+                  padding: 2px 14px !important;
+                  width: max-content;
+                  height: auto;
+                "
+                (click)="open(endTaskModal, 'task')"
+                [disabled]="
+                  TaskData.Obj?.status == 1 || TaskData.Obj?.status == 3
+                "
+              >
+                {{ "end task" | translate }}
+              </button>
+              <p class="flex items-center mb-0 relative">
+                {{ "Mission Completion Ratio" | translate }}
+                <input
+                  [disabled]="
+                    TaskData.Obj?.status == 1 || TaskData.Obj?.status == 3
+                  "
+                  type="number"
+                  max
+                  name="missionRatio"
+                  class="form-control"
+                  (keyup)="disablesavingpercentage()"
+                  [(ngModel)]="percentage"
+                />
+                <span class="percent absolute">%</span>
+              </p>
+
+              <button
+                [disabled]="
+                  TaskData.Obj?.status == 1 ||
+                  TaskData.Obj?.status == 3 ||
+                  isdisabled == 0 ||
+                  percentage == '' ||
+                  percentage == null
+                "
+                type="button"
+                mat-button
+                mat-raise-button
+                class="bg-success text-white px-4 py-2"
+                style="
+                  padding: 2px 12px !important;
+                  width: min-content;
+                  height: auto;
+                "
+                (click)="open(PercentageTaskModal, 'savepercentage')"
+              >
+                حفظ
+              </button>
+            </div>
+            <div class="flex justify-end items-center gap-2 taskBtns">
+              <button
+                class="btn btn-outline-success"
+                (click)="open(mapModal, 'mapModal')"
+                [disabled]="
+                  TaskData.Obj?.status == 1 || TaskData.Obj?.status == 3
+                "
+              >
+                <i class="fa fa-map-marker"></i>
+              </button>
+
+              <button
+                type="button"
+                class="btn btn-outline-secondary rounded-lg"
+                (click)="open(stopTaskModal, 'task')"
+                [disabled]="
+                  TaskData.Obj?.status == 1 || TaskData.Obj?.status == 3
+                "
+              >
+                <i class="fa fa-pause"></i>
+              </button>
+
+              <button
+                type="button"
+                class="t-Uploading-Project btn btn-sm waves-effect p-0"
+                [disabled]="
+                  TaskData.Obj?.status == 1 || TaskData.Obj?.status == 3
+                "
+                (click)="open(uploadFileModal, 'task')"
+                style="filter: grayscale(1)"
+              >
+                <img
+                  src="/assets/icons/upload-cloud-line@2x.png"
+                  alt="upload icon"
+                  class="uploadingIcon"
+                />
+              </button>
+
+              <!-- <button type="button" class="btn btn-outline-secondary rounded-lg"
+                (click)="open(deleteTaskModal, 'task')">
+                <i class="fa fa-trash"></i>
+              </button> -->
+              <button
+                type="button"
+                class="btn btn-outline-secondary rounded-lg"
+                [disabled]="
+                  TaskData.Obj?.status == 1 || TaskData.Obj?.status == 3
+                "
+                (click)="open(requestextendTaskModal, 'task')"
+              >
+                <i class="fa fa-clock"></i>
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-secondary rounded-lg"
+                [disabled]="
+                  TaskData.Obj?.status == 1 || TaskData.Obj?.status == 3
+                "
+                (click)="
+                  open(requestconvertTaskModal, 'task');
+                  Fillcustomerhavingoffer()
+                "
+              >
+                <i class="fa fa-backward"></i>
+              </button>
+            </div>
+          </div>
+          <div class="mt-3 flex items-center gap-6 flex-wrap">
+            <!-- <div style="max-width: 150px">
+              <div class="form-check form-switch">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  role="switch"
+                  id="flexSwitchCheckDefault"
+                />
+                <label
+                  class="form-check-label"
+                  for="flexSwitchCheckDefault"
+                  style="width: max-content"
+                >
+                  {{ "achieve the goal" | translate }}
+                </label>
+              </div>
+            </div> -->
+            <!-- <div style="max-width: 150px" class="mt-2">
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"
+                  [(ngModel)]="TaskData.goalcheck" (change)="open(projectgoal, 'projectgoalLate')" />
+                <label class="form-check-label" for="flexSwitchCheckDefault" style="width: max-content">
+                  {{ "achieve the goal" | translate }}
+                </label>
+              </div>
+            </div> -->
+
+            <!-- <div class="periority">
+              <mat-radio-group
+                aria-label="Select an option"
+                name="status"
+                style="display: flex; gap: 6px; align-items: center"
+              >
+                <mat-radio-button value="1" class="text-warning">{{
+                  "low" | translate
+                }}</mat-radio-button>
+                <mat-radio-button value="2" class="text-success">{{
+                  "middle" | translate
+                }}</mat-radio-button>
+                <mat-radio-button value="3" class="text-base">{{
+                  "high" | translate
+                }}</mat-radio-button>
+                <mat-radio-button value="4" class="text-danger">{{
+                  "urgent" | translate
+                }}</mat-radio-button>
+              </mat-radio-group>
+            </div> -->
+
+            <!-- <div class="periority mt-4 mb-2">
+              <mat-radio-group aria-label="Select an option" name="status" [(ngModel)]="phasePriValue">
+                <mat-radio-button value="1" class="text-warning">{{
+                  "low" | translate
+                  }}</mat-radio-button>
+                <mat-radio-button value="2" class="text-success">{{
+                  "middle" | translate
+                  }}</mat-radio-button>
+                <mat-radio-button value="3" class="text-base">{{
+                  "high" | translate
+                  }}</mat-radio-button>
+                <mat-radio-button value="4" class="text-danger">{{
+                  "urgent" | translate
+                  }}</mat-radio-button>
+              </mat-radio-group>
+              <button style="margin-top: -5px !important;" *ngIf="phasePriValueTemp!=phasePriValue" type="button"
+                class="btn py-1 px-4 mt-0 bg-base text-white" (click)="ChangePriorityTask('task')">
+                {{ "confirem" | translate }}
+              </button>
+            </div> -->
+          </div>
+          <div class="info m-2">
+            <label class="fs-6">{{
+              "Job Details Required for Mission" | translate
+            }}</label>
+            <textarea
+              [(ngModel)]="taskLongDesc"
+              name="info"
+              style="width: 100%; height: 100px; padding: 15px"
+              placeholder="{{ 'task statement' | translate }}"
+            ></textarea>
+            <button
+              style="margin-top: -5px !important"
+              *ngIf="taskLongDescTemp != taskLongDesc"
+              type="button"
+              class="btn py-1 px-4 mt-0 bg-base text-white"
+              (click)="SaveTaskLongDesc('task')"
+            >
+              {{ "confirem" | translate }}
+            </button>
+          </div>
+
+          <!-- <div class="users flex items-center justify-between flex-wrap mt-2">
+            <div>
+              <img
+                src="/assets/images/login-img.png"
+                alt="img"
+                class="img-fluid"
+                style="
+                  width: 80px;
+                  height: 80px;
+                  border-radius: 50%;
+                  margin-inline-end: 10px;
+                "
+              />
+              <span style="margin-inline-end: 10px">{{
+                "Created by" | translate
+              }}</span>
+              <span>adwdawd</span>
+            </div>
+            <div>
+              <img
+                src="/assets/images/login-img.png"
+                alt="img"
+                class="img-fluid"
+                style="
+                  width: 80px;
+                  height: 80px;
+                  border-radius: 50%;
+                  margin-inline-end: 10px;
+                "
+              />
+              <span style="margin-inline-end: 10px">{{
+                "project manager" | translate
+              }}</span>
+              <span>adwdawd</span>
+            </div>
+          </div> -->
+          <div class="users flex items-center justify-between flex-wrap mt-2">
+            <div>
+              <img
+                [src]="ShowImgAdded()"
+                alt="img"
+                class="img-fluid"
+                style="
+                  width: 80px;
+                  height: 80px;
+                  border-radius: 50%;
+                  margin-inline-end: 20px;
+                "
+              />
+              <span style="margin-inline-end: 10px">{{
+                "Created by" | translate
+              }}</span>
+              <span *ngIf="!TaskData.Obj?.settingId">{{
+                TaskData.Obj?.addedTaskName
+              }}</span>
+              <span *ngIf="TaskData.Obj?.settingId" title="مهمة في سير"
+                ><i class="fa fa-signal fa-2xl" aria-hidden="true"></i
+              ></span>
+            </div>
+            <div>
+              <img
+                [src]="ShowImgManager()"
+                alt="img"
+                class="img-fluid"
+                style="
+                  width: 80px;
+                  height: 80px;
+                  border-radius: 50%;
+                  margin-inline-end: 20px;
+                "
+              />
+              <span style="margin-inline-end: 10px">{{
+                "project manager" | translate
+              }}</span>
+              <span>{{ TaskData.Obj?.projectMangerName }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="mb-5">
+        <div
+          class="border border-base rounded-lg p-2 mb-4"
+          style="height: 400px"
+        >
+          <span
+            class="font-bold my-4 block"
+            [translate]="'name'"
+            [translateParams]="{
+              ar: 'طلبات العمل',
+              en: 'Work Order'
+            }"
+          ></span>
+          <div class="flex gap-1 flex-wrap">
+            <button
+              class="btn btn-warning flex gap-1 items-center"
+              (click)="OrdersDayWeekMonthclick(1)"
+            >
+              <span
+                class="text-sm"
+                [translate]="'name'"
+                [translateParams]="{
+                  ar: 'طلبات اليوم ',
+                  en: 'Todays Order'
+                }"
+              ></span>
+              <span class="text-xs rounded-lg w-5 p-1 bg-white text-base">{{
+                OrdersDay
+              }}</span>
+            </button>
+            <button
+              class="btn btn-secondary flex gap-1 items-center"
+              (click)="OrdersDayWeekMonthclick(2)"
+            >
+              <span
+                class="text-sm"
+                [translate]="'name'"
+                [translateParams]="{
+                  ar: 'طلبات الاسبوع ',
+                  en: 'ًWeek'
+                }"
+              ></span>
+              <span class="text-xs rounded-lg w-5 p-1 bg-white text-base">{{
+                Ordermonth
+              }}</span>
+            </button>
+            <button
+              class="btn btn-primary flex gap-1 items-center"
+              (click)="OrdersDayWeekMonthclick(3)"
+            >
+              <span
+                class="text-sm"
+                [translate]="'name'"
+                [translateParams]="{
+                  ar: 'طلبات الشهر ',
+                  en: 'Month'
+                }"
+              ></span>
+              <span class="text-xs rounded-lg w-5 p-1 bg-white text-base">{{
+                OrderMonth
+              }}</span>
+            </button>
+          </div>
+
+          <div class="search-div">
+            <input
+              type="search"
+              placeholder="{{ 'search' | translate }}"
+              name="search"
+              class="form-control"
+              id=""
+              style="width: 95%; margin: 15px auto 5px; height: 40px"
+            />
+          </div>
+
+          <div class="flex flex-col gap-3 p-3 h-48 overflow-auto">
+            <div *ngFor="let item of WorkOrderList">
+              <div (click)="selectOrder(item)" class="project-box">
+                <span>{{ item.required }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="OrderData.selected" class="tasks-page custome-task">
+          <p class="mb-4">
+            <span style="margin-inline-end: 20px">رقم امر العمل </span>
+            <span>{{ OrderData.Obj?.OrderNo }}</span>
+          </p>
+
+          <!-- <div class="d-flex items-center justify-between flex-wrap gap-8 fs-6">
+            <p class="mb-3">
+              <span style="margin-inline-end: 20px"
+                >المطلوب
+              </span>
+              <span>{{ OrderData.Obj.rquired }}</span>
+            </p>
+            <p class="mb-4">
+              <span style="margin-inline-end: 20px"
+                >{{ "Duration" | translate }}
+              </span>
+              <span>{{ selectedTask2[0]?.Required }}</span>
+              -
+              <span style="margin-inline-end: 20px"
+                >{{ "Project name/description" | translate }}
+              </span>
+              <span>{{ OrderData.Obj.ProjectNo }}</span>
+
+            </p>
+            <div class="chart mb-4" style="max-width: 150px">
+              <ngx-gauge
+                type="full"
+                value="68"
+                label="progress"
+                append="%"
+                thick="10"
+                foregroundColor="#2980b9"
+              ></ngx-gauge>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <mat-progress-bar
+              mode="determinate"
+              value="41"
+              style="height: 12px"
+            ></mat-progress-bar>
+          </div> -->
+
+          <div class="table">
+            <div class="date flex items-center justify-between">
+              <p>
+                <span>{{ "From" | translate }}</span>
+                <span>{{
+                  OrderData.Obj?.orderDate | date : "dd-MM-yyyy"
+                }}</span>
+              </p>
+              <p>
+                <span>{{ "To" | translate }}</span>
+                <span>{{ OrderData.Obj?.endDate | date : "dd-MM-yyyy" }}</span>
+              </p>
+            </div>
+
+            <table
+              class="table table-responsive table-striped table-bordered text-center"
+              style="vertical-align: middle; font-size: 14px"
+            >
+              <thead
+                class="bg-base text-white"
+                style="line-height: 30px; font-size: 13px"
+              >
+                <tr>
+                  <th>رقم امر العمل</th>
+                  <th>المطلوب</th>
+                  <th>رقم المشروع</th>
+                  <th>المدة</th>
+                </tr>
+              </thead>
+              <tbody>
+                <td>{{ OrderData.Obj?.orderNo }}</td>
+                <td>{{ OrderData.Obj?.required }}</td>
+                <td>{{ OrderData.Obj?.projectNo }}</td>
+                <td>{{ OrderData.Obj?.strTime }}</td>
+              </tbody>
+            </table>
+          </div>
+          <div class="my-2 flex items-center justify-between flex-wrap">
+            <div class="flex justify-start items-center gap-4">
+              <button
+                type="button"
+                mat-button
+                mat-raise-button
+                class="bg-success text-white px-4 py-2"
+                style="
+                  padding: 2px 14px !important;
+                  width: max-content;
+                  height: auto;
+                "
+                (click)="open(endWorkOrder, 'infoAction')"
+              >
+                {{ "end task" | translate }}
+              </button>
+              <p class="flex items-center mb-0 relative">
+                {{ "Mission Completion Ratio" | translate }}
+                <input
+                  type="text"
+                  name="missionRatio"
+                  class="form-control"
+                  style="width: 60%"
+                  [(ngModel)]="OrderData.percentComplete"
+                />
+                <span class="percent absolute">%</span>
+              </p>
+
+              <button
+                type="button"
+                mat-button
+                mat-raise-button
+                class="bg-success text-white px-4 py-2"
+                style="
+                  padding: 2px 14px !important;
+                  width: max-content;
+                  height: auto;
+                "
+                (click)="open(PercentageModal, 'infoAction')"
+              >
+                حفظ النسبه
+              </button>
+            </div>
+            <div class="flex justify-end items-center gap-2 taskBtns">
+              <!-- <button
+              class="btn btn-outline-success"
+              (click)="open(mapModal, 'mapModal')"
+            >
+              <i class="fa fa-map-marker"></i>
+            </button> -->
+
+              <!-- <button
+                type="button"
+                class="btn btn-outline-secondary rounded-lg"
+                (click)="open(stopTaskModal, 'infoAction')"
+              >
+                <i class="fa fa-pause"></i>
+              </button> -->
+              <button
+                *ngIf="OrderFilesCount > 0"
+                type="button"
+                class="min-w-max p-2 bg-sky-100 hover:bg-sky-500 rounded-lg duration-300 hover:text-white aspect-square w-10"
+                (click)="
+                  GetAllProjectRequirementByOrderId(OrderData.Obj);
+                  open(showOrdersfiles, 'openfile')
+                "
+              >
+                <i class="fa-solid fa-eye"></i>
+              </button>
+              <button
+                (click)="downloadFileWorkOrder(OrderData.Obj)"
+                *ngIf="
+                  OrderData?.Obj?.projectId == null &&
+                  OrderData.Obj?.attatchmentUrl
+                "
+                class="min-w-max p-2 bg-sky-100 hover:bg-sky-500 rounded-lg duration-300 hover:text-white aspect-square w-10"
+              >
+                <i class="fa-solid fa-eye"></i>
+              </button>
+              <button
+                type="button"
+                class="t-Uploading-Project btn btn-sm waves-effect p-0"
+                (click)="open(uploadFileModal, 'infoAction')"
+                style="filter: grayscale(1)"
+              >
+                <img
+                  src="/assets/icons/upload-cloud-line@2x.png"
+                  alt="upload icon"
+                  class="uploadingIcon"
+                />
+              </button>
+
+              <!-- <button
+                type="button"
+                class="btn btn-outline-secondary rounded-lg"
+                (click)="open(deleteTaskModal, 'infoAction')"
+              >
+                <i class="fa fa-trash"></i>
+              </button> -->
+              <!-- <button
+                type="button"
+                class="btn btn-outline-secondary rounded-lg"
+                (click)="open(extendTaskModal, 'infoAction')"
+              >
+                <i class="fa fa-clock"></i>
+              </button> -->
+              <!-- <button
+                type="button"
+                class="btn btn-outline-secondary rounded-lg"
+                (click)="open(assignTaskModal, 'infoAction')"
+              >
+                <i class="fa fa-backward"></i>
+              </button> -->
+            </div>
+          </div>
+          <!-- <div class="mt-3 flex items-center gap-6 flex-wrap">
+            <div style="max-width: 150px">
+              <div class="form-check form-switch">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  role="switch"
+                  id="flexSwitchCheckDefault"
+                />
+                <label
+                  class="form-check-label"
+                  for="flexSwitchCheckDefault"
+                  style="width: max-content"
+                >
+                  {{ "achieve the goal" | translate }}
+                </label>
+              </div>
+            </div>
+
+            <div class="periority">
+              <mat-radio-group
+                aria-label="Select an option"
+                name="status"
+                style="display: flex; gap: 6px; align-items: center"
+              >
+                <mat-radio-button value="1" class="text-warning">{{
+                  "low" | translate
+                }}</mat-radio-button>
+                <mat-radio-button value="2" class="text-success">{{
+                  "middle" | translate
+                }}</mat-radio-button>
+                <mat-radio-button value="3" class="text-base">{{
+                  "high" | translate
+                }}</mat-radio-button>
+                <mat-radio-button value="4" class="text-danger">{{
+                  "urgent" | translate
+                }}</mat-radio-button>
+              </mat-radio-group>
+            </div>
+
+
+          </div> -->
+          <div class="info mt-2">
+            <label class="fs-6">{{
+              "Job Details Required for Mission" | translate
+            }}</label>
+            <textarea
+              disabled
+              name="info"
+              style="width: 100%; height: 50px; padding: 10px 15px"
+              [(ngModel)]="OrderData.required"
+            ></textarea>
+          </div>
+
+          <!-- <div class="users flex items-center justify-between flex-wrap mt-2">
+            <div>
+              <img
+                src="/assets/images/login-img.png"
+                alt="img"
+                class="img-fluid"
+                style="
+                  width: 80px;
+                  height: 80px;
+                  border-radius: 50%;
+                  margin-inline-end: 10px;
+                "
+              />
+              <span style="margin-inline-end: 10px">{{
+                "Created by" | translate
+              }}</span>
+              <span>adwdawd</span>
+            </div>
+            <div>
+              <img
+                src="/assets/images/login-img.png"
+                alt="img"
+                class="img-fluid"
+                style="
+                  width: 80px;
+                  height: 80px;
+                  border-radius: 50%;
+                  margin-inline-end: 10px;
+                "
+              />
+              <span style="margin-inline-end: 10px">{{
+                "project manager" | translate
+              }}</span>
+              <span>adwdawd</span>
+            </div>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #showOrdersfiles let-modal>
+  <div class="model-body" style="padding: 30px; text-align: center">
+    <table
+      class="table table-responsive table-striped table-bordered text-center"
+      style="vertical-align: middle; font-size: 14px"
+    >
+      <thead
+        class="bg-base text-white"
+        style="line-height: 30px; font-size: 13px"
+      >
+        <tr>
+          <th>اسم الملف</th>
+          <th>خيارات</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of OrderFiles">
+          <td>{{ item.nameAr }}</td>
+          <td>
+            <button
+              type="button"
+              class="min-w-max p-2 bg-sky-100 hover:bg-sky-500 rounded-lg duration-300 hover:text-white aspect-square w-10"
+              (click)="downloadFile(item.attachmentUrl)"
+            >
+              <i class="fa-solid fa-eye"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="flex justify-center gap-3 mt-3">
+      <button mat-raised-button color="warn" (click)="modal.dismiss()">
+        {{ "close" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Add option -->
+<ng-template #AddOption let-modal>
+  <div class="modal-header bg-base text-white">
+    <h4
+      class="modal-title mb-0"
+      id="modal-basic-title"
+      [translate]="'name'"
+      [translateParams]="{ ar: 'اضافة جديدة', en: 'Add New' }"
+    ></h4>
+    <button type="button" class="m-0" (click)="modal.dismiss('Cross click')">
+      <i class="fa fa-close"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form #addOptionForm="ngForm">
+      <div class="row">
+        <div class="col-lg-6 mb-4 mb-lg-0">
+          <div class="form-input-group">
+            <label for="" class="block mb-3">{{ "nameAr" | translate }}</label>
+            <input
+              type="text"
+              placeholder="{{ 'nameAr' | translate }}"
+              class="form-control"
+              ngModel
+              name="nameAr"
+              required
+            />
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="form-input-group">
+            <label for="" class="block mb-3">{{ "nameEn" | translate }}</label>
+            <input
+              type="text"
+              placeholder="{{ 'nameEn' | translate }}"
+              class="form-control"
+              ngModel
+              name="nameEn"
+              required
+            />
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer justify-content-center" style="border-top: none">
+    <button
+      type="button"
+      class="btn btn-light py-2 px-3 mt-0"
+      (click)="modal.dismiss('Cross click')"
+    >
+      {{ "close" | translate }}
+    </button>
+    <button
+      type="button"
+      class="btn submit-btn bg-base text-white py-2 px-3 mt-0"
+      [disabled]="addOptionForm.invalid"
+      (click)="saveOption(addOptionForm.value)"
+    >
+      {{ "Save" | translate }}
+    </button>
+
+    <div
+      class="d-block w-100 mt-4"
+      style="
+        border-top: 2px solid #d5dadf;
+        padding-top: 24px;
+        border-radius: 3px;
+      "
+    >
+      <div class="w-100 mb-3">
+        <input
+          type="text"
+          class="form-control pull-right"
+          placeholder="{{ 'search' | translate }}"
+          (keyup)="updateFilter($event)"
+        />
+      </div>
+
+      <ngx-datatable
+        style="max-height: 300px; overflow-y: auto"
+        #table
+        class="striped w-100"
+        [columnMode]="'flex'"
+        [headerHeight]="50"
+        [footerHeight]="50"
+        [rowHeight]="'auto'"
+        [limit]="100"
+        [rows]="rows"
+      >
+        <!-- Column: Editing Mode-->
+        <ngx-datatable-column [flexGrow]="0.5">
+          <ng-template
+            let-value="value"
+            let-row="row"
+            let-rowIndex="rowIndex"
+            ngx-datatable-cell-template
+          >
+            <!-- Pencil icon -->
+            <i
+              class="fa fa-pencil"
+              title="Modify"
+              style="cursor: pointer"
+              *ngIf="!this.isEditable[rowIndex]"
+              (click)="this.isEditable[rowIndex] = !this.isEditable[rowIndex]"
+            ></i>
+
+            <!-- Save/Delete icons -->
+            <div class="actions">
+              <i
+                class="fa fa-edit text-success"
+                *ngIf="this.isEditable[rowIndex]"
+                title="Save"
+                (click)="save(row, rowIndex)"
+              ></i>
+              <i
+                class="fa fa-trash text-danger"
+                *ngIf="this.isEditable[rowIndex]"
+                title="Delete"
+                (click)="delete(row, rowIndex)"
+              ></i>
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column
+          [flexGrow]="1.5"
+          name="{{ 'nameAr' | translate }}"
+        >
+          <ng-template
+            ngx-datatable-cell-template
+            let-rowIndex="rowIndex"
+            let-row="row"
+          >
+            <div class="form-input-group">
+              <input
+                type="text"
+                name="activity_name"
+                [(ngModel)]="row.name_ar"
+                [disabled]="!isEditable[rowIndex]"
+              />
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column
+          [flexGrow]="1.5"
+          name="{{ 'nameEn' | translate }}"
+        >
+          <ng-template
+            ngx-datatable-cell-template
+            let-rowIndex="rowIndex"
+            let-row="row"
+          >
+            <div class="form-input-group">
+              <input
+                type="text"
+                name="activity_name_en"
+                [(ngModel)]="row.name_en"
+                [disabled]="!isEditable[rowIndex]"
+              />
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+      </ngx-datatable>
+    </div>
+  </div>
+</ng-template>
+
+<!-- endTaskModal -->
+<ng-template #endTaskModal let-modal>
+  <div class="modal-body text-center">
+    <p>{{ "Do you want to finish the task?" | translate }}</p>
+    <div class="flex gap-2 justify-center mt-3">
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="confirm_endtask(); modal.dismiss()"
+      >
+        {{ "Yes" | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "No" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- stopTaskModal -->
+<ng-template #stopTaskModal let-modal>
+  <div class="modal-body text-center">
+    <p>{{ "Do you want to stop the task?" | translate }}</p>
+    <div class="flex gap-2 justify-center mt-3">
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="confirm_playandstoptask(3); modal.dismiss()"
+      >
+        {{ "Yes" | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "No" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- deleteTaskModal -->
+<ng-template #deleteTaskModal let-modal>
+  <div class="modal-body text-center">
+    <p
+      [translate]="'name'"
+      [translateParams]="{
+        ar: 'هل تريد بالتأكيد حذف هذا الصف',
+        en: 'Are you sure to delete this row ?'
+      }"
+    ></p>
+    <div class="flex gap-2 justify-center mt-3">
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="confirm_deletetask(); modal.dismiss()"
+      >
+        {{ "Yes" | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "No" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- extendTaskModal -->
+<ng-template #extendTaskModal let-modal>
+  <div class="modal-header bg-base text-white">
+    <h4
+      class="modal-title mb-0"
+      id="modal-basic-title"
+      [translate]="'name'"
+      [translateParams]="{ ar: 'تمديد المهمة', en: '  extended Task' }"
+    ></h4>
+    <button type="button" class="m-0" (click)="modal.dismiss('Cross click')">
+      <i class="fa fa-close"></i>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-lg-6 col-lg-4 mb-3 mb-lg-0">
+        <div class="form-group">
+          <label class="col-form-label"> {{ "Duration" | translate }}</label>
+          <ng-select
+            class="w-full p-0"
+            placeholder="{{ 'Chose' | translate }}"
+            [(ngModel)]="extendedData.selectedTaskType"
+            [ngModelOptions]="{ standalone: true }"
+            [clearable]="false"
+          >
+            <ng-option
+              *ngFor="let type of TaskType"
+              [value]="type.id"
+              [translate]="'name'"
+              [translateParams]="{ ar: type.name?.ar, en: type.name?.en }"
+            >
+            </ng-option>
+          </ng-select>
+        </div>
+      </div>
+
+      <div
+        class="col-lg-6 col-lg-4 mb-3 mb-lg-0"
+        *ngIf="extendedData.selectedTaskType == 1"
+      >
+        <div class="form-group">
+          <label for="to234" class="text-right col-form-label block">
+            {{ "Time" | translate }}
+          </label>
+          <input
+            #to234="ngModel"
+            [(ngModel)]="extendedData.TimeH"
+            ngModel
+            class="form-control"
+            type="number"
+            id="to234"
+            name="to234"
+            (keyup)="TimeHChange()"
+          />
+        </div>
+      </div>
+
+      <div
+        class="col-lg-6 col-lg-4 mb-3 mb-lg-0"
+        *ngIf="extendedData.selectedTaskType == 2"
+      >
+        <div class="form-group">
+          <label class="text-right col-form-label block">
+            {{ "From" | translate }} {{ " " }}{{ "Date" | translate }}
+          </label>
+          <div class="form-group timeInput">
+            <input
+              ngModel
+              name="from"
+              type="text"
+              class="form-control"
+              bsDatepicker
+              [(ngModel)]="extendedData.DateFrom"
+              disabled="disabled"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 col-lg-4" *ngIf="extendedData.selectedTaskType == 2">
+        <div class="form-group">
+          <label class="text-right col-form-label block">
+            {{ "To" | translate }} {{ " " }}{{ "Date" | translate }}
+          </label>
+          <div class="form-group timeInput">
+            <input
+              ngModel
+              name="to"
+              type="text"
+              class="form-control"
+              bsDatepicker
+              [(ngModel)]="extendedData.DateTo"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer justify-content-end" style="border-top: none">
+    <button
+      type="button"
+      class="btn py-2 px-3 mt-0 bg-base text-white"
+      (click)="modal.dismiss('Cross click'); confirm_changeTaskTime()"
+    >
+      {{ "confirem" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+<!-- assignTaskModal -->
+<ng-template #assignTaskModal let-modal>
+  <div class="modal-header bg-base text-white">
+    <h4
+      class="modal-title mb-0"
+      id="modal-basic-title"
+      [translate]="'name'"
+      [translateParams]="{
+        ar: 'تحويل المهمة      ',
+        en: '    Task Transformation '
+      }"
+    ></h4>
+    <button type="button" class="m-0" (click)="modal.dismiss('Cross click')">
+      <i class="fa fa-close"></i>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-12">
+        <div class="form-group">
+          <label class="col-form-label"> {{ "userName" | translate }}</label>
+          <ng-select
+            class="w-full p-0"
+            placeholder="{{ 'Chose' | translate }}"
+            [(ngModel)]="UsersSelectConvert"
+            [ngModelOptions]="{ standalone: true }"
+          >
+            <ng-option
+              *ngFor="let user of load_UsersSelectConvert"
+              [value]="user.id"
+              >{{ user.name }}</ng-option
+            >
+          </ng-select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer justify-content-end" style="border-top: none">
+    <button
+      type="button"
+      class="btn py-2 px-3 mt-0 bg-base text-white"
+      (click)="modal.dismiss('Cross click'); confirm_converttask()"
+    >
+      {{ "confirem" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #uploadFileModal let-modal>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="m-0">
+      <span
+        class="text-2xl"
+        [translate]="'name'"
+        [translateParams]="{
+          ar: '  اضافة ملفات',
+          en: 'Add Files',
+        }"
+      >
+      </span>
+    </h4>
+    <button
+      type="button"
+      class="text-2xl text-white m-0"
+      (click)="modal.dismiss()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form>
+      <p class="w-max p-1 bg-red-100 mx-auto mb-3">
+        {{ "Verification service depends only on pdf files" | translate }}
+      </p>
+      <div class="upload">
+        <file-upload [control]="controlTask" style="min-height: 240px">
+          <ng-template
+            let-isFileDragDropAvailable="isFileDragDropAvailable"
+            #placeholder
+          >
+            <div *ngIf="controlTask.size === 0">
+              <div class="icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="1em"
+                  viewBox="0 0 640 512"
+                >
+                  <path
+                    d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-217c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l39-39V392c0 13.3 10.7 24 24 24s24-10.7 24-24V257.9l39 39c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0l-80 80z"
+                  />
+                </svg>
+              </div>
+              <div class="upload-text">{{ "Upload File" | translate }} 😶</div>
+            </div>
+          </ng-template>
+
+          <ng-template
+            let-i="index"
+            let-file="file"
+            let-control="controlTask"
+            #item
+          >
+            <div *ngIf="file">
+              <span
+                class="delete-button"
+                style="display: flex"
+                (click)="controlTask.removeFile(file)"
+              >
+                <span> حذف ❌ </span>
+                <svg viewBox="0 0 448 512">
+                  <path
+                    d="M32 464a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128H32zm272-256a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zM432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16z"
+                  ></path>
+                </svg>
+              </span>
+              <img
+                class="max-h-44"
+                *ngIf="controlTask.valid"
+                [src]="uploadedFile | async"
+              />
+
+              <section class="file-info">
+                <span style="font-size: 16px; font-weight: 700"
+                  >تفاصيل الملف</span
+                >
+                <hr />
+                <ul>
+                  <li><span style="color: red">Name: </span>{{ file.name }}</li>
+                  <li><span style="color: red">Type: </span>{{ file.type }}</li>
+                  <li>
+                    <span style="color: red">Size: </span>{{ file.size }} bytes
+                  </li>
+                </ul>
+              </section>
+              <section *ngIf="!(controlTask.size === 0)">
+                <p>
+                  تم تحديد الملف بنجاح، ولرفع الملف علي المشروع اضغط زر حفظ ✅
+                </p>
+              </section>
+            </div>
+          </ng-template>
+        </file-upload>
+      </div>
+      <mat-progress-bar
+        style="height: 12px"
+        mode="determinate"
+        value="{{ progress }}"
+      ></mat-progress-bar>
+      <p style="text-align: center; color: #950101" *ngIf="uploading">
+        جاري التحميل ... ⏳
+      </p>
+      <p style="font-weight: 700">يرجي الانتباه للاتي عند رفع ملف :</p>
+      <p>
+        <span style="color: red">أولا</span> : تأكد من فحص الملف بواسطة مكافح
+        الفيروسات والتأكد منه قبل رفعه علي النظام
+      </p>
+      <p>
+        <span style="color: red">ثانيا</span> : لا تقم برفع الملفات التي لا تخص
+        المشروع لتوفير مساحة تخزين علي السيرفر الخاص بك
+      </p>
+      <p>
+        <span style="color: red">ثالثا</span> : خدمة التحقق من الوثائق والتي
+        توفر للعميل معرفة مصدر الملف تتوفر بصيغة PDF فقط
+      </p>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-light" (click)="modal.dismiss()">
+      {{ "Back" | translate }}
+    </button>
+    <button
+      [disabled]="controlTask.size === 0 || disableButtonSave_File"
+      (click)="confirm_SaveFiles(modal)"
+      class="btn btn-primary"
+    >
+      {{ "Save" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #mapModal let-modal>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="m-0">
+      <span class="text-2xl">{{ "Location" | translate }} </span>
+    </h4>
+    <button
+      type="button"
+      class="text-2xl text-white m-0"
+      (click)="modal.dismiss()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="relative rounded-lg overflow-hidden">
+      <agm-map
+        (mapReady)="onMapReady($event)"
+        style="height: 60vh"
+        [latitude]="latitude"
+        [longitude]="longitude"
+        [zoom]="zoom"
+      >
+        <agm-marker
+          [markerDraggable]="true"
+          [latitude]="latitude"
+          [longitude]="longitude"
+          (dragEnd)="markerDragEnd($event)"
+        ></agm-marker>
+      </agm-map>
+      <button
+        class="bottom-[120px] right-[10px] shadow rounded-sm border-neutral-400 text-neutral-500 absolute h-10 w-10 bg-white flex justify-center items-center z-20"
+        (click)="setCurrentLocation()"
+      >
+        <i class="fa fa-map-marker"></i>
+      </button>
+    </div>
+    <div class="text-end mt-2">
+      <button (click)="modal?.dismiss()" class="btn btn-secondary">
+        {{ "close" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- stopTaskModal -->
+<ng-template #stopTaskModal let-modal>
+  <div class="modal-body text-center">
+    <p>{{ "Do you want to stop the task?" | translate }}</p>
+    <div class="flex gap-2 justify-center mt-3">
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="confirm_playandstoptask(3); modal.dismiss()"
+      >
+        {{ "Yes" | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "No" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- stopTaskModal -->
+<ng-template #playTaskModal let-modal>
+  <div class="modal-body text-center">
+    <p>{{ "Do you want to play the task?" | translate }}</p>
+    <div class="flex gap-2 justify-center mt-3">
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="confirm_playandstoptask(2); modal.dismiss()"
+      >
+        {{ "Yes" | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "No" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #projectgoal let-modal>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="m-0">
+      <span class="text-2xl">
+        {{ "اهداف المشروع" | translate }}
+      </span>
+    </h4>
+    <button
+      type="button"
+      class="text-2xl text-white m-0"
+      (click)="modal.dismiss()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form #form="ngForm">
+      <div class="row items-center">
+        <div class="col-md-6 mb-3">
+          <div class="form-group">
+            <label class="col-form-label">
+              {{ "الهدف" | translate }}
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              id="goalname"
+              name="goalname"
+              [(ngModel)]="TaskData.goalname"
+            />
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+<!-- endWorkOrder -->
+<ng-template #endWorkOrder let-modal>
+  <div class="modal-body text-center">
+    <p>{{ "Do you want to finish the task?" | translate }}</p>
+    <div class="flex gap-2 justify-center mt-3">
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="FinishOrder(); modal.dismiss()"
+      >
+        {{ "Yes" | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "No" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- endWorkOrder -->
+<ng-template #PercentageModal let-modal>
+  <div class="modal-body text-center">
+    <p>هل تريد حفظ النسبة</p>
+    <div class="flex gap-2 justify-center mt-3">
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="SavePercentage(); modal.dismiss()"
+      >
+        {{ "Yes" | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "No" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- endTask -->
+<ng-template #PercentageTaskModal let-modal>
+  <div class="modal-body text-center">
+    <p>هل تريد حفظ النسبة</p>
+    <div class="flex gap-2 justify-center mt-3">
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="finishTask(modal); modal.dismiss()"
+      >
+        {{ "Yes" | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "No" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- endTask -->
+<ng-template #requestextendTaskModal let-modal>
+  <div class="modal-body text-center">
+    <p>هل تريد تمديد المهمة</p>
+    <div class="flex gap-2 justify-center mt-3">
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="confirm_changeTaskTime2(modal); modal.dismiss()"
+      >
+        {{ "Yes" | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "No" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- endTask -->
+<ng-template #requestconvertTaskModal let-modal>
+  <div class="modal-body text-center">
+    <p>هل تريد تحويل المهمة</p>
+    <div class="flex gap-2 justify-center mt-3">
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="confirm_converttask2(modal); modal.dismiss()"
+      >
+        {{ "Yes" | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "No" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>

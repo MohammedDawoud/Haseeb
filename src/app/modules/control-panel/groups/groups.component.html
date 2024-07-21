@@ -1,0 +1,259 @@
+<div class="staffcontracts">
+  <app-navigator [title]="title"></app-navigator>
+  <div class="flex gap-2 flex-wrap items-end justify-between">
+    <div class="max-w-xs">
+      <label
+        class="col-form-label"
+        [translate]="'name'"
+        [translateParams]="{
+          ar: ' صلاحيات مجموعة  ',
+          en: 'Permissions of group  '
+        }"
+      >
+      </label>
+      <!-- <ng-select class="w-full p-0" [(ngModel)]="selectedPermission" placeholder="{{ 'Chose' | translate }}">
+        <ng-option [value]="1">السكرتارية</ng-option>
+        <ng-option [value]="2">الادارة</ng-option>
+      </ng-select> -->
+
+      <!-- <ng-select class="w-full p-0" placeholder="{{ 'Group' | translate }}" formControlName="GroupId">
+        <ng-option *ngFor="let group of groupOptions" [value]="group.id">{{ group.name }}</ng-option>
+      </ng-select> -->
+
+      <!-- <ng-select class="w-full p-0" placeholder="{{ 'Group' | translate }}" [(ngModel)]="selectedGroupId">
+        <ng-option *ngFor="let group of groupOptions" [value]="group.id">{{ group.name }}</ng-option>
+      </ng-select> -->
+
+      <!-- <ng-select class="w-full p-0" placeholder="{{ 'Group' | translate }}" [(ngModel)]="selectedGroupId">
+        <ng-option *ngFor="let group of groupOptions" [value]="group.id" (click)="onOptionClick(group.id)">
+          {{ group.name }}
+        </ng-option>
+      </ng-select> -->
+
+      <ng-select
+        class="w-full p-0"
+        [(ngModel)]="selectedGroupId"
+        placeholder="{{ 'Group' | translate }}"
+        (change)="onOptionClick()"
+      >
+        <ng-option *ngFor="let group of groupOptions" [value]="group.id">{{
+          group.name
+        }}</ng-option>
+      </ng-select>
+    </div>
+    <div class="controler flex gap-2 flex-wrap">
+      <button class="btn btn-primary" (click)="open(addNewGroup, null, 'add')">
+        <span
+          class="hidden md:block"
+          [translate]="'name'"
+          [translateParams]="{
+            ar: ' مجموعة جديدة',
+            en: 'New group'
+          }"
+        >
+        </span>
+        <i class="fa-solid fa-plus"></i>
+      </button>
+
+      <button (click)="savePrivileges()" class="btn bg-base text-white">
+        <span
+          class="hidden md:block"
+          [translate]="'name'"
+          [translateParams]="{
+            ar: ' حفظ',
+            en: 'Save'
+          }"
+        >
+        </span>
+        <i class="fa-solid fa-floppy-disk"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- <div class="container-fluid">
+  <div class="row">
+    .col-lg-5
+  </div>
+</div> -->
+
+  <div class="separator-title">
+    <span>
+      {{
+        lang == "ar"
+          ? "صلاحيات" + " " + selectedGroupName
+          : "Permissions" + " " + selectedGroupName
+      }}
+    </span>
+  </div>
+
+  <div class="max-h-[60vh] overflow-auto px-10" style="display: flex">
+    <!-- <tree-ngx [nodeItems]="group" class="{{ 'dir' | translate }}" (selectedItems)="selectedTask1 = $event"
+      [options]="options" (click)="selectTask();">
+      <ng-template #nodeCollapsibleTemplate let-expanded="expanded">
+        <span *ngIf="!expanded">
+          <i class="fa-solid fa-folder-plus tree-icon"></i>
+        </span>
+        <span *ngIf="expanded">
+          <i class="fa-solid fa-folder-minus tree-icon"></i>
+        </span>
+      </ng-template>
+    </tree-ngx> -->
+    <tree-ngx
+      [nodeItems]="AccountngxTree"
+      class="{{ 'dir' | translate }}"
+      (selectedItems)="selectedTask1 = $event"
+      [options]="options"
+    >
+      <ng-template #nodeNameTemplate let-node="node" let-context="context">
+        <span
+          *ngIf="node.id == 151315 || node.id == 151316 || node.id == 1118"
+          style="background-color: red; color: black"
+          [class.active]="context.active"
+          >{{ node.text | translate }}
+        </span>
+        <span
+          *ngIf="node.id != 151315 && node.id != 151316 && node.id != 1118"
+          [class.active]="context.active"
+          >{{ node.text | translate }}
+        </span>
+      </ng-template>
+      <ng-template #nodeCollapsibleTemplate let-expanded="expanded">
+        <span *ngIf="!expanded">
+          <i class="fa-solid fa-folder-plus tree-icon"></i>
+        </span>
+        <span *ngIf="expanded">
+          <i class="fa-solid fa-folder-minus tree-icon"></i>
+        </span>
+      </ng-template>
+    </tree-ngx>
+
+    <div class="separator-title" style="height: max-content">
+      <span>
+        {{
+          lang == "ar"
+            ? "صلاحيات" + " " + selectedGroupName
+            : "Permissions" + " " + selectedGroupName
+        }}
+      </span>
+    </div>
+  </div>
+</div>
+
+<!-- addNewGroup   -->
+<ng-template #addNewGroup let-modal>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="modal-title mb-0" id="modal-basic-title">
+      <span
+        class="text-2xl"
+        [translate]="'name'"
+        [translateParams]="{
+          ar: 'إضافة مجموعة جديدة',
+          en: 'Add new group'
+        }"
+      >
+      </span>
+    </h4>
+    <button
+      type="button"
+      class="text-white m-0"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <i class="fa fa-close"></i>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <form class="modal-form" #form="ngForm" [formGroup]="groupForm">
+      <div class="grid md:grid-cols-2 gap-3">
+        <div class="form-group">
+          <label class="text-right col-form-label block">
+            {{ "nameAr" | translate }}
+            <span class="text-danger">*</span></label
+          >
+          <!-- <input
+            class="form-control"
+            type="text"
+            [placeholder]="('Write' | translate) + ' ' + ('nameAr' | translate)"
+          /> -->
+
+          <input
+            type="text"
+            id="NameAr"
+            name="NameAr"
+            class="form-control"
+            autocomplete="off"
+            [placeholder]="('Write' | translate) + ' ' + ('nameAr' | translate)"
+            formControlName="NameAr"
+          />
+
+          <div
+            *ngIf="
+              groupForm.get('NameAr')?.hasError('required') &&
+              groupForm.get('NameAr')?.touched
+            "
+            class="error-text"
+          >
+            This field is required.
+          </div>
+          <!-- <div *ngIf="groupForm.get('NameAr')?.hasError('pattern') && groupForm.get('NameAr')?.touched"
+            class="error-text">
+            Invalid pattern.
+          </div> -->
+        </div>
+        <div class="form-group">
+          <label class="text-right col-form-label block">
+            {{ "nameEn" | translate }}
+            <span class="text-danger">*</span></label
+          >
+          <!-- <input
+            class="form-control"
+            type="text"
+            [placeholder]="('Write' | translate) + ' ' + ('nameEn' | translate)"
+          /> -->
+
+          <input
+            type="text"
+            id="NameEn"
+            name="NameEn"
+            class="form-control"
+            autocomplete="off"
+            [placeholder]="('Write' | translate) + ' ' + ('nameEn' | translate)"
+            formControlName="NameEn"
+          />
+          <div
+            *ngIf="
+              groupForm.get('NameEn')?.hasError('required') &&
+              groupForm.get('NameEn')?.touched
+            "
+            class="error-text"
+          >
+            This field is required.
+          </div>
+          <!-- <div *ngIf="groupForm.get('NameEn')?.hasError('pattern') && groupForm.get('NameEn')?.touched"
+            class="error-text">
+            Invalid pattern.
+          </div> -->
+        </div>
+      </div>
+    </form>
+    <div
+      class="flex gap-2 justify-end pt-3 border-t border-neutral-300 col-span-1 md:col-span-2 mt-2"
+    >
+      <button
+        [disabled]="!groupForm.valid"
+        (click)="saveGroup(modal)"
+        class="btn bg-base text-white"
+        type="submit"
+      >
+        {{ "Save" | translate }}
+      </button>
+      <button (click)="modal.dismiss()" class="btn btn-secondary">
+        {{ "Back" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>

@@ -1,0 +1,150 @@
+::ng-deep {
+  .mat-paginator-container {
+    justify-content: space-between !important;
+    padding: 15px 10px 0px !important;
+  }
+
+  .mat-paginator-range-actions {
+    direction: inherit !important;
+  }
+
+  .mat-paginator-range-label {
+    direction: initial;
+  }
+
+  .mat-tab-group {
+    padding-bottom: 15px;
+  }
+}
+
+agm-map {
+  width: 100%;
+  height: 600px;
+  display: block;
+  margin-top: 40px;
+  width: 100%;
+  height: 600px;
+  display: block;
+  margin-top: 40px;
+}
+
+::ng-deep {
+  img.leaflet-marker-icon.leaflet-zoom-animated.leaflet-interactive {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    box-shadow: 0px 0px 2px 1px #0a6dca;
+  }
+
+  .leaflet-popup {
+    // padding: 15px 40px 10px !important;
+    padding: 10px !important;
+    width: 230px;
+    text-wrap: balance;
+    max-height: max-content !important;
+    background-color: #00bb84;
+    color: #fff;
+    left: -90px !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
+    text-align: center;
+    border-radius: 5px;
+    font-size: 14px !important;
+
+    .leaflet-popup-content-wrapper {
+      width: 100%;
+      height: 100%;
+      min-width: 100%;
+      background: transparent;
+      box-shadow: none !important;
+      color: #fff !important;
+      min-height: 100%;
+    }
+
+    .leaflet-popup-tip {
+      background: #00bb84 !important;
+    }
+
+    .leaflet-popup-tip-container {
+      bottom: -20px;
+    }
+
+    .leaflet-popup-content {
+      text-align: center;
+      text-align: center;
+      width: 100% !important;
+      margin: 0 !important;
+    }
+
+    p {
+      margin: 5px 0 !important;
+    }
+
+    i {
+      width: 22px;
+      height: 22px;
+      background: #fff;
+      border-radius: 50%;
+      color: #20c997;
+      line-height: 23px;
+      text-align: center;
+    }
+  }
+
+  .client-img {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    padding: 3px;
+    background: #fdfdfd;
+  }
+
+  .gm-style .gm-style-iw-d {
+    overflow: auto !important;
+  }
+
+  .attendance-app {
+    div[role="dialog"] {
+      opacity: 1 !important;
+      visibility: visible !important;
+      display: block !important;
+    }
+
+    div[role="button"] {
+      width: 50px !important;
+      height: 50px !important;
+      border-radius: 50% !important;
+      clip-path: circle(50% at 50% 50%);
+
+      img {
+        width: 50px !important;
+        height: 50px !important;
+        border-radius: 50% !important;
+      }
+    }
+  }
+
+  .custom-marker {
+    img {
+      width: 50px !important;
+      height: 50px !important;
+      border-radius: 50% !important;
+    }
+  }
+
+  button {
+    &.gm-ui-hover-effect {
+      display: none !important;
+    }
+  }
+
+  .gm-style .gm-style-iw-tc {
+    inset-inline-end: 0;
+
+    &::after {
+      background-color: #00bb84 !important;
+    }
+  }
+}

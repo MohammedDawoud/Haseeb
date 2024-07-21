@@ -1,0 +1,42 @@
+import { Auditable } from "./auditable";
+import { Users } from "./users";
+
+
+export class SystemSettings extends Auditable {
+    settingId: number;
+    fiscalYear: number | null;
+    branchId: number | null;
+    currencyId: number | null;
+    attendenceId: number | null;
+    custGenerateCode: string | null;
+    projGenerateCode: string | null;
+    contractGenerateCode: string | null;
+    empGenerateCode: string | null;
+    branchGenerateCode: string | null;
+    decimalPoints: number | null;
+    noReplyMail: string | null;
+    activeCodeInterval: number | null;
+    activeUserNumber: number | null;
+    voucherGenerateCode: string | null;
+    logErrors: boolean | null;
+    enableNotification: boolean | null;
+    enableSMS: boolean | null;
+    sMTPPort: number | null;
+    defaultUserSession: number | null;
+    phoneNoDigits: number | null;
+    mobileNoDigits: number | null;
+    nationalIDDigits: number | null;
+    contractGenerateCode2: string | null;
+    customerMailIsRequired: boolean | null;
+    customerNationalIdIsRequired: boolean | null;
+    orgDataIsRequired: boolean | null;
+    customerphoneIsRequired: boolean | null;
+    contract_Con_Code: string | null;
+    contract_Sup_Code: string | null;
+    contract_Des_Code: string | null;
+    uploadInvZatca: boolean | null;
+    zatcaCheckCode: string | null;
+    contractEndNote: number | null;
+    resedentEndNote: number | null;
+    updateUserT: Users | null;
+}

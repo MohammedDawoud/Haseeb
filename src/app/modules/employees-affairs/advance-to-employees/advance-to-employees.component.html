@@ -1,0 +1,908 @@
+<div class="employeesCovenant">
+  <app-navigator [title]="title"></app-navigator>
+  <div class="head flex flex-column gap-4 flex-wrap items-start justify-start">
+    <div class="btns w-100">
+      <button
+        type="button"
+        class="btn bg-base text-white"
+        (click)="open(addNewCovenant)"
+      >
+        {{ "addNewCovenant" | translate }}
+      </button>
+    </div>
+
+    <div class="flex gap-2 flex-wrap items-end w-100">
+      <div class="max-w-xs flex-grow">
+        <label class="col-form-label"> {{ "Employee Name" | translate }}</label>
+        <ng-select
+          class="w-full p-0"
+          placeholder="{{ 'Chose' | translate }}"
+          [(ngModel)]="selectedUser"
+          (ngModelChange)="SearchCustody()"
+          [ngModelOptions]="{ standalone: true }"
+        >
+          <ng-option *ngFor="let user of users" [value]="user.id">{{
+            user.name
+          }}</ng-option>
+        </ng-select>
+      </div>
+
+      <div class="max-w-xs flex-grow">
+        <label class="col-form-label"> {{ "covenant" | translate }}</label>
+        <ng-select
+          class="w-full p-0"
+          placeholder="{{ 'Chose' | translate }}"
+          [(ngModel)]="selectcust"
+          (ngModelChange)="SearchCustody()"
+          [ngModelOptions]="{ standalone: true }"
+        >
+          <ng-option *ngFor="let user of custodyselect" [value]="user.id">{{
+            user.name
+          }}</ng-option>
+        </ng-select>
+      </div>
+
+      <input
+        (keyup)="applyFilter($event)"
+        class="form-control"
+        style="max-width: 300px"
+        #input
+        placeholder="{{ 'search' | translate }}"
+      />
+    </div>
+  </div>
+
+  <div class="tables-data mt-3 overflow-hidden">
+    <!-- table -->
+
+    <div class="overflow-auto">
+      <table
+        mat-table
+        [dataSource]="dataSource"
+        matSort
+        class="mat-elevation-z8 rounded-t-lg overflow-hidden w-max"
+      >
+        <ng-container matColumnDef="employeName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "Employee Name" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <span>{{ element.employeeName }}</span>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="covenant">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "covenant" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <span>{{ element.itemName }}</span>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="Quantity">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "Quantity" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <span>{{ element.quantity }}</span>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="price">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "price" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <span>{{ element.itemPrice }}</span>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="receiptCustody">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "Receipt of custody" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <span>{{ element.date }}</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="operations">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "operations" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <!-- <button *ngIf="element.convertStatus !=true && element.type==2" -->
+            <button
+              class="p-2 bg-yellow-100 hover:bg-yellow-500 rounded-lg duration-300 hover:text-white w-10"
+              (click)="open(convenantUnLink, element, 'edit')"
+            >
+              <i class="fa fa-gears"></i>
+            </button>
+
+            <button
+              *ngIf="element.type == 2 && element.convertStatus != true"
+              class="p-2 bg-sky-100 hover:bg-sky-500 rounded-lg duration-300 hover:text-white w-10"
+              (click)="open(transferToAccounts, element, 'transfer')"
+            >
+              <i class="fa-solid fa-rotate-right"></i>
+            </button>
+            <button
+              *ngIf="
+                element.type == 2 &&
+                element.convertStatus == true &&
+                element.invoiceId == null
+              "
+              class="p-2 bg-sky-100 hover:bg-sky-500 rounded-lg duration-300 hover:text-white w-10"
+              style="color: red"
+              (click)="open(returntransferToAccounts, element, 'transfer')"
+            >
+              <i class="fa-solid fa-rotate-left"></i>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayedColumns"
+          class="duration-300 hover:bg-slate-100"
+        ></tr>
+
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="4">
+            {{ "noResult" | translate }} "{{ input.value }}"
+          </td>
+        </tr>
+      </table>
+    </div>
+    <mat-paginator [pageSizeOptions]="[10, 25, 100]"> </mat-paginator>
+  </div>
+</div>
+
+<ng-template #addNewCovenant let-modal>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="modal-title mb-0" id="modal-basic-title">
+      <span>{{ "addNewCovenant" | translate }}</span>
+    </h4>
+    <button
+      type="button"
+      class="text-white m-0"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <i class="fa fa-close"></i>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <form #form="ngForm">
+      <div class="row">
+        <div class="col-md-6 col-lg-4 mb-3">
+          <div class="form-group">
+            <label class="col-form-label">
+              {{ "Employee Name" | translate }}</label
+            >
+            <ng-select
+              class="w-full p-0"
+              placeholder="{{ 'Chose' | translate }}"
+              [(ngModel)]="modalDetails.user"
+              [ngModelOptions]="{ standalone: true }"
+              name="user"
+            >
+              <ng-option *ngFor="let user of users" [value]="user.id">{{
+                user.name
+              }}</ng-option>
+            </ng-select>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 mb-3">
+          <div class="form-group">
+            <label class="col-form-label">
+              {{ "convanant type" | translate }}</label
+            >
+            <ng-select
+              class="w-full p-0"
+              placeholder="{{ 'Chose' | translate }}"
+              [(ngModel)]="modalDetails.convanantType"
+              [ngModelOptions]="{ standalone: true }"
+              name="convanantType"
+            >
+              <ng-option
+                *ngFor="let user of CustodyTypeSelectId"
+                [value]="user.id"
+                >{{ user.Name }}</ng-option
+              >
+            </ng-select>
+          </div>
+        </div>
+        <div
+          class="col-md-6 col-lg-4 mb-3"
+          *ngIf="modalDetails.convanantType == 1"
+        >
+          <div class="form-group">
+            <label class="col-form-label"> {{ "category" | translate }}</label>
+            <div class="flex">
+              <ng-select
+                class="w-full p-0"
+                placeholder="{{ 'Chose' | translate }}"
+                [(ngModel)]="modalDetails.category"
+                [ngModelOptions]="{ standalone: true }"
+                name="category"
+                style="min-width: max-content !important"
+              >
+                <ng-option *ngFor="let user of itemselect" [value]="user.id">{{
+                  user.name
+                }}</ng-option>
+              </ng-select>
+              <button
+                *ngIf="modalDetails.convanantType == 1"
+                type="button"
+                class="bg-base text-white"
+                style="padding: 0px 10px"
+                (click)="open(addOption)"
+              >
+                <i class="fa fa-plus"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          class="col-md-6 col-lg-4 mb-3"
+          *ngIf="modalDetails.convanantType == 1"
+        >
+          <div class="form-group">
+            <label>
+              {{ "Quantity" | translate }}
+            </label>
+            <input
+              [(ngModel)]="modalDetails.Quantity"
+              class="form-control"
+              type="text"
+              name="Quantity"
+            />
+          </div>
+        </div>
+
+        <div
+          class="col-md-6 col-lg-4 mb-3"
+          *ngIf="modalDetails.convanantType == 2"
+        >
+          <div class="form-group">
+            <label>
+              {{ "Amount" | translate }}
+            </label>
+            <input
+              [(ngModel)]="modalDetails.amount"
+              class="form-control"
+              type="text"
+              name="amount"
+            />
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4 mb-3">
+          <div class="form-group">
+            <label class="text-right col-form-label block">
+              {{ "Chose Date" | translate }}
+            </label>
+            <div class="form-group timeInput">
+              <input
+                [(ngModel)]="modalDetails.date"
+                name="date"
+                type="text"
+                (ngModelChange)="gethigridate()"
+                class="form-control"
+                bsDatepicker
+              />
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 mb-3">
+          <div class="form-group">
+            <label class="text-right col-form-label block">
+              {{ "Corresponding" | translate }}
+            </label>
+
+            <div class="form-group timeInput">
+              <!-- <input
+                [(ngModel)]="modalDetails.hijriDate"
+                name="hijriDate"
+                type="text"
+                class="form-control"
+                bsDatepicker
+                
+              /> -->
+              <hijri-gregorian-datepicker
+                [(selectedDate)]="modalDetails.hijriDate"
+                [isRequired]="true"
+                [hijriLabel]="'Hijri'"
+                [selectedDateType]="selectedDateType"
+                [dir]="'dir' | translate"
+              >
+              </hijri-gregorian-datepicker>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <div class="d-flex items-center justify-end gap-3 mt-4">
+      <button
+        type="button"
+        class="btn bg-base text-white"
+        (click)="addCovenant(form.value); modal.close('Save click', 'end')"
+      >
+        {{ "add" | translate }}
+      </button>
+
+      <button (click)="modal?.dismiss()" class="btn btn-outline-secondary">
+        {{ "close" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #convenantUnLink let-modal>
+  <p class="mb-2 text-center mt-4">{{ "Release the convenant" | translate }}</p>
+  <div class="d-flex items-center justify-center gap-3 my-4">
+    <button
+      (click)="endcustody(modal)"
+      type="button"
+      class="btn bg-base text-white"
+    >
+      {{ "confirem" | translate }}
+    </button>
+
+    <button (click)="modal?.dismiss()" class="btn btn-outline-secondary">
+      {{ "close" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #transferToAccounts let-modal>
+  <p class="mb-2 text-center mt-4">{{ "Transfer to accounts" | translate }}</p>
+  <div class="d-flex items-center justify-center gap-3 my-4">
+    <button
+      (click)="transfercustody(modal); modal?.dismiss()"
+      type="button"
+      class="btn bg-base text-white"
+    >
+      {{ "confirem" | translate }}
+    </button>
+
+    <button (click)="modal?.dismiss()" class="btn btn-outline-secondary">
+      {{ "close" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #returntransferToAccounts let-modal>
+  <p class="mb-2 text-center mt-4">{{ "Transfer to accounts" | translate }}</p>
+  <div class="d-flex items-center justify-center gap-3 my-4">
+    <button
+      (click)="returntransfercustody(); modal?.dismiss()"
+      type="button"
+      class="btn bg-base text-white"
+    >
+      {{ "confirem" | translate }}
+    </button>
+
+    <button (click)="modal?.dismiss()" class="btn btn-outline-secondary">
+      {{ "close" | translate }}
+    </button>
+  </div>
+</ng-template>
+<!-- Add option -->
+<ng-template #addOption let-modal>
+  <div class="modal-header bg-base text-white">
+    <h4
+      class="modal-title mb-0"
+      id="modal-basic-title"
+      [translate]="'name'"
+      [translateParams]="{ ar: 'اضافة جديدة', en: 'Add New' }"
+    ></h4>
+    <button type="button" class="m-0" (click)="modal.dismiss('Cross click')">
+      <i class="fa fa-close"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form #addOptionForm="ngForm">
+      <div class="row">
+        <div class="col-md-6 col-lg-4">
+          <div class="form-input-group">
+            <label for="" class="block mb-3">{{ "nameAr" | translate }}</label>
+            <input
+              type="text"
+              placeholder="{{ 'nameAr' | translate }}"
+              class="form-control"
+              [(ngModel)]="modalitemDetails.namear"
+              name="nameAr"
+              required
+            />
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <div class="form-input-group">
+            <label for="" class="block mb-3">{{ "nameEn" | translate }}</label>
+            <input
+              type="text"
+              placeholder="{{ 'nameEn' | translate }}"
+              class="form-control"
+              [(ngModel)]="modalitemDetails.nameen"
+              name="nameEn"
+              required
+            />
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <div class="form-group">
+            <label class="col-form-label"> {{ "Type" | translate }}</label>
+            <div class="flex">
+              <ng-select
+                class="w-full p-0"
+                placeholder="{{ 'Chose' | translate }}"
+                [(ngModel)]="modalitemDetails.itemtype"
+                [ngModelOptions]="{ standalone: true }"
+                name="type"
+                style="min-width: max-content !important"
+              >
+                <ng-option
+                  *ngFor="let user of ItemTypeselected"
+                  [value]="user.id"
+                  >{{ user.name }}</ng-option
+                >
+              </ng-select>
+              <button
+                type="button"
+                class="bg-base text-white"
+                style="padding: 0px 10px"
+                (click)="open(Additemtype)"
+              >
+                <i class="fa fa-plus"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <div class="form-group">
+            <label for="Quantity" class="text-right col-form-label block">
+              {{ "Quantity" | translate }}
+            </label>
+            <input
+              required
+              #Quantity="ngModel"
+              [(ngModel)]="modalitemDetails.qntity"
+              ngModel
+              class="form-control"
+              type="text"
+              id="Quantity"
+              name="Quantity"
+            />
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <div class="form-group">
+            <label for="price" class="text-right col-form-label block">
+              {{ "price" | translate }}
+            </label>
+            <input
+              required
+              #price="ngModel"
+              [(ngModel)]="modalitemDetails.price"
+              ngModel
+              class="form-control"
+              type="text"
+              id="price"
+              name="price"
+            />
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <div class="form-group">
+            <label for="color" class="text-right col-form-label block">
+              {{ "color" | translate }}
+            </label>
+            <input
+              required
+              #color="ngModel"
+              [(ngModel)]="modalitemDetails.color"
+              ngModel
+              class="form-control"
+              type="text"
+              id="color"
+              name="color"
+            />
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer justify-content-center" style="border-top: none">
+    <button
+      type="button"
+      class="btn btn-light py-2 px-3 mt-0"
+      (click)="modal.dismiss('Cross click')"
+    >
+      {{ "close" | translate }}
+    </button>
+    <button
+      type="button"
+      class="btn submit-btn bg-base text-white py-2 px-3 mt-0"
+      [disabled]="addOptionForm.invalid"
+      (click)="saveitems()"
+    >
+      {{ "Save" | translate }}
+    </button>
+
+    <div
+      class="d-block w-100 mt-4"
+      style="
+        border-top: 2px solid #d5dadf;
+        padding-top: 24px;
+        border-radius: 3px;
+      "
+    >
+      <div class="w-100 mb-3">
+        <input
+          type="text"
+          class="form-control pull-right"
+          placeholder="{{ 'search' | translate }}"
+          (keyup)="updateFilter($event)"
+        />
+      </div>
+
+      <div class="editable shadow mb-4">
+        <table
+          class="table table-responsive table-striped table-bordered text-center"
+          style="vertical-align: middle; font-size: 14px"
+        >
+          <thead
+            class="bg-base text-white"
+            style="line-height: 30px; font-size: 13px"
+          >
+            <tr>
+              <th>{{ "nameAr" | translate }}</th>
+              <th>{{ "nameEn" | translate }}</th>
+              <th>{{ "operations" | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let item of Itemlist; let i = index"
+              style="line-height: 5px"
+            >
+              <td>
+                <input
+                  type="text"
+                  name="os-name{{ i }}"
+                  [(ngModel)]="item.nameAr"
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  name="os-name{{ i }}"
+                  [(ngModel)]="item.nameEn"
+                />
+              </td>
+              <td>
+                <button
+                  (click)="edititem(item)"
+                  class="p-2 bg-orange-100 hover:bg-orange-500 rounded-lg duration-300 hover:text-white w-10"
+                >
+                  <i class="fa-regular fa-pen-to-square"></i>
+                </button>
+
+                <button
+                  class="p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white w-10 me-3"
+                  (click)="open(deleteModal2, item, 'deleted')"
+                >
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- <ngx-datatable
+        style="max-height: 300px; overflow-y: auto"
+        #table
+        class="striped w-100"
+        [columnMode]="'flex'"
+        [headerHeight]="50"
+        [footerHeight]="50"
+        [rowHeight]="'auto'"
+        [limit]="100"
+        [rows]="modalitemDetails"
+      >
+        <ngx-datatable-column [flexGrow]="0.5">
+          <ng-template
+            let-value="value"
+            let-row="row"
+            let-rowIndex="rowIndex"
+            ngx-datatable-cell-template
+          >
+            <i
+              class="fa fa-pencil"
+              title="Modify"
+              style="cursor: pointer"
+              *ngIf="!this.isEditable[rowIndex]"
+              (click)="this.isEditable[rowIndex] = !this.isEditable[rowIndex]"
+            ></i>
+
+            <div class="actions">
+              <i
+                class="fa fa-edit text-success"
+                *ngIf="this.isEditable[rowIndex]"
+                title="Save"
+                (click)="save(modalitemDetails, rowIndex)"
+              ></i>
+              <i
+                class="fa fa-trash text-danger"
+                *ngIf="this.isEditable[rowIndex]"
+                title="Delete"
+                (click)="delete(modalitemDetails, rowIndex)"
+              ></i>
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column
+          [flexGrow]="1.5"
+          name="{{ 'nameAr' | translate }}"
+        >
+          <ng-template
+            ngx-datatable-cell-template
+            let-rowIndex="rowIndex"
+            let-row="row"
+          >
+            <div class="form-input-group">
+              <input
+                type="text"
+                name="nameAr"
+                [(ngModel)]="modalitemDetails.nameAr"
+                [disabled]="!isEditable[rowIndex]"
+              />
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column
+          [flexGrow]="1.5"
+          name="{{ 'nameEn' | translate }}"
+        >
+          <ng-template
+            ngx-datatable-cell-template
+            let-rowIndex="rowIndex"
+            let-row="row"
+          >
+            <div class="form-input-group">
+              <input
+                type="text"
+                name="nameEn"
+                [(ngModel)]="modalitemDetails.nameEn"
+                [disabled]="!isEditable[rowIndex]"
+              />
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+      </ngx-datatable> -->
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #deleteModal2 let-modal>
+  <div class="modal-body text-center">
+    <p
+      [translate]="'name'"
+      [translateParams]="{
+        ar: 'هل تريد بالتأكيد حذف هذا الصف',
+        en: 'Are you sure to delete this row ?'
+      }"
+    ></p>
+    <div class="flex gap-2 justify-center">
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="Deleteitem(); modal.dismiss()"
+      >
+        {{ "Yes" | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "No" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Add option -->
+<ng-template #Additemtype let-modal>
+  <div class="modal-header bg-base text-white">
+    <h4
+      class="modal-title mb-0"
+      id="modal-basic-title"
+      [translate]="'name'"
+      [translateParams]="{ ar: 'اضافة جديدة', en: 'Add New' }"
+    ></h4>
+    <button type="button" class="m-0" (click)="modal.dismiss('Cross click')">
+      <i class="fa fa-close"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form #addOptionForm="ngForm">
+      <div class="row">
+        <div class="col-md-6 col-lg-4">
+          <div class="form-input-group">
+            <label for="" class="block mb-3">{{ "nameAr" | translate }}</label>
+            <input
+              type="text"
+              placeholder="{{ 'nameAr' | translate }}"
+              class="form-control"
+              [(ngModel)]="modalitemtypeDetails.namear"
+              name="nameAr"
+              required
+            />
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <div class="form-input-group">
+            <label for="" class="block mb-3">{{ "nameEn" | translate }}</label>
+            <input
+              type="text"
+              placeholder="{{ 'nameEn' | translate }}"
+              class="form-control"
+              [(ngModel)]="modalitemtypeDetails.nameen"
+              name="nameEn"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+          <div class="form-group">
+            <label for="Quantity" class="text-right col-form-label block">
+              {{ "Quantity" | translate }}
+            </label>
+            <input
+              required
+              #Quantity="ngModel"
+              [(ngModel)]="modalitemtypeDetails.note"
+              ngModel
+              class="form-control"
+              type="text"
+              id="Quantity"
+              name="Quantity"
+            />
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer justify-content-center" style="border-top: none">
+    <button
+      type="button"
+      class="btn btn-light py-2 px-3 mt-0"
+      (click)="modal.dismiss('Cross click')"
+    >
+      {{ "close" | translate }}
+    </button>
+    <button
+      type="button"
+      class="btn submit-btn bg-base text-white py-2 px-3 mt-0"
+      [disabled]="addOptionForm.invalid"
+      (click)="saveitemtypes()"
+    >
+      {{ "Save" | translate }}
+    </button>
+
+    <div
+      class="d-block w-100 mt-4"
+      style="
+        border-top: 2px solid #d5dadf;
+        padding-top: 24px;
+        border-radius: 3px;
+      "
+    >
+      <div class="w-100 mb-3">
+        <input
+          type="text"
+          class="form-control pull-right"
+          placeholder="{{ 'search' | translate }}"
+          (keyup)="updateFilter($event)"
+        />
+      </div>
+
+      <div class="editable shadow mb-4">
+        <table
+          class="table table-responsive table-striped table-bordered text-center"
+          style="vertical-align: middle; font-size: 14px"
+        >
+          <thead
+            class="bg-base text-white"
+            style="line-height: 30px; font-size: 13px"
+          >
+            <tr>
+              <th>{{ "nameAr" | translate }}</th>
+              <th>{{ "nameEn" | translate }}</th>
+              <th>{{ "operations" | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let item of ItemTypelist; let i = index"
+              style="line-height: 5px"
+            >
+              <td>
+                <input
+                  type="text"
+                  name="os-name{{ i }}"
+                  [(ngModel)]="item.nameAr"
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  name="os-name{{ i }}"
+                  [(ngModel)]="item.nameEn"
+                />
+              </td>
+              <td>
+                <button
+                  (click)="edititemtype(item)"
+                  class="p-2 bg-orange-100 hover:bg-orange-500 rounded-lg duration-300 hover:text-white w-10"
+                >
+                  <i class="fa-regular fa-pen-to-square"></i>
+                </button>
+
+                <button
+                  class="p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white w-10 me-3"
+                  (click)="open(deleteModal3, item, 'deleted3')"
+                >
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #deleteModal3 let-modal>
+  <div class="modal-body text-center">
+    <p
+      [translate]="'name'"
+      [translateParams]="{
+        ar: 'هل تريد بالتأكيد حذف هذا الصف',
+        en: 'Are you sure to delete this row ?'
+      }"
+    ></p>
+    <div class="flex gap-2 justify-center">
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="Deleteitemtype(); modal.dismiss()"
+      >
+        {{ "Yes" | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "No" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>

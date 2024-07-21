@@ -1,0 +1,3820 @@
+<div class="catch-receipt">
+  <app-navigator [title]="title"></app-navigator>
+  <div class="container-fluid">
+    <div class="head flex gap-2 flex-wrap items-end justify-between">
+      <!-- all buttons  -->
+      <div class="btns mb-3 w-100">
+        <div class="row d-md-flex">
+          <button
+            type="button"
+            class="flex gap-1 btn btn-danger mb-3 col-md-2"
+            [disabled]="this.selection.selected.length == 0"
+            (click)="
+              open(PostVouchersCheckBoxmodal, '', 'PostVouchersCheckBoxmodal')
+            "
+          >
+            {{ "PostingDocument" | translate }}
+          </button>
+
+          <button
+            type="button"
+            class="btn bg-base text-white mb-3 col-md-2"
+            (click)="
+              open(
+                ReceiptVoucherwithoutCustomerModal,
+                '',
+                'ReceiptVoucherwithoutCustomerModal',
+                'noCustomer'
+              )
+            "
+          >
+            {{ "ReceiptVoucherwithoutCustomer" | translate }}
+          </button>
+
+          <button
+            type="button"
+            class="btn bg-base text-white mb-3 col-md-2"
+            (click)="
+              open(
+                ReceiptVoucherwithoutCustomerModal,
+                '',
+                'ReceiptVoucherwithoutCustomerModal',
+                'withCustomer'
+              )
+            "
+          >
+            {{ "receiptVoucher" | translate }}
+          </button>
+
+          <button
+            type="button"
+            class="flex gap-1 btn btn-outline-secondary mb-3 col-md-2"
+            (click)="getPrintdata('report')"
+          >
+            {{ "Print" | translate }}
+            <i class="fa-solid fa-print"></i>
+          </button>
+
+          <button
+            type="button"
+            class="flex gap-1 btn btn-outline-secondary mb-3 col-md-2"
+            (click)="exportData()"
+          >
+            {{ "exportExcel" | translate }}
+          </button>
+
+          <button
+            type="button"
+            class="flex gap-1 btn btn-success mb-3 col-md-2"
+            (click)="showFilters = !showFilters; reset()"
+          >
+            {{ "research" | translate }}
+            <i class="fa-solid fa-search"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- search  after Edit -->
+    <div *ngIf="showFilters" class="filters">
+      <div class="container-fluid">
+        <div class="d-flex">
+          <!-- <input type="checkbox" name="date" id="date" ngModel />
+        <label for="date" class="mx-2">{{ "search_date" | translate }}</label> -->
+
+          <button
+            class="btn btn-primary"
+            (click)="data.enable = !data.enable; CheckDate(null)"
+            [translate]="'name'"
+            [translateParams]="{
+              ar: 'فلترة بالوقت',
+              en: 'Time Filter'
+            }"
+          ></button>
+        </div>
+
+        <!-- ---- -->
+        <div class="row align-items-end">
+          <div class="col-xxl-2 col-md-3 col-lg-3 mb-0 mb-md-3">
+            <div class="form-group">
+              <label class="col-form-label">
+                {{ "Bond number" | translate }}</label
+              >
+
+              <input
+                type="text "
+                class="w-full p-2 inputType"
+                name="user"
+                autocomplete="off"
+                [(ngModel)]="datafilter.voucherNo"
+                placeholder="{{ 'Chose' | translate }}"
+              />
+            </div>
+          </div>
+          <div class="col-xxl-2 col-md-3 col-lg-3 mb-0 mb-md-3">
+            <div class="form-group">
+              <label class="col-form-label">
+                {{ "Statement" | translate }}</label
+              >
+
+              <input
+                type="text "
+                class="w-full p-2 inputType"
+                name="user"
+                autocomplete="off"
+                [(ngModel)]="datafilter.invoiceNote"
+                placeholder="{{ 'Chose' | translate }}"
+              />
+            </div>
+          </div>
+
+          <div
+            class="col-xxl-2 col-md-3 col-lg-3 mb-0 mb-md-3"
+            *ngIf="data.enable"
+          >
+            <div class="form-group timeInput">
+              <label class="col-form-label">{{
+                "Chose Date" | translate
+              }}</label>
+              <input
+                placeholder="{{ 'Chose Date' | translate }}"
+                name="date"
+                type="text"
+                class="form-control"
+                [(ngModel)]="datafilter.datefilter"
+                (ngModelChange)="CheckDate($event)"
+                bsDaterangepicker
+                #dpr="bsDaterangepicker"
+              />
+            </div>
+          </div>
+
+          <div class="col-xxl-2 col-md-3 col-lg-3 mb-0 mb-md-3">
+            <div class="form-group">
+              <label class="col-form-label">
+                {{ "deportationStatus" | translate }}</label
+              >
+              <ng-select
+                class="w-full p-0"
+                placeholder="{{ 'Chose' | translate }}"
+                name="user"
+                (change)="GetAllVouchers()"
+                [(ngModel)]="datafilter.isPost"
+              >
+                <ng-option
+                  *ngFor="let user of deportationStatusList"
+                  [value]="user.id"
+                  >{{ user.name | translate }}</ng-option
+                >
+              </ng-select>
+            </div>
+          </div>
+
+          <div class="col-xxl-2 col-md-3 col-lg-3 mb-0 mb-md-3">
+            <div class="form-group">
+              <label class="col-form-label"> {{ "Client" | translate }}</label>
+              <ng-select
+                class="w-full p-0"
+                placeholder="{{ 'Chose' | translate }}"
+                name="user"
+                (change)="GetAllVouchers()"
+                [(ngModel)]="datafilter.customerId"
+              >
+                <ng-option
+                  *ngFor="let user of AllCustomerSelectByAllReVoucherList"
+                  [value]="user.id"
+                  >{{ user.name }}</ng-option
+                >
+              </ng-select>
+            </div>
+          </div>
+          <div class="col-xxl-2 col-md-3 col-lg-3 mb-0 mb-md-3">
+            <button
+              type="button"
+              class="flex gap-1 btn btn-primary"
+              (click)="GetAllVouchers()"
+            >
+              {{ "search" | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- table -->
+    <div class="overflow-auto">
+      <table
+        mat-table
+        [dataSource]="projectsDataSource"
+        matSort
+        class="mat-elevation-z8 rounded-t-lg overflow-hidden w-max"
+      >
+        <ng-container matColumnDef="select">
+          <th mat-header-cell *matHeaderCellDef>
+            <mat-checkbox
+              color="warn"
+              (change)="$event ? toggleAllRows() : null"
+              [checked]="selection.hasValue() && isAllSelected()"
+              [indeterminate]="selection.hasValue() && !isAllSelected()"
+            >
+            </mat-checkbox>
+          </th>
+          <td
+            mat-cell
+            *matCellDef="let row"
+            [style.background]="getisPostbackground(row)"
+            [style.pointerEvents]="getisPostpointerEvents(row)"
+          >
+            <mat-checkbox
+              color="warn"
+              (click)="$event.stopPropagation()"
+              (change)="$event ? selection.toggle(row) : null"
+              [checked]="selection.isSelected(row)"
+            >
+            </mat-checkbox>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="invoiceNumber">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "Bond number" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.invoiceNumber }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "BondDate" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.date }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="customerName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "Customer Name" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.customerName }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="totalValue">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "BondTotal" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.totalValue }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="payTypeName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "Payment type" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.payTypeName }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="statusName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "BondCondition" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.statusName }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="journalNumber">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "Registration number" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.journalNumber }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="postDate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "Posting date" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.postDate }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="BondAttachments">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "BondAttachments" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <button
+              *ngIf="element.fileUrl"
+              class="p-2 bg-sky-100 hover:bg-sky-500 rounded-lg duration-300 hover:text-white w-10 mx-1"
+              (click)="downloadFile(element)"
+            >
+              <i class="fa-solid fa-eye"></i>
+            </button>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="operations">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "operations" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <div class="child-btns">
+              <span class="dtr-data" *ngIf="element.isPost == false">
+                <!--تعديل  -->
+                <button
+                  type="button"
+                  id="68"
+                  class="p-2 bg-orange-100 hover:bg-orange-500 rounded-lg duration-300 hover:text-white w-10 mx-1"
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  title=" تعديل "
+                  data-original-title="تعديل "
+                  (click)="
+                    open(
+                      ReceiptVoucherwithoutCustomerModal,
+                      element,
+                      'editReceiptModal'
+                    )
+                  "
+                >
+                  <i class="fa-regular fa-pen-to-square"></i>
+                </button>
+              </span>
+
+              <span class="dtr-data" *ngIf="element.isPost == false">
+                <!--حذف   -->
+                <button
+                  type="button"
+                  id="68"
+                  class="p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white w-10 mx-1"
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  title=" حذف "
+                  data-original-title="حذف "
+                  (click)="
+                    open(DeleteVoucherModal, element, 'DeleteVoucherModal')
+                  "
+                >
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </span>
+              <span class="dtr-data" *ngIf="element.isPost == true">
+                <!--فك الترحيل   -->
+                <button
+                  type="button"
+                  id="68"
+                  class="p-2 bg-blue-100 hover:bg-blue-500 rounded-lg duration-300 hover:text-white mx-1"
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  (click)="open(PostBackVouchers, element, 'PostBackVouchers')"
+                >
+                  {{ "Post Back" | translate }}
+                </button>
+              </span>
+              <span class="dtr-data" *ngIf="element.isPost == true">
+                <!--عرض القيد المحاسبي   -->
+                <button
+                  type="button"
+                  id="68"
+                  class="p-2 bg-blue-100 hover:bg-blue-500 rounded-lg duration-300 hover:text-white mx-1"
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  (click)="open(accountingentry, element, 'accountingentry')"
+                >
+                  <!-- (click)="open(AllJournalsByReVoucheModal,element,'AllJournalsByReVoucheModal')" -->
+                  {{ "View Journal Entry" | translate }}
+                </button>
+              </span>
+              <span class="dtr-data">
+                <!--طباعة  -->
+                <button
+                  type="button"
+                  id="68"
+                  class="AddNewTaskbtn btn btn-outline-success btn-sm waves-effect mx-1"
+                  (click)="GetReport(element)"
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  title=" طباعة "
+                  data-original-title="طباعة "
+                >
+                  <i class="fa-solid fa-print"></i>
+                </button>
+              </span>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="projectDisplayedColumns"></tr>
+
+        <tr
+          mat-row
+          *matRowDef="let row; columns: projectDisplayedColumns"
+          (dblclick)="
+            open(ReceiptVoucherwithoutCustomerModal, row, 'viewReceiptModal')
+          "
+        ></tr>
+      </table>
+    </div>
+    <mat-paginator [pageSizeOptions]="[10, 25, projectsDataSource.data.length]">
+    </mat-paginator>
+  </div>
+  <div
+    id="report"
+    [ngStyle]="{ direction: lang == 'ar' ? 'rtl' : 'ltr' }"
+    style="position: absolute"
+  >
+    <!--Header-->
+    <div
+      class="report-header"
+      style="
+        display: flex;
+        align-items: center;
+        gap: 100px;
+        padding: 3px 0px;
+        margin-bottom: 20px;
+      "
+    >
+      <div class="headerNe-right-side">
+        <img
+          src="{{ environmentPho }}"
+          alt="logo"
+          style="
+            height: 200px;
+            width: 200px;
+            max-width: 200px;
+            object-fit: fill;
+          "
+        />
+      </div>
+
+      <div class="headerNe-lefy-side" style="width: 100%">
+        <h1
+          style="
+            letter-spacing: 0.25px;
+            font-size: 23px;
+            margin: 0;
+            margin-bottom: 5px;
+          "
+        >
+          {{ OrganizationData?.nameAr }}
+        </h1>
+        <h1
+          style="
+            letter-spacing: 0.25px;
+            font-size: 23px;
+            margin: 0;
+            margin-bottom: 5px;
+          "
+        >
+          {{ OrganizationData?.nameEn }}
+        </h1>
+        <div class="line" style="position: relative; padding: 5px 0px 10px">
+          <span
+            style="
+              position: absolute;
+              right: 0;
+              width: 100%;
+              height: 2px;
+              background-color: #e5e5e5;
+              z-index: 1;
+            "
+          ></span>
+          <span
+            style="
+              position: absolute;
+              right: 0;
+              width: 70%;
+              height: 2px;
+              background-color: #ec1c24;
+              z-index: 2;
+            "
+          ></span>
+        </div>
+
+        <h1
+          style="
+            margin-bottom: 0;
+            font-size: 34px;
+            color: #0c8191;
+            margin-bottom: 0;
+            margin-top: 30px;
+            font-weight: 500;
+          "
+          [translate]="'name'"
+          [translateParams]="{
+            ar: 'سند قبض ',
+            en: 'Catch Receipt'
+          }"
+        ></h1>
+      </div>
+    </div>
+    <!--/Header-->
+
+    <div style="margin-bottom: 10px">
+      <p>
+        <span
+          [translate]="'name'"
+          [translateParams]="{
+            ar: 'التاريخ: ',
+            en: 'Date: '
+          }"
+        ></span>
+        <span> {{ dateprint | date }} </span>
+      </p>
+    </div>
+    <div class="services" style="width: 100%; margin-bottom: 20px">
+      <div class="content">
+        <table style="text-align: center; vertical-align: middle; width: 100%">
+          <thead>
+            <td
+              style="
+                font-size: 16px;
+                background-color: #fff;
+                padding: 14px 4px;
+                text-align: center;
+                color: #272727;
+                word-wrap: break-word;
+                border-inline-start: 1px dashed #0c8191;
+                border: 1px dashed #272727;
+                font-weight: 600;
+              "
+            >
+              {{ "Bond number" | translate }}
+            </td>
+            <td
+              style="
+                font-size: 16px;
+                background-color: #fff;
+                padding: 14px 4px;
+                text-align: center;
+                color: #272727;
+                word-wrap: break-word;
+                border-inline-start: 1px dashed #0c8191;
+                border: 1px dashed #272727;
+                font-weight: 600;
+              "
+            >
+              {{ "BondDate" | translate }}
+            </td>
+            <td
+              style="
+                font-size: 16px;
+                background-color: #f7f7f7;
+                padding: 14px 4px;
+                text-align: center;
+                color: #272727;
+                word-wrap: break-word;
+                border-inline-start: 1px dashed #0c8191;
+                border: 1px dashed #272727;
+                font-weight: 600;
+              "
+            >
+              {{ "Customer Name" | translate }}
+            </td>
+            <td
+              style="
+                font-size: 16px;
+                background-color: #f7f7f7;
+                padding: 14px 4px;
+                text-align: center;
+                color: #272727;
+                word-wrap: break-word;
+                border-inline-start: 1px dashed #0c8191;
+                border: 1px dashed #272727;
+                font-weight: 600;
+              "
+            >
+              {{ "BondTotal" | translate }}
+            </td>
+            <td
+              style="
+                font-size: 16px;
+                background-color: #fff;
+                padding: 14px 4px;
+                text-align: center;
+                color: #272727;
+                word-wrap: break-word;
+                border-inline-start: 1px dashed #0c8191;
+                border: 1px dashed #272727;
+                font-weight: 600;
+              "
+            >
+              {{ "Payment type" | translate }}
+            </td>
+            <td
+              style="
+                font-size: 16px;
+                background-color: #fff;
+                padding: 14px 4px;
+                text-align: center;
+                color: #272727;
+                word-wrap: break-word;
+                border-inline-start: 1px dashed #0c8191;
+                border: 1px dashed #272727;
+                font-weight: 600;
+              "
+            >
+              {{ "BondCondition" | translate }}
+            </td>
+            <td
+              style="
+                font-size: 16px;
+                background-color: #fff;
+                padding: 14px 4px;
+                text-align: center;
+                color: #272727;
+                word-wrap: break-word;
+                border-inline-start: 1px dashed #0c8191;
+                border: 1px dashed #272727;
+                font-weight: 600;
+              "
+            >
+              {{ "Registration number" | translate }}
+            </td>
+            <td
+              style="
+                font-size: 16px;
+                background-color: #fff;
+                padding: 14px 4px;
+                text-align: center;
+                color: #272727;
+                word-wrap: break-word;
+                border-inline-start: 1px dashed #0c8191;
+                border: 1px dashed #272727;
+                font-weight: 600;
+              "
+            >
+              {{ "Posting date" | translate }}
+            </td>
+            <td
+              style="
+                font-size: 16px;
+                background-color: #fff;
+                padding: 14px 4px;
+                text-align: center;
+                color: #272727;
+                word-wrap: break-word;
+                border-inline-start: 1px dashed #0c8191;
+                border: 1px dashed #272727;
+                font-weight: 600;
+              "
+            >
+              {{ "BondAttachments" | translate }}
+            </td>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of printprojectsDataSource">
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  padding: 10px 0px;
+                  color: #272727;
+                  border-inline-start: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+              >
+                {{ item.invoiceNumber }}
+              </td>
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  padding: 10px 0px;
+                  color: #272727;
+                  border-inline-start: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+              >
+                {{ item.date }}
+              </td>
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  padding: 10px 0px;
+                  color: #272727;
+                  border-inline-start: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+              >
+                {{ item.customerName }}
+              </td>
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  padding: 10px 0px;
+                  color: #272727;
+                  border-inline-start: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+              >
+                {{ item.totalValue }}
+              </td>
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  padding: 10px 0px;
+                  color: #272727;
+                  border-inline-start: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+              >
+                {{ item.payTypeName }}
+              </td>
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  padding: 10px 0px;
+                  color: #272727;
+                  border-inline-start: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+              >
+                {{ item.statusName }}
+              </td>
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  padding: 10px 0px;
+                  border: 1px dashed #272727;
+                  color: #272727;
+                  border-inline-start: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+              >
+                {{ item.journalNumber }}
+              </td>
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  padding: 10px 0px;
+                  border: 1px dashed #272727;
+                  color: #272727;
+                  border-inline-start: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+              >
+                {{ item.postDate }}
+              </td>
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  padding: 10px 0px;
+                  border: 1px dashed #272727;
+                  color: #272727;
+                  border-inline-start: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+              >
+                {{ item.BondAttachments }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="max-h-100 overflow-x-scroll overflow-y-scroll p-4"
+    id="reportaccountingentryModal"
+    [ngStyle]="{ direction: lang == 'ar' ? 'rtl' : 'ltr' }"
+    style="position: absolute"
+  >
+    <!--Header-->
+    <div
+      class="report-header"
+      style="
+        display: flex;
+        align-items: center;
+        gap: 100px;
+        padding: 3px 0px;
+        margin-bottom: 20px;
+      "
+    >
+      <div class="headerNe-right-side">
+        <img
+          src="{{ environmentPho }}"
+          alt="logo"
+          style="
+            height: 200px;
+            width: 200px;
+            max-width: 200px;
+            object-fit: fill;
+          "
+        />
+      </div>
+
+      <div class="headerNe-lefy-side" style="width: 100%">
+        <h1
+          style="
+            letter-spacing: 0.25px;
+            font-size: 23px;
+            margin: 0;
+            margin-bottom: 5px;
+          "
+        >
+          {{ OrganizationData?.nameAr }}
+        </h1>
+        <h1
+          style="
+            letter-spacing: 0.25px;
+            font-size: 23px;
+            margin: 0;
+            margin-bottom: 5px;
+          "
+        >
+          {{ OrganizationData?.nameEn }}
+        </h1>
+        <h1
+          style="
+            margin-bottom: 0;
+            font-size: 34px;
+            color: #0c8191;
+            margin-bottom: 0;
+            margin-top: 30px;
+            font-weight: 500;
+            display: flex;
+            justify-content: center;
+          "
+        >
+          {{ "View_accounting_entry" | translate }}
+        </h1>
+      </div>
+    </div>
+    <!--/Header-->
+
+    <div style="margin-bottom: 10px">
+      <p>
+        <span
+          [translate]="'name'"
+          [translateParams]="{
+            ar: 'التاريخ: ',
+            en: 'Date: '
+          }"
+        ></span>
+        <span> {{ datePrintJournals | date }} </span>
+      </p>
+    </div>
+
+    <table
+      class="border border-gray-500"
+      style="width: 100%; text-align: center"
+    >
+      <thead>
+        <tr>
+          <th class="w-1/9 px-1 border py-2">{{ "date" | translate }}</th>
+          <th class="w-1/9 px-1 border py-2">
+            {{ "Bond number" | translate }}
+          </th>
+          <th class="w-1/9 px-1 border py-2">{{ "Bond type" | translate }}</th>
+          <th class="w-1/9 px-1 border py-2">
+            {{ "Registration number" | translate }}
+          </th>
+          <th class="w-1/9 px-1 border py-2">
+            {{ "account code" | translate }}
+          </th>
+          <th class="w-1/9 px-1 border py-2">
+            {{ "account name" | translate }}
+          </th>
+          <th class="w-1/9 px-1 border py-2">{{ "Statement" | translate }}</th>
+          <th class="w-1/9 px-1 border py-2">{{ "debtor" | translate }}</th>
+          <th class="w-1/9 px-1 border py-2">{{ "Creditor" | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let entry of AllJournalEntries">
+          <td class="w-1/9 border px-1 py-2">{{ entry.transactionDate }}</td>
+          <td class="w-1/9 border px-1 py-2">{{ entry.invoiceNumber }}</td>
+          <td class="w-1/9 border px-1 py-2">{{ entry.typeName }}</td>
+          <td class="w-1/9 border px-1 py-2">{{ entry.journalNo }}</td>
+          <td class="w-1/9 border px-1 py-2">{{ entry.accountCode }}</td>
+          <td class="w-1/9 border px-1 py-2">{{ entry.accountName }}</td>
+          <td class="w-1/9 border px-1 py-2">{{ entry.notes }}</td>
+          <td class="w-1/9 border px-1 py-2">{{ entry.depit }}</td>
+          <td class="w-1/9 border px-1 py-2">{{ entry.credit }}</td>
+        </tr>
+        <tr>
+          <td class="w-1/9 border px-1 py-2">{{ "total" | translate }}</td>
+          <td class="w-1/9 border px-1 py-2"></td>
+          <td class="w-1/9 border px-1 py-2"></td>
+          <td class="w-1/9 border px-1 py-2"></td>
+          <td class="w-1/9 border px-1 py-2"></td>
+          <td class="w-1/9 border px-1 py-2"></td>
+          <td class="w-1/9 border px-1 py-2"></td>
+          <td class="w-1/9 border px-1 py-2 bg-green-500">{{ totaldepit }}</td>
+          <td class="w-1/9 border px-1 py-2 bg-red-500">{{ totalcredit }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- decodingPagingModal  -->
+<ng-template #decodingPagingModal let-modal>
+  <div class="text-center p-3">
+    {{ "Do you want to undo the deportation of this bond?" | translate }}
+  </div>
+
+  <div class="flex justify-center p-3">
+    <button
+      class="btn text-white me-2"
+      style="background-color: var(--base-color)"
+    >
+      {{ "Print" | translate }}
+    </button>
+
+    <button (click)="modal?.dismiss()" class="btn btn-secondary">
+      {{ "close" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+<!-- NewSalesInvoiceModal  -->
+<ng-template #NewSalesInvoiceModal let-modal>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="m-0">
+      <span class="text-2xl">{{ "NewsSalesInvoice" | translate }}</span>
+    </h4>
+    <button
+      type="button"
+      class="text-2xl text-white m-0"
+      (click)="modal?.dismiss()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <ng-container>
+      <form class="" #smsForm="ngForm">
+        <div class="row align-items-end mb-4 mx-3">
+          <div class="col-sm-6 col-md-3 col-lg-2 mb-0 mb-sm-3">
+            <div class="form-group">
+              <label for="customerEn" class="text-right col-form-label block">
+                {{ "date" | translate }}
+              </label>
+              <input
+                placeholder="{{ 'Chose' | translate }}"
+                name="date"
+                type="text"
+                class="form-control"
+                bsDatepicker
+                #dpr="bsDatepicker"
+              />
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-md-3 col-lg-2 mb-0 mb-sm-3">
+            <div class="form-group">
+              <label for="customerEn" class="text-right col-form-label block">
+                {{ "invoice number" | translate }}
+              </label>
+              <input
+                required
+                placeholder="{{ 'invoice number' | translate }}"
+                class="form-control"
+                type="text"
+                disabled
+              />
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-md-3 col-lg-2 mb-0 mb-sm-3">
+            <div class="form-group">
+              <input
+                required
+                placeholder="{{ 'Registration number' | translate }}"
+                class="form-control"
+                type="text"
+                disabled
+              />
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-md-3 col-lg-2 mb-0 mb-sm-3">
+            <div class="form-group">
+              <input
+                required
+                placeholder="{{ 'SR' | translate }}"
+                class="form-control"
+                type="text"
+                disabled
+              />
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-md-3 col-lg-2 mb-0 mb-sm-3">
+            <div class="form-group">
+              <input
+                placeholder="{{ 'mainCenter' | translate }}"
+                required
+                class="form-control"
+                type="text"
+                disabled
+              />
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-md-3 col-lg-2 mb-0 mb-sm-3">
+            <div class="form-group">
+              <ng-select
+                class="w-full p-0"
+                placeholder="{{ 'Chose' | translate }}"
+                [(ngModel)]="modalDetails.user"
+                [ngModelOptions]="{ standalone: true }"
+                name="user"
+              >
+                <ng-option *ngFor="let user of users" [value]="user.id">{{
+                  user.Name
+                }}</ng-option>
+              </ng-select>
+            </div>
+          </div>
+          <!-- 2 line-->
+
+          <div class="col-sm-6 col-md-3 col-lg-2 mb-0 mb-sm-3">
+            <div class="form-group">
+              <label
+                for="Corresponding"
+                class="text-right col-form-label block"
+              >
+                {{ "Corresponding" | translate }}
+              </label>
+              <input
+                id="Corresponding"
+                placeholder="{{ 'Chose' | translate }}"
+                name="date"
+                type="text"
+                class="form-control"
+                bsDatepicker
+                #dpr="bsDatepicker"
+              />
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-md-3 col-lg-2 mb-0 mb-sm-3">
+            <div class="form-group">
+              <label for="customerEn" class="text-right col-form-label block">
+                {{ "Type" | translate }}
+              </label>
+              <ng-select
+                class="w-full p-0"
+                placeholder="{{ 'Chose' | translate }}"
+                name="description"
+                disabled
+              >
+                <ng-option *ngFor="let user of users" [value]="user.id">{{
+                  user.Name
+                }}</ng-option>
+              </ng-select>
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-md-3 col-lg-4 mb-0 mb-sm-3">
+            <div class="form-group">
+              <ng-select
+                class="w-full p-0"
+                placeholder="{{ 'Chose' | translate }}"
+                [(ngModel)]="modalDetails.description"
+                [ngModelOptions]="{ standalone: true }"
+                name="description"
+              >
+                <ng-option *ngFor="let user of users" [value]="user.id">{{
+                  user.Name
+                }}</ng-option>
+              </ng-select>
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-md-3 col-lg-2 mb-0 mb-sm-3">
+            <div class="form-group">
+              <input
+                placeholder="{{ 'thePhone' | translate }}"
+                required
+                class="form-control"
+                type="text"
+              />
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-md-3 col-lg-2 mb-0 mb-sm-3">
+            <div class="form-group">
+              <input
+                placeholder="{{ 'ref' | translate }}"
+                required
+                class="form-control"
+                type="text"
+              />
+            </div>
+          </div>
+          <!-- 3 line -->
+
+          <div class="col-sm-6 col-md-3 col-lg-3 mb-0 mb-sm-3">
+            <div class="form-group">
+              <label for="Supplier" class="text-right col-form-label block">
+                {{ "Supplier" | translate }}
+              </label>
+              <ng-select
+                class="w-full p-0"
+                disabled
+                placeholder="{{ 'Chose' | translate }}"
+              >
+                <ng-option *ngFor="let user of users" [value]="user.id">{{
+                  user.Name
+                }}</ng-option>
+              </ng-select>
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-md-3 col-lg-3 mb-0 mb-sm-3">
+            <div class="form-group">
+              <label for="customerEn" class="text-right col-form-label block">
+                {{ "R_D_Supplier" | translate }}
+              </label>
+              <input
+                required
+                placeholder="{{ '' | translate }}"
+                class="form-control"
+                type="text"
+                disabled
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="editable shadow mb-4">
+            <table
+              class="table table-responsive table-striped table-bordered text-center"
+              style="vertical-align: middle; font-size: 14px"
+            >
+              <thead
+                class="bg-base text-white"
+                style="line-height: 30px; font-size: 13px"
+              >
+                <tr>
+                  <th>{{ "ServiceNo" | translate }}</th>
+                  <th colspan="2">{{ "ServiceName" | translate }}</th>
+                  <th>{{ "Unit" | translate }}</th>
+                  <th>{{ "Quantity" | translate }}</th>
+                  <th>{{ "price" | translate }}</th>
+                  <th>{{ "Discount" | translate }}</th>
+                  <th>{{ "discountPercentage" | translate }}</th>
+                  <th>{{ "totalBeforeTax" | translate }}</th>
+                  <th>{{ "VATTax" | translate }}</th>
+                  <th>{{ "Net_taxes" | translate }}</th>
+                  <th>{{ "delete" | translate }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="let item of users; let i = index"
+                  style="line-height: 5px"
+                >
+                  <td>{{ item.id }}</td>
+                  <td colspan="2">
+                    <input
+                      type="text"
+                      name="os-name{{ i }}"
+                      [(ngModel)]="item.Name"
+                      ngModel
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      name="os-name{{ i }}"
+                      [(ngModel)]="item.Name"
+                      ngModel
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      name="os-name{{ i }}"
+                      [(ngModel)]="item.Name"
+                      ngModel
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      name="os-name{{ i }}"
+                      [(ngModel)]="item.Name"
+                      ngModel
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      name="os-name{{ i }}"
+                      [(ngModel)]="item.Name"
+                      ngModel
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      name="os-name{{ i }}"
+                      [(ngModel)]="item.Name"
+                      ngModel
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      name="os-name{{ i }}"
+                      [(ngModel)]="item.Name"
+                      ngModel
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      name="os-name{{ i }}"
+                      [(ngModel)]="item.Name"
+                      ngModel
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      name="os-name{{ i }}"
+                      [(ngModel)]="item.Name"
+                      ngModel
+                    />
+                  </td>
+
+                  <td>
+                    <button
+                      class="p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white w-10"
+                    >
+                      <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="box w-100 py-2 me-3 px-5">
+                <div>
+                  <label for="include_tax">{{ "tax type" | translate }}</label>
+                  <ng-select
+                    class="w-100"
+                    placeholder="{{ 'Chose' | translate }}"
+                    name="include_tax"
+                  >
+                    <ng-option [value]="0">{{
+                      "Excluding tax" | translate
+                    }}</ng-option>
+                    <ng-option [value]="1">{{
+                      "Taxes included" | translate
+                    }}</ng-option>
+                  </ng-select>
+                </div>
+
+                <div>
+                  <label for="paid" class="text-right col-form-label block">
+                    {{ "paid" | translate }}
+                  </label>
+                  <input
+                    id="paid"
+                    required
+                    class="form-control"
+                    type="text"
+                    disabled
+                  />
+                </div>
+
+                <div>
+                  <label for="remaining">{{ "remaining" | translate }}</label>
+                  <input
+                    disabled
+                    type="text"
+                    id="remaining"
+                    name="remaining"
+                    class="form-control"
+                  />
+                </div>
+              </div>
+
+              <div class="d-flex me-3">
+                <input type="checkbox" name="date" id="date" ngModel />
+                <label for="date" class="mx-2">{{
+                  "hideAccount" | translate
+                }}</label>
+              </div>
+
+              <div class="form-group row my-4 me-3">
+                <label for="Statement" class="col-sm-2 col-form-label">{{
+                  "Statement" | translate
+                }}</label>
+                <div class="col-sm-10">
+                  <input
+                    disabled
+                    type="text"
+                    id="Statement"
+                    name="Statement"
+                    class="form-control"
+                    placeholder="{{ 'Statement' | translate }}"
+                  />
+                </div>
+              </div>
+
+              <div class="form-group row me-3">
+                <label for="theNotes" class="col-sm-2 col-form-label">{{
+                  "theNotes" | translate
+                }}</label>
+                <div class="col-sm-10">
+                  <input
+                    disabled
+                    type="text"
+                    id="theNotes"
+                    name="theNotes"
+                    class="form-control"
+                    placeholder="{{ 'theNotes' | translate }}"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="box w-100 px-2 py-2 mx-3">
+                <div>
+                  <label
+                    for="totalAmount"
+                    class="text-right col-form-label block"
+                  >
+                    {{ "totalAmount" | translate }}
+                  </label>
+                  <input
+                    id="totalAmount"
+                    required
+                    class="form-control"
+                    type="text"
+                    disabled
+                  />
+                </div>
+                <div>
+                  <label
+                    for="TotalDiscount"
+                    class="text-right col-form-label block"
+                  >
+                    {{ "TotalDiscount" | translate }}
+                  </label>
+                  <input
+                    id="TotalDiscount"
+                    required
+                    class="form-control"
+                    type="text"
+                    disabled
+                  />
+                </div>
+
+                <div>
+                  <label
+                    for="netAmount"
+                    class="text-right col-form-label block"
+                  >
+                    {{ "netAmount" | translate }}
+                  </label>
+                  <input
+                    id="netAmount"
+                    required
+                    class="form-control"
+                    type="text"
+                    disabled
+                  />
+                </div>
+
+                <div>
+                  <label for="AllTotal" class="text-right col-form-label block">
+                    {{ "AllTotal" | translate }}
+                  </label>
+                  <input
+                    id="AllTotal"
+                    required
+                    class="form-control"
+                    type="text"
+                    disabled
+                  />
+                </div>
+
+                <div>
+                  <label for="netBill">{{ "netBill" | translate }}</label>
+                  <input
+                    disabled
+                    type="text"
+                    id="netBill"
+                    name="netBill"
+                    class="form-control"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    for="TotalTaxes"
+                    class="text-right col-form-label block"
+                  >
+                    {{ "TotalTaxes" | translate }}
+                  </label>
+                  <input
+                    id="TotalTaxes"
+                    required
+                    class="form-control"
+                    type="text"
+                    disabled
+                  />
+                </div>
+
+                <div>
+                  <label for="CreditNoteTotal">{{
+                    "CreditNoteTotal" | translate
+                  }}</label>
+                  <input
+                    disabled
+                    type="text"
+                    id="CreditNoteTotal"
+                    name="CreditNoteTotal"
+                    class="form-control"
+                  />
+                </div>
+
+                <div>
+                  <label for="TotalDebtorNotice">{{
+                    "TotalDebtorNotice" | translate
+                  }}</label>
+                  <input
+                    disabled
+                    type="text"
+                    id="TotalDebtorNotice"
+                    name="TotalDebtorNotice"
+                    class="form-control"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    for="Net_taxes"
+                    class="text-right col-form-label block"
+                  >
+                    {{ "Net_taxes" | translate }}
+                  </label>
+                  <input
+                    id="Net_taxes"
+                    required
+                    class="form-control"
+                    type="text"
+                    disabled
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <!-- footer -->
+    </ng-container>
+
+    <div class="d-flex justify-content-end">
+      <div>
+        <button
+          (click)="modal?.dismiss()"
+          class="btn text-white"
+          style="background-color: var(--base-color)"
+        >
+          {{ "Save_CarryOver" | translate }}
+        </button>
+      </div>
+
+      <div>
+        <button (click)="modal?.dismiss()" class="btn btn-secondary me-2">
+          {{ "close" | translate }}
+        </button>
+      </div>
+
+      <div>
+        <button
+          (click)="modal?.dismiss()"
+          class="btn text-white"
+          style="background-color: var(--base-color)"
+        >
+          {{ "save" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- سند قبض بدون عميل  -->
+<!-- ReceiptVoucherwithoutCustomerModal  -->
+<ng-template #ReceiptVoucherwithoutCustomerModal let-modal>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="m-0">
+      <span class="text-2xl" *ngIf="CustCheckPage == 'noCustomer'">{{
+        "ReceiptVoucherwithoutCustomer" | translate
+      }}</span>
+      <span class="text-2xl" *ngIf="CustCheckPage == 'withCustomer'">{{
+        "NewReceiptVoucher" | translate
+      }}</span>
+    </h4>
+    <button
+      type="button"
+      class="text-2xl text-white m-0"
+      (click)="modal?.dismiss()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <ng-container>
+      <form [formGroup]="ReceiptVoucherForm">
+        <div class="row align-items-end mb-3 mx-3">
+          <!-- 1 line -->
+          <div class="col-sm-6 col-md-3 col-lg-4 mb-0">
+            <div class="form-group">
+              <label for="customerEn" class="text-right col-form-label block">
+                {{ "date" | translate }}
+              </label>
+              <input
+                placeholder="{{ 'Chose' | translate }}"
+                name="date"
+                type="text"
+                class="form-control"
+                bsDatepicker
+                autocomplete="off"
+                formControlName="dateM"
+                #dpr="bsDatepicker"
+                (ngModelChange)="gethigridate()"
+              />
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-md-3 col-lg-4 mb-0">
+            <div class="form-group">
+              <label for="customerEn" class="text-right col-form-label block">
+                {{ "Bond number" | translate }}
+              </label>
+              <input
+                required
+                class="form-control"
+                type="text"
+                autocomplete="off"
+                formControlName="VoucherNumber"
+              />
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-md-3 col-lg-4 mb-0">
+            <div class="form-group">
+              <label for="customerEn" class="text-right col-form-label block">
+                {{ "m_Cost" | translate }}
+                <span class="text-danger">*</span>
+              </label>
+              <ng-select
+                class="w-full p-0"
+                placeholder="{{ 'Chose' | translate }}"
+                autocomplete="off"
+                formControlName="costCentersId"
+                name="user"
+              >
+                <ng-option
+                  *ngFor="let user of costCentersList"
+                  [value]="user.id"
+                  >{{ user.name }}</ng-option
+                >
+              </ng-select>
+              <div
+                *ngIf="
+                  ReceiptVoucherForm.get('costCentersId')?.hasError(
+                    'required'
+                  ) && ReceiptVoucherForm.get('costCentersId')?.touched
+                "
+                class="error-text"
+              >
+                This field is required.
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <!-- 2 line -->
+      <div class="row align-items-end mb-3 mx-3">
+        <div class="col-sm-6 col-md-3 col-lg-4 mb-0">
+          <div class="form-group hijri-gregorianReciept">
+            <label for="customerEn" class="text-right col-form-label block">
+              {{ "Corresponding" | translate }}
+            </label>
+            <!-- <input placeholder="{{ 'Chose' | translate }}" name="date" type="text" class="form-control" bsDatepicker
+                formControlName="hijriDate"
+                  #dpr="bsDatepicker" /> -->
+            <hijri-gregorian-datepicker
+              [(selectedDate)]="hijriDate"
+              [isRequired]="true"
+              [hijriLabel]="'Hijri'"
+              [disabled]="hijritype"
+              [selectedDateType]="selectedDateType"
+              [dir]="'dir' | translate"
+            >
+            </hijri-gregorian-datepicker>
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-3 col-lg-4 mb-0">
+          <div class="form-group">
+            <label for="customerEn" class="text-right col-form-label block">
+              {{ "referenceNumber" | translate }}
+              <!-- <span class="text-danger">*</span> -->
+            </label>
+            <input
+              placeholder="{{ 'referenceNumber' | translate }}"
+              autocomplete="off"
+              [disabled]="modalType == 'View'"
+              [(ngModel)]="referenceNumber"
+              class="form-control"
+              type="text"
+            />
+            <!-- <div *ngIf="referenceNumber==null&& submitted==true" class="error-text">
+                  This field is required.
+                </div> -->
+          </div>
+        </div>
+
+        <div
+          class="col-sm-6 col-md-3 col-lg-4 mb-0"
+          *ngIf="modalType != 'Create'"
+        >
+          <div class="form-group">
+            <label for="customerEn" class="text-right col-form-label block">
+              {{ "Invoice Number" | translate }}
+            </label>
+            <input
+              autocomplete="off"
+              disabled
+              [(ngModel)]="R_theInvoice"
+              name="R_theInvoice"
+              placeholder="{{ 'R_theInvoice' | translate }}"
+              class="form-control"
+              type="text"
+            />
+          </div>
+        </div>
+
+        <div
+          class="col-sm-6 col-md-3 col-lg-4 mb-0"
+          *ngIf="CustCheckPage == 'withCustomer' && modalType == 'Create'"
+        >
+          <div class="form-group">
+            <label for="customerEn" class="text-right col-form-label block">
+              {{ "Invoice Number" | translate }}
+              <span class="text-danger">*</span>
+            </label>
+            <ng-select
+              class="w-full p-0"
+              placeholder="{{ 'Chose' | translate }}"
+              autocomplete="off"
+              [(ngModel)]="R_theInvoice"
+              name="R_theInvoice"
+              (change)="GetInvoiceByNo(R_theInvoice)"
+            >
+              <ng-option
+                *ngFor="let user of InvoicesWithCustomer"
+                [value]="user.invoiceNumber"
+                >{{ user.invoiceNumber }}</ng-option
+              >
+            </ng-select>
+          </div>
+        </div>
+      </div>
+      <!-- 3 line -->
+
+      <!-- <form [formGroup]="ReceiptVoucherForm"> -->
+      <div class="row align-items-end mb-3 mx-3">
+        <div class="col-sm-6 col-md-3 col-lg-4 mb-0">
+          <div class="form-group">
+            <label for="customerEn" class="text-right col-form-label block">
+              {{ "Registration number" | translate }}
+            </label>
+            <input
+              autocomplete="off"
+              [(ngModel)]="Registrationnumber"
+              disabled
+              placeholder="{{ 'Registration number' | translate }}"
+              class="form-control"
+              type="text"
+            />
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-4 mb-0">
+          <div class="form-group">
+            <label for="customerEn" class="text-right col-form-label block">
+              {{ "Payment type" | translate }}
+              <span class="text-danger">*</span>
+            </label>
+            <ng-select
+              placeholder="{{ 'Chose' | translate }}"
+              class="w-full p-0"
+              [(ngModel)]="paymenttype"
+              [disabled]="modalType == 'View'"
+              (change)="FillCustAc(false)"
+            >
+              <ng-option *ngFor="let user of PayTypeList" [value]="user.id">{{
+                user.name | translate
+              }}</ng-option>
+            </ng-select>
+            <div
+              *ngIf="paymenttype == null && submitted == true"
+              class="error-text"
+            >
+              This field is required.
+            </div>
+          </div>
+        </div>
+
+        <!-- <div class="col-sm-6 col-md-3 col-lg-4 mb-0">
+              <div class="upload col-span-1 md:col-span-2">
+                <label for="attach">{{ "attachments" | translate }}</label>
+                <input type="file" accept="image/*" (change)="selectFile($event)" formControlName="fileUrl" />
+              </div>
+            </div> -->
+
+        <div class="col-sm-6 col-md-3 col-lg-4 mb-0">
+          <div class="upload col-span-1 md:col-span-2">
+            <label for="attachments" class=" " for="attachments">{{
+              "attachments" | translate
+            }}</label>
+            <file-upload
+              class="w-full"
+              style="min-height: 40px"
+              [(ngModel)]="uploadedFiles"
+              name="files"
+            ></file-upload>
+          </div>
+        </div>
+
+        <div
+          class="col-sm-6 col-md-3 col-lg-4 mb-0"
+          *ngIf="CustCheckPage == 'withCustomer'"
+        >
+          <div class="form-group">
+            <label for="customerEn" class="text-right col-form-label block">
+              {{ "customer name" | translate }}
+              <span class="text-danger">*</span>
+            </label>
+            <ng-select
+              placeholder="{{ 'Chose' | translate }}"
+              class="w-full p-0"
+              autocomplete="off"
+              (change)="GetCustomersByCustomerId(); GetInvoiceByCustomer()"
+              [(ngModel)]="ClientId"
+            >
+              <ng-option
+                *ngFor="let user of AllCustomerForDropWithBranchList"
+                [value]="user.id"
+                >{{ user.name }}</ng-option
+              >
+            </ng-select>
+            <div
+              *ngIf="ClientId == null && submitted == true"
+              class="error-text"
+            >
+              This field is required.
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- </form> -->
+      <!--  -->
+      <form [formGroup]="ReceiptVoucherForm">
+        <div class="row mx-3 items-end">
+          <div class="col-md-12">
+            <div class="boxContainer mb-3 w-100 p-3">
+              <div class="row">
+                <div class="col-md-3">
+                  <label
+                    for="recipientName"
+                    class="text-yellow"
+                    for="recipientName"
+                  >
+                    {{ "recipientfromName" | translate }}
+                    <span class="text-danger">*</span>
+                  </label>
+                </div>
+                <div class="col-md-9">
+                  <input
+                    id="recipientName"
+                    placeholder="{{ 'recipientName' | translate }}"
+                    type="text"
+                    class="form-control text-center  {{
+                      ReceiptVoucherForm.get('recipientName')?.hasError(
+                        'required'
+                      ) && ReceiptVoucherForm.get('recipientName')?.touched
+                        ? 'errorInput'
+                        : ''
+                    }}"
+                    name="recipientName"
+                    autocomplete="off"
+                    formControlName="recipientName"
+                  />
+                  <!-- <div *ngIf="ReceiptVoucherForm.get('recipientName')?.hasError('required')
+                            && ReceiptVoucherForm.get('recipientName')?.touched" class="error-text">
+                    This field is required.
+                  </div> -->
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-3">
+                  <label for="AmountOf" class="text-orange">
+                    {{ "AmountOf" | translate }}
+                    <span class="text-danger">*</span>
+                  </label>
+                </div>
+                <div class="col-md-3">
+                  <input
+                    id="AmountOf"
+                    placeholder="{{ 'AmountOf' | translate }}"
+                    class="form-control text-center  {{
+                      ReceiptVoucherForm.get('AmountOf')?.hasError(
+                        'required'
+                      ) && ReceiptVoucherForm.get('AmountOf')?.touched
+                        ? 'errorInput'
+                        : ''
+                    }}"
+                    type="number"
+                    autocomplete="off"
+                    formControlName="AmountOf"
+                    name="AmountOf"
+                    (keyup)="
+                      ConvertNumToString_Catch(
+                        this.ReceiptVoucherForm.controls['AmountOf'].value
+                      )
+                    "
+                  />
+                  <!-- <div *ngIf="ReceiptVoucherForm.get('AmountOf')?.hasError('required')
+                            && ReceiptVoucherForm.get('AmountOf')?.touched" class="error-text">
+                    This field is required.
+                  </div> -->
+                </div>
+                <div class="col-md-6">
+                  <input
+                    id="AmountOf"
+                    placeholder="{{ 'amountWriting' | translate }}"
+                    class="form-control text-center"
+                    type="text"
+                    autocomplete="off"
+                    formControlName="amountWriting"
+                  />
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-3">
+                  <label for="AndThatFor" class="text-yellow">
+                    {{ "AndThatFor" | translate }}
+                    <span class="text-danger">*</span>
+                  </label>
+                </div>
+                <div class="col-md-9">
+                  <input
+                    id="AndThatFor"
+                    placeholder="{{ 'AndThatFor' | translate }}"
+                    class="form-control text-center
+                  {{
+                      ReceiptVoucherForm.get('AndThatFor')?.hasError(
+                        'required'
+                      ) && ReceiptVoucherForm.get('AndThatFor')?.touched
+                        ? 'errorInput'
+                        : ''
+                    }} "
+                    type="text"
+                    name="AndThatFor"
+                    autocomplete="off"
+                    formControlName="AndThatFor"
+                  />
+                  <!-- <div *ngIf="ReceiptVoucherForm.get('AndThatFor')?.hasError('required')
+                             && ReceiptVoucherForm.get('AndThatFor')?.touched" class="error-text">
+                    This field is required.
+                  </div> -->
+                </div>
+              </div>
+            </div>
+            <div class="boxContainer w-100 p-3">
+              <div class="row">
+                <div class="col-md-3">
+                  <label for="fromAccount" class="text-orange">
+                    {{ "fromAccount" | translate }}
+                    <span class="text-danger">*</span>
+                  </label>
+                </div>
+                <div class="col-md-6">
+                  <ng-select
+                    placeholder="{{ 'Chose' | translate }}"
+                    class="w-full p-0 h-100
+                  {{
+                      ReceiptVoucherForm.get('fromAccount')?.hasError(
+                        'required'
+                      ) && ReceiptVoucherForm.get('fromAccount')?.touched
+                        ? 'errorInput'
+                        : ''
+                    }}"
+                    autocomplete="off"
+                    formControlName="fromAccount"
+                    name="fromAccount"
+                    (change)="
+                      GetAccCodeFormID(
+                        this.ReceiptVoucherForm.controls['fromAccount'].value,
+                        1
+                      )
+                    "
+                  >
+                    <ng-option
+                      *ngFor="let user of FillCustAccountsSelect2listFROM"
+                      [value]="user.id"
+                    >
+                      {{ user.name }}</ng-option
+                    >
+                  </ng-select>
+                  <!-- <div *ngIf="ReceiptVoucherForm.get('fromAccount')?.hasError('required')
+                           && ReceiptVoucherForm.get('fromAccount')?.touched" class="error-text">
+                    This field is required.
+                  </div> -->
+                </div>
+                <div class="col-md-3">
+                  <input
+                    id="accountNumber"
+                    placeholder="{{ 'accountNumber' | translate }}"
+                    autocomplete="off"
+                    formControlName="AccCodeFrom"
+                    class="form-control text-center"
+                    type="text"
+                  />
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-3">
+                  <label for="toAccount" class="text-green-500">
+                    {{ "toAccount" | translate }}
+                    <span class="text-danger">*</span>
+                  </label>
+                </div>
+                <div class="col-md-6">
+                  <ng-select
+                    placeholder="{{ 'Chose' | translate }}"
+                    required
+                    class="w-full p-0 h-100
+                  {{
+                      ReceiptVoucherForm.get('toAccount')?.hasError(
+                        'required'
+                      ) && ReceiptVoucherForm.get('toAccount')?.touched
+                        ? 'errorInput'
+                        : ''
+                    }}"
+                    (change)="
+                      GetAccCodeFormID(
+                        this.ReceiptVoucherForm.controls['toAccount'].value,
+                        2
+                      )
+                    "
+                    autocomplete="off"
+                    formControlName="toAccount"
+                  >
+                    <ng-option
+                      *ngFor="let user of FillCustAccountsSelect2listTO"
+                      [value]="user.id"
+                    >
+                      {{ user.name }}</ng-option
+                    >
+                  </ng-select>
+                  <!-- <div *ngIf="ReceiptVoucherForm.get('toAccount')?.hasError('required')
+                           && ReceiptVoucherForm.get('toAccount')?.touched" class="error-text">
+                    This field is required.
+                  </div> -->
+                </div>
+                <div class="col-md-3">
+                  <input
+                    id="accountNumber"
+                    placeholder="{{ 'accountNumber' | translate }}"
+                    autocomplete="off"
+                    formControlName="AccCodeTo"
+                    class="form-control text-center"
+                    type="text"
+                  />
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-3">
+                  <label for="Statement " class="text-babyblue">
+                    {{ "Statement" | translate }}
+                  </label>
+                </div>
+                <div class="col-md-9">
+                  <input
+                    id="Statement "
+                    placeholder="{{ 'Statement' | translate }}"
+                    autocomplete="off"
+                    formControlName="Statement"
+                    class="form-control text-center"
+                    type="text"
+                    name="Statement"
+                  />
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-3">
+                  <label for="Notes " class="text-babyblue">
+                    {{ "Notes" | translate }}
+                  </label>
+                </div>
+                <div class="col-md-9">
+                  <input
+                    id="Notes "
+                    placeholder="{{ 'Notes' | translate }}"
+                    autocomplete="off"
+                    formControlName="Notes"
+                    class="form-control text-center"
+                    type="text"
+                    name="Notes"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <!-- footer -->
+      <div
+        class="editable shadow mb-4 d-block"
+        style="overflow: auto"
+        *ngIf="checkdetailsList.length > 0"
+      >
+        <p class="text-center">
+          {{ "Check_transferDetails" | translate }}
+        </p>
+        <table
+          class="table table-responsive table-striped table-bordered text-center"
+          style="
+            vertical-align: middle;
+            font-size: 14px;
+            min-width: max-content;
+          "
+        >
+          <thead
+            class="bg-base text-white"
+            style="line-height: 30px; font-size: 13px"
+          >
+            <tr>
+              <th>{{ "serial" | translate }}</th>
+              <th>{{ "Payment type" | translate }}</th>
+              <th>{{ "Check_transferNumber" | translate }}</th>
+              <th>{{ "dateCheck_transfer" | translate }}</th>
+              <th>{{ "BankName" | translate }}</th>
+              <th>{{ "edit" | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let item of checkdetailsList; let i = index"
+              style="line-height: 5px"
+            >
+              <td>{{ item.checkdetail }}</td>
+              <td>{{ item.checkdetailpaytype }}</td>
+              <td>{{ item.checkdetailcheckNo }}</td>
+              <td>{{ item.checkdetailcheckDate }}</td>
+              <td>{{ item.checkdetailbankName }}</td>
+              <td *ngIf="modalType == 'Create' || modalType == 'Edit'">
+                <button
+                  class="p-2 bg-orange-100 hover:bg-orange-500 rounded-lg duration-300 hover:text-white w-10"
+                  (click)="
+                    open(
+                      EditCheckDetailsModal,
+                      item,
+                      'EditCheckDetailsModal',
+                      'EditCheckDetails'
+                    )
+                  "
+                >
+                  <i class="fa-regular fa-pen-to-square"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </ng-container>
+    <div
+      class="d-flex align-items-center gap-2"
+      *ngIf="this.modalType == 'Edit'"
+    >
+      <img
+        class="rounded-circle"
+        width="50"
+        height="50"
+        src="{{ addInvoiceImg | img }}"
+        alt=""
+      />
+      <p class="mb-0">
+        {{ "Data Entry" | translate }} :{{ addUser }} - {{ addDate | date }}
+      </p>
+    </div>
+    <div class="d-flex justify-content-end gap-2">
+      <div *ngIf="modalType == 'Create'">
+        <button
+          (click)="SaveVoucher(modal, 'PostVouchers')"
+          class="btn text-white"
+          style="background-color: var(--base-color)"
+          [disabled]="  disableButtonSave_Voucher ||
+            this.ReceiptVoucherForm.controls['recipientName'].value == null ||
+            this.ReceiptVoucherForm.controls['AmountOf'].value == null ||
+            this.ReceiptVoucherForm.controls['AndThatFor'].value == null ||
+            this.ReceiptVoucherForm.controls['fromAccount'].value == null ||
+            this.ReceiptVoucherForm.controls['toAccount'].value == null ||
+            this.ReceiptVoucherForm.controls['costCentersId'].value == null ||
+            paymenttype == null ||
+            (CustCheckPage == 'withCustomer' && ClientId == null)
+          "
+        >
+          {{ "Save_CarryOver" | translate }}
+        </button>
+      </div>
+      <div *ngIf="modalType == 'Edit'">
+        <button
+          (click)="
+            PostVouchers(
+              this.ReceiptVoucherForm.controls['VoucherId'].value,
+              modal
+            )
+          "
+          class="btn text-white"
+          style="background-color: var(--base-color)"
+        >
+          {{ "CarryOver" | translate }}
+        </button>
+      </div>
+      <div *ngIf="modalType == 'Create' || modalType == 'Edit'">
+        <button
+          class="btn text-white"
+          style="background-color: var(--base-color)"
+          (click)="SaveVoucher(modal)"
+          [disabled]=" disableButtonSave_Voucher ||
+            this.ReceiptVoucherForm.controls['recipientName'].value == null ||
+            this.ReceiptVoucherForm.controls['AmountOf'].value == null ||
+            this.ReceiptVoucherForm.controls['AndThatFor'].value == null ||
+            this.ReceiptVoucherForm.controls['fromAccount'].value == null ||
+            this.ReceiptVoucherForm.controls['toAccount'].value == null ||
+            this.ReceiptVoucherForm.controls['costCentersId'].value == null ||
+            paymenttype == null ||
+            (CustCheckPage == 'withCustomer' && ClientId == null)
+          "
+        >
+          {{ "save" | translate }}
+        </button>
+      </div>
+
+      <div>
+        <button (click)="modal?.dismiss()" class="btn btn-secondary">
+          {{ "close" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- سند قبض -->
+<!-- AllJournalsByReVoucheModal  -->
+<!-- <ng-template #AllJournalsByReVoucheModal let-modal>
+  <div style="background-color: var(--base-color)" class="modal-header text-white flex justify-between items-center">
+    <h4 class="m-0">
+      <span class="text-2xl">{{ "View Journal Entry" | translate }}</span>
+    </h4>
+    <button type="button" class="text-2xl text-white m-0" (click)="modal?.dismiss()">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <ng-container>
+  <div class="overflow-auto">
+    <table mat-table [dataSource]="AllJournalsByReVoucherlist" matSort
+      class="mat-elevation-z8 rounded-t-lg overflow-hidden w-max">
+      <ng-container matColumnDef="transactionDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span>{{ "date" | translate }}</span>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.transactionDate }}
+        </td>
+        <td mat-footer-cell *matFooterCellDef class="bg-light">
+          {{ "total" | translate }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="invoiceNumber">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span>{{ "Bond number" | translate }}</span>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.invoiceNumber }}
+        </td>
+        <td mat-footer-cell *matFooterCellDef class="bg-light"></td>
+      </ng-container>
+
+      <ng-container matColumnDef="typeName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span>{{ "Bond type" | translate }}</span>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.typeName }}
+        </td>
+        <td mat-footer-cell *matFooterCellDef class="bg-light"></td>
+      </ng-container>
+
+      <ng-container matColumnDef="journalNo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span>{{ "Registration number" | translate }}</span>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.journalNo }}
+        </td>
+        <td mat-footer-cell *matFooterCellDef class="bg-light"></td>
+      </ng-container>
+
+      <ng-container matColumnDef="accountCode">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span>{{ "account code" | translate }}</span>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.accountCode }}
+        </td>
+        <td mat-footer-cell *matFooterCellDef class="bg-light"></td>
+      </ng-container>
+
+      <ng-container matColumnDef="accountName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span>{{ "account name" | translate }}</span>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.accountName }}
+        </td>
+        <td mat-footer-cell *matFooterCellDef class="bg-light"></td>
+      </ng-container>
+
+      <ng-container matColumnDef="notes">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span>{{ "Statement" | translate }}</span>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.notes }}
+        </td>
+        <td mat-footer-cell *matFooterCellDef class="bg-light"></td>
+      </ng-container>
+
+      <ng-container matColumnDef="depit">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span>{{ "debtor" | translate }}</span>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.depit }}
+        </td>
+        <td mat-footer-cell *matFooterCellDef class="bg-light">
+          {{totaldepit}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="credit">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span>{{ "Creditor" | translate }}</span>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.credit }}
+        </td>
+        <td mat-footer-cell *matFooterCellDef class="bg-light">
+          {{totalcredit}}
+        </td>
+      </ng-container>
+
+
+      <tr mat-header-row *matHeaderRowDef="AllJournalsByReVoucherColumns"></tr>
+
+      <tr mat-row *matRowDef="let row; columns: AllJournalsByReVoucherColumns"></tr>
+
+      <tr mat-footer-row *matFooterRowDef="AllJournalsByReVoucherColumns"></tr>
+    </table>
+  </div>
+  <mat-paginator [pageSizeOptions]="[10, 25,AllJournalsByReVoucherlist.data.length]"> </mat-paginator>
+
+    </ng-container>
+
+    <div class="d-flex justify-content-end gap-2">
+      <div>
+        <button (click)="modal?.dismiss()" class="btn btn-secondary">
+          {{ "close" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template> -->
+
+<!-- rowDetailsModal  -->
+<ng-template #rowDetailsModal let-modal>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="m-0">
+      <span class="text-2xl">{{ "show" | translate }}</span>
+    </h4>
+    <button
+      type="button"
+      class="text-2xl text-white m-0"
+      (click)="modal?.dismiss()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <ng-container>
+      <form #addForm="ngForm">
+        <div class="row align-items-end justify-end mb-3 mx-3">
+          <!-- 1 line -->
+          <div class="col-sm-6 col-md-3 col-lg-4 mb-0">
+            <div class="form-group">
+              <label for="customerEn" class="text-right col-form-label block">
+                {{ "date" | translate }}
+              </label>
+              <input
+                placeholder="{{ 'Chose' | translate }}"
+                name="date"
+                type="text"
+                class="form-control"
+                bsDatepicker
+                #dpr="bsDatepicker"
+              />
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-md-3 col-lg-4 mb-0">
+            <div class="form-group">
+              <label for="customerEn" class="text-right col-form-label block">
+                {{ "Bond number" | translate }}
+              </label>
+              <input required class="form-control" type="text" disabled />
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-md-3 col-lg-4 mb-0">
+            <div class="form-group">
+              <label for="customerEn" class="text-right col-form-label block">
+                {{ "m_Cost" | translate }}
+              </label>
+              <ng-select
+                class="w-full p-0"
+                placeholder="{{ 'mainCenter' | translate }}"
+                [(ngModel)]="modalDetails.user"
+                [ngModelOptions]="{ standalone: true }"
+                name="user"
+              >
+                <ng-option *ngFor="let user of users" [value]="user.id">{{
+                  user.Name
+                }}</ng-option>
+              </ng-select>
+            </div>
+          </div>
+
+          <!-- 2 line -->
+
+          <div class="col-sm-6 col-md-3 col-lg-4 mb-0">
+            <div class="form-group">
+              <label for="customerEn" class="text-right col-form-label block">
+                {{ "Corresponding" | translate }}
+              </label>
+              <input
+                placeholder="{{ 'Chose' | translate }}"
+                name="date"
+                type="text"
+                class="form-control"
+                bsDatepicker
+                #dpr="bsDatepicker"
+              />
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-md-3 col-lg-4 mb-0">
+            <div class="form-group">
+              <label for="customerEn" class="text-right col-form-label block">
+                {{ "R_theInvoice" | translate }}
+              </label>
+              <input
+                required
+                placeholder="{{ 'R_theInvoice' | translate }}"
+                class="form-control"
+                type="text"
+                disabled
+              />
+            </div>
+          </div>
+
+          <!-- 3 line -->
+          <div class="col-sm-6 col-md-3 col-lg-4 mb-0">
+            <div class="form-group">
+              <label for="customerEn" class="text-right col-form-label block">
+                {{ "Registration number" | translate }}
+              </label>
+              <input
+                required
+                placeholder="{{ 'Registration number' | translate }}"
+                class="form-control"
+                type="text"
+                disabled
+              />
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-md-3 col-lg-4 mb-0">
+            <div class="form-group">
+              <label for="customerEn" class="text-right col-form-label block">
+                {{ "Payment type" | translate }}
+              </label>
+              <ng-select
+                placeholder="{{ 'Chose' | translate }}"
+                class="w-full p-0"
+              >
+                <ng-option *ngFor="let user of users" [value]="user.id">{{
+                  user.Name
+                }}</ng-option>
+              </ng-select>
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-md-3 col-lg-4 mb-0">
+            <div class="upload col-span-1 md:col-span-2">
+              <label for="attach">{{ "attachments" | translate }}</label>
+              <input type="file" accept="image/*" />
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-md-3 col-lg-4 mb-0">
+            <div class="form-group">
+              <label for="customerEn" class="text-right col-form-label block">
+                {{ "A_Client" | translate }}
+              </label>
+              <ng-select
+                placeholder="{{ 'Chose' | translate }}"
+                class="w-full p-0"
+                disabled
+              >
+                <ng-option *ngFor="let user of users" [value]="user.id">{{
+                  user.Name
+                }}</ng-option>
+              </ng-select>
+            </div>
+          </div>
+        </div>
+
+        <!--  -->
+        <div class="row mx-3 items-end">
+          <div class="col-md-12">
+            <div class="boxContainer mb-3 w-100 p-3">
+              <div class="row">
+                <div class="col-md-3">
+                  <label
+                    for="recipientName"
+                    class="text-yellow"
+                    for="recipientName"
+                  >
+                    {{ "recipientName" | translate }}
+                  </label>
+                </div>
+                <div class="col-md-9">
+                  <input
+                    id="recipientName"
+                    placeholder="{{ 'recipientName' | translate }}"
+                    required
+                    class="form-control text-center {{
+                      recipientName.invalid && recipientName.touched
+                        ? 'errorInput'
+                        : ''
+                    }}"
+                    type="text"
+                    ngModel
+                    name="recipientName"
+                    #recipientName="ngModel"
+                  />
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-3">
+                  <label for="AmountOf" class="text-orange">
+                    {{ "AmountOf" | translate }}
+                  </label>
+                </div>
+                <div class="col-md-3">
+                  <input
+                    id="AmountOf"
+                    placeholder="{{ 'AmountOf' | translate }}"
+                    required
+                    class="form-control text-center {{
+                      AmountOf.invalid && AmountOf.touched ? 'errorInput' : ''
+                    }}"
+                    type="number"
+                    ngModel
+                    name="AmountOf"
+                    #AmountOf="ngModel"
+                  />
+                </div>
+                <div class="col-md-6">
+                  <input
+                    id="AmountOf"
+                    placeholder="{{ 'amountWriting' | translate }}"
+                    required
+                    class="form-control text-center"
+                    type="text"
+                    disabled
+                  />
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-3">
+                  <label for="AndThatFor" class="text-yellow">
+                    {{ "AndThatFor" | translate }}
+                  </label>
+                </div>
+                <div class="col-md-9">
+                  <input
+                    id="AndThatFor"
+                    placeholder="{{ 'AndThatFor' | translate }}"
+                    required
+                    class="form-control text-center {{
+                      AndThatFor.invalid && AndThatFor.touched
+                        ? 'errorInput'
+                        : ''
+                    }}"
+                    type="text"
+                    ngModel
+                    name="AndThatFor"
+                    #AndThatFor="ngModel"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="boxContainer w-100 p-3">
+              <div class="row">
+                <div class="col-md-3">
+                  <label for="fromAccount" class="text-orange">
+                    {{ "fromAccount" | translate }}
+                  </label>
+                </div>
+                <div class="col-md-6">
+                  <ng-select
+                    placeholder="{{ 'Chose' | translate }}"
+                    required
+                    class="w-full p-0 h-100 {{
+                      fromAccount.invalid && fromAccount.touched
+                        ? 'errorInput'
+                        : ''
+                    }}"
+                    ngModel
+                    name="fromAccount"
+                    #fromAccount="ngModel"
+                  >
+                    <ng-option *ngFor="let user of users" [value]="user.id">
+                      {{ user.Name }}</ng-option
+                    >
+                  </ng-select>
+                </div>
+                <div class="col-md-3">
+                  <input
+                    id="accountNumber"
+                    required
+                    placeholder="{{ 'accountNumber' | translate }}"
+                    class="form-control text-center"
+                    type="text"
+                    disabled
+                  />
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-3">
+                  <label for="toAccount" class="text-green-500">
+                    {{ "toAccount" | translate }}
+                  </label>
+                </div>
+                <div class="col-md-6">
+                  <ng-select
+                    placeholder="{{ 'Chose' | translate }}"
+                    required
+                    class="w-full p-0 h-100 {{
+                      toAccount.invalid && toAccount.touched ? 'errorInput' : ''
+                    }}"
+                    ngModel
+                    name="toAccount"
+                    #toAccount="ngModel"
+                  >
+                    <ng-option *ngFor="let user of users" [value]="user.id">
+                      {{ user.Name }}</ng-option
+                    >
+                  </ng-select>
+                </div>
+                <div class="col-md-3">
+                  <input
+                    id="accountNumber"
+                    placeholder="{{ 'accountNumber' | translate }}"
+                    required
+                    class="form-control text-center"
+                    type="text"
+                    disabled
+                  />
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-3">
+                  <label for="Statement " class="text-babyblue">
+                    {{ "Statement" | translate }}
+                  </label>
+                </div>
+                <div class="col-md-9">
+                  <input
+                    id="Statement "
+                    placeholder="{{ 'Statement' | translate }}"
+                    required
+                    class="form-control text-center {{
+                      Statement.invalid && Statement.touched ? 'errorInput' : ''
+                    }}"
+                    type="text"
+                    ngModel
+                    name="Statement"
+                    #Statement="ngModel"
+                  />
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-3">
+                  <label for="Notes " class="text-babyblue">
+                    {{ "Notes" | translate }}
+                  </label>
+                </div>
+                <div class="col-md-9">
+                  <input
+                    id="Notes "
+                    placeholder="{{ 'Notes' | translate }}"
+                    required
+                    class="form-control text-center {{
+                      Notes.invalid && Notes.touched ? 'errorInput' : ''
+                    }}"
+                    type="text"
+                    ngModel
+                    name="Notes"
+                    #Notes="ngModel"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <div class="editable shadow mb-4 d-block" style="overflow: auto">
+        <p class="text-center">
+          {{ "Check_transferDetails" | translate }}
+        </p>
+        <table
+          class="table table-responsive table-striped table-bordered text-center"
+          style="
+            vertical-align: middle;
+            font-size: 14px;
+            min-width: max-content;
+          "
+        >
+          <thead
+            class="bg-base text-white"
+            style="line-height: 30px; font-size: 13px"
+          >
+            <tr>
+              <th>{{ "serial" | translate }}</th>
+              <th>{{ "Payment type" | translate }}</th>
+              <th>{{ "Check_transferNumber" | translate }}</th>
+              <th>{{ "dateCheck_transfer" | translate }}</th>
+              <th>{{ "BankName" | translate }}</th>
+              <th>{{ "edit" | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let item of users; let i = index"
+              style="line-height: 5px"
+            >
+              <td>{{ item.id }}</td>
+              <td>
+                <input
+                  type="text"
+                  name="os-name{{ i }}"
+                  [(ngModel)]="item.Name"
+                  ngModel
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  name="os-name{{ i }}"
+                  [(ngModel)]="item.Name"
+                  ngModel
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  name="os-name{{ i }}"
+                  [(ngModel)]="item.Name"
+                  ngModel
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  name="os-name{{ i }}"
+                  [(ngModel)]="item.Name"
+                  ngModel
+                />
+              </td>
+              <td>
+                <button
+                  class="p-2 bg-orange-100 hover:bg-orange-500 rounded-lg duration-300 hover:text-white w-10"
+                  (click)="open(EditCheckDetailsModal)"
+                >
+                  <i class="fa-regular fa-pen-to-square"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </ng-container>
+
+    <div class="d-flex align-items-center gap-2">
+      <img
+        class="rounded-circle"
+        width="50"
+        height="50"
+        src="../../../../../assets/images/client-3.png"
+        alt=""
+      />
+      <p class="mb-0">
+        {{ "Data Entry" | translate }} : محمد هلهل - فى - 2023-06-13 - 13:45:00
+      </p>
+    </div>
+
+    <div class="d-flex justify-content-end gap-2">
+      <div>
+        <button
+          (click)="modal?.dismiss()"
+          class="btn text-white"
+          style="background-color: var(--base-color)"
+        >
+          {{ "Save_CarryOver" | translate }}
+        </button>
+      </div>
+
+      <div>
+        <button
+          (click)="modal?.dismiss()"
+          class="btn text-white"
+          style="background-color: var(--base-color)"
+        >
+          {{ "save" | translate }}
+        </button>
+      </div>
+
+      <div>
+        <button (click)="modal?.dismiss()" class="btn btn-secondary">
+          {{ "close" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- EditCheckDetailsModal -->
+<ng-template #EditCheckDetailsModal let-modal>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="m-0">
+      <span class="text-2xl">{{ "Check_transferDetails" | translate }}</span>
+    </h4>
+    <button
+      type="button"
+      class="text-2xl text-white m-0"
+      (click)="modal.dismiss()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="max-h-100 overflow-x-scroll overflow-y-scroll px-4">
+    <form [formGroup]="CheckDetailsForm">
+      <div class="row align-items-end mb-4 mx-3">
+        <!-- 1 line -->
+
+        <div class="col-sm-6 col-md-3 col-lg-4 mb-0 mb-sm-3">
+          <div class="form-group">
+            <label for="customerEn" class="text-right col-form-label block">
+              {{ "Payment type" | translate }}
+            </label>
+            <input
+              autocomplete="off"
+              formControlName="paymenttypeName"
+              class="form-control"
+              type="text"
+            />
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-4 mb-0 mb-sm-3">
+          <div class="form-group">
+            <label for="customerEn" class="text-right col-form-label block">
+              {{ "dateCheck_transfer" | translate }}
+            </label>
+            <input
+              placeholder="{{ 'Chose' | translate }}"
+              name="dateCheck_transfer"
+              type="text"
+              class="form-control"
+              bsDatepicker
+              #dpr="bsDatepicker"
+              formControlName="dateCheck_transfer"
+            />
+          </div>
+        </div>
+
+        <div
+          class="col-sm-6 col-md-3 col-lg-4 mb-0 mb-sm-3"
+          *ngIf="transferNumber == true"
+        >
+          <div class="form-group">
+            <label for="customerEn" class="text-right col-form-label block">
+              {{ "Check_transferNumber" | translate }}
+            </label>
+            <input
+              placeholder="{{ 'Check_transferNumber' | translate }}"
+              autocomplete="off"
+              formControlName="Check_transferNumber"
+              class="form-control"
+              type="number"
+            />
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-4 mb-0 mb-sm-3">
+          <div class="form-group">
+            <label for="customerEn" class="text-right col-form-label block">
+              {{ "BankName" | translate }}
+            </label>
+            <ng-select
+              class="w-full p-0"
+              placeholder="{{ 'Chose' | translate }}"
+              name="user"
+              formControlName="BankId"
+            >
+              <ng-option
+                *ngFor="let user of BankSelectList"
+                [value]="user.id"
+                >{{ user.name }}</ng-option
+              >
+            </ng-select>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          class="flex gap-1 btn btn-success mb-3 col-md-2"
+          (click)="open(AddModalBanks, '', 'AddModalBanks')"
+        >
+          {{ "add" | translate }}
+          <i class="fa-solid fa-plus"></i>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="flex justify-end p-3">
+    <button class="btn mx-2 btn-secondary" (click)="modal?.dismiss()">
+      {{ "close" | translate }}
+    </button>
+
+    <button
+      class="btn text-white"
+      style="background-color: var(--base-color)"
+      (click)="checkdetailsTabel(modal)"
+      [disabled]="this.CheckDetailsForm.controls['BankId'].value == null"
+    >
+      {{ "save" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+<!-- AddModalBanks -->
+<ng-template #AddModalBanks let-modal>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="m-0">
+      <span class="text-2xl">{{ "Bank Name" | translate }}</span>
+    </h4>
+    <button
+      type="button"
+      class="text-2xl text-white m-0"
+      (click)="modal.dismiss()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="max-h-100 overflow-x-scroll overflow-y-scroll px-4">
+    <form class="" #smsForm="ngForm">
+      <div class="row align-items-end mb-4 mx-3">
+        <!-- 1 line -->
+
+        <div class="col-sm-6 col-md-3 col-lg-6 mb-0 mb-sm-3">
+          <div class="form-group">
+            <label for="nameAr" class="text-right col-form-label block">
+              {{ "nameAr" | translate }}
+            </label>
+            <input
+              class="form-control"
+              type="text"
+              [(ngModel)]="BanksNameEn"
+              [ngModelOptions]="{ standalone: true }"
+            />
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-6 mb-0 mb-sm-3">
+          <div class="form-group">
+            <label for="nameEn" class="text-right col-form-label block">
+              {{ "nameEn" | translate }}
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="BanksNameAr"
+              [ngModelOptions]="{ standalone: true }"
+            />
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-12 mb-0 mb-sm-3 text-center">
+          <button
+            type="button"
+            class="flex gap-1 btn text-white mb-3 col-md-2 me-3"
+            (click)="SaveBanks()"
+            style="background-color: var(--base-color)"
+          >
+            {{ "save" | translate }}
+          </button>
+
+          <button
+            type="button"
+            class="flex gap-1 btn btn-secondary mb-3 col-md-2"
+            (click)="modal?.dismiss()"
+          >
+            {{ "close" | translate }}
+          </button>
+        </div>
+
+        <!-- <div class="col-sm-6 col-md-3 col-lg-12 mb-0 mb-sm-3 text-center">
+          <input name="dateCheck_transfer" placeholder="{{ 'search' | translate }}" type="text" class="form-control"/>
+        </div> -->
+      </div>
+
+      <div class="editable shadow mb-4">
+        <table
+          class="table table-responsive table-striped table-bordered text-center"
+          style="vertical-align: middle; font-size: 14px"
+        >
+          <thead
+            class="bg-base text-white"
+            style="line-height: 30px; font-size: 13px"
+          >
+            <tr>
+              <th>{{ "BankName_ar" | translate }}</th>
+              <th>{{ "BankName_en" | translate }}</th>
+              <th>{{ "operations" | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let item of BanksList; let i = index"
+              style="line-height: 5px"
+            >
+              <td>{{ item.nameAr }}</td>
+              <td>{{ item.nameEn }}</td>
+              <td>
+                <button
+                  class="p-2 bg-orange-100 hover:bg-orange-500 rounded-lg duration-300 hover:text-white w-10"
+                  (click)="updateBanks(item)"
+                >
+                  <i class="fa-regular fa-pen-to-square"></i>
+                </button>
+
+                <button
+                  class="p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white w-10 me-3"
+                  (click)="open(deleteBank, item, 'deleteBank')"
+                >
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </form>
+  </div>
+  <!--
+  <div class="flex justify-end p-3">
+    <button class="btn me-2 btn-secondary" (click)="modal?.dismiss()">
+      {{ "close" | translate }}
+    </button>
+
+    <button (click)="modal?.dismiss()" class="btn text-white" style="background-color: var(--base-color)">
+      {{ "save" | translate }}
+    </button>
+  </div> -->
+</ng-template>
+
+<!-- deleteBank -->
+<ng-template #deleteBank let-modal>
+  <div class="modal-body text-center">
+    <p
+      [translate]="'name'"
+      [translateParams]="{
+        ar: 'هل تريد حذف هذا العنصر ؟',
+        en: 'Do you want to delete this item?'
+      }"
+    ></p>
+    <div class="flex gap-2 justify-center">
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "close" | translate }}
+      </button>
+
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="DeleteBank(modal)"
+      >
+        {{ "confirem" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- DeleteVoucherModal -->
+<ng-template #DeleteVoucherModal let-modal>
+  <div class="modal-body text-center">
+    <p
+      [translate]="'name'"
+      [translateParams]="{
+        ar: 'هل تريد حذف هذا العنصر ؟',
+        en: 'Do you want to delete this item?'
+      }"
+    ></p>
+    <div class="flex gap-2 justify-center">
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "close" | translate }}
+      </button>
+
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="DeleteVoucher(modal)"
+      >
+        {{ "confirem" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+<!-- PostBackVouchers -->
+<ng-template #PostBackVouchers let-modal>
+  <div class="modal-body text-center">
+    <p
+      [translate]="'name'"
+      [translateParams]="{
+        ar: 'هل تريد فك ترحيل هذا السند؟',
+        en: 'Do you want to undo the deportation of this bond?'
+      }"
+    ></p>
+    <div class="flex gap-2 justify-center">
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "close" | translate }}
+      </button>
+
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="PostBackV(modal)"
+      >
+        {{ "confirem" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+<!-- PostVouchersCheckBoxmodal -->
+<ng-template #PostVouchersCheckBoxmodal let-modal>
+  <div class="modal-body text-center">
+    <p
+      [translate]="'name'"
+      [translateParams]="{
+        ar: 'هل انت متأكد من ترحيل سند؟',
+        en: 'Are you sure to post a bond?'
+      }"
+    ></p>
+    <div class="flex gap-2 justify-center">
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "close" | translate }}
+      </button>
+
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="PostVouchersCheckBox(modal)"
+      >
+        {{ "confirem" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #printDivModal let-modal>
+  <div class="modal-body">
+    <div
+      id="reportprintDivModal"
+      [ngStyle]="{ direction: lang == 'ar' ? 'rtl' : 'ltr' }"
+    >
+      <!--Header-->
+      <div
+        class="report-header"
+        style="
+          display: flex;
+          align-items: center;
+          gap: 100px;
+          padding: 3px 0px;
+          margin-bottom: 20px;
+        "
+      >
+        <div class="headerNe-right-side">
+          <img
+            *ngIf="CustomData"
+            src="{{ CustomData }}"
+            alt="logo"
+            style="
+              height: 200px;
+              width: 200px;
+              max-width: 200px;
+              object-fit: fill;
+            "
+          />
+        </div>
+
+        <div class="headerNe-lefy-side" style="width: 100%">
+          <h1
+            style="
+              letter-spacing: 0.25px;
+              font-size: 23px;
+              margin: 0;
+              margin-bottom: 5px;
+            "
+          >
+            {{ EntryVoucherPrintData?.org_VD?.nameAr }}
+          </h1>
+          <h1
+            style="
+              letter-spacing: 0.25px;
+              font-size: 23px;
+              margin: 0;
+              margin-bottom: 5px;
+            "
+          >
+            {{ EntryVoucherPrintData?.org_VD?.nameEn }}
+          </h1>
+          <div class="line" style="position: relative; padding: 5px 0px 10px">
+            <span
+              style="
+                position: absolute;
+                right: 0;
+                width: 100%;
+                height: 2px;
+                background-color: #e5e5e5;
+                z-index: 1;
+              "
+            ></span>
+            <span
+              style="
+                position: absolute;
+                right: 0;
+                width: 70%;
+                height: 2px;
+                background-color: #ec1c24;
+                z-index: 2;
+              "
+            ></span>
+          </div>
+
+          <h1
+            style="
+              margin-bottom: 0;
+              font-size: 34px;
+              color: #0c8191;
+              margin-bottom: 0;
+              margin-top: 30px;
+              font-weight: 500;
+            "
+            [translate]="'name'"
+            [translateParams]="{
+              ar: ' سند قبض',
+              en: ' Catch Receipt'
+            }"
+          ></h1>
+        </div>
+      </div>
+      <!--/Header-->
+
+      <div style="margin-bottom: 10px">
+        <p>
+          <span
+            [translate]="'name'"
+            [translateParams]="{
+              ar: 'التاريخ: ',
+              en: 'Date: '
+            }"
+          ></span>
+          <span> {{ EntryVoucherPrintData?.dateTimeNow }}</span>
+          <span
+            *ngIf="CustomDataNoteInvoice"
+            style="margin-right: 18%; color: red"
+          >
+            {{ CustomDataNoteInvoice }}</span
+          >
+        </p>
+      </div>
+
+      <div class="info" style="overflow: auto; margin-bottom: 20px">
+        <table
+          class="table table-bordered m-0"
+          style="
+            width: 100%;
+            color: white;
+            text-align: center;
+            vertical-align: middle;
+            min-width: max-content;
+          "
+        >
+          <tr>
+            <td
+              style="
+                padding-inline: 0px !important;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+                border: 1px solid #dce0e4;
+              "
+            >
+              ريال .S.R
+            </td>
+            <td
+              style="
+                padding-inline: 0px !important;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+                border: 1px solid #dce0e4;
+              "
+            >
+              {{ "Bond number" | translate }}
+            </td>
+            <td
+              style="
+                padding-inline: 0px !important;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+                border: 1px solid #dce0e4;
+              "
+            >
+              {{ "Invoice Number" | translate }}
+            </td>
+            <td
+              style="
+                line-height: 0 !important;
+                padding: 0px !important;
+                background-color: #f7f7f7;
+                border: 1px solid #dce0e4;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+                border: 1px solid #dce0e4;
+              "
+              colspan="2"
+            >
+              <span
+                style="
+                  border: none;
+                  display: inline-block;
+                  padding: 10px 0px;
+                  border: 1px solid #dce0e4;
+                  width: 100%;
+
+                  line-height: 24px;
+                "
+                [translate]="'name'"
+                [translateParams]="{ ar: 'تاريخ السند', en: 'Vouvher Date' }"
+              ></span>
+            </td>
+          </tr>
+          <tr>
+            <td
+              style="
+                width: 25%;
+                padding-inline: 0px !important;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 500;
+                border: 1px solid #dce0e4;
+                padding: 10px 0px;
+              "
+            >
+              {{ EntryVoucherPrintData?.voucherVM[0].totalValue }}
+            </td>
+            <td
+              style="
+                width: 25%;
+                padding-inline: 0px !important;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 500;
+                border: 1px solid #dce0e4;
+                padding: 10px 0px;
+              "
+            >
+              {{ EntryVoucherPrintData?.voucherVM[0].invoiceNumber }}
+            </td>
+            <td
+              style="
+                width: 20%;
+                padding-inline: 0px !important;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 500;
+                border: 1px solid #dce0e4;
+                padding: 10px 0px;
+              "
+            >
+              {{ CustomDatatoInvoice }}
+            </td>
+            <td
+              style="
+                width: 15%;
+                padding-inline: 0px !important;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 500;
+                border: 1px solid #dce0e4;
+                padding: 10px 0px;
+              "
+            >
+              {{ EntryVoucherPrintData?.voucherVM[0].date }}
+            </td>
+            <td
+              style="
+                width: 15%;
+                padding-inline: 0px !important;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 500;
+                border: 1px solid #dce0e4;
+                padding: 10px 0px;
+              "
+            >
+              {{ EntryVoucherPrintData?.voucherVM[0].hijriDate }}
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="services" style="width: 100%; margin-bottom: 20px">
+        <div class="content">
+          <table
+            style="text-align: center; vertical-align: middle; width: 100%"
+          >
+            <!-- <thead>
+              <td
+                style="
+                  font-size: 16px;
+                  background-color: #fff;
+                  padding: 14px 4px;
+                  text-align: center;
+                  color: #272727;
+                  word-wrap: break-word;
+                  border-inline-start: 1px dashed #0c8191;
+                  border: 1px dashed #272727;
+                  font-weight: 600;
+                "
+              >{{"account code"|translate}}</td>
+              <td
+                style="
+                  font-size: 16px;
+                  background-color: #fff;
+                  padding: 14px 4px;
+                  text-align: center;
+                  color: #272727;
+                  word-wrap: break-word;
+                  border-inline-start: 1px dashed #0c8191;
+                  border: 1px dashed #272727;
+                  font-weight: 600;
+                "
+              >{{"account name"|translate}}</td>
+              <td
+                style="
+                  font-size: 16px;
+                  background-color: #f7f7f7;
+                  padding: 14px 4px;
+                  text-align: center;
+                  color: #272727;
+                  word-wrap: break-word;
+                  border-inline-start: 1px dashed #0c8191;
+                  border: 1px dashed #272727;
+                  font-weight: 600;
+                "
+               >{{"Debit"|translate}}</td>
+              <td
+                style="
+                  font-size: 16px;
+                  background-color: #f7f7f7;
+                  padding: 14px 4px;
+                  text-align: center;
+                  color: #272727;
+                  word-wrap: break-word;
+                  border-inline-start: 1px dashed #0c8191;
+                  border: 1px dashed #272727;
+                  font-weight: 600;
+                "
+               >{{"Credit"|translate}}</td>
+               <td
+                style="
+                  font-size: 16px;
+                  background-color: #fff;
+                  padding: 14px 4px;
+                  text-align: center;
+                  color: #272727;
+                  word-wrap: break-word;
+                  border-inline-start: 1px dashed #0c8191;
+                  border: 1px dashed #272727;
+                  font-weight: 600;
+                "
+               >{{"Statement"|translate}}</td>
+              <td
+                style="
+                  font-size: 16px;
+                  background-color: #fff;
+                  padding: 14px 4px;
+                  text-align: center;
+                  color: #272727;
+                  word-wrap: break-word;
+                  border-inline-start: 1px dashed #0c8191;
+                  border: 1px dashed #272727;
+                  font-weight: 600;
+                "
+               >{{"costCenter"|translate}}</td>
+            </thead> -->
+            <tbody>
+              <tr
+                *ngFor="let item of EntryVoucherPrintData?.voucherVM"
+                style="display: flex; flex-direction: column"
+              >
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 50px;
+                    color: #272727;
+                    display: flex;
+                    justify-content: space-between;
+                  "
+                >
+                  <span> استلمنا من السيد / السادة</span>
+                  <span>{{ item.recevierTxt }} </span>
+                  <span>Received From Mr/Messrs</span>
+                </td>
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 50px;
+                    color: #272727;
+                    display: flex;
+                    justify-content: space-between;
+                  "
+                >
+                  <span> مبلغ و قدره</span>
+                  <span>{{ item.invoiceValueText }} </span>
+                  <span>The sum of S.R</span>
+                </td>
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 50px;
+                    color: #272727;
+                    display: flex;
+                    justify-content: space-between;
+                  "
+                >
+                  <span> نوع السند </span>
+                  <span>{{ getpayType(item.payType) }} </span>
+                  <span>Voucher</span>
+                </td>
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 50px;
+                    color: #272727;
+                    display: flex;
+                    justify-content: space-between;
+                  "
+                >
+                  <span> تاريخ</span>
+                  <span>{{ item.checkDate }} </span>
+                  <span> Date</span>
+                </td>
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 50px;
+                    color: #272727;
+                    display: flex;
+                    justify-content: space-between;
+                  "
+                >
+                  <span> المسحوب علي بنك</span>
+                  <span>{{ item.bankName }} </span>
+                  <span>Bank</span>
+                </td>
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 50px;
+                    color: #272727;
+                    display: flex;
+                    justify-content: space-between;
+                  "
+                >
+                  <span> وذلك مقابل</span>
+                  <span>{{ item.description }} </span>
+                  <span>And That For</span>
+                </td>
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 50px;
+                    color: #272727;
+                    display: flex;
+                    justify-content: space-between;
+                  "
+                >
+                  <span>مركز التكلفة </span>
+                  <span>{{ item.costCenterName }} </span>
+                  <span>Cost center</span>
+                </td>
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 50px;
+                    color: #272727;
+                    display: flex;
+                    justify-content: space-between;
+                  "
+                >
+                  <span> ملاحظات</span>
+                  <span>{{ item.notes }} </span>
+                  <span>Notes</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div
+            style="
+              display: grid;
+              grid-template-columns: auto auto auto auto;
+              padding-top: 20px;
+            "
+            class="text-center"
+          >
+            <div class="grid-item">
+              <p>
+                المستلم<br />Receiver<br />......................................
+              </p>
+            </div>
+            <div class="grid-item">
+              <p>
+                المحاسب<br />Accountant<br />......................................
+              </p>
+            </div>
+            <div class="grid-item">
+              <p>الختم<br />Seal<br />......................................</p>
+            </div>
+            <div class="grid-item">
+              <p>
+                المدير المالي واالاداري<br />Manger<br />......................................
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button
+      (click)="printDiv('reportprintDivModal')"
+      class="min-w-max p-2 bg-sky-100 hover:bg-sky-500 rounded-lg duration-300 hover:text-white aspect-square w-10"
+    >
+      <i class="fa fa-print"></i>
+    </button>
+    <button
+      type="button"
+      (click)="modal.dismiss()"
+      mat-raised-button
+      color="basic"
+    >
+      {{ "No" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+<!-- عرض القيد المحاسبي  -->
+<!-- accountingentry -->
+<ng-template #accountingentry let-modal>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="m-0">
+      <span class="text-2xl">{{ "View_accounting_entry" | translate }}</span>
+    </h4>
+    <button
+      type="button"
+      class="text-2xl text-white m-0"
+      (click)="modal.dismiss()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="max-h-100 overflow-x-scroll overflow-y-scroll p-4">
+    <table
+      class="border border-gray-500"
+      style="width: 100%; text-align: center"
+    >
+      <thead>
+        <tr>
+          <th class="w-1/9 px-1 py-2">{{ "date" | translate }}</th>
+          <th class="w-1/9 px-1 py-2">{{ "Bond number" | translate }}</th>
+          <th class="w-1/9 px-1 py-2">{{ "Bond type" | translate }}</th>
+          <th class="w-1/9 px-1 py-2">
+            {{ "Registration number" | translate }}
+          </th>
+          <th class="w-1/9 px-1 py-2">{{ "account code" | translate }}</th>
+          <th class="w-1/9 px-1 py-2">{{ "account name" | translate }}</th>
+          <th class="w-1/9 px-1 py-2">{{ "Statement" | translate }}</th>
+          <th class="w-1/9 px-1 py-2">{{ "debtor" | translate }}</th>
+          <th class="w-1/9 px-1 py-2">{{ "Creditor" | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let entry of AllJournalEntries">
+          <td class="w-1/9 border px-1 py-2">{{ entry.transactionDate }}</td>
+          <td class="w-1/9 border px-1 py-2">{{ entry.invoiceNumber }}</td>
+          <td class="w-1/9 border px-1 py-2">{{ entry.typeName }}</td>
+          <td class="w-1/9 border px-1 py-2">{{ entry.journalNo }}</td>
+          <td class="w-1/9 border px-1 py-2">{{ entry.accountCode }}</td>
+          <td class="w-1/9 border px-1 py-2">{{ entry.accountName }}</td>
+          <td class="w-1/9 border px-1 py-2">{{ entry.notes }}</td>
+          <td class="w-1/9 border px-1 py-2">{{ entry.depit }}</td>
+          <td class="w-1/9 border px-1 py-2">{{ entry.credit }}</td>
+        </tr>
+        <tr>
+          <td class="w-1/9 border px-1 py-2">{{ "total" | translate }}</td>
+          <td class="w-1/9 border px-1 py-2"></td>
+          <td class="w-1/9 border px-1 py-2"></td>
+          <td class="w-1/9 border px-1 py-2"></td>
+          <td class="w-1/9 border px-1 py-2"></td>
+          <td class="w-1/9 border px-1 py-2"></td>
+          <td class="w-1/9 border px-1 py-2"></td>
+          <td class="w-1/9 border px-1 py-2 bg-green-500">{{ totaldepit }}</td>
+          <td class="w-1/9 border px-1 py-2 bg-red-500">{{ totalcredit }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="flex justify-end p-3">
+    <button
+      class="btn text-white me-2"
+      (click)="PrintJournalsByReVoucher()"
+      style="background-color: var(--base-color)"
+    >
+      {{ "Print" | translate }}
+    </button>
+
+    <button (click)="modal?.dismiss()" class="btn btn-secondary">
+      {{ "close" | translate }}
+    </button>
+  </div>
+</ng-template>

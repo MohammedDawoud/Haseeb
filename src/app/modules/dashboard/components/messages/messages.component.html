@@ -1,0 +1,349 @@
+<div class="add-search pb-4">
+  <app-navigator [title]="title"></app-navigator>
+
+  <div class="tables-data mt-3 overflow-hidden">
+    <div class="btn-group gap-2 flex-wrap">
+      <label
+        class="btn btn-primary"
+        [(ngModel)]="data.type"
+        (click)="setCustomersType(0)"
+        btnRadio="0"
+        tabindex="0"
+        role="button"
+        ><i class="fa-solid fa-users"></i>
+        <span
+          class="text-sm"
+          [translate]="'name'"
+          [translateParams]="{
+            ar: 'الوارد ',
+            en: 'Inbox'
+          }"
+        ></span>
+        <span class="text-xs rounded-full p-1 bg-white text-base"
+          >23</span
+        ></label
+      >
+      <label
+        class="btn btn-primary"
+        [(ngModel)]="data.type"
+        (click)="setCustomersType(1)"
+        btnRadio="1"
+        tabindex="0"
+        role="button"
+      >
+        <i class="fa fa-user-group text-sm"></i>
+        <span
+          class="text-sm"
+          [translate]="'name'"
+          [translateParams]="{
+            ar: 'الصادر',
+            en: 'Sender'
+          }"
+        ></span>
+        <span class="text-xs rounded-full p-1 bg-white text-base"
+          >23</span
+        ></label
+      >
+      <label
+        class="btn btn-primary"
+        [(ngModel)]="data.type"
+        (click)="setCustomersType(2)"
+        btnRadio="2"
+        tabindex="0"
+        role="button"
+      >
+        <i class="fa fa-building text-sm"></i>
+        <span
+          class="text-sm"
+          [translate]="'name'"
+          [translateParams]="{
+            ar: ' سلة المهملات',
+            en: ' Trash '
+          }"
+        ></span>
+        <span class="text-xs rounded-full p-1 bg-white text-base"
+          >23</span
+        ></label
+      >
+    </div>
+
+    <!-- buttons -->
+    <div class="flex justify-between gap-2 items-center my-3 flex-wrap">
+      <div class="w-fit">
+        <input
+          class="form-control"
+          placeholder="{{ 'search' | translate }}"
+          #input
+        />
+      </div>
+      <div class="flex gap-2 controler">
+        <button
+          class="flex gap-1 btn btn-primary"
+          (click)="open(sms, '', '', 'top')"
+        >
+          <span
+            class="hidden md:block"
+            [translate]="'name'"
+            [translateParams]="{
+              ar: 'ارسال  ',
+              en: ' Send'
+            }"
+          ></span>
+          <i class="fa-solid fa-paper-plane"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- table -->
+    <div class="overflow-auto">
+      <table
+        mat-table
+        [dataSource]="data.data"
+        matSort
+        class="mat-elevation-z8 rounded-t-lg overflow-hidden w-max"
+      >
+        <!-- name Column -->
+        <ng-container matColumnDef="sender">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span
+              [translate]="'name'"
+              [translateParams]="{
+                ar: 'اسم الراسل',
+                en: 'Sender Name'
+              }"
+            ></span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.sender }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="reciever">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span
+              [translate]="'name'"
+              [translateParams]="{
+                ar: 'اسم المستقبل',
+                en: 'Reciever Name'
+              }"
+            ></span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.reciever }}
+          </td>
+        </ng-container>
+
+        <!-- nationalId Column -->
+        <ng-container matColumnDef="topic">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span
+              [translate]="'name'"
+              [translateParams]="{
+                ar: 'الموضوع',
+                en: 'Topic'
+              }"
+            ></span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.topic }}
+          </td>
+        </ng-container>
+
+        <!-- customerType Column -->
+        <ng-container matColumnDef="text">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span
+              [translate]="'name'"
+              [translateParams]="{
+                ar: 'النص',
+                en: 'Text'
+              }"
+            ></span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.text }}
+          </td>
+        </ng-container>
+        <!-- email Column -->
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span
+              [translate]="'name'"
+              [translateParams]="{
+                ar: 'التاريخ',
+                en: 'Date'
+              }"
+            ></span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.date }}
+          </td>
+        </ng-container>
+
+        <!-- operations Column -->
+        <ng-container matColumnDef="delete">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            [translate]="'name'"
+            [translateParams]="{
+              ar: 'حذف',
+              en: 'Delete'
+            }"
+          ></th>
+          <td mat-cell *matCellDef="let element">
+            <div class="flex gap-1 justify-center py-2">
+              <button
+                (click)="open(deleteModal, '', '')"
+                class="min-w-max p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white aspect-square w-10"
+              >
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+
+        <tr mat-header-row *matHeaderRowDef="columns"></tr>
+
+        <tr
+          mat-row
+          *matRowDef="let row; columns: columns"
+          class="duration-300 hover:bg-slate-100"
+        ></tr>
+        <!-- Row shown when there is no matching data. -->
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="4">
+            {{ "No result found for " }} "{{ input.value }}"
+          </td>
+        </tr>
+      </table>
+    </div>
+    <mat-paginator [pageSizeOptions]="[10, 25]"> </mat-paginator>
+  </div>
+
+  <!-- modals  -->
+
+  <ng-template #sms let-modal>
+    <div
+      style="background-color: var(--base-color)"
+      class="modal-header text-white flex justify-between items-center"
+    >
+      <h4 class="m-0">
+        <span
+          [translate]="'name'"
+          [translateParams]="{
+            ar: 'ارسال رسالة',
+            en: 'Send Message'
+          }"
+        ></span>
+      </h4>
+      <button
+        type="button"
+        class="text-2xl text-white m-0"
+        (click)="modal.dismiss()"
+      >
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form class="modal-form" #form="ngForm">
+        <div class="flex flex-col gap-3">
+          <div>
+            <label class="col-form-label">
+              <span
+                [translate]="'name'"
+                [translateParams]="{
+                  ar: 'اسم المستقبل',
+                  en: 'Reciever Name'
+                }"
+              ></span>
+              <span class="text-danger">*</span></label
+            >
+            <ng-select
+              class="w-full p-0"
+              placeholder="{{ 'Chose' | translate }}"
+            >
+              <ng-option>اختيار</ng-option>
+              <ng-option>اختيار</ng-option>
+              <ng-option>اختيار</ng-option>
+            </ng-select>
+          </div>
+
+          <div class="form-group">
+            <label class="text-right col-form-label block">
+              <span
+                [translate]="'name'"
+                [translateParams]="{
+                  ar: 'الموضوع',
+                  en: 'Topic'
+                }"
+              ></span>
+              <span class="text-danger">*</span></label
+            >
+            <input class="form-control" type="text" placeholder="....." />
+          </div>
+          <div class="form-group">
+            <label class="text-right col-form-label block">
+              <span
+                [translate]="'name'"
+                [translateParams]="{
+                  ar: 'النص',
+                  en: 'Text'
+                }"
+              ></span>
+              <span class="text-danger">*</span></label
+            >
+            <input class="form-control" type="text" placeholder="....." />
+          </div>
+        </div>
+      </form>
+      <div
+        class="flex gap-2 justify-end pt-3 border-t border-neutral-300 col-span-1 md:col-span-2 mt-2"
+      >
+        <button (click)="modal.dismiss()" class="btn btn-secondary">
+          {{ "Back" | translate }}
+        </button>
+        <button
+          class="btn bg-base text-white"
+          type="submit"
+          [translate]="'name'"
+          [translateParams]="{
+            ar: 'ارسال',
+            en: 'Send'
+          }"
+        ></button>
+      </div>
+    </div>
+  </ng-template>
+  <!-- confirm delete Modal -->
+  <ng-template #deleteModal let-modal>
+    <div class="modal-body text-center">
+      <p
+        [translate]="'name'"
+        [translateParams]="{
+          ar: 'هل تريد بالتأكيد حذف هذا الصف',
+          en: 'Are you sure to delete this row ?'
+        }"
+      ></p>
+      <div class="flex gap-2 justify-center">
+        <button
+          type="button"
+          mat-raised-button
+          color="warn"
+          (click)="modal.dismiss()"
+        >
+          {{ "Yes" | translate }}
+        </button>
+        <button
+          type="button"
+          (click)="modal.dismiss()"
+          mat-raised-button
+          color="basic"
+        >
+          {{ "No" | translate }}
+        </button>
+      </div>
+    </div>
+  </ng-template>
+</div>

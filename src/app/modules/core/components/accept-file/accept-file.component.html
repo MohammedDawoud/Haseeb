@@ -1,0 +1,149 @@
+<div class="accept-file">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-5 mb-4 mb-lg-0">
+        <div class="info text-center">
+          <img
+            src="/assets/images/logo_image.png"
+            alt="logo"
+            class="d-inline-block mb-3 img-fluid"
+          />
+          <h2
+            [translate]="'name'"
+            [translateParams]="{
+              ar: 'منصة تعميير للاستشارات الهندسية',
+              en: 'Tameer platform for engineering consultancy'
+            }"
+          ></h2>
+        </div>
+      </div>
+      <div class="col-lg-7">
+        <div class="services">
+          <h2>{{ "Approval of the file" | translate }}</h2>
+          <p>
+            {{
+              "Dear customer, to confirm your approval of the file, please fill in the following data, based on the details sent to you via e-mail"
+                | translate
+            }}
+          </p>
+          <form #checkForm="ngForm" class="row">
+            <div class="form-input col-lg-6">
+              <img src="/assets/images/id.svg" alt="user icon" />
+
+              <input
+                type="text"
+                name="id"
+                placeholder="{{ 'ID Number' | translate }}   "
+                ngModel
+                #id="ngModel"
+                required
+                autocomplete="off"
+              />
+              <span
+                class="text-danger"
+                *ngIf="id.hasError('required') && id.touched"
+                >{{ "requiredError" | translate }}
+              </span>
+            </div>
+
+            <div class="form-input col-lg-6">
+              <img src="/assets/images/id.svg" alt="user icon" />
+
+              <input
+                type="text"
+                name="OfferNumber"
+                placeholder="{{ 'Offer Number' | translate }}   "
+                ngModel
+                #OfferNumber="ngModel"
+                required
+                autocomplete="off"
+              />
+              <span
+                class="text-danger"
+                *ngIf="OfferNumber.hasError('required') && OfferNumber.touched"
+                >{{ "requiredError" | translate }}
+              </span>
+            </div>
+
+            <div class="form-input col-lg-6">
+              <img src="/assets/images/barcode.svg" alt="user icon" />
+
+              <input
+                type="text"
+                name="digitCode"
+                placeholder="{{ 'Enter the 4-digit code' | translate }}   "
+                ngModel
+                #digitCode="ngModel"
+                required
+                autocomplete="off"
+              />
+              <span
+                class="text-danger"
+                *ngIf="digitCode.hasError('required') && digitCode.touched"
+                >{{ "requiredError" | translate }}
+              </span>
+            </div>
+
+            <div class="form-input col-lg-6">
+              <img src="/assets/images/barcode.svg" alt="user icon" />
+
+              <input
+                type="text"
+                name="code"
+                placeholder="{{ 'code' | translate }}   "
+                ngModel
+                #code="ngModel"
+                required
+                autocomplete="off"
+              />
+              <span
+                class="text-danger"
+                *ngIf="code.hasError('required') && code.touched"
+                >{{ "requiredError" | translate }}
+              </span>
+            </div>
+
+            <button
+              class="btn btn-outline-secondary check-btn"
+              [disabled]="checkForm.invalid"
+              (click)="check(checkForm.value)"
+            >
+              {{ "send" | translate }}
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #pinCodeModal let-modal>
+  <div class="modal-body text-center">
+    <div class="pin-code">
+      <div class="pin-code-info rounded bg-body">
+        <div class="head text-center">
+          <h2>
+            {{
+              "Please enter the confirmation code for your approval of the file"
+                | translate
+            }}
+          </h2>
+        </div>
+        <form #form="ngForm">
+          <ng-otp-input
+            (onInputChange)="onOtpChange($event)"
+            [config]="{ length: 4 }"
+          ></ng-otp-input>
+
+          <button
+            class="btn btn-outline-secondary pin-code-btn"
+            [disabled]="pinCode?.length < 4"
+            (click)="checkPinCode()"
+          >
+            ارسال
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>

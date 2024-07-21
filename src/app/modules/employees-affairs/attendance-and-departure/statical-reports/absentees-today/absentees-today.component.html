@@ -1,0 +1,357 @@
+<div class="add-search pb-4">
+  <app-navigator [title]="title"></app-navigator>
+
+  <div class="tables-data mt-3 overflow-hidden">
+    <div class="flex justify-end gap-2 items-center my-3 flex-wrap">
+      <div class="flex gap-2 controler">
+          <button
+            type="button"
+            class="flex gap-1 btn btn-success"
+            (click)="exportData()"
+          >
+            {{ "exportExcel" | translate }}
+          </button>
+        <button class="flex gap-1 btn btn-primary" (click)="Printabsence()">
+          <span class="hidden md:block">{{ "Print" | translate }}</span>
+          <i class="fa-solid fa-print"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- table -->
+    <div class="overflow-auto mt-3">
+      <table
+        class="min-w-max overflow-hidden rounded-t-lg table table-bordered table-striped"
+      >
+        <thead>
+          <tr class="bg-base text-white">
+            <th
+              class="invoice-title uppercase text-center"
+              [translate]="'name'"
+              [translateParams]="{
+                ar: 'اسم الموظف',
+                en: 'Employee Name'
+              }"
+            ></th>
+            <th
+              class="invoice-title uppercase text-center"
+              [translate]="'name'"
+              [translateParams]="{
+                ar: 'الرقم الوظيفى',
+                en: 'Jop Number'
+              }"
+            ></th>
+            <th
+              class="invoice-title uppercase text-center"
+              [translate]="'name'"
+              [translateParams]="{
+                ar: 'التاريخ',
+                en: 'Date'
+              }"
+            ></th>
+            <th
+              class="invoice-title uppercase text-center"
+              [translate]="'name'"
+              [translateParams]="{
+                ar: 'اليوم',
+                en: 'Day'
+              }"
+            ></th>
+            <th
+              class="invoice-title uppercase text-center"
+              [translate]="'name'"
+              [translateParams]="{
+                ar: 'الفرع',
+                en: 'Branch'
+              }"
+            ></th>
+          </tr>
+        </thead>
+        <tbody id="tabledetails">
+          <tr
+            class="text-black text-center"
+            *ngFor="let employee of data.absence"
+          >
+            <td>{{ employee.e_FullName }}</td>
+            <td>{{ employee.empNo }}</td>
+            <td>{{ employee.mdate }}</td>
+            <td>{{ getDayName(employee.dayNOfWeek) }}</td>
+            <td>{{ employee.e_BranchId }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div style="display: none">
+    <div
+      id="reportabsence"
+      [ngStyle]="{ direction: lang == 'ar' ? 'rtl' : 'ltr' }"
+    >
+      <div
+        class="report-header"
+        style="
+          display: flex;
+          align-items: center;
+          gap: 100px;
+          padding: 3px 0px;
+          margin-bottom: 20px;
+        "
+      >
+        <div class="headerNe-right-side">
+          <img
+            *ngIf="logourl"
+            src="{{ logourl }}"
+            alt="logo"
+            style="
+              height: 200px;
+              width: 200px;
+              max-width: 200px;
+              object-fit: fill;
+            "
+          />
+        </div>
+
+        <div class="headerNe-lefy-side" style="width: 100%">
+          <h1
+            style="
+              letter-spacing: 0.25px;
+              font-size: 23px;
+              margin: 0;
+              margin-bottom: 3px;
+            "
+          >
+            {{ userG?.companyName }}
+          </h1>
+          <div class="line" style="position: relative; padding: 5px 0px 10px">
+            <span
+              style="
+                position: absolute;
+                right: 0;
+                width: 100%;
+                height: 2px;
+                background-color: #e5e5e5;
+                z-index: 1;
+              "
+            ></span>
+            <span
+              style="
+                position: absolute;
+                right: 0;
+                width: 70%;
+                height: 2px;
+                background-color: #ec1c24;
+                z-index: 2;
+              "
+            ></span>
+          </div>
+
+          <h1
+            style="
+              margin-bottom: 0;
+              font-size: 34px;
+              color: #0c8191;
+              margin-bottom: 0;
+              margin-top: 30px;
+              font-weight: 500;
+            "
+            [translate]="'name'"
+            [translateParams]="{
+              ar: '  الغائبون اليوم ',
+              en: 'ُAbsence Today'
+            }"
+          ></h1>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 10px">
+        <p>
+          <span
+            [translate]="'name'"
+            [translateParams]="{
+              ar: 'التاريخ: ',
+              en: 'Date: '
+            }"
+          ></span>
+          <span> {{ datePrintJournals }}</span>
+        </p>
+      </div>
+            <div style="margin-bottom: 10px ;text-align: center;" >
+      <p>
+        <span
+          [translate]="'name'"
+          [translateParams]="{
+            ar: ' الفرع: ',
+            en: 'Branch: '
+          }"
+        ></span>
+        <span> {{BranchName}} </span>
+ 
+      </p>
+    </div>
+
+      <div class="services" style="width: 100%; margin-bottom: 10px">
+        <div class="content">
+          <table
+            style="
+              text-align: center;
+              vertical-align: middle;
+              width: 100%;
+              font-size: 12px;
+            "
+          >
+            <thead>
+              <td
+                style="
+                  font-size: 16px;
+                  background-color: #fff;
+                  padding: 14px 4px;
+                  text-align: center;
+                  color: #272727;
+                  word-wrap: break-word;
+                  border-inline-start: 1px dashed #0c8191;
+                  border: 1px dashed #272727;
+                  font-weight: 600;
+                "
+              >
+                اسم الموظف
+              </td>
+
+              <td
+                style="
+                  font-size: 16px;
+                  background-color: #f7f7f7;
+                  padding: 14px 4px;
+                  text-align: center;
+                  color: #272727;
+                  word-wrap: break-word;
+                  border-inline-start: 1px dashed #0c8191;
+                  border: 1px dashed #272727;
+                  font-weight: 600;
+                "
+              >
+                الرقم الوظيفي
+              </td>
+              <td
+                style="
+                  font-size: 16px;
+                  background-color: #f7f7f7;
+                  padding: 14px 4px;
+                  text-align: center;
+                  color: #272727;
+                  word-wrap: break-word;
+                  border-inline-start: 1px dashed #0c8191;
+                  border: 1px dashed #272727;
+                  font-weight: 600;
+                "
+              >
+                التاريخ
+              </td>
+
+              <td
+                style="
+                  font-size: 16px;
+                  background-color: #f7f7f7;
+                  padding: 14px 4px;
+                  text-align: center;
+                  color: #272727;
+                  word-wrap: break-word;
+                  border-inline-start: 1px dashed #0c8191;
+                  border: 1px dashed #272727;
+                  font-weight: 600;
+                "
+              >
+                اليوم
+              </td>
+              <td
+                style="
+                  font-size: 16px;
+                  background-color: #fff;
+                  padding: 14px 4px;
+                  text-align: center;
+                  color: #272727;
+                  word-wrap: break-word;
+                  border-inline-start: 1px dashed #0c8191;
+                  border: 1px dashed #272727;
+                  font-weight: 600;
+                "
+              >
+                الفرع
+              </td>
+            </thead>
+            <tbody>
+              <tr *ngFor="let employee of data.absence">
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 0px;
+                    color: #272727;
+                    border-inline-start: 1px dashed #272727;
+                    border-bottom: 1px dashed #272727;
+                  "
+                >
+                  {{ employee.e_FullName }}
+                </td>
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 0px;
+                    color: #272727;
+                    border-inline-start: 1px dashed #272727;
+                    border-bottom: 1px dashed #272727;
+                  "
+                >
+                  {{ employee.empNo }}
+                </td>
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 0px;
+                    color: #272727;
+                    border-inline-start: 1px dashed #272727;
+                    border-bottom: 1px dashed #272727;
+                  "
+                >
+                  {{ employee.mdate }}
+                </td>
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 0px;
+                    color: #272727;
+                    border-inline-start: 1px dashed #272727;
+                    border-bottom: 1px dashed #272727;
+                  "
+                >
+                  {{ getDayName(employee.dayNOfWeek) }}
+                </td>
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 0px;
+                    color: #272727;
+                    border-inline-start: 1px dashed #272727;
+                    border-bottom: 1px dashed #272727;
+                    border-left: 1px dashed #272727;
+                  "
+                >
+                  {{ employee.e_BranchId }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,47 @@
+import { Auditable } from "./auditable";
+import { Project } from "./project";
+import { ProjectSubTypes } from "./projectSubTypes";
+import { ProjectPhasesTasks } from "./projectPhasesTasks";
+import { Users } from "./users";
+import { NodeLocations } from "./nodeLocations";
+import { Settings } from "./settings";
+
+export class TemplatesTasks extends Auditable {
+    templateTaskId: number;
+    descriptionAr: string | null;
+    descriptionEn: string | null;
+    parentId: number | null;
+    templateId: number | null;
+    projSubTypeId: number | null;
+    type: number | null;
+    userId: number | null;
+    projectId: number | null;
+    timeMinutes: number | null;
+    timeType: number | null;
+    remaining: number | null;
+    isUrgent: boolean | null;
+    isTemp: boolean | null;
+    taskType: number | null;
+    status: number | null;
+    oldStatus: number | null;
+    active: boolean | null;
+    stopCount: number | null;
+    orderNo: number | null;
+    startDate: string | null;
+    endDate: string | null;
+    percentComplete: number | null;
+    cost: number | null;
+    toUserId: number | null;
+    notes: string | null;
+    branchId: number | null;
+    locationId: number | null;
+    project: Project | null;
+    settingId: number | null;
+    parentSettingId: number | null;
+    projectSubTypes: ProjectSubTypes | null;
+    mainPhase: ProjectPhasesTasks | null;
+    subPhase: ProjectPhasesTasks | null;
+    users: Users | null;
+    nodeLocations: NodeLocations | null;
+    settings: Settings | null;
+}
