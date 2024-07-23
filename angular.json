@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "tameer_cloud": {
+    "haseeb_cloud": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -24,7 +24,7 @@
               "chartjs",
               "lodash"
             ],
-            "outputPath": "dist/tameer_cloud",
+            "outputPath": "dist/haseeb_cloud",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -79,10 +79,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "tameer_cloud:build:production"
+              "browserTarget": "haseeb_cloud:build:production"
             },
             "development": {
-              "browserTarget": "tameer_cloud:build:development"
+              "browserTarget": "haseeb_cloud:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -90,7 +90,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "tameer_cloud:build"
+            "browserTarget": "haseeb_cloud:build"
           }
         },
         "test": {
