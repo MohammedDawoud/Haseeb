@@ -271,7 +271,7 @@ export class CustomerContractsAddMainComponent implements OnInit {
         Engineering_License: [null],
         Engineering_LicenseDate: [null],
         ContractCustSelectId: [customerId, [Validators.required]],
-        ContractProjSelectId: [projectid, [Validators.required]],
+        ContractProjSelectId: [null],
         customerIdtxt: [null],
         OfferSelectid: [null],
         check:[false],

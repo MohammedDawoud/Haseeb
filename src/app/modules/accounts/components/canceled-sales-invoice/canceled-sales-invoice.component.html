@@ -13,7 +13,7 @@
             placeholder="{{ 'Chose' | translate }}"
             [(ngModel)]="data.filter.search_CustomerName"
             [ngModelOptions]="{ standalone: true }"
-            (change)="FillAllProjectSelectByAllMrdod_C();RefreshData();"
+            (change)="RefreshData();"
           >
             <ng-option *ngFor="let user of load_customers" [value]="user.id">{{
               user.name
@@ -21,7 +21,7 @@
           </ng-select>
         </div>
       </div>
-      <div class="mb-0 mb-md-3">
+      <!-- <div class="mb-0 mb-md-3">
         <div class="form-group">
           <label class="col-form-label">
             {{ "project number" | translate }}</label
@@ -38,7 +38,7 @@
             }}</ng-option>
           </ng-select>
         </div>
-      </div>
+      </div> -->
 
       <div class="flex justify-content-center gap-3 mb-md-3">
         <button class="btn btn-primary" (click)="data.filter.enable = !data.filter.enable;CheckDate(null)" [translate]="'name'"

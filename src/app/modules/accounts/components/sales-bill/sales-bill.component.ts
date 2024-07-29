@@ -165,7 +165,7 @@ export class SalesBillComponent implements OnInit {
     'date',
     'totalValue',
     'PaymentType',
-    'projectNumber',
+    // 'projectNumber',
     'ClientName',
     'InvoiceStatus',
     'PostingDate',
@@ -219,7 +219,7 @@ export class SalesBillComponent implements OnInit {
   ngOnInit(): void {
     this.LoadData();
     this.FillCustomerSelect();
-    this.FillProjectSelect();
+    //this.FillProjectSelect();
     this.FillCustAccountsSelect2REC(1);
 
     this._sharedService.GetWhatsAppSetting().subscribe((data: any) => {
@@ -296,7 +296,7 @@ export class SalesBillComponent implements OnInit {
       this.FillCustAccountsSelect2REC(1);
       this.FillSubAccountLoad();
       this.GetAllCustomerForDropWithBranch();
-      this.FillCostCenterSelectREC();
+      this.FillCostCenterSelect();
       this.gethigridate();
       this.FillBankSelect();
       this.GenerateVoucherNumberREC();
@@ -434,7 +434,7 @@ export class SalesBillComponent implements OnInit {
       this.intialModelBranchOrganization();
       this.FillServiceAccount();
       this.FillCostCenterSelect_Service();
-      this.FillProjectTypeSelectService();
+      //this.FillProjectTypeSelectService();
       this.FillPackagesSelect();
     }
     if (type == 'SaveInvoiceConfirmModal') {
@@ -2961,7 +2961,7 @@ export class SalesBillComponent implements OnInit {
           this.ProjectTypenameEn = null;
           this.ProjectTypenameAr = null;
           this.TypeId = '0';
-          this.FillProjectTypeSelectService();
+         // this.FillProjectTypeSelectService();
           this.GetAllProjectType();
           this.toast.success(data.reasonPhrase, 'رسالة');
         },

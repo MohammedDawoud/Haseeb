@@ -34,7 +34,7 @@
         </div>
         </div>
 
-        <div class="form-group">
+        <!-- <div class="form-group">
           <label class="col-form-label">
             {{ "project manager" | translate }}</label
           >
@@ -49,7 +49,7 @@
               user.name
             }}</ng-option>
           </ng-select>
-        </div>
+        </div> -->
         <div class="form-check form-switch me-3">
           <label
             class="form-check-label"
@@ -169,16 +169,16 @@
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="projectDescription">
+        <!-- <ng-container matColumnDef="projectDescription">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>
             <span>{{ "Project name/description" | translate }}</span>
           </th>
           <td mat-cell *matCellDef="let element">
             {{ element.projectDescription }}
           </td>
-        </ng-container>
+        </ng-container> -->
 
-        <ng-container matColumnDef="projectNo">
+        <!-- <ng-container matColumnDef="projectNo">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>
             <span>{{ "Project Number" | translate }}</span>
           </th>
@@ -189,7 +189,7 @@
           >
             {{ element.projectNo }}
           </td>
-        </ng-container>
+        </ng-container> -->
 
         <ng-container matColumnDef="totalPaidPayment">
           <th
@@ -490,7 +490,7 @@
             <label class="col-form-label">
               {{ "Project Type" | translate }}</label
             >
-            <ng-select
+            <!-- <ng-select
               class="w-full p-0"
               placeholder="{{ 'Chose' | translate }}"
               ngModel
@@ -501,7 +501,7 @@
               <ng-option *ngFor="let item of ProjectTypeList_Template" [value]="item.id">{{
                 item.name
               }}</ng-option>
-            </ng-select>
+            </ng-select> -->
           </div>
         </div>
       </div>

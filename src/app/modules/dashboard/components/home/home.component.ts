@@ -470,22 +470,7 @@ export class HomeComponent implements OnInit {
       img: 'Group 40200@2x',
       color: '#333333',
     },
-    {
-      title: {
-        ar: 'مشاريعي',
-        en: 'My Projects',
-      },
-      img: 'Group 40199@2x',
-      color: '#f1854e',
-    },
-    {
-      title: {
-        ar: 'مهامى',
-        en: 'My Tasks',
-      },
-      img: 'Path 33991@2x',
-      color: '#f1854e',
-    },
+   
     {
       title: {
         ar: 'عهد',

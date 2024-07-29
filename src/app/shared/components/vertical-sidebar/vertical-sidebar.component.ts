@@ -215,256 +215,256 @@ export class VerticalSidebarComponent implements OnInit {
         ],
       },
 
-      {
-        name: { ar: 'الاتصالات الإدارية', en: 'Administrative Communications' },
-        link: null,
-        type: 'multiple',
-        icon: '/assets/sidebar-icons/bx-support-1.png',
-        show: this.userG?.userPrivileges.includes(10),
+      // {
+      //   name: { ar: 'الاتصالات الإدارية', en: 'Administrative Communications' },
+      //   link: null,
+      //   type: 'multiple',
+      //   icon: '/assets/sidebar-icons/bx-support-1.png',
+      //   show: this.userG?.userPrivileges.includes(10),
 
-        children: [
-          {
-            name: { ar: 'الصادر', en: 'Outbox' },
-            link: null,
-            type: 'multiple',
-            icon: '/assets/sidebar-icons/export.png',
-            show: true,
+      //   children: [
+      //     {
+      //       name: { ar: 'الصادر', en: 'Outbox' },
+      //       link: null,
+      //       type: 'multiple',
+      //       icon: '/assets/sidebar-icons/export.png',
+      //       show: true,
 
-            children: [
-              {
-                name: { ar: 'البحث في الصادر', en: 'Search in Outbox' },
-                link: '/communications/Outbox',
-                type: 'single',
-                icon:
-                  this.lang == 'ar'
-                    ? '/assets/sidebar-icons/Group 40278.png'
-                    : '/assets/sidebar-icons/Group 40280.png',
-                show: this.userG?.userPrivileges.includes(101013),
+      //       children: [
+      //         {
+      //           name: { ar: 'البحث في الصادر', en: 'Search in Outbox' },
+      //           link: '/communications/Outbox',
+      //           type: 'single',
+      //           icon:
+      //             this.lang == 'ar'
+      //               ? '/assets/sidebar-icons/Group 40278.png'
+      //               : '/assets/sidebar-icons/Group 40280.png',
+      //           show: this.userG?.userPrivileges.includes(101013),
                 
-              },
+      //         },
 
-              {
-                name: { ar: 'الخطابات الصادرة', en: 'Outbox Letters' },
-                link: '/communications/OutboxAdd',
-                type: 'single',
-                icon:
-                  this.lang == 'ar'
-                    ? '/assets/sidebar-icons/Group 40278.png'
-                    : '/assets/sidebar-icons/Group 40280.png',
-                show: this.userG?.userPrivileges.includes(101010),
-              },
-            ],
-          },
-          {
-            name: { ar: 'الوارد', en: 'Inbox' },
-            link: null,
-            type: 'multiple',
-            icon: '/assets/sidebar-icons/export-1.png',
-            show: this.userG?.userPrivileges.includes(1012),
+      //         {
+      //           name: { ar: 'الخطابات الصادرة', en: 'Outbox Letters' },
+      //           link: '/communications/OutboxAdd',
+      //           type: 'single',
+      //           icon:
+      //             this.lang == 'ar'
+      //               ? '/assets/sidebar-icons/Group 40278.png'
+      //               : '/assets/sidebar-icons/Group 40280.png',
+      //           show: this.userG?.userPrivileges.includes(101010),
+      //         },
+      //       ],
+      //     },
+      //     {
+      //       name: { ar: 'الوارد', en: 'Inbox' },
+      //       link: null,
+      //       type: 'multiple',
+      //       icon: '/assets/sidebar-icons/export-1.png',
+      //       show: this.userG?.userPrivileges.includes(1012),
 
-            children: [
-              {
-                name: { ar: 'البحث في الوارد', en: 'Search in Inbox' },
-                link: '/communications/Inbox',
-                type: 'single',
-                icon:
-                  this.lang == 'ar'
-                    ? '/assets/sidebar-icons/Group 40278.png'
-                    : '/assets/sidebar-icons/Group 40280.png',
-                show: this.userG?.userPrivileges.includes(101201),
-              },
+      //       children: [
+      //         {
+      //           name: { ar: 'البحث في الوارد', en: 'Search in Inbox' },
+      //           link: '/communications/Inbox',
+      //           type: 'single',
+      //           icon:
+      //             this.lang == 'ar'
+      //               ? '/assets/sidebar-icons/Group 40278.png'
+      //               : '/assets/sidebar-icons/Group 40280.png',
+      //           show: this.userG?.userPrivileges.includes(101201),
+      //         },
 
-              {
-                name: { ar: 'الخطابات الواردة', en: 'Inbox Letters' },
-                link: '/communications/InboxAdd',
-                type: 'single',
-                icon:
-                  this.lang == 'ar'
-                    ? '/assets/sidebar-icons/Group 40278.png'
-                    : '/assets/sidebar-icons/Group 40280.png',
-                show: this.userG?.userPrivileges.includes(101202),
-              },
-            ],
-          },
-          {
-            name: { ar: 'بحث', en: 'Search' },
-            link: null,
-            type: 'multiple',
-            icon: '/assets/sidebar-icons/Search Icon.png',
-            show: this.userG?.userPrivileges.includes(10),
+      //         {
+      //           name: { ar: 'الخطابات الواردة', en: 'Inbox Letters' },
+      //           link: '/communications/InboxAdd',
+      //           type: 'single',
+      //           icon:
+      //             this.lang == 'ar'
+      //               ? '/assets/sidebar-icons/Group 40278.png'
+      //               : '/assets/sidebar-icons/Group 40280.png',
+      //           show: this.userG?.userPrivileges.includes(101202),
+      //         },
+      //       ],
+      //     },
+      //     {
+      //       name: { ar: 'بحث', en: 'Search' },
+      //       link: null,
+      //       type: 'multiple',
+      //       icon: '/assets/sidebar-icons/Search Icon.png',
+      //       show: this.userG?.userPrivileges.includes(10),
 
-            children: [
-              {
-                name: {
-                  ar: 'بحث في الصادر و الوارد',
-                  en: 'Search in InOutBox',
-                },
-                link: '/communications/OutInboxSearch',
-                type: 'single',
-                icon:
-                  this.lang == 'ar'
-                    ? '/assets/sidebar-icons/Group 40278.png'
-                    : '/assets/sidebar-icons/Group 40280.png',
-                show: this.userG?.userPrivileges.includes(101013),
-              },
+      //       children: [
+      //         {
+      //           name: {
+      //             ar: 'بحث في الصادر و الوارد',
+      //             en: 'Search in InOutBox',
+      //           },
+      //           link: '/communications/OutInboxSearch',
+      //           type: 'single',
+      //           icon:
+      //             this.lang == 'ar'
+      //               ? '/assets/sidebar-icons/Group 40278.png'
+      //               : '/assets/sidebar-icons/Group 40280.png',
+      //           show: this.userG?.userPrivileges.includes(101013),
+      //         },
 
-              {
-                name: { ar: 'بحث في الملفات', en: 'Search in Files' },
-                link: '/communications/OutInboxFiles',
-                type: 'single',
-                icon:
-                  this.lang == 'ar'
-                    ? '/assets/sidebar-icons/Group 40278.png'
-                    : '/assets/sidebar-icons/Group 40280.png',
-                show: this.userG?.userPrivileges.includes(101010),
-              },
-            ],
-          },
-        ],
-      },
+      //         {
+      //           name: { ar: 'بحث في الملفات', en: 'Search in Files' },
+      //           link: '/communications/OutInboxFiles',
+      //           type: 'single',
+      //           icon:
+      //             this.lang == 'ar'
+      //               ? '/assets/sidebar-icons/Group 40278.png'
+      //               : '/assets/sidebar-icons/Group 40280.png',
+      //           show: this.userG?.userPrivileges.includes(101010),
+      //         },
+      //       ],
+      //     },
+      //   ],
+      // },
 
 
-      {
-        name: { ar: 'ادارة المشاريع', en: 'project management' },
-        link: null,
-        type: 'multiple',
-        icon: '/assets/sidebar-icons/settings-services.png',
-        show: this.userG?.userPrivileges.includes(11),
+      // {
+      //   name: { ar: 'ادارة المشاريع', en: 'project management' },
+      //   link: null,
+      //   type: 'multiple',
+      //   icon: '/assets/sidebar-icons/settings-services.png',
+      //   show: this.userG?.userPrivileges.includes(11),
 
-        children: [
-          {
-            name: { ar: 'عروض الأسعار', en: 'Quotations' },
-            link: '/projects/offers-price',
-            type: 'single',
-            icon: '/assets/sidebar-icons/offer_broken.png',
-            show: this.userG?.userPrivileges.includes(12131),
-          },
-          {
-            name: { ar: 'حركة المشاريع', en: 'Project movement' },
-            link: '/projects/track-projects',
-            type: 'single',
-            icon: '/assets/sidebar-icons/movement.png',
-            show: this.userG?.userPrivileges.includes(1110),
-          },
-          {
-            name: { ar: 'حركة المهام', en: 'task movement' },
-            link: '/projects/track-missions',
-            type: 'single',
-            icon: '/assets/sidebar-icons/Group 40676.png',
-            show: this.userG?.userPrivileges.includes(1113),
-          },
-          {
-            name: { ar: 'المهام الإدارية', en: 'Administrative tasks' },
-            link: '/projects/work-orders',
-            type: 'single',
-            icon: '/assets/sidebar-icons/process-on-vm-line-2.png',
-            show: this.userG?.userPrivileges.includes(1114),
-          },
-          {
-            name: { ar: 'سير عمل المشروع', en: 'Project workflow' },
-            link: '/projects/project-setting',
-            type: 'single',
-            icon: '/assets/sidebar-icons/arrow-left-right.png',
-            show: this.userG?.userPrivileges.includes(1110),
-          },
-          {
-            name: { ar: 'متطلبات المشروع', en: 'Project requirements' },
-            link: '/projects/project-requirements',
-            type: 'single',
-            icon: '/assets/sidebar-icons/data-1.png',
-            show: this.userG?.userPrivileges.includes(1115),
-          },
-          {
-            name: { ar: 'مركز رفع الملفات', en: 'File upload center' },
-            link: '/projects/file-uploader-center-new',
-            type: 'single',
-            icon: '/assets/sidebar-icons/upload-cloud-line.png',
-            show: this.userG?.userPrivileges.includes(12132),
-          },
-          {
-            name: { ar: 'أرشيف المشاريع', en: 'Projects archive' },
-            link: '/projects/project-archive',
-            type: 'single',
-            icon: '/assets/sidebar-icons/Path 34061.png',
-            show: this.userG?.userPrivileges.includes(1212),
-          },
-          {
-            name: { ar: 'الإشراف', en: 'Supervision' },
-            link: '/projects/supervisions',
-            type: 'single',
-            icon: '/assets/sidebar-icons/airline-manage-gates.png',
-            show: this.userG?.userPrivileges.includes(1119),
-          },
-          {
-            name: { ar: 'حالة المشروع', en: 'Project state' },
-            link: '/projects/project-status',
-            type: 'single',
-            icon: '/assets/sidebar-icons/ai-status.png',
-            show: this.userG?.userPrivileges.includes(1120),
-          },
-          {
-            name: {
-              ar: 'إيرادات ومصروفات المشاريع',
-              en: 'Project revenues and expenses',
-            },
-            link: '/projects/follow-project',
-            type: 'single',
-            icon: '/assets/sidebar-icons/money-1.png',
-            show: this.userG?.userPrivileges.includes(1121),
-          },
-          {
-            name: { ar: 'تقارير  المشاريع', en: 'Project Reports' },
-            link: null,
-            type: 'multiple',
-            icon: '/assets/sidebar-icons/report-data-4.png',
-            show: this.userG?.userPrivileges.includes(121321),
+      //   children: [
+      //     {
+      //       name: { ar: 'عروض الأسعار', en: 'Quotations' },
+      //       link: '/projects/offers-price',
+      //       type: 'single',
+      //       icon: '/assets/sidebar-icons/offer_broken.png',
+      //       show: this.userG?.userPrivileges.includes(12131),
+      //     },
+      //     {
+      //       name: { ar: 'حركة المشاريع', en: 'Project movement' },
+      //       link: '/projects/track-projects',
+      //       type: 'single',
+      //       icon: '/assets/sidebar-icons/movement.png',
+      //       show: this.userG?.userPrivileges.includes(1110),
+      //     },
+      //     {
+      //       name: { ar: 'حركة المهام', en: 'task movement' },
+      //       link: '/projects/track-missions',
+      //       type: 'single',
+      //       icon: '/assets/sidebar-icons/Group 40676.png',
+      //       show: this.userG?.userPrivileges.includes(1113),
+      //     },
+      //     {
+      //       name: { ar: 'المهام الإدارية', en: 'Administrative tasks' },
+      //       link: '/projects/work-orders',
+      //       type: 'single',
+      //       icon: '/assets/sidebar-icons/process-on-vm-line-2.png',
+      //       show: this.userG?.userPrivileges.includes(1114),
+      //     },
+      //     {
+      //       name: { ar: 'سير عمل المشروع', en: 'Project workflow' },
+      //       link: '/projects/project-setting',
+      //       type: 'single',
+      //       icon: '/assets/sidebar-icons/arrow-left-right.png',
+      //       show: this.userG?.userPrivileges.includes(1110),
+      //     },
+      //     {
+      //       name: { ar: 'متطلبات المشروع', en: 'Project requirements' },
+      //       link: '/projects/project-requirements',
+      //       type: 'single',
+      //       icon: '/assets/sidebar-icons/data-1.png',
+      //       show: this.userG?.userPrivileges.includes(1115),
+      //     },
+      //     {
+      //       name: { ar: 'مركز رفع الملفات', en: 'File upload center' },
+      //       link: '/projects/file-uploader-center-new',
+      //       type: 'single',
+      //       icon: '/assets/sidebar-icons/upload-cloud-line.png',
+      //       show: this.userG?.userPrivileges.includes(12132),
+      //     },
+      //     {
+      //       name: { ar: 'أرشيف المشاريع', en: 'Projects archive' },
+      //       link: '/projects/project-archive',
+      //       type: 'single',
+      //       icon: '/assets/sidebar-icons/Path 34061.png',
+      //       show: this.userG?.userPrivileges.includes(1212),
+      //     },
+      //     {
+      //       name: { ar: 'الإشراف', en: 'Supervision' },
+      //       link: '/projects/supervisions',
+      //       type: 'single',
+      //       icon: '/assets/sidebar-icons/airline-manage-gates.png',
+      //       show: this.userG?.userPrivileges.includes(1119),
+      //     },
+      //     {
+      //       name: { ar: 'حالة المشروع', en: 'Project state' },
+      //       link: '/projects/project-status',
+      //       type: 'single',
+      //       icon: '/assets/sidebar-icons/ai-status.png',
+      //       show: this.userG?.userPrivileges.includes(1120),
+      //     },
+      //     {
+      //       name: {
+      //         ar: 'إيرادات ومصروفات المشاريع',
+      //         en: 'Project revenues and expenses',
+      //       },
+      //       link: '/projects/follow-project',
+      //       type: 'single',
+      //       icon: '/assets/sidebar-icons/money-1.png',
+      //       show: this.userG?.userPrivileges.includes(1121),
+      //     },
+      //     {
+      //       name: { ar: 'تقارير  المشاريع', en: 'Project Reports' },
+      //       link: null,
+      //       type: 'multiple',
+      //       icon: '/assets/sidebar-icons/report-data-4.png',
+      //       show: this.userG?.userPrivileges.includes(121321),
 
-            children: [
-              {
-                name: {
-                  ar: 'تقرير الاداء الشامل',
-                  en: 'Comprehensive Performance Report',
-                },
-                link: '/projects/performance-report',
-                type: 'single',
-                icon:
-                  this.lang == 'ar'
-                    ? '/assets/sidebar-icons/Group 40278.png'
-                    : '/assets/sidebar-icons/Group 40280.png',
-                show: this.userG?.userPrivileges.includes(1213211),
-              },
-              {
-                name: { ar: 'مشاريع المستخدم', en: 'User Projects' },
-                link: '/projects/user-projects',
-                type: 'single',
-                icon: '/assets/sidebar-icons/user-data.png',
-                show: this.userG?.userPrivileges.includes(1213212),
-              },
-              {
-                name: { ar: 'مهام المستخدم', en: 'user tasks' },
-                link: '/projects/user-tasks',
-                type: 'single',
-                icon: '/assets/sidebar-icons/report-data-5.png',
-                show: this.userG?.userPrivileges.includes(1213213),
-              },
-              {
-                name: { ar: 'مهام حسب المشروع', en: 'tasks by project' },
-                link: '/projects/project-tasks-report',
-                type: 'single',
-                icon: '/assets/sidebar-icons/report-data-5.png',
-                show: this.userG?.userPrivileges.includes(1213214),
-              },
-              {
-                name: { ar: 'تكلفة المشروع', en: 'project cost' },
-                link: '/projects/project-cost',
-                type: 'single',
-                icon: '/assets/sidebar-icons/moneyalt.png',
-                show: this.userG?.userPrivileges.includes(1213215),
-              },
-            ],
-          },
-        ],
-      },
+      //       children: [
+      //         {
+      //           name: {
+      //             ar: 'تقرير الاداء الشامل',
+      //             en: 'Comprehensive Performance Report',
+      //           },
+      //           link: '/projects/performance-report',
+      //           type: 'single',
+      //           icon:
+      //             this.lang == 'ar'
+      //               ? '/assets/sidebar-icons/Group 40278.png'
+      //               : '/assets/sidebar-icons/Group 40280.png',
+      //           show: this.userG?.userPrivileges.includes(1213211),
+      //         },
+      //         {
+      //           name: { ar: 'مشاريع المستخدم', en: 'User Projects' },
+      //           link: '/projects/user-projects',
+      //           type: 'single',
+      //           icon: '/assets/sidebar-icons/user-data.png',
+      //           show: this.userG?.userPrivileges.includes(1213212),
+      //         },
+      //         {
+      //           name: { ar: 'مهام المستخدم', en: 'user tasks' },
+      //           link: '/projects/user-tasks',
+      //           type: 'single',
+      //           icon: '/assets/sidebar-icons/report-data-5.png',
+      //           show: this.userG?.userPrivileges.includes(1213213),
+      //         },
+      //         {
+      //           name: { ar: 'مهام حسب المشروع', en: 'tasks by project' },
+      //           link: '/projects/project-tasks-report',
+      //           type: 'single',
+      //           icon: '/assets/sidebar-icons/report-data-5.png',
+      //           show: this.userG?.userPrivileges.includes(1213214),
+      //         },
+      //         {
+      //           name: { ar: 'تكلفة المشروع', en: 'project cost' },
+      //           link: '/projects/project-cost',
+      //           type: 'single',
+      //           icon: '/assets/sidebar-icons/moneyalt.png',
+      //           show: this.userG?.userPrivileges.includes(1213215),
+      //         },
+      //       ],
+      //     },
+      //   ],
+      // },
 
       {
         name: { ar: 'شؤون الموظفين', en: 'Employees Affairs' },

@@ -145,8 +145,8 @@ export class CustomerContractsComponent implements OnInit {
     'date',
     'totalValue',
     'customerName',
-    'projectDescription',
-    'projectNo',
+    // 'projectDescription',
+    // 'projectNo',
     'totalPaidPayment',
     'totalRemainingPayment',
     'operations',
@@ -249,7 +249,7 @@ export class CustomerContractsComponent implements OnInit {
   ) {
     this.userG = this.authenticationService.userGlobalObj;
     this.currentDate = new Date();
-    this.FillAllUsersSelectAll();
+    // this.FillAllUsersSelectAll();
     this.LoadContractData();
   }
 
