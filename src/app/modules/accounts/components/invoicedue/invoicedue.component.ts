@@ -194,8 +194,11 @@ export class InvoicedueComponent {
 
 
   getvaluedue(obj:any){
-    return +parseFloat(obj.invoiceValue).toFixed(2) -(+parseFloat(obj.valueCollect).toFixed(2)+ +parseFloat(obj.retinvoiceValue).toFixed(2));
+    var Value:any=+parseFloat(obj.invoiceValue).toFixed(2) -(+parseFloat(obj.valueCollect).toFixed(2)+ +parseFloat(obj.retinvoiceValue).toFixed(2));
+    Value = +parseFloat(Value).toFixed(2);
+    return Value;
   }
+
 
   getRangeValue(obj:any,type:any){
     if(obj.daysV<=0)

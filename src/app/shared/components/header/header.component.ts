@@ -372,7 +372,6 @@ export class HeaderComponent implements OnInit {
   UserNotifications: any;
   UserNotificationscount: any;
   GetUnReadUserNotification() {
-    //debugger;
     this._headerService.GetUnReadUserNotification().subscribe((data) => {
       console.log(data);
 
@@ -381,9 +380,7 @@ export class HeaderComponent implements OnInit {
     });
   }
   GetUnReadUserNotificationcount() {
-    //debugger;
     this._headerService.GetUnReadUserNotificationcount().subscribe((data) => {
-      debugger;
       console.log(data);
 
       this.UserNotificationscount = data.result;

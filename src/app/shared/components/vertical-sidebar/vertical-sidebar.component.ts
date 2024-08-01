@@ -750,6 +750,13 @@ export class VerticalSidebarComponent implements OnInit {
             show: this.userG?.userPrivileges.includes(131003),
           },
           {
+            name: { ar: 'سند جرد', en: 'Inventory Debenture' },
+            link: '/accounts/Debentures',
+            type: 'single',
+            icon: '/assets/sidebar-icons/cash_outline.png',
+            show: this.userG?.userPrivileges.includes(131003),
+          },
+          {
             name: { ar: 'مردود المصروفات', en: 'Expense return' },
             link: '/accounts/Expense_return',
             type: 'single',

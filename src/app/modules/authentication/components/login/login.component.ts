@@ -127,7 +127,6 @@ export class LoginComponent implements OnInit {
   getqrcode() {
     this.api.GenerateCompanyQR().subscribe({
       next: (res: any) => {
-        debugger
         this.Qrcode =environment.PhotoURL+ res.result;
       }
     });

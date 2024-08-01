@@ -2,7 +2,7 @@
   <!-- <h2 class="mb-5 px-3 confirm-msg">الملف الشخصي</h2> -->
   <div class="container-fluid">
     <form class="px-2 grid items-start md:grid-cols-2 gap-3" [formGroup]="userForm">
-      <div class="grid grid-cols-2 gap-x-1 gap-y-4">
+      <div class="grid grid-cols-2 gap-x-1 gap-y-4" style="display: none;">
         <div class="flex flex-col items-center gap-1">
           <ng-container  *ngIf="  this.userForm.controls['ImgUrl'].value != (null&&'') " >
             <img class="w-1/2"src="{{ this.userForm.controls['ImgUrl'].value }}"alt="" />
@@ -294,7 +294,7 @@
               en: 'Max session time is 20 min'
             }">*</span>
         </div>
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between" style="display: none;">
           <div class="flex justify-between items-center">
             <span class="col-form-label font-lg font-bold">{{
               "Engineer seal" | translate

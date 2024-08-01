@@ -145,10 +145,10 @@ export class ServicePricesComponent implements OnInit {
     'choose',
   ];
   projectDisplayedColumns: string[] = [
-    'projectName',
-    'projectSubTypeName',
-    'serviceName_EN',
+    'name',
     'amount',
+    'AmountPur',
+    'Begbalance',
     'operations',
   ];
 
@@ -433,7 +433,7 @@ export class ServicePricesComponent implements OnInit {
     this.projectTasksDataSource = new MatTableDataSource(this.projectTasks);
     this.GetAllServicesPrice()
 
-    this.FillProjectTypeSelect()
+    // this.FillProjectTypeSelect()
   }
 
   ngAfterViewInit() {
@@ -564,41 +564,50 @@ export class ServicePricesComponent implements OnInit {
 
     if (type == 'addSerivceModal') {
 
-    this.details = []
-    this.AllcostCenterlist = []
-      this.SubprojecttypeList = []
-      this.intialModelBranchOrganization()
-      this.FillServiceAccount()
-      this.FillCostCenterSelect()
-      this.FillProjectTypeSelect()
-      this.FillPackagesSelect()
+    this.details = [];
+    this.AllcostCenterlist = [];
+      this.SubprojecttypeList = [];
+      this.intialModelBranchOrganization();
+      this.FillServiceAccount();
+      this.FillServiceAccountPurchase();
+      this.FillCostCenterSelect();
+      this.FillProjectTypeSelect();
+      this.FillPackagesSelect();
     }
     if (data && type == 'editSerivceModal') {
-      this.SubprojecttypeList = []
+      this.SubprojecttypeList = [];
 
-      this.details = []
-      this.AllcostCenterlist = []
-      this.intialModelBranchOrganization()
-      this.FillServiceAccount()
-      this.FillCostCenterSelect()
-      this.FillProjectTypeSelect()
-      this.FillPackagesSelect()
+      this.details = [];
+      this.AllcostCenterlist = [];
+      this.intialModelBranchOrganization();
+      this.FillServiceAccount();
+      this.FillServiceAccountPurchase();
+      this.FillCostCenterSelect();
+      // this.FillProjectTypeSelect();
+      this.FillPackagesSelect();
       this.SerivceModalDetails = data;
       this.SerivceModalForm.controls["id"].setValue(data.servicesId)
       this.SerivceModalForm.controls["nameAccount"].setValue(data.accountName)
-      this.SerivceModalForm.controls["ProjectType"].setValue(data.projectId)
-      this.SerivceModalForm.controls["SubprojectType"].setValue(data.projectSubTypeID)
+      // this.SerivceModalForm.controls["ProjectType"].setValue(data.projectId)
+      // this.SerivceModalForm.controls["SubprojectType"].setValue(data.projectSubTypeID)
       this.SerivceModalForm.controls["ServiceName"].setValue(data.servicesName)
       this.SerivceModalForm.controls["ServiceNameEN"].setValue(data.serviceName_EN)
-      this.SerivceModalForm.controls["ServiceType"].setValue(data.serviceType)
+      // this.SerivceModalForm.controls["ServiceType"].setValue(data.serviceType)
       this.SerivceModalForm.controls["amount"].setValue(data.amount)
-      this.SerivceModalForm.controls["costCenter"].setValue(data.costCenterId)
+      // this.SerivceModalForm.controls["costCenter"].setValue(data.costCenterId)
       this.SerivceModalForm.controls["ServiceRevenueAccount"].setValue(data.accountId)
-      this.SerivceModalForm.controls["PackageId"].setValue(data.packageId)
+      // this.SerivceModalForm.controls["PackageId"].setValue(data.packageId)
 
-      this._accountsreportsService.FillProjectSubTypesSelect(this.SerivceModalForm.controls["ProjectType"].value).subscribe(data => {
-        this.SubprojecttypeList = data;
-      });
+      this.SerivceModalForm.controls["AmountPur"].setValue(data.amountPur)
+      this.SerivceModalForm.controls["AccountIdPur"].setValue(data.accountIdPur)
+      this.SerivceModalForm.controls["Begbalance"].setValue(data.begbalance)
+      this.SerivceModalForm.controls["SerialNumber"].setValue(data.serialNumber)
+      this.SerivceModalForm.controls["ItemCode"].setValue(data.itemCode)
+
+
+      // this._accountsreportsService.FillProjectSubTypesSelect(this.SerivceModalForm.controls["ProjectType"].value).subscribe(data => {
+      //   this.SubprojecttypeList = data;
+      // });
     }
   }
   DSerivcelistid: any
@@ -660,6 +669,7 @@ export class ServicePricesComponent implements OnInit {
 
   CostCenterSelectlist: any = []
   ServiceAccountlist: any = []
+  ServiceAccountPurlist: any = []
   FillCostCenterSelect() {
     this._accountsreportsService.FillCostCenterSelect().subscribe(data => {
       this.CostCenterSelectlist = data;
@@ -668,6 +678,11 @@ export class ServicePricesComponent implements OnInit {
   FillServiceAccount() {
     this._accountsreportsService.FillServiceAccount().subscribe(data => {
       this.ServiceAccountlist = data;
+    });
+  }
+  FillServiceAccountPurchase() {
+    this._accountsreportsService.FillSubAccountLoad().subscribe(data => {
+      this.ServiceAccountPurlist = data.result;
     });
   }
   packageList: any = []
@@ -753,6 +768,15 @@ export class ServicePricesComponent implements OnInit {
       ServiceRevenueAccount: [null, [Validators.required]],
       nameAccount: [null, [Validators.required]],
       PackageId: [null, [Validators.required]],
+
+      AmountPur: [null, [Validators.required]],
+      AccountIdPur: [null, [Validators.required]],
+      Begbalance: [null],
+      SerialNumber: [null],
+      ItemCode: [null, [Validators.required]],
+
+
+
     })
   }
 
@@ -777,32 +801,25 @@ export class ServicePricesComponent implements OnInit {
         AccountId: this.SerivceModalForm.controls["ServiceRevenueAccount"].value,
         accountName: 'ايرادات',
         Amount: Number(this.SerivceModalForm.controls["amount"].value),
-        CostCenterId: this.SerivceModalForm.controls["costCenter"].value,
-        PackageId: this.SerivceModalForm.controls["PackageId"].value,
-        ProjectId: this.SerivceModalForm.controls["ProjectType"].value,
-        ProjectSubTypeID: this.SerivceModalForm.controls["SubprojectType"].value,
+        // CostCenterId: this.SerivceModalForm.controls["costCenter"].value,
+        // PackageId: this.SerivceModalForm.controls["PackageId"].value,
+        // ProjectId: this.SerivceModalForm.controls["ProjectType"].value,
+        // ProjectSubTypeID: this.SerivceModalForm.controls["SubprojectType"].value,
         ServiceName_EN: this.SerivceModalForm.controls["ServiceNameEN"].value,
-        ServiceType: this.SerivceModalForm.controls["ServiceType"].value,
+        // ServiceType: this.SerivceModalForm.controls["ServiceType"].value,
         ServicesId: this.SerivceModalForm.controls["id"].value,
         servicesName: this.SerivceModalForm.controls["ServiceName"].value,
+
+        amountPur: this.SerivceModalForm.controls["AmountPur"].value,
+        accountIdPur: this.SerivceModalForm.controls["AccountIdPur"].value,
+        begbalance: this.SerivceModalForm.controls["Begbalance"].value,
+        serialNumber: this.SerivceModalForm.controls["SerialNumber"].value,
+        itemCode: this.SerivceModalForm.controls["ItemCode"].value,
+
       },
       details: this.details
     }
 
-    // var details : any = []
-    // const formData = new FormData();
-    // formData.append('AccountId', this.SerivceModalForm.controls['ServiceRevenueAccount'].value);
-    // formData.append('accountName',  'ايرادات');
-    // formData.append('Amount', this.SerivceModalForm.controls['amount'].value);
-    // formData.append('CostCenterId', this.SerivceModalForm.controls['costCenter'].value);
-    // formData.append('Details', details);
-    // formData.append('PackageId', this.SerivceModalForm.controls['PackageId'].value);
-    // formData.append('ProjectId', this.SerivceModalForm.controls['ProjectType'].value);
-    // formData.append('ProjectSubTypeID', this.SerivceModalForm.controls['SubprojectType'].value);
-    // formData.append('ServiceName_EN', this.SerivceModalForm.controls['ServiceNameEN'].value);
-    // formData.append('ServiceType', this.SerivceModalForm.controls['ServiceType'].value);
-    // formData.append('ServicesId', this.SerivceModalForm.controls['id'].value);
-    // formData.append('servicesName', this.SerivceModalForm.controls['ServiceName'].value);
     this._accountsreportsService.SaveServicePriceWithDetails(params).subscribe((result: any) => {
 
       if (result.statusCode == 200) {

@@ -433,6 +433,7 @@ export class SalesBillComponent implements OnInit {
       this.SubprojecttypeList = [];
       this.intialModelBranchOrganization();
       this.FillServiceAccount();
+      this.FillServiceAccountPurchase();
       this.FillCostCenterSelect_Service();
       //this.FillProjectTypeSelectService();
       this.FillPackagesSelect();
@@ -1391,7 +1392,8 @@ export class SalesBillComponent implements OnInit {
     var remainder =
       +parseFloat(this.modalInvoice.TotalVoucherValueLbl).toFixed(2) -
       +parseFloat(this.modalInvoice.PaidValue).toFixed(2);
-    this.modalInvoice.remainder = remainder;
+      var Accremainder = parseFloat(remainder.toString()).toFixed(2);
+      this.modalInvoice.remainder = Accremainder;
   }
 
   offerpriceChange() {
@@ -2821,6 +2823,8 @@ export class SalesBillComponent implements OnInit {
 
   CostCenterSelectlist: any = [];
   ServiceAccountlist: any = [];
+  ServiceAccountPurlist: any = [];
+
   FillCostCenterSelect_Service() {
     this._accountsreportsService.FillCostCenterSelect().subscribe((data) => {
       this.CostCenterSelectlist = data;
@@ -2829,6 +2833,11 @@ export class SalesBillComponent implements OnInit {
   FillServiceAccount() {
     this._accountsreportsService.FillServiceAccount().subscribe((data) => {
       this.ServiceAccountlist = data;
+    });
+  }
+  FillServiceAccountPurchase() {
+    this._accountsreportsService.FillSubAccountLoad().subscribe(data => {
+      this.ServiceAccountPurlist = data.result;
     });
   }
   packageList: any = [];
@@ -2874,6 +2883,13 @@ export class SalesBillComponent implements OnInit {
       ServiceRevenueAccount: [null, [Validators.required]],
       nameAccount: [null, [Validators.required]],
       PackageId: [null, [Validators.required]],
+
+      AmountPur: [null, [Validators.required]],
+      AccountIdPur: [null, [Validators.required]],
+      Begbalance: [null],
+      SerialNumber: [null],
+      ItemCode: [null, [Validators.required]],
+
     });
   }
 
@@ -2898,19 +2914,24 @@ export class SalesBillComponent implements OnInit {
 
     const params = {
       services_price: {
-        AccountId:
-          this.SerivceModalForm.controls['ServiceRevenueAccount'].value,
+        AccountId: this.SerivceModalForm.controls["ServiceRevenueAccount"].value,
         accountName: 'ايرادات',
-        Amount: Number(this.SerivceModalForm.controls['amount'].value),
-        CostCenterId: this.SerivceModalForm.controls['costCenter'].value,
-        PackageId: this.SerivceModalForm.controls['PackageId'].value,
-        ProjectId: this.SerivceModalForm.controls['ProjectType'].value,
-        ProjectSubTypeID:
-          this.SerivceModalForm.controls['SubprojectType'].value,
-        ServiceName_EN: this.SerivceModalForm.controls['ServiceNameEN'].value,
-        ServiceType: this.SerivceModalForm.controls['ServiceType'].value,
-        ServicesId: this.SerivceModalForm.controls['id'].value,
-        servicesName: this.SerivceModalForm.controls['ServiceName'].value,
+        Amount: Number(this.SerivceModalForm.controls["amount"].value),
+        // CostCenterId: this.SerivceModalForm.controls["costCenter"].value,
+        // PackageId: this.SerivceModalForm.controls["PackageId"].value,
+        // ProjectId: this.SerivceModalForm.controls["ProjectType"].value,
+        // ProjectSubTypeID: this.SerivceModalForm.controls["SubprojectType"].value,
+        ServiceName_EN: this.SerivceModalForm.controls["ServiceNameEN"].value,
+        // ServiceType: this.SerivceModalForm.controls["ServiceType"].value,
+        ServicesId: this.SerivceModalForm.controls["id"].value,
+        servicesName: this.SerivceModalForm.controls["ServiceName"].value,
+
+        amountPur: this.SerivceModalForm.controls["AmountPur"].value,
+        accountIdPur: this.SerivceModalForm.controls["AccountIdPur"].value,
+        begbalance: this.SerivceModalForm.controls["Begbalance"].value,
+        serialNumber: this.SerivceModalForm.controls["SerialNumber"].value,
+        itemCode: this.SerivceModalForm.controls["ItemCode"].value,
+
       },
       details: this.details,
     };
@@ -3645,12 +3666,14 @@ export class SalesBillComponent implements OnInit {
     this.receiptService.VousherRe_Sum(invId).subscribe((result: any) => {
       if (result.statusCode == 200) {
         debugger;
-        var AccValue = 0;
+        var AccValue:any = 0;
         if (Value > parseFloat(result.reasonPhrase)) {
           AccValue = Value - parseFloat(result.reasonPhrase);
         } else {
           AccValue = 0;
         }
+        AccValue=parseFloat(AccValue.toString()).toFixed(2);
+
         this.ConvertNumToString_Offer(AccValue);
         this.ReceiptVoucherForm.controls['AmountOf'].setValue(AccValue);
       } else {

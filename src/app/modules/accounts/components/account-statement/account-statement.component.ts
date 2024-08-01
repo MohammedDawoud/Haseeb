@@ -455,12 +455,14 @@ export class AccountStatementComponent implements OnInit {
     this.receiptService.VousherRe_Sum(invId).subscribe((result: any) => {
       if (result.statusCode == 200) {
         debugger;
-        var AccValue = 0;
+        var AccValue:any = 0;
         if (Value > parseFloat(result.reasonPhrase)) {
           AccValue = Value - parseFloat(result.reasonPhrase);
         } else {
           AccValue = 0;
         }
+        AccValue=parseFloat(AccValue.toString()).toFixed(2);
+
         this.RemainingInvoiceValue = AccValue;
         this.ConvertNumToString_Catch(AccValue);
         this.ReceiptVoucherForm.controls['AmountOf'].setValue(AccValue);
@@ -2445,7 +2447,8 @@ export class AccountStatementComponent implements OnInit {
     var remainder =
       +parseFloat(this.modalInvoice.TotalVoucherValueLbl).toFixed(2) -
       +parseFloat(this.modalInvoice.PaidValue).toFixed(2);
-    this.modalInvoice.remainder = remainder;
+      var Accremainder = parseFloat(remainder.toString()).toFixed(2);
+      this.modalInvoice.remainder = Accremainder;
   }
 
   offerpriceChange() {

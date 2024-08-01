@@ -2,7 +2,7 @@
   <app-navigator [title]="title"></app-navigator>
 
   <div class="row align-items-center">
-    <div class="col-xxl-3 col-md-4 col-lg-3 mb-0 mb-md-3">
+    <div class="col-xxl-3 col-md-4 col-lg-3 mb-0 mb-md-3" style="display: none;">
       <div class="form-group">
         <label class="col-form-label"> {{ "Project Type" | translate }}</label>
         <ng-select
@@ -20,7 +20,7 @@
       </div>
     </div>
 
-    <div class="col-xxl-3 col-md-4 col-lg-3 mb-0 mb-md-3">
+    <div class="col-xxl-3 col-md-4 col-lg-3 mb-0 mb-md-3" style="display: none;">
       <div class="form-group">
         <label class="col-form-label">
           {{ "Subproject type" | translate }}</label
@@ -70,7 +70,7 @@
           {{ "salesBill" | translate }}
         </button>
 
-        <button
+        <button style="display: none;"
           type="button"
           class="flex gap-1 btn bg-base mb-3 col-md-2 text-white ms-3"
           (click)="open(addtotalSurfacesModal, null, 'addtotalSurfacesModal')"
@@ -86,7 +86,7 @@
           {{ "AddService" | translate }}
         </button>
 
-        <button
+        <button style="display: none;"
           type="button"
           class="flex gap-1 btn bg-base mb-3 col-md-2 text-white ms-3"
           (click)="open(floortotalSurfacesModal,null, 'floortotalSurfacesModal')"
@@ -106,25 +106,7 @@
       matSort
       class="mat-elevation-z8 rounded-t-lg overflow-hidden w-max"
     >
-      <ng-container matColumnDef="projectName">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          <span>{{ "Project Type" | translate }}</span>
-        </th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.projectName }}
-        </td>
-      </ng-container>
-
-      <ng-container matColumnDef="projectSubTypeName">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          <span>{{ "Subproject type" | translate }}</span>
-        </th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.projectSubTypeName }}
-        </td>
-      </ng-container>
-
-      <ng-container matColumnDef="serviceName_EN">
+      <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
           <span>{{ "ServiceName" | translate }}</span>
         </th>
@@ -135,10 +117,28 @@
 
       <ng-container matColumnDef="amount">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          <span>{{ "price" | translate }}</span>
+          <span>{{ "PriceRev" | translate }}</span>
         </th>
         <td mat-cell *matCellDef="let element">
           {{ element.amount }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="AmountPur">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span>{{ "PricePur" | translate }}</span>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.amountPur }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="Begbalance">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span>{{ "Beginningbalance" | translate }}</span>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.begbalance }}
         </td>
       </ng-container>
 
@@ -902,7 +902,7 @@
   <div class="modal-body">
     <form [formGroup]="SerivceModalForm" >
       <div class="row items-center">
-        <div class="col-sm-6 col-md-3 mb-3">
+        <div class="col-sm-6 col-md-3 mb-3" style="display: none;">
           <div class="form-group">
             <label class="col-form-label">
               {{ "Project Type" | translate }}</label
@@ -928,7 +928,7 @@
           </div>
         </div>
 
-        <div class="col-sm-6 col-md-3 mb-3">
+        <div class="col-sm-6 col-md-3 mb-3" style="display: none;">
           <button
             type="button"
 
@@ -940,7 +940,7 @@
           </button>
         </div>
 
-        <div class="col-sm-6 col-md-3 mb-3">
+        <div class="col-sm-6 col-md-3 mb-3" style="display: none;">
           <div class="form-group">
             <label class="col-form-label">
               {{ "Subproject type" | translate }}</label
@@ -966,7 +966,7 @@
           </div>
         </div>
 
-        <div class="col-sm-6 col-md-3 mb-3">
+        <div class="col-sm-6 col-md-3 mb-3" style="display: none;">
           <button
             type="button"
 
@@ -977,7 +977,7 @@
             <i class="fa-solid fa-plus"></i>
           </button>
         </div>
-        <div class="col-sm-6 col-md-3 mb-3"*ngIf="this.SerivceModalForm.controls['ProjectType'].value == 1">
+        <div class="col-sm-6 col-md-3 mb-3" *ngIf="this.SerivceModalForm.controls['ProjectType'].value == 1">
           <div class="form-group">
             <label class="col-form-label">
               {{ "Packages" | translate }}</label
@@ -1002,7 +1002,7 @@
           </div>
         </div>
 
-        <div class="col-sm-6 col-md-3 mb-3">
+        <div class="col-sm-6 col-md-3 mb-3" style="display: none;">
           <button
             type="button"
 
@@ -1058,7 +1058,7 @@
           </div>
         </div>
 
-        <div class="col-sm-6 col-md-3 mb-3">
+        <div class="col-sm-6 col-md-3 mb-3" style="display: none;">
           <div class="form-group">
             <label class="col-form-label">
               {{ "ServiceType" | translate }}</label
@@ -1086,12 +1086,12 @@
 
         <div class="col-sm-6 col-md-3 mb-3" *ngIf="SerivceModalForm.controls['PackageId'].value ==  null">
           <div class="form-group">
-            <label class="col-form-label"> {{ "price" | translate }}</label>
+            <label class="col-form-label"> {{ "PriceRev" | translate }}</label>
             <span class="text-danger">*</span>
             <div class="d-flex">
               <input
                 name="price"
-                placeholder="{{ 'price' | translate }}"
+                placeholder="{{ 'PriceRev' | translate }}"
                 type="text"
                 class="form-control" autocomplete="off"
                 formControlName="amount"
@@ -1108,7 +1108,7 @@
         </div>
 
         <!-- 3 -->
-        <div class="col-sm-6 col-md-3 mb-3">
+        <div class="col-sm-6 col-md-3 mb-3" style="display: none;">
           <div class="form-group">
             <label class="col-form-label">
               {{ "costCenter" | translate }}</label
@@ -1123,18 +1123,12 @@
                 user.name
               }}</ng-option>
             </ng-select>
-            <!-- <div class="fieldrequired" *ngIf="
-                      SerivceModalForm.controls['costCenter']?.hasError('required') &&
-                      SerivceModalForm.controls['costCenter'].touched
-                    ">
-                    {{ "This field is required" | translate }}
-                  </div> -->
           </div>
         </div>
         <div class="col-sm-6 col-md-3 mb-3">
           <div class="form-group">
             <label class="col-form-label">
-              {{ "ServiceRevenueAccount" | translate }}</label
+              {{ "AddServiceDetails" | translate }}</label
             >
           <button
             type="button"
@@ -1172,6 +1166,123 @@
                   </div>
           </div>
         </div>
+
+        <div class="col-sm-6 col-md-3 mb-3" *ngIf="SerivceModalForm.controls['PackageId'].value ==  null">
+          <div class="form-group">
+            <label class="col-form-label"> {{ "PricePur" | translate }}</label>
+            <span class="text-danger">*</span>
+            <div class="d-flex">
+              <input
+                name="AmountPur"
+                placeholder="{{ 'PricePur' | translate }}"
+                type="text"
+                class="form-control" autocomplete="off"
+                formControlName="AmountPur"
+              />
+              <SPAN class="me-1"> {{ "RS" | translate }}</SPAN>
+            </div>
+            <div class="fieldrequired" *ngIf="
+                      SerivceModalForm.controls['AmountPur']?.hasError('required') &&
+                      SerivceModalForm.controls['AmountPur'].touched
+                    ">
+                    {{ "This field is required" | translate }}
+                  </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 mb-3">
+          <div class="form-group">
+            <label class="col-form-label">
+              {{ "ServicePurAccount" | translate }}</label
+            >
+            <span class="text-danger">*</span>
+            <ng-select
+              name="AccountIdPur"
+              class="w-full p-0"
+              placeholder="{{ 'Chose' | translate }}" autocomplete="off"
+              formControlName="AccountIdPur"
+            >
+              <ng-option *ngFor="let user of ServiceAccountPurlist" [value]="user.id">{{
+                user.name
+              }}</ng-option>
+            </ng-select>
+            <div class="fieldrequired" *ngIf="
+                      SerivceModalForm.controls['AccountIdPur']?.hasError('required') &&
+                      SerivceModalForm.controls['AccountIdPur'].touched
+                    ">
+                    {{ "This field is required" | translate }}
+                  </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 mb-3">
+          <div class="form-group">
+            <label class="col-form-label">
+              {{ "Beginningbalance" | translate }}</label
+            >
+            <span class="text-danger">*</span>
+            <input
+              name="Begbalance"
+              placeholder="{{ 'Beginningbalance' | translate }}"
+              type="text"
+              class="form-control"
+              formControlName="Begbalance" autocomplete="off"
+            />
+            <div class="fieldrequired" *ngIf="
+                      SerivceModalForm.controls['Begbalance']?.hasError('required') &&
+                      SerivceModalForm.controls['Begbalance'].touched
+                    ">
+                    {{ "This field is required" | translate }}
+                  </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 mb-3">
+          <div class="form-group">
+            <label class="col-form-label">
+              {{ "SerialNumber" | translate }}</label
+            >
+            <span class="text-danger">*</span>
+            <input
+              name="SerialNumber"
+              placeholder="{{ 'SerialNumber' | translate }}"
+              type="text"
+              class="form-control"
+              formControlName="SerialNumber" autocomplete="off"
+            />
+            <div class="fieldrequired" *ngIf="
+                      SerivceModalForm.controls['SerialNumber']?.hasError('required') &&
+                      SerivceModalForm.controls['SerialNumber'].touched
+                    ">
+                    {{ "This field is required" | translate }}
+                  </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 mb-3">
+          <div class="form-group">
+            <label class="col-form-label">
+              {{ "ItemCode" | translate }}</label
+            >
+            <span class="text-danger">*</span>
+            <input
+              name="ItemCode"
+              placeholder="{{ 'ItemCode' | translate }}"
+              type="text"
+              class="form-control"
+              formControlName="ItemCode" autocomplete="off"
+            />
+            <div class="fieldrequired" *ngIf="
+                      SerivceModalForm.controls['ItemCode']?.hasError('required') &&
+                      SerivceModalForm.controls['ItemCode'].touched
+                    ">
+                    {{ "This field is required" | translate }}
+                  </div>
+          </div>
+        </div>
+
+
+
       </div>
     </form>
     <p class="w-fit bg-red-100 text-danger mx-auto my-3 p-1">
@@ -1181,13 +1292,13 @@
       class="flex gap-2 justify-end pt-3 border-t border-neutral-300 col-span-1 md:col-span-2 mt-2"
     >
       <button class="btn bg-base text-white" type="submit"(click)="SaveServicePriceWithDetails(modal)"   [disabled]='
-      this.SerivceModalForm.controls["ProjectType"].value ==null||
-      this.SerivceModalForm.controls["SubprojectType"].value ==null||
-      this.SerivceModalForm.controls["ServiceName"].value ==null||
-      this.SerivceModalForm.controls["ServiceNameEN"].value ==null||
-      this.SerivceModalForm.controls["ServiceType"].value ==null||
-      (this.SerivceModalForm.controls["amount"].value ==null&& this.SerivceModalForm.controls["PackageId"].value == null)||
-      this.SerivceModalForm.controls["ServiceRevenueAccount"].value ==null'>
+      this.SerivceModalForm.controls["ServiceName"].value ==null|| this.SerivceModalForm.controls["ServiceName"].value ==""||
+      this.SerivceModalForm.controls["ServiceNameEN"].value ==null|| this.SerivceModalForm.controls["ServiceNameEN"].value ==""||
+      this.SerivceModalForm.controls["AmountPur"].value ==null|| this.SerivceModalForm.controls["AmountPur"].value ==""||
+      this.SerivceModalForm.controls["amount"].value ==null|| this.SerivceModalForm.controls["amount"].value ==""||
+      this.SerivceModalForm.controls["ServiceRevenueAccount"].value ==null || 
+      this.SerivceModalForm.controls["ItemCode"].value ==null || this.SerivceModalForm.controls["ItemCode"].value ==""||
+      this.SerivceModalForm.controls["AccountIdPur"].value ==null'>
         {{ "Save" | translate }}
       </button>
       <button (click)="modal?.dismiss()" class="btn btn-secondary">

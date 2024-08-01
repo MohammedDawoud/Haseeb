@@ -63,6 +63,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { SuppliersComponent } from './components/suppliers/suppliers.component';
 import { InvoicedueComponent } from './components/invoicedue/invoicedue.component';
 import { SalesBillDraftsComponent } from './components/sales-bill-drafts/sales-bill-drafts.component';
+import { DebenturesComponent } from './components/debentures/debentures.component';
 
 
 @NgModule({
@@ -109,6 +110,7 @@ import { SalesBillDraftsComponent } from './components/sales-bill-drafts/sales-b
     SuppliersComponent,
     InvoicedueComponent,
     SalesBillDraftsComponent,
+    DebenturesComponent,
   ],
   imports: [
     CommonModule,

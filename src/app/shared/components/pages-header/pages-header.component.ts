@@ -138,7 +138,6 @@ export class PagesHeaderComponent implements OnInit {
   getqrcode() {
     this.api.GenerateCompanyQR().subscribe({
       next: (res: any) => {
-        debugger
         this.Qrcode =environment.PhotoURL+ res.result;
       }
     });

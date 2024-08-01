@@ -1027,6 +1027,12 @@ export class AccountsreportsService {
   FillServiceAccount() {
     return this.http.get<any>(this.apiEndPoint + 'Account/FillServiceAccount');
   }
+  FillServiceAccountPurchase() {
+    return this.http.get<any>(this.apiEndPoint + 'Account/FillServiceAccountPurchase');
+  }
+  FillSubAccountLoad() {
+    return this.http.get<any>(this.apiEndPoint+'Account/FillSubAccountLoad');
+  }
   FillPackagesSelect() {
     return this.http.get<any>(this.apiEndPoint + 'Packages/FillPackagesSelect');
   }

@@ -951,7 +951,7 @@
                 [ngModelOptions]="{ standalone: true }"
                 disabled
               />
-              <button
+              <button style="display: none;"
                 type="button"
                 class="btn bg-base text-white itemBtn"
                 (click)="open(AddItem, null, 'AddItem')"
@@ -1470,7 +1470,7 @@
         <!-- 1 line -->
         <div class="col-sm-6 col-md-3 col-lg-4 mb-0">
           <div class="form-group">
-            <label for="customerEn" class="text-right col-form-label block">
+            <label for="date" class="text-right col-form-label block">
               {{ "date" | translate }}
             </label>
             <input
@@ -1491,7 +1491,7 @@
 
         <div class="col-sm-6 col-md-3 col-lg-4 mb-0">
           <div class="form-group">
-            <label for="customerEn" class="text-right col-form-label block">
+            <label for="invoiceNumber" class="text-right col-form-label block">
               {{ "Bond number" | translate }}
             </label>
             <input
@@ -1510,7 +1510,7 @@
 
         <div class="col-sm-6 col-md-3 col-lg-4 mb-0">
           <div class="form-group">
-            <label for="customerEn" class="text-right col-form-label block">
+            <label for="user" class="text-right col-form-label block">
               {{ "m_Cost" | translate }}
             </label>
             <ng-select
@@ -1534,7 +1534,7 @@
 
         <div class="col-sm-6 col-md-3 col-lg-4 mb-0">
           <div class="form-group hijri-gregorianReciept">
-            <label for="customerEn" class="text-right col-form-label block">
+            <label for="hijriDate" class="text-right col-form-label block">
               {{ "Corresponding" | translate }}
             </label>
             <!-- <input placeholder="{{ 'Chose' | translate }}" name="date" type="text" class="form-control" bsDatepicker
@@ -1555,7 +1555,7 @@
 
         <div class="col-sm-6 col-md-3 col-lg-4 mb-0">
           <div class="form-group">
-            <label for="customerEn" class="text-right col-form-label block">
+            <label for="reftxt" class="text-right col-form-label block">
               {{ "referenceNumber" | translate }}
             </label>
             <input
@@ -3839,6 +3839,79 @@
   </div>
 </ng-template>
 
+<!-- servicesListModal Category -->
+<!-- <ng-template #servicesListModal let-modal>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="m-0">
+      <span class="text-2xl">{{ "servicesList" | translate }}</span>
+    </h4>
+    <button
+      type="button"
+      class="text-2xl text-white m-0"
+      (click)="modal.dismiss()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body" style="overflow-y: scroll; max-height: 600px">
+    <mat-form-field class="w-full">
+      <mat-label>{{ "search" | translate }}</mat-label>
+      <input matInput (keyup)="applyFilterServiceList($event)" #input />
+    </mat-form-field>
+
+    <div class="table">
+      <table
+        mat-table
+        [dataSource]="serviceListDataSource"
+        class="mat-elevation-z8 table table-responsive table-striped table-bordered text-center"
+        style="vertical-align: middle; font-size: 14px"
+      >
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ "ServiceName" | translate }}
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ lang == "ar" ? element.nAmeAr : element.nAmeEn }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="price">
+          <th mat-header-cell *matHeaderCellDef>{{ "price" | translate }}</th>
+          <td mat-cell *matCellDef="let element">{{ element.price }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="servicesListdisplayedColumns"></tr>
+        <tr
+          mat-row
+          *matRowDef="
+            let row;
+            let i = index;
+            columns: servicesListdisplayedColumns
+          "
+          (dblclick)="setServiceRowValue(row); modal.dismiss()"
+        ></tr>
+
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="4">
+            {{ "noResult" | translate }} "{{ input.value }}"
+          </td>
+        </tr>
+      </table>
+      <mat-paginator #paginatorServices [pageSizeOptions]="[10, 25]">
+      </mat-paginator>
+    </div>
+
+    <div class="text-end mt-2">
+      <button (click)="modal?.dismiss()" class="btn btn-secondary">
+        {{ "Back" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template> -->
+
 <!-- servicesListModal -->
 <ng-template #servicesListModal let-modal>
   <div
@@ -3869,20 +3942,16 @@
         class="mat-elevation-z8 table table-responsive table-striped table-bordered text-center"
         style="vertical-align: middle; font-size: 14px"
       >
-        <!-- Name Column -->
         <ng-container matColumnDef="name">
           <th mat-header-cell *matHeaderCellDef>
             {{ "ServiceName" | translate }}
           </th>
-          <td mat-cell *matCellDef="let element">
-            {{ lang == "ar" ? element.nAmeAr : element.nAmeEn }}
-          </td>
+          <td mat-cell *matCellDef="let element">{{ element.servicesName }}</td>
         </ng-container>
 
-        <!-- price Column -->
         <ng-container matColumnDef="price">
           <th mat-header-cell *matHeaderCellDef>{{ "price" | translate }}</th>
-          <td mat-cell *matCellDef="let element">{{ element.price }}</td>
+          <td mat-cell *matCellDef="let element">{{ element.amount }}</td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="servicesListdisplayedColumns"></tr>
@@ -3896,7 +3965,6 @@
           (dblclick)="setServiceRowValue(row); modal.dismiss()"
         ></tr>
 
-        <!-- Row shown when there is no matching data. -->
         <tr class="mat-row" *matNoDataRow>
           <td class="mat-cell" colspan="4">
             {{ "noResult" | translate }} "{{ input.value }}"

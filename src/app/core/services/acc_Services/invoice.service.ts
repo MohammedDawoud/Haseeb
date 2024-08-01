@@ -258,5 +258,7 @@ export class InvoiceService {
   SendWInvoice(model : any){
     return this.http.post<any>(`${this.apiEndPoint}Voucher/SendWInvoice`, model);
   }
-
+  DeleteVoucher(invId:any) {
+    return this.http.post<any>(this.apiEndPoint + 'Voucher/DeleteVoucher?VoucherId='+invId,null);
+  }
 }

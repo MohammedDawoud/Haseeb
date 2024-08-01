@@ -5525,7 +5525,8 @@ export class TrackProjectsComponent implements OnInit {
     var remainder =
       +parseFloat(this.modalInvoice.TotalVoucherValueLbl).toFixed(2) -
       +parseFloat(this.modalInvoice.PaidValue).toFixed(2);
-    this.modalInvoice.remainder = remainder;
+      var Accremainder = parseFloat(remainder.toString()).toFixed(2);
+      this.modalInvoice.remainder = Accremainder;
   }
 
   offerpriceChange() {

@@ -498,6 +498,7 @@ export class OffersPriceComponent implements OnInit {
       this.SubprojecttypeList = [];
       this.intialModelBranchOrganization();
       this.FillServiceAccount();
+      this.FillServiceAccountPurchase();
       this.FillCostCenterSelect_Service();
       this.FillProjectTypeSelectService();
       this.FillPackagesSelect();
@@ -2734,7 +2735,8 @@ export class OffersPriceComponent implements OnInit {
     var remainder =
       +parseFloat(this.modalInvoice.TotalVoucherValueLbl).toFixed(2) -
       +parseFloat(this.modalInvoice.PaidValue).toFixed(2);
-    this.modalInvoice.remainder = remainder;
+      var Accremainder = parseFloat(remainder.toString()).toFixed(2);
+      this.modalInvoice.remainder = Accremainder;
   }
 
   offerpriceChange() {
@@ -4615,6 +4617,7 @@ export class OffersPriceComponent implements OnInit {
 
   CostCenterSelectlist: any = [];
   ServiceAccountlist: any = [];
+  ServiceAccountPurlist: any = [];
   FillCostCenterSelect_Service() {
     this._accountsreportsService.FillCostCenterSelect().subscribe((data) => {
       this.CostCenterSelectlist = data;
@@ -4623,6 +4626,11 @@ export class OffersPriceComponent implements OnInit {
   FillServiceAccount() {
     this._accountsreportsService.FillServiceAccount().subscribe((data) => {
       this.ServiceAccountlist = data;
+    });
+  }
+  FillServiceAccountPurchase() {
+    this._accountsreportsService.FillSubAccountLoad().subscribe(data => {
+      this.ServiceAccountPurlist = data.result;
     });
   }
   packageList: any = [];
@@ -4668,6 +4676,13 @@ export class OffersPriceComponent implements OnInit {
       ServiceRevenueAccount: [null, [Validators.required]],
       nameAccount: [null, [Validators.required]],
       PackageId: [null, [Validators.required]],
+
+      AmountPur: [null, [Validators.required]],
+      AccountIdPur: [null, [Validators.required]],
+      Begbalance: [null],
+      SerialNumber: [null],
+      ItemCode: [null, [Validators.required]],
+
     });
   }
 
@@ -4692,19 +4707,24 @@ export class OffersPriceComponent implements OnInit {
 
     const params = {
       services_price: {
-        AccountId:
-          this.SerivceModalForm.controls['ServiceRevenueAccount'].value,
+        AccountId: this.SerivceModalForm.controls["ServiceRevenueAccount"].value,
         accountName: 'ايرادات',
-        Amount: Number(this.SerivceModalForm.controls['amount'].value),
-        CostCenterId: this.SerivceModalForm.controls['costCenter'].value,
-        PackageId: this.SerivceModalForm.controls['PackageId'].value,
-        ProjectId: this.SerivceModalForm.controls['ProjectType'].value,
-        ProjectSubTypeID:
-          this.SerivceModalForm.controls['SubprojectType'].value,
-        ServiceName_EN: this.SerivceModalForm.controls['ServiceNameEN'].value,
-        ServiceType: this.SerivceModalForm.controls['ServiceType'].value,
-        ServicesId: this.SerivceModalForm.controls['id'].value,
-        servicesName: this.SerivceModalForm.controls['ServiceName'].value,
+        Amount: Number(this.SerivceModalForm.controls["amount"].value),
+        // CostCenterId: this.SerivceModalForm.controls["costCenter"].value,
+        // PackageId: this.SerivceModalForm.controls["PackageId"].value,
+        // ProjectId: this.SerivceModalForm.controls["ProjectType"].value,
+        // ProjectSubTypeID: this.SerivceModalForm.controls["SubprojectType"].value,
+        ServiceName_EN: this.SerivceModalForm.controls["ServiceNameEN"].value,
+        // ServiceType: this.SerivceModalForm.controls["ServiceType"].value,
+        ServicesId: this.SerivceModalForm.controls["id"].value,
+        servicesName: this.SerivceModalForm.controls["ServiceName"].value,
+
+        amountPur: this.SerivceModalForm.controls["AmountPur"].value,
+        accountIdPur: this.SerivceModalForm.controls["AccountIdPur"].value,
+        begbalance: this.SerivceModalForm.controls["Begbalance"].value,
+        serialNumber: this.SerivceModalForm.controls["SerialNumber"].value,
+        itemCode: this.SerivceModalForm.controls["ItemCode"].value,
+
       },
       details: this.details,
     };

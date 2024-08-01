@@ -3,103 +3,106 @@
 
   <!-- inputs -->
   <div class="container-fluid">
-    <div
-      class="grid gap-2 xl:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 lg:grid-cols-4 align-items-center"
-    >
-      <div class="mb-0 mb-md-3">
-        <div class="form-group">
-          <label class="col-form-label"> {{ "accountName" | translate }}</label>
-          <ng-select
-            class="w-full p-0"
-            placeholder="{{ 'Chose' | translate }}"
-            [(ngModel)]="data.filter.search_accountId"
-            name="accountName" (change)="changeAccount()"
-          >
-            <ng-option *ngFor="let user of load_accountIds" [value]="user.id">{{
-              user.name
-            }}</ng-option>
-          </ng-select>
-        </div>
-      </div>
 
-      <div class="mb-0 mb-md-3">
-        <div class="form-group">
-          <label class="col-form-label">
-            {{ "withCostCenter" | translate }}</label
-          >
-          <ng-select
-            class="w-full p-0"
-            placeholder="{{ 'Chose' | translate }}"
-            [(ngModel)]="data.filter.search_costCenterId"
-            name="withCostCenter" (change)="changeAccount()"
-          >
-            <ng-option
-              *ngFor="let user of load_costCenters"
-              [value]="user.id"
-              >{{ user.name }}</ng-option
-            >
-          </ng-select>
-        </div>
-      </div>
+    <div class="head flex gap-2 flex-wrap items-end justify-between">
+      <div class="btns mb-3 w-100">
+        <div class="row flex flex-wrap w-100">
 
-      <div class="mb-3">
-        <div class="flex justify-content-center gap-3">
-          <button
-            class="btn btn-primary"
-            (click)="(data.filter.enable =! data.filter.enable);ResetSearchTime()"
-            [translate]="'name'"
-            [translateParams]="{
-              ar: 'فلترة بالوقت',
-              en: 'Time Filter'
-            }"
-          ></button>
-          <div class="form-group timeInput" *ngIf="data.filter.enable">
-            <input
-              placeholder="{{ 'Chose Date' | translate }}"
-              [(ngModel)]="data.filter.date"
-              type="text"
-              (ngModelChange)="CheckDate($event)"
-              class="form-control"
-              bsDaterangepicker
-              #dpr="bsDaterangepicker"
-            />
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="col-form-label"> {{ "accountName" | translate }}</label>
+              <ng-select
+                class="w-full p-0"
+                placeholder="{{ 'Chose' | translate }}"
+                [(ngModel)]="data.filter.search_accountId"
+                name="accountName" (change)="changeAccount()"
+              >
+                <ng-option *ngFor="let user of load_accountIds" [value]="user.id">{{
+                  user.name
+                }}</ng-option>
+              </ng-select>
+            </div>
           </div>
-        </div>
-      </div>
-
-      <div class="mb-3">
-        <div class="form-check form-switch position-relative mt-5 mb-2">
-          <input
-            class="form-check-input position-absolute end-25"
-            type="checkbox"
-            role="switch"
-            [checked]="showTable"
-            id="flexSwitchCheckDefault"
-            (change)="showTable = !showTable;changeAccount()"
-          />
-          <label
-            class="form-check-label me-5"
-            for="flexSwitchCheckDefault"
-            style="width: max-content"
-          >
-            {{ "DoNotShowZeroAccounts" | translate }}
-          </label>
-        </div>
-      </div>
-
-      <div class="mb-3">
-              <div class="form-group">
-          <label class="col-form-label"> {{ "search" | translate }}</label>
-
-          <input type="text " class="w-full p-2 inputType"autocomplete="off" name="search" (keyup)="applyFilter($event)"#input/>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label class="col-form-label">
+                {{ "withCostCenter" | translate }}</label
+              >
+              <ng-select
+                class="w-full p-0"
+                placeholder="{{ 'Chose' | translate }}"
+                [(ngModel)]="data.filter.search_costCenterId"
+                name="withCostCenter" (change)="changeAccount()"
+              >
+                <ng-option
+                  *ngFor="let user of load_costCenters"
+                  [value]="user.id"
+                  >{{ user.name }}</ng-option
+                >
+              </ng-select>
+            </div>
+          </div>
+    
+          <div style="margin-top: 2%;" class="col-md-3">
+            <div class="flex justify-content-center gap-3">
+              <button
+                class="btn btn-primary"
+                (click)="(data.filter.enable =! data.filter.enable);ResetSearchTime()"
+                [translate]="'name'"
+                [translateParams]="{
+                  ar: 'فلترة بالوقت',
+                  en: 'Time Filter'
+                }"
+              ></button>
+              <div class="form-group timeInput" *ngIf="data.filter.enable">
+                <input
+                  placeholder="{{ 'Chose Date' | translate }}"
+                  [(ngModel)]="data.filter.date"
+                  type="text"
+                  (ngModelChange)="CheckDate($event)"
+                  class="form-control"
+                  bsDaterangepicker
+                  #dpr="bsDaterangepicker"
+                />
+              </div>
+            </div>
+          </div>
+    
+          <div  class="col-md-2">
+            <div class="form-check form-switch position-relative mt-5 mb-2">
+              <input
+                class="form-check-input position-absolute end-25"
+                type="checkbox"
+                role="switch"
+                [checked]="showTable"
+                id="flexSwitchCheckDefault"
+                (change)="showTable = !showTable;changeAccount()"
+              />
+              <label
+                class="form-check-label me-5"
+                for="flexSwitchCheckDefault"
+                style="width: max-content"
+              >
+                {{ "DoNotShowZeroAccounts" | translate }}
+              </label>
+            </div>
+          </div>
+    
         </div>
       </div>
     </div>
 
     <div class="head flex gap-2 flex-wrap items-end justify-between">
       <!-- all buttons  -->
+
       <div class="btns w-100">
         <div class="row d-md-flex justify-content-center">
+          <div class="col-md-2">
+            <div class="form-group">
+            <input type="text " placeholder="بحث" class="w-full p-2 inputType"autocomplete="off" name="search" (keyup)="applyFilter($event)"#input/>
+          </div>
+          </div>
+
           <button
             type="button"(click)="getPrintdata('report')"
             class="flex gap-1 btn btn-outline-secondary col-md-2"

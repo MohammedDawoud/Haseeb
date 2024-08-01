@@ -42,6 +42,7 @@ import { FollowUpOnCustomerRevenueComponent } from './components/follow-up-on-cu
 import { SuppliersComponent } from './components/suppliers/suppliers.component';
 import { InvoicedueComponent } from './components/invoicedue/invoicedue.component';
 import { SalesBillDraftsComponent } from './components/sales-bill-drafts/sales-bill-drafts.component';
+import { DebenturesComponent } from './components/debentures/debentures.component';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'Sales_bill' },
@@ -89,8 +90,7 @@ const routes: Routes = [
   { path: 'Service_prices', component: ServicePricesComponent },
   { path: 'Closed', component: ClosedComponent },
   { path: 'Suppliers', component: SuppliersComponent },
-
-
+  { path: 'Debentures', component: DebenturesComponent },
 ];
 
 @NgModule({

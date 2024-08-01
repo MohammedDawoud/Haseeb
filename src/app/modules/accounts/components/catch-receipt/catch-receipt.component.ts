@@ -1946,12 +1946,14 @@ export class CatchReceiptComponent implements OnInit {
     this.receiptService.VousherRe_Sum(invId).subscribe((result: any) => {
       if (result.statusCode == 200) {
         debugger;
-        var AccValue = 0;
+        var AccValue:any = 0;
         if (Value > parseFloat(result.reasonPhrase)) {
           AccValue = Value - parseFloat(result.reasonPhrase);
         } else {
           AccValue = 0;
         }
+        AccValue=parseFloat(AccValue.toString()).toFixed(2);
+
         this.RemainingInvoiceValue = AccValue;
         this.ConvertNumToString_Catch(AccValue);
         this.ReceiptVoucherForm.controls['AmountOf'].setValue(AccValue);

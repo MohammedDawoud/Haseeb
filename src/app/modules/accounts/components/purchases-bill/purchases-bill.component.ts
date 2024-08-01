@@ -603,7 +603,8 @@ export class PurchasesBillComponent implements OnInit {
       this.FilltAllCategoryType();
       this.GetAllCategoryType();
       this.FillSubAccountLoad();
-      this.GetAllCategory();
+      //this.GetAllCategory();
+      this.GetAllServicesPrice();
       this.nAmeAr = null;
       this.nAmeEn = null;
       this.AccountId = null;
@@ -664,7 +665,8 @@ export class PurchasesBillComponent implements OnInit {
     }
 
     if (type == 'servicesList') {
-      this.GetAllCategory();
+      //this.GetAllCategory();
+      this.GetAllServicesPrice();
     }
     if (type == 'accountingentry') {
       this.GetAllJournalsByInvIDPurchase(data.invoiceId);
@@ -1327,7 +1329,8 @@ export class PurchasesBillComponent implements OnInit {
     var remainder =
       +parseFloat(this.modalInvoice.TotalVoucherValueLbl).toFixed(2) -
       +parseFloat(this.modalInvoice.PaidValue).toFixed(2);
-    this.modalInvoice.remainder = remainder;
+      var Accremainder = parseFloat(remainder.toString()).toFixed(2);
+      this.modalInvoice.remainder = Accremainder;
   }
 
   taxtypeChange() {
@@ -1344,6 +1347,15 @@ export class PurchasesBillComponent implements OnInit {
   serviceListDataSourceTemp: any = [];
   GetAllCategory() {
     this.purchasesBillService.GetAllCategory().subscribe((data) => {
+      this.serviceListDataSource = new MatTableDataSource(data.result);
+      this.serviceListDataSource.paginator = this.paginatorServices;
+
+      this.servicesList = data.result;
+      this.serviceListDataSourceTemp = data.result;
+    });
+  }
+  GetAllServicesPrice() {
+    this._invoiceService.GetAllServicesPrice().subscribe((data) => {
       this.serviceListDataSource = new MatTableDataSource(data.result);
       this.serviceListDataSource.paginator = this.paginatorServices;
 
@@ -1407,23 +1419,63 @@ export class PurchasesBillComponent implements OnInit {
     this.CalculateTotal(1);
   }
 
+  // setServiceRowValue(element: any) {
+  //   this.InvoiceDetailsRows.filter(
+  //     (a: { idRow: any }) => a.idRow == this.selectedServiceRow
+  //   )[0].AccJournalid = element.categoryId;
+  //   this.InvoiceDetailsRows.filter(
+  //     (a: { idRow: any }) => a.idRow == this.selectedServiceRow
+  //   )[0].UnitConst = element.categorTypeName;
+  //   this.InvoiceDetailsRows.filter(
+  //     (a: { idRow: any }) => a.idRow == this.selectedServiceRow
+  //   )[0].QtyConst = 1;
+  //   this.InvoiceDetailsRows.filter(
+  //     (a: { idRow: any }) => a.idRow == this.selectedServiceRow
+  //   )[0].accountJournaltxt =
+  //     this.lang == 'ar' ? element.nAmeAr : element.nAmeEn;
+  //   this.InvoiceDetailsRows.filter(
+  //     (a: { idRow: any }) => a.idRow == this.selectedServiceRow
+  //   )[0].Amounttxt = element.price;
+  //   this.CalculateTotal2(1);
+  //   this.addInvoiceRow();
+  // }
+
+  // setServiceRowValueNew(indexRow: any, item: any, Qty: any, servamount: any) {
+  //   this.addInvoiceRow();
+  //   this.InvoiceDetailsRows.filter(
+  //     (a: { idRow: any }) => a.idRow == indexRow
+  //   )[0].AccJournalid = item.categoryId;
+  //   this.InvoiceDetailsRows.filter(
+  //     (a: { idRow: any }) => a.idRow == indexRow
+  //   )[0].UnitConst = item.categorTypeName;
+  //   this.InvoiceDetailsRows.filter(
+  //     (a: { idRow: any }) => a.idRow == indexRow
+  //   )[0].QtyConst = Qty;
+  //   this.InvoiceDetailsRows.filter(
+  //     (a: { idRow: any }) => a.idRow == indexRow
+  //   )[0].accountJournaltxt = item.name;
+  //   this.InvoiceDetailsRows.filter(
+  //     (a: { idRow: any }) => a.idRow == indexRow
+  //   )[0].Amounttxt = servamount;
+  //   this.CalculateTotal(1);
+  // }
+
   setServiceRowValue(element: any) {
     this.InvoiceDetailsRows.filter(
       (a: { idRow: any }) => a.idRow == this.selectedServiceRow
-    )[0].AccJournalid = element.categoryId;
+    )[0].AccJournalid = element.servicesId;
     this.InvoiceDetailsRows.filter(
       (a: { idRow: any }) => a.idRow == this.selectedServiceRow
-    )[0].UnitConst = element.categorTypeName;
+    )[0].UnitConst = element.serviceTypeName;
     this.InvoiceDetailsRows.filter(
       (a: { idRow: any }) => a.idRow == this.selectedServiceRow
     )[0].QtyConst = 1;
     this.InvoiceDetailsRows.filter(
       (a: { idRow: any }) => a.idRow == this.selectedServiceRow
-    )[0].accountJournaltxt =
-      this.lang == 'ar' ? element.nAmeAr : element.nAmeEn;
+    )[0].accountJournaltxt = element.servicesName;
     this.InvoiceDetailsRows.filter(
       (a: { idRow: any }) => a.idRow == this.selectedServiceRow
-    )[0].Amounttxt = element.price;
+    )[0].Amounttxt = element.amount;
     this.CalculateTotal2(1);
     this.addInvoiceRow();
   }
@@ -1432,10 +1484,10 @@ export class PurchasesBillComponent implements OnInit {
     this.addInvoiceRow();
     this.InvoiceDetailsRows.filter(
       (a: { idRow: any }) => a.idRow == indexRow
-    )[0].AccJournalid = item.categoryId;
+    )[0].AccJournalid = item.servicesId;
     this.InvoiceDetailsRows.filter(
       (a: { idRow: any }) => a.idRow == indexRow
-    )[0].UnitConst = item.categorTypeName;
+    )[0].UnitConst = item.serviceTypeName;
     this.InvoiceDetailsRows.filter(
       (a: { idRow: any }) => a.idRow == indexRow
     )[0].QtyConst = Qty;
@@ -1447,6 +1499,7 @@ export class PurchasesBillComponent implements OnInit {
     )[0].Amounttxt = servamount;
     this.CalculateTotal(1);
   }
+
 
   FillCustAccountsSelect2_Save(PayType: any, modal: any) {
     if (PayType) {
@@ -1637,12 +1690,12 @@ export class PurchasesBillComponent implements OnInit {
       debugger;
       var VoucherDetailsObj: any = {};
       VoucherDetailsObj.LineNumber = index + 1;
-      VoucherDetailsObj.CategoryId = element.AccJournalid;
-      VoucherDetailsObj.AccountId =
-        this.modalInvoice.WhichClick == 3
-          ? this.modalInvoice.ToAccountId
-          : this.modalInvoice.TempBox;
-      //VoucherDetailsObj.AccountId = this.modalInvoice.TempBox;
+      // VoucherDetailsObj.CategoryId = element.AccJournalid;
+      
+      VoucherDetailsObj.ServicesPriceId = element.AccJournalid;
+
+      // VoucherDetailsObj.AccountId =this.modalInvoice.WhichClick == 3? this.modalInvoice.ToAccountId: this.modalInvoice.TempBox;
+      VoucherDetailsObj.AccountId = this.modalInvoice.TempBox;
       VoucherDetailsObj.Amount = element.Amounttxt;
       VoucherDetailsObj.Qty = element.QtyConst;
       VoucherDetailsObj.TaxType = this.modalInvoice.taxtype;
@@ -1946,15 +1999,18 @@ export class PurchasesBillComponent implements OnInit {
       } else {
         maxVal = 0;
       }
-
+      debugger
       this.InvoiceDetailsRows?.push({
         idRow: maxVal + 1,
-        AccJournalid: item.categoryId,
-        UnitConst: item.categoryTypeName,
+        // AccJournalid: item.categoryId,
+        AccJournalid: item.servicesPriceId,
+        // UnitConst: item.categoryTypeName,
+        UnitConst: item.serviceTypeName,
         QtyConst: item.qty,
         DiscountValueConst: item.discountValue_Det,
         DiscountPercentageConst: item.discountPercentage_Det,
-        accountJournaltxt: item.categoryName,
+        // accountJournaltxt: item.categoryName,
+        accountJournaltxt: item.servicesPriceName,
         AmountBeforeTaxtxt: AmountVal,
         Amounttxt: AmountVal,
         taxAmounttxt: item.taxAmount,
@@ -2145,12 +2201,15 @@ export class PurchasesBillComponent implements OnInit {
 
           this.InvoiceDetailsRows?.push({
             idRow: maxVal + 1,
-            AccJournalid: item.categoryId,
-            UnitConst: item.categoryTypeName,
+            // AccJournalid: item.categoryId,
+            AccJournalid: item.servicesPriceId,
+            // UnitConst: item.categoryTypeName,
+            UnitConst: item.serviceTypeName,
             QtyConst: item.qty,
             DiscountValueConst: item.discountValue_Det,
             DiscountPercentageConst: item.discountPercentage_Det,
-            accountJournaltxt: item.categoryName,
+            // accountJournaltxt: item.categoryName,
+            accountJournaltxt: item.servicesPriceName,
             AmountBeforeTaxtxt: AmountVal,
             Amounttxt: AmountVal,
             taxAmounttxt: item.taxAmount,
@@ -4218,12 +4277,14 @@ export class PurchasesBillComponent implements OnInit {
     this.receiptService.PayVousher_Sum(invId).subscribe((result: any) => {
       if (result.statusCode == 200) {
         debugger;
-        var AccValue = 0;
+        var AccValue:any = 0;
         if (Value > parseFloat(result.reasonPhrase)) {
           AccValue = Value - parseFloat(result.reasonPhrase);
         } else {
           AccValue = 0;
         }
+        AccValue=parseFloat(AccValue.toString()).toFixed(2);
+
         this.ConvertNumToString_Offer((AccValue = AccValue));
         this.vouchermodel.invoiceValue = AccValue;
         // this.ReceiptVoucherForm.controls['AmountOf'].setValue(AccValue);
