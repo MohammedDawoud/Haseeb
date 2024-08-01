@@ -72,13 +72,13 @@
 
       <!-- all buttons  -->
       <div class="row flex flex-wrap">
-        <button
+        <!-- <button
           type="button"
           class="flex gap-1 btn bg-base text-white mb-3 col-md-2"
           (click)="open(contractChoseModal, null, 'contracts')"
         >
           {{ "ContractsSaudi" | translate }}
-        </button>
+        </button> -->
 
         <button
           type="button"
@@ -115,13 +115,13 @@
         type="button" class="btn btn-secondary mb-3 col-md-2">
           {{ "Print" | translate }}
         </button>
-        <button
+        <!-- <button
           type="button"
           class="btn bg-base text-white mb-3 col-md-2"
           (click)="open(draftFormsModal,null,'draftFormsModal')"
         >
           {{ "draftForms" | translate }}
-        </button>
+        </button> -->
       </div>
     </div>
 
@@ -280,11 +280,11 @@
                       class="AddNewTaskbtn btn btn-outline-warning btn-sm waves-effect"
                       data-toggle="tooltip"
                       data-placement="top"
-                      title=" مسودات العقد  "
-                      data-original-title="مسودات العقد  "
-                      (click)="EditDarftsOpen2(element);"
+                      title=" تحمل مسودة العقد "
+                      data-original-title=" تحميل المسودة "
+                      (click)="DownloadDraft(element);"
                     >
-                      <i class="fa-solid fa-file-contract"></i>
+                      <i class="fa-solid fa-download"></i>
                     </button>
                     <!-- رفع العقد المختوم -->
                     <button
@@ -485,12 +485,12 @@
           </div>
         </div>
 
-        <div class="col-xxl-6 col-md-5 mb-0 mb-md-3">
+        <!-- <div class="col-xxl-6 col-md-5 mb-0 mb-md-3">
           <div class="form-group">
             <label class="col-form-label">
               {{ "Project Type" | translate }}</label
             >
-            <!-- <ng-select
+            <ng-select
               class="w-full p-0"
               placeholder="{{ 'Chose' | translate }}"
               ngModel
@@ -501,9 +501,9 @@
               <ng-option *ngFor="let item of ProjectTypeList_Template" [value]="item.id">{{
                 item.name
               }}</ng-option>
-            </ng-select> -->
+            </ng-select>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
 

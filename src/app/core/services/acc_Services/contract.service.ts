@@ -38,6 +38,10 @@ export class ContractService {
   Connect_appendFile_Draft(ProjectId:any,uploadedFile:any){
     return this.http.post(this.apiEndPoint+'Draft/Connect_appendFile_Draft', {}, { params:{ProjectId:ProjectId,uploadedFile:uploadedFile}});
   }
+
+    DownloadFile_Draft(ContractId:any){
+    return this.http.post(this.apiEndPoint+'Contract/DownloadFile_Draft', {}, { params:{ContractId:ContractId}});
+  }
   SaveProjectContract(formData:any){
     return this.http.post<any>(this.apiEndPoint+'Contract/SaveProjectContract' ,formData );
   }
@@ -111,13 +115,13 @@ export class ContractService {
 
 
   FillCustomerSelectWProC() {
-    return this.http.get<any>(this.apiEndPoint + 'Project/FillCustomerSelectWProC');
+    return this.http.get<any>(this.apiEndPoint + 'Customer/FillCustomerSelect');
   }
   FillCustomerSelectWProC3() {
-    return this.http.get<any>(this.apiEndPoint + 'Project/FillCustomerSelectWProC3');
+    return this.http.get<any>(this.apiEndPoint + 'Customer/FillCustomerSelect');
   }
   FillCustomerSelectWProC2() {
-    return this.http.get<any>(this.apiEndPoint + 'Project/FillCustomerSelectWProC2');
+    return this.http.get<any>(this.apiEndPoint + 'Customer/FillCustomerSelect');
   }
   FillEmployeeSelect() {
     return this.http.get<any>(this.apiEndPoint + 'Employee/FillEmployeeSelect');

@@ -145,7 +145,7 @@ export class FollowUpOnCreditAndDebitNotesComponent implements OnInit{
 
     this.RefreshData();
     this.FillCustomerSelect();
-    this.FillProjectSelect();
+    // this.FillProjectSelect();
     this.FillSupplierSelect();
 
     this.api.GetOrganizationDataLogin().subscribe((data: any) => {

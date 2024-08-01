@@ -936,19 +936,19 @@ export class VerticalSidebarComponent implements OnInit {
                     : '/assets/sidebar-icons/Group 40280.png',
                 show: this.userG?.userPrivileges.includes(13180803),
               },
-              {
-                name: {
-                  ar: 'ايرادات مدراء المشاريع',
-                  en: 'Project managers revenue',
-                },
-                link: '/accounts/Project_managers_revenue',
-                type: 'single',
-                icon:
-                  this.lang == 'ar'
-                    ? '/assets/sidebar-icons/Group 40278.png'
-                    : '/assets/sidebar-icons/Group 40280.png',
-                show: this.userG?.userPrivileges.includes(13180804),
-              },
+              // {
+              //   name: {
+              //     ar: 'ايرادات مدراء المشاريع',
+              //     en: 'Project managers revenue',
+              //   },
+              //   link: '/accounts/Project_managers_revenue',
+              //   type: 'single',
+              //   icon:
+              //     this.lang == 'ar'
+              //       ? '/assets/sidebar-icons/Group 40278.png'
+              //       : '/assets/sidebar-icons/Group 40280.png',
+              //   show: this.userG?.userPrivileges.includes(13180804),
+              // },
               {
                 name: {
                   ar: 'متابعة إيرادات العملاء',

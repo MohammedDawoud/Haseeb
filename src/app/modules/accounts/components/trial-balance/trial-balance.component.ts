@@ -496,7 +496,6 @@ export class TrialBalanceComponent implements OnInit {
   filteringTypeList: any = [
     { id: 2, name: 'العملاء' },
     { id: 3, name: 'الموردين' },
-    { id: 1, name: 'المشاريع' },
     { id: 5, name: 'الموظفين' },
     { id: 4, name: 'الفروع' },
     { id: 6, name: 'الخدمات' },

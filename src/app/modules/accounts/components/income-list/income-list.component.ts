@@ -423,7 +423,6 @@ export class IncomeListComponent implements OnInit {
   filteringTypeList: any = [
     { id: 12, name: 'العملاء' },
     { id: 13, name: 'الموردين' },
-    { id: 11, name: 'المشاريع' },
     { id: 15, name: 'الموظفين' },
     { id: 14, name: 'الفروع' },
     { id: 16, name: 'الخدمات' },

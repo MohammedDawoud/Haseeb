@@ -1974,6 +1974,27 @@ GetInvoicePrint(obj:any,TempCheck:any){
     });
   }
 
+  DownloadDraft(data:any){
+    debugger
+    this._contractService.DownloadFile_Draft(data.contractId).subscribe((result: any)=>{
+      if(result.statusCode==200){
+          try
+          {
+            debugger
+            var link=environment.PhotoURL+result.returnedStr;
+            window.open(link, '_blank');
+          }
+          catch (error)
+          {
+            this.toast.error("تأكد من الملف", this.translate.instant("Message"));return;
+          }
+          this.toast.success(this.translate.instant(result.reasonPhrase),this.translate.instant("Message"));
+
+      }
+      else{this.toast.error(this.translate.instant(result.reasonPhrase),this.translate.instant("Message"))};
+    });
+  }
+
   draftModals()
   {
     this.resetDrafts_Template();

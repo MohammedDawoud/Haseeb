@@ -11,7 +11,7 @@
           placeholder="{{ 'Chose' | translate }}"
           [(ngModel)]="data.filter.search_CustomerName"
           name="Client"
-          (change)="FillProjectSelect();RefreshData();"
+          (change)="RefreshData();"
         >
           <ng-option *ngFor="let user of load_customers" [value]="user.id">{{
             user.name
@@ -19,7 +19,7 @@
         </ng-select>
       </div>
 
-      <div class="form-group" *ngIf="data.filter.TypeTab==2">
+      <!-- <div class="form-group" *ngIf="data.filter.TypeTab==2">
         <label class="col-form-label">
           {{ "Project Number" | translate }}</label
         >
@@ -34,7 +34,7 @@
             user.name
           }}</ng-option>
         </ng-select>
-      </div>
+      </div> -->
 
       <div class="form-group" *ngIf="data.filter.TypeTab==1">
         <label class="col-form-label">
