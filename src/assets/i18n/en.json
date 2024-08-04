@@ -211,6 +211,9 @@
   "buildingType": "building Type",
   "Storehouses": "Storehouses",
   "Storehouse": "Storehouse",
+  "FromStorehouse": "From Storehouse",
+  "ToStorehouse": "To Storehouse",
+
   "offerPriceNo": "offer Price Number",
   "offerPriceNoProject": "Is the project related to a previous offerPriceNo?",
   "Powers": "Powers",
@@ -542,6 +545,8 @@
   "ResourceName_en": " Supplier Name EN  ",
   "UnderDaily": "Under Daily",
   "InventoryDebenture": "Inventory Debenture",
+  "TransferDebenture": "Transfer Debenture",
+
   "DebtShowFirst": "Debt show first",
   "CreditOfferFirst": "Credit offer first",
   "credit_debit": "credit/debit",
