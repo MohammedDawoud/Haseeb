@@ -20,6 +20,13 @@ export class DebentureService {
     var url = `${environment.apiEndPoint}Debentures/GetAllDebentures?&Type=${Type}`;
     return this.http.get<any>(url);
   }
+  // GetAllquantities(ServiceId: any) {
+  //   var url = `${environment.apiEndPoint}Voucher/GetAllquantities?&ServiceId=${ServiceId}`;
+  //   return this.http.get<any>(url);
+  // }
+  GetAllquantities(formData:any){
+    return this.http.post<any>(this.apiEndPoint+'Account/GetAllQuantities' ,formData );
+  }
   SaveDebenture(formData:any){
     return this.http.post<any>(this.apiEndPoint+'Debentures/SaveDebenture' ,formData );
   }
@@ -37,6 +44,7 @@ export class DebentureService {
   SaveStorehouse(formData:any){
     return this.http.post<any>(this.apiEndPoint+'Storehouse/SaveStorehouse' ,formData );
   }
+  
   DeleteStorehouse(StorehouseId:any){
     return this.http.post(this.apiEndPoint+'Storehouse/DeleteStorehouse', {}, { params:{StorehouseId:StorehouseId}});
   }

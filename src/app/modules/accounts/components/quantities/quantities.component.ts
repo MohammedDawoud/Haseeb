@@ -40,11 +40,12 @@ const HijriDate = hijriSafe.default;
 const toHijri = hijriSafe.toHijri;
 
 @Component({
-  selector: 'app-transfer-debentures',
-  templateUrl: './transfer-debentures.component.html',
-  styleUrls: ['./transfer-debentures.component.scss']
+  selector: 'app-quantities',
+  templateUrl: './quantities.component.html',
+  styleUrls: ['./quantities.component.scss']
 })
-export class TransferDebenturesComponent {
+export class QuantitiesComponent {
+
   title: any = {
     main: {
       name: {
@@ -54,8 +55,8 @@ export class TransferDebenturesComponent {
       link: '/accounts',
     },
     sub: {
-      ar: 'سند نقل',
-      en: 'Transfer Debenture',
+      ar: 'الكميات',
+      en: 'Quantities',
     },
   };
 
@@ -101,12 +102,13 @@ export class TransferDebenturesComponent {
   pathurl = environment.PhotoURL;
   projectDisplayedColumns: string[] = [
     // 'select',
-    'BondNumber',
-    'BondDate',
-    'Qty',
-    'FromStorehouseStr',
-    // 'BondAttachments',
-    'operations',
+    'itemCode',
+    'servicesName',
+    'amount',
+    'amountPur',
+    'begbalance',
+    'qtyStorehouse',
+    'qtyTotal',
   ];
 
   modalDebenture: any = {
@@ -177,14 +179,14 @@ export class TransferDebenturesComponent {
   ) {
     this.userG = this.authenticationService.userGlobalObj;
 
-    this.LoadDataDebenture();
+    this.LoadDataQuantities();
     this.currentDate = new Date();
     this.api.lang.subscribe((res) => {
       this.lang = res;
     });
   }
 
-  dataDebentureVoucher: any = {
+  dataQuantitieVoucher: any = {
     filter: {
       enable: false,
       date: null,
@@ -198,58 +200,45 @@ export class TransferDebenturesComponent {
       Desc: null,
       Type: 11,
       AllEntryVoucher: false,
+      ServiceId:null,
+      StorehouseId:null,
     },
   };
   DebentureDataSource = new MatTableDataSource();
   DebentureSourceTemp: any = [];
 
-  LoadDataDebenture() {
-    this._debentureService.GetAllDebentures(this.dataDebentureVoucher.filter.Type).subscribe((data) => {
+  LoadDataQuantities() {
+    var formData = new FormData();
+    if (this.dataQuantitieVoucher.filter.DateFrom_P != null &&this.dataQuantitieVoucher.filter.DateFrom_P != null) {
+      formData.append('FromDate', this.dataQuantitieVoucher.filter.DateFrom_P);
+      formData.append('ToDate', this.dataQuantitieVoucher.filter.DateTo_P);
+    }
+    if(!(this.dataQuantitieVoucher.filter.ServiceId==null || this.dataQuantitieVoucher.filter.ServiceId==0))
+    {
+      formData.append('ServiceId', this.dataQuantitieVoucher.filter.ServiceId);
+    }
+    if(!(this.dataQuantitieVoucher.filter.StorehouseId==null || this.dataQuantitieVoucher.filter.StorehouseId==0))
+      {
+        formData.append('StorehouseId', this.dataQuantitieVoucher.filter.StorehouseId);
+      }
+
+    this._debentureService.GetAllquantities(formData).subscribe((data) => {
       this.DebentureDataSource = new MatTableDataSource(data.result);
       this.DebentureSourceTemp = data.result;
       this.DebentureDataSource.paginator = this.paginator;
       this.DebentureDataSource.sort = this.sort;
+      console.log(data);
     });
   }
 
-  LoadDataDebentureSearch() {
-    var _voucherFilterVM = new VoucherFilterVM();
-    _voucherFilterVM.type = this.dataDebentureVoucher.filter.Type;
-    // _voucherFilterVM.voucherNo=this.dataDebentureVoucher.filter.search_Number;
-    // _voucherFilterVM.invoiceNote=this.dataDebentureVoucher.filter.invoiceNote;
-    if (
-      this.dataDebentureVoucher.filter.DateFrom_P != null &&
-      this.dataDebentureVoucher.filter.DateFrom_P != null
-    ) {
-      _voucherFilterVM.dateFrom = this.dataDebentureVoucher.filter.DateFrom_P;
-      _voucherFilterVM.dateTo = this.dataDebentureVoucher.filter.DateTo_P;
-      _voucherFilterVM.isChecked = true;
-    } else {
-      _voucherFilterVM.dateFrom = null;
-      _voucherFilterVM.dateTo = null;
-      _voucherFilterVM.isChecked = false;
-    }
-    if (this.dataDebentureVoucher.filter.StatusPost > 0)
-      _voucherFilterVM.isSearch = true;
-    else _voucherFilterVM.isSearch = this.dataDebentureVoucher.filter.isSearch;
-
-    _voucherFilterVM.isPost = this.dataDebentureVoucher.filter.StatusPost;
-    var obj = _voucherFilterVM;
-    this._debentureService.GetAllDebentures(obj).subscribe((data) => {
-      this.DebentureDataSource = new MatTableDataSource(data);
-      this.DebentureSourceTemp = data;
-      this.DebentureDataSource.paginator = this.paginator;
-      this.DebentureDataSource.sort = this.sort;
-    });
-  }
   ResetRefresh() {
     if (this.showFilters == false) {
-      this.dataDebentureVoucher.filter.DateFrom_P = null;
-      this.dataDebentureVoucher.filter.DateTo_P = null;
-      this.dataDebentureVoucher.filter.date = null;
-      this.dataDebentureVoucher.filter.StatusPost = null;
-      this.dataDebentureVoucher.filter.search_Input = null;
-      this.LoadDataDebenture();
+      this.dataQuantitieVoucher.filter.DateFrom_P = null;
+      this.dataQuantitieVoucher.filter.DateTo_P = null;
+      this.dataQuantitieVoucher.filter.date = null;
+      this.dataQuantitieVoucher.filter.StatusPost = null;
+      this.dataQuantitieVoucher.filter.search_Input = null;
+      this.LoadDataQuantities();
     }
   }
   applyFilter(event: Event) {
@@ -257,17 +246,17 @@ export class TransferDebenturesComponent {
     this.DebentureDataSource.filter = filterValue.trim().toLowerCase();
   }
   CheckDate(event: any) {
-    this.dataDebentureVoucher.filter.isSearch = true;
+    this.dataQuantitieVoucher.filter.isSearch = true;
     if (event != null) {
-      this.dataDebentureVoucher.filter.DateFrom_P =
+      this.dataQuantitieVoucher.filter.DateFrom_P =
         this._sharedService.date_TO_String(event[0]);
-      this.dataDebentureVoucher.filter.DateTo_P =
+      this.dataQuantitieVoucher.filter.DateTo_P =
         this._sharedService.date_TO_String(event[1]);
-      this.LoadDataDebenture();
+      this.LoadDataQuantities();
     } else {
-      this.dataDebentureVoucher.filter.DateFrom_P = null;
-      this.dataDebentureVoucher.filter.DateTo_P = null;
-      this.LoadDataDebenture();
+      this.dataQuantitieVoucher.filter.DateFrom_P = null;
+      this.dataQuantitieVoucher.filter.DateTo_P = null;
+      this.LoadDataQuantities();
     }
   }
   getColorStatus(element: any) {
@@ -295,72 +284,8 @@ export class TransferDebenturesComponent {
   }
 
 
-  DebentureVoucherPopup() {
-    debugger
-    this.resetDebentureData();
-    this.FillStorehouseSelect();
-    this.FillCostCenterSelect();
-    this.GenerateDebentureNumber();
-  }
-
-  EditDebentureVoucherPopup(data: any) {
-    this.resetDebentureData();
-    this.FillStorehouseSelect();
-    this.FillCostCenterSelect();
-    const DateHijri = toHijri(this._sharedService.String_TO_date(data.date));
-    var DateGre = new HijriDate(
-      DateHijri._year,
-      DateHijri._month,
-      DateHijri._date
-    );
-    DateGre._day = DateGre._date;
-
-    this.modalDebenture = {
-
-
-      DebentureId: data.debentureId,
-      DebentureNumber: data.debentureNumber,
-      Type: 11,
-      Date: this._sharedService.String_TO_date(data.date),
-      HijriDate: DateGre,
-      Notes: data.notes,
-      ServicesId: data.servicesId,
-      FromStorehouseId: data.fromStorehouseId,
-      ToStorehouseId: data.toStorehouseId,
-      Qty: data. qty,
-      QtyText: null,
-      BranchId: null,
-      YearId: null,
-      CostCenterId: null,
-      addUser: data.addUser,
-      addDate: data.addDate,
-      addedImg: data.addInvoiceImg,
-    };
-  }
-
-  GenerateDebentureNumber() {
-    this._debentureService
-      .GenerateDebentureNumber(this.modalDebenture.Type)
-      .subscribe((data) => {
-        this.modalDebenture.DebentureNumber = data.reasonPhrase;
-      });
-  }
-
   ngAfterViewInit() {}
-  confirmDebentureVoucher() {
-    this._debentureService
-      .DeleteDebenture(this.RowDebentureData.debentureId)
-      .subscribe((result: any) => {
-        if (result.statusCode == 200) {
-          this.toast.success(
-            this.translate.instant(result.reasonPhrase),this.translate.instant('Message'));
-             this.LoadDataDebenture();
-        } else {
-          this.toast.error(
-            this.translate.instant(result.reasonPhrase),this.translate.instant('Message'));
-        }
-      });
-  }
+
   InvoicesIds: any = [];
   WhichPost: number = 1;
   WhichTypeAddEditView: number = 1;
@@ -377,21 +302,6 @@ export class TransferDebenturesComponent {
     if (data) {
       this.RowDebentureData = data;
     }
-    if (type == 'DebentureVoucherModal') {
-      this.WhichTypeAddEditView = 1;
-      this.DebentureVoucherPopup();
-    } else if (type == 'EditDebentureVoucherModal') {
-      this.WhichTypeAddEditView = 2;
-      this.EditDebentureVoucherPopup(data);
-    } else if (type == 'ViewDebentureVoucherModal') {
-      this.WhichTypeAddEditView = 3;
-      this.EditDebentureVoucherPopup(data);
-    }
-
-    if (type == 'SaveEntryVoucherConfirmModal') {
-      this.EntryVoucherModelPublic = model;
-    }
-
     this.modalService
 
       .open(content, {
@@ -423,105 +333,7 @@ export class TransferDebenturesComponent {
     }
   }
 
-  ShowImg(pho: any) {
-    var img = environment.PhotoURL + pho;
-    return img;
-  }
-  //----------------------btn----------------------------
 
-  InvoicesObjs: Invoices[] = [];
-  invoice: any;
-  public _invoices: Invoices;
-
-
-  disableButtonSave_EntryVoucher = false;
-  AccountListdisplayedColumns: string[] = ['name'];
-  CostCenterListdisplayedColumns: string[] = ['name'];
-  CostCentercol: any = 'اختر';
-
-
-  CostCenterListDataSource = new MatTableDataSource();
-  CostCenterListDataSourceTemp: any;
-  CostCenterList: any;
-  @ViewChild('paginatorCostCenter') paginatorCostCenter!: MatPaginator;
-
-  applyFilterCostCenterList(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.CostCenterListDataSource.filter = filterValue.trim().toLowerCase();
-  }
-
-  //-----------------------------------------------------------------------------------
-
-  AccountListDataSource = new MatTableDataSource();
-  AccountListDataSourceTemp: any;
-  AccountList: any;
-  @ViewChild('paginatorAccount') paginatorAccount: MatPaginator;
-
-  journalDebitNmRows = 0;
-  journalCreditNmRows = 0;
-  downloadFile(data: any) {
-    try {
-      var link = environment.PhotoURL + data.fileUrl;
-      window.open(link, '_blank');
-    } catch (error) {
-      this.toast.error('تأكد من الملف', 'رسالة');
-    }
-  }
-  //-----------------------------------------------------------------------------------
-  saveEntryVoucher() {
-    if (this.modalDebenture.Date==null || this.modalDebenture.Date=='') {
-      this.toast.error('من فضلك أختر تاريخ', 'رسالة');return;
-    }
-    if (this.modalDebenture.DebentureNumber==null || this.modalDebenture.DebentureNumber=='') {
-      this.toast.error('من فضلك تأكد كم رقم السند', 'رسالة');return;
-    }
-    if (this.modalDebenture.FromStorehouseId==null || this.modalDebenture.FromStorehouseId=='' || this.modalDebenture.FromStorehouseId==0) {
-      this.toast.error('من فضلك أختر من مستودع', 'رسالة');return;
-    }
-    if (this.modalDebenture.ToStorehouseId==null || this.modalDebenture.ToStorehouseId=='' || this.modalDebenture.ToStorehouseId==0) {
-      this.toast.error('من فضلك أختر الي مستودع', 'رسالة');return;
-    }
-    if (this.modalDebenture.ServicesId==null || this.modalDebenture.ServicesId=='') {
-      this.toast.error('من فضلك أختر اسم الصنف', 'رسالة');return;
-    }
-    if (this.modalDebenture.Qty==null || this.modalDebenture.Qty=='') {
-      this.toast.error('من فضلك أدخل الكمية', 'رسالة');return;
-    }
-    if (this.modalDebenture.FromStorehouseId==this.modalDebenture.ToStorehouseId) {
-      this.toast.error('لا يمكنك اختيار نفس المستودع', 'رسالة');return;
-    }
-
-    var VoucherObj: any = {};
-    VoucherObj.DebentureId = this.modalDebenture.DebentureId;
-    VoucherObj.DebentureNumber = this.modalDebenture.DebentureNumber;
-
-    if (this.modalDebenture.Date != null) {
-      VoucherObj.Date = this._sharedService.date_TO_String( this.modalDebenture.Date);
-      const nowHijri = toHijri(this.modalDebenture.Date);
-      VoucherObj.HijriDate = this._sharedService.hijri_TO_String(nowHijri);
-    }
-    VoucherObj.Notes = this.modalDebenture.Notes;
-    VoucherObj.Type = this.modalDebenture.Type;
-    VoucherObj.ServicesId = this.modalDebenture.ServicesId;
-    VoucherObj.FromStorehouseId = this.modalDebenture.FromStorehouseId;
-    VoucherObj.ToStorehouseId = this.modalDebenture.ToStorehouseId;
-    VoucherObj.Qty = this.modalDebenture.Qty;
-
-    this.disableButtonSave_EntryVoucher = true;
-    setTimeout(() => {
-      this.disableButtonSave_EntryVoucher = false;
-    }, 7000);
-    this._debentureService.SaveDebenture(VoucherObj).subscribe((result: any) => {
-      if (result.statusCode == 200) {
-        this.toast.success(this.translate.instant(result.reasonPhrase),this.translate.instant('Message'));
-        this.LoadDataDebenture();
-        this.resetDebentureData();
-        this.EntryVoucherModelPublic?.dismiss();
-      } else {
-        this.toast.error(this.translate.instant(result.reasonPhrase), this.translate.instant('Message'));
-      }
-    });
-  }
 
 
   // ############### send sms
@@ -630,26 +442,26 @@ export class TransferDebenturesComponent {
   }
   Printdiffrentvoucher() {
     var _voucherFilterVM = new VoucherFilterVM();
-    _voucherFilterVM.type = this.dataDebentureVoucher.filter.Type;
-    // _voucherFilterVM.voucherNo=this.dataDebentureVoucher.filter.search_Number;
-    // _voucherFilterVM.invoiceNote=this.dataDebentureVoucher.filter.invoiceNote;
+    _voucherFilterVM.type = this.dataQuantitieVoucher.filter.Type;
+    // _voucherFilterVM.voucherNo=this.dataQuantitieVoucher.filter.search_Number;
+    // _voucherFilterVM.invoiceNote=this.dataQuantitieVoucher.filter.invoiceNote;
     if (
-      this.dataDebentureVoucher.filter.DateFrom_P != null &&
-      this.dataDebentureVoucher.filter.DateFrom_P != null
+      this.dataQuantitieVoucher.filter.DateFrom_P != null &&
+      this.dataQuantitieVoucher.filter.DateFrom_P != null
     ) {
-      _voucherFilterVM.dateFrom = this.dataDebentureVoucher.filter.DateFrom_P;
-      _voucherFilterVM.dateTo = this.dataDebentureVoucher.filter.DateTo_P;
+      _voucherFilterVM.dateFrom = this.dataQuantitieVoucher.filter.DateFrom_P;
+      _voucherFilterVM.dateTo = this.dataQuantitieVoucher.filter.DateTo_P;
       _voucherFilterVM.isChecked = true;
     } else {
       _voucherFilterVM.dateFrom = null;
       _voucherFilterVM.dateTo = null;
       _voucherFilterVM.isChecked = false;
     }
-    if (this.dataDebentureVoucher.filter.StatusPost > 0)
+    if (this.dataQuantitieVoucher.filter.StatusPost > 0)
       _voucherFilterVM.isSearch = true;
-    else _voucherFilterVM.isSearch = this.dataDebentureVoucher.filter.isSearch;
+    else _voucherFilterVM.isSearch = this.dataQuantitieVoucher.filter.isSearch;
 
-    _voucherFilterVM.isPost = this.dataDebentureVoucher.filter.StatusPost;
+    _voucherFilterVM.isPost = this.dataQuantitieVoucher.filter.StatusPost;
     var obj = _voucherFilterVM;
     this._entryvoucherService.Printdiffrentvoucher(obj).subscribe((data) => {
       var PDFPath = environment.PhotoURL + data.reasonPhrase;

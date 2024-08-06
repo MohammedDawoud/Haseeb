@@ -44,6 +44,7 @@ import { InvoicedueComponent } from './components/invoicedue/invoicedue.componen
 import { SalesBillDraftsComponent } from './components/sales-bill-drafts/sales-bill-drafts.component';
 import { DebenturesComponent } from './components/debentures/debentures.component';
 import { TransferDebenturesComponent } from './components/transfer-debentures/transfer-debentures.component';
+import { QuantitiesComponent } from './components/quantities/quantities.component';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'Sales_bill' },
@@ -93,6 +94,7 @@ const routes: Routes = [
   { path: 'Suppliers', component: SuppliersComponent },
   { path: 'Debentures', component: DebenturesComponent },
   { path: 'TransferDebentures', component: TransferDebenturesComponent },
+  { path: 'Quantities', component: QuantitiesComponent },
 
 ];
 

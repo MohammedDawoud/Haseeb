@@ -65,6 +65,7 @@ import { InvoicedueComponent } from './components/invoicedue/invoicedue.componen
 import { SalesBillDraftsComponent } from './components/sales-bill-drafts/sales-bill-drafts.component';
 import { DebenturesComponent } from './components/debentures/debentures.component';
 import { TransferDebenturesComponent } from './components/transfer-debentures/transfer-debentures.component';
+import { QuantitiesComponent } from './components/quantities/quantities.component';
 
 
 @NgModule({
@@ -113,6 +114,7 @@ import { TransferDebenturesComponent } from './components/transfer-debentures/tr
     SalesBillDraftsComponent,
     DebenturesComponent,
     TransferDebenturesComponent,
+    QuantitiesComponent,
   ],
   imports: [
     CommonModule,

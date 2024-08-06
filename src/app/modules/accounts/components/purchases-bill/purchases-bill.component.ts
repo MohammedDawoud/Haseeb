@@ -43,6 +43,7 @@ import { VoucherDetails } from 'src/app/core/Classes/DomainObjects/voucherDetail
 import { DatePipe } from '@angular/common';
 import { Acc_Clauses } from 'src/app/core/Classes/DomainObjects/acc_Clauses';
 import { Acc_Suppliers } from 'src/app/core/Classes/DomainObjects/acc_Suppliers';
+import { DebentureService } from 'src/app/core/services/acc_Services/debenture.service';
 const hijriSafe = require('hijri-date/lib/safe');
 const HijriDate = hijriSafe.default;
 const toHijri = hijriSafe.toHijri;
@@ -303,6 +304,7 @@ export class PurchasesBillComponent implements OnInit {
     private purchasesBillService: PurchasesBillService,
     private _accountsreportsService: AccountsreportsService,
     private _invoiceService: InvoiceService,
+    private _debentureService: DebentureService,
     private api: RestApiService,
     private receiptService: ReceiptService,
     private _payvoucherservice: PayVoucherService,
@@ -951,7 +953,7 @@ export class PurchasesBillComponent implements OnInit {
     this.FillCostCenterSelect();
     this.FillSuppliersSelect();
     this.GetBranch_Costcenter();
-
+    this.FillStorehouseSelect();
     this.resetInvoiceData();
     this.modalInvoice.popuptype = 2;
     this.GetBranchOrganization();
@@ -1641,6 +1643,7 @@ export class PurchasesBillComponent implements OnInit {
     VoucherObj.InvoiceNotes = this.modalInvoice.InvoiceNotes;
     VoucherObj.Type = this.modalInvoice.Type;
     VoucherObj.InvoiceValue = this.modalInvoice.VoucherValue;
+    VoucherObj.StorehouseId = this.modalInvoice.storehouseId;
     VoucherObj.TotalValue = this.modalInvoice.TotalVoucherValueLbl;
     VoucherObj.TaxAmount = this.modalInvoice.taxAmountLbl;
     VoucherObj.ToAccountId = this.modalInvoice.ToAccountId;
@@ -1939,7 +1942,7 @@ export class PurchasesBillComponent implements OnInit {
   InvoiceView(data: any) {
     this.setAddress_Inv();
     this.FillSuppliersSelect();
-
+    this.FillStorehouseSelect();
     if (data.addDate !== null) {
       var AddDate = this._sharedService.date_TO_String(new Date(data.addDate));
       //data.addUser
@@ -2036,6 +2039,7 @@ export class PurchasesBillComponent implements OnInit {
       InvoiceNumber: data.invoiceNumber,
       JournalNumber: data.journalNumber,
       InvoicePayType: null,
+      storehouseId:data.storehouseId,
       Date: date,
       HijriDate: DateGre,
       Notes: data.notes,
@@ -2237,6 +2241,7 @@ export class PurchasesBillComponent implements OnInit {
           InvoiceNumber: data.invoiceNumber,
           JournalNumber: data.journalNumber,
           InvoicePayType: null,
+          storehouseId:data.storehouseId,
           Date: date,
           HijriDate: DateGre,
           Notes: data.notes,
@@ -4315,4 +4320,85 @@ export class PurchasesBillComponent implements OnInit {
       this.vouchermodel.reVoucherNValueText = '';
     }
   }
+    //-----------------------------------Storehouse------------------------------------------------
+  //#region 
+
+  dataAdd: any = {
+    Storehouse: {
+      id: 0,
+      nameAr: null,
+      nameEn: null,
+    },
+  }
+  Storehouse: any;
+  StorehousePopup: any;
+
+  FillStorehouseSelect() {
+    this.Storehouse = [];
+    this.StorehousePopup = [];
+    this._debentureService.FillStorehouseSelect().subscribe((data) => {
+      this.Storehouse = data;
+      this.StorehousePopup = data;
+    });
+  }
+  StorehouseRowSelected: any;
+  getStorehouseRow(row: any) {
+    this.StorehouseRowSelected = row;
+  }
+  setStorehouseInSelect(data: any, model: any) {
+    this.modalInvoice.storehouseId = data.id;
+  }
+  resetStorehouse() {
+    this.dataAdd.Storehouse.id = 0;
+    this.dataAdd.Storehouse.nameAr = null;
+    this.dataAdd.Storehouse.nameEn = null;
+  }
+  saveStorehouse() {
+    if (
+      this.dataAdd.Storehouse.nameAr == null ||
+      this.dataAdd.Storehouse.nameEn == null
+    ) {
+      this.toast.error('من فضلك أكمل البيانات', 'رسالة');
+      return;
+    }
+    var StorehouseObj: any = {};
+    StorehouseObj.StorehouseId = this.dataAdd.Storehouse.id;
+    StorehouseObj.NameAr = this.dataAdd.Storehouse.nameAr;
+    StorehouseObj.NameEn = this.dataAdd.Storehouse.nameEn;
+    this._debentureService
+      .SaveStorehouse(StorehouseObj)
+      .subscribe((result: any) => {
+        if (result.statusCode == 200) {
+          this.toast.success(
+            this.translate.instant(result.reasonPhrase),
+            this.translate.instant('Message')
+          );
+          this.resetStorehouse();
+          this.FillStorehouseSelect();
+        } else {
+          this.toast.error(
+            this.translate.instant(result.reasonPhrase),
+            this.translate.instant('Message')
+          );
+        }
+      });
+  }
+  confirmStorehouseDelete() {
+    this._debentureService
+      .DeleteStorehouse(this.StorehouseRowSelected.id)
+      .subscribe((result: any) => {
+        if (result.statusCode == 200) {
+          this.toast.success(
+            this.translate.instant(result.reasonPhrase),this.translate.instant('Message')
+          );
+          this.FillStorehouseSelect();
+        } else {
+          this.toast.error(
+            this.translate.instant(result.reasonPhrase),this.translate.instant('Message')
+          );
+        }
+      });
+  }
+  //#endregion
+  //----------------------------------(End)-Storehouse---------------------------------------------
 }

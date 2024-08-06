@@ -35,6 +35,7 @@ import 'hijri-date';
 import { InvoiceService } from 'src/app/core/services/acc_Services/invoice.service';
 import { ProjectService } from 'src/app/core/services/pro_Services/project.service';
 import {CdkDragDrop,CdkDrag,CdkDropList,CdkDropListGroup,moveItemInArray,transferArrayItem,} from '@angular/cdk/drag-drop';
+import { DebentureService } from 'src/app/core/services/acc_Services/debenture.service';
 
 const hijriSafe= require('hijri-date/lib/safe');
 const HijriDate =  hijriSafe.default;
@@ -243,6 +244,7 @@ export class CustomerContractsComponent implements OnInit {
     private _printreportsService: PrintreportsService,
     private authenticationService: AuthenticationService,
     private _invoiceService: InvoiceService,
+    private _debentureService: DebentureService,
     private _projectService: ProjectService,
 
 
@@ -2315,6 +2317,7 @@ GetInvoicePrint(obj:any,TempCheck:any){
       this.FillCostCenterSelect_Invoices(null);
       this.FillCustomerSelectWProOnlyWithBranch();
     }
+    this.FillStorehouseSelect();
     this.resetInvoiceData();
     // if(this.invoicepop==3)
     // {
@@ -2976,7 +2979,7 @@ GetInvoicePrint(obj:any,TempCheck:any){
   }
   disableButtonSave_Invoice=false;
 
-  saveInvoice(){
+  saveInvoice() {
     if(!(parseInt(this.modalInvoice.TotalVoucherValueLbl)>0))
     {
       this.toast.error("من فضلك أدخل قيمة صحيحة للفاتورة", this.translate.instant("Message"));
@@ -3000,6 +3003,8 @@ GetInvoicePrint(obj:any,TempCheck:any){
     VoucherObj.InvoiceNotes = this.modalInvoice.InvoiceNotes;
     VoucherObj.Type = this.modalInvoice.Type;
     VoucherObj.InvoiceValue = this.modalInvoice.VoucherValue;
+    VoucherObj.StorehouseId = this.modalInvoice.storehouseId;
+
     VoucherObj.TotalValue = this.modalInvoice.TotalVoucherValueLbl;
     VoucherObj.TaxAmount = this.modalInvoice.taxAmountLbl;
     VoucherObj.ToAccountId = this.modalInvoice.ToAccountId;
@@ -3557,5 +3562,86 @@ GetInvoicePrint(obj:any,TempCheck:any){
 
   //#endregion
 
+    //-----------------------------------Storehouse------------------------------------------------
+  //#region 
+
+  dataAdd: any = {
+    Storehouse: {
+      id: 0,
+      nameAr: null,
+      nameEn: null,
+    },
+  }
+  Storehouse: any;
+  StorehousePopup: any;
+
+  FillStorehouseSelect() {
+    this.Storehouse = [];
+    this.StorehousePopup = [];
+    this._debentureService.FillStorehouseSelect().subscribe((data) => {
+      this.Storehouse = data;
+      this.StorehousePopup = data;
+    });
+  }
+  StorehouseRowSelected: any;
+  getStorehouseRow(row: any) {
+    this.StorehouseRowSelected = row;
+  }
+  setStorehouseInSelect(data: any, model: any) {
+    this.modalInvoice.storehouseId = data.id;
+  }
+  resetStorehouse() {
+    this.dataAdd.Storehouse.id = 0;
+    this.dataAdd.Storehouse.nameAr = null;
+    this.dataAdd.Storehouse.nameEn = null;
+  }
+  saveStorehouse() {
+    if (
+      this.dataAdd.Storehouse.nameAr == null ||
+      this.dataAdd.Storehouse.nameEn == null
+    ) {
+      this.toast.error('من فضلك أكمل البيانات', 'رسالة');
+      return;
+    }
+    var StorehouseObj: any = {};
+    StorehouseObj.StorehouseId = this.dataAdd.Storehouse.id;
+    StorehouseObj.NameAr = this.dataAdd.Storehouse.nameAr;
+    StorehouseObj.NameEn = this.dataAdd.Storehouse.nameEn;
+    this._debentureService
+      .SaveStorehouse(StorehouseObj)
+      .subscribe((result: any) => {
+        if (result.statusCode == 200) {
+          this.toast.success(
+            this.translate.instant(result.reasonPhrase),
+            this.translate.instant('Message')
+          );
+          this.resetStorehouse();
+          this.FillStorehouseSelect();
+        } else {
+          this.toast.error(
+            this.translate.instant(result.reasonPhrase),
+            this.translate.instant('Message')
+          );
+        }
+      });
+  }
+  confirmStorehouseDelete() {
+    this._debentureService
+      .DeleteStorehouse(this.StorehouseRowSelected.id)
+      .subscribe((result: any) => {
+        if (result.statusCode == 200) {
+          this.toast.success(
+            this.translate.instant(result.reasonPhrase),this.translate.instant('Message')
+          );
+          this.FillStorehouseSelect();
+        } else {
+          this.toast.error(
+            this.translate.instant(result.reasonPhrase),this.translate.instant('Message')
+          );
+        }
+      });
+  }
+  //#endregion
+  //----------------------------------(End)-Storehouse---------------------------------------------
 
 }

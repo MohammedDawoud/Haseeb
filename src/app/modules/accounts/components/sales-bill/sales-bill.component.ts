@@ -47,6 +47,7 @@ import {
 import 'hijri-date';
 import { RestApiService } from 'src/app/shared/services/api.service';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
+import { DebentureService } from 'src/app/core/services/acc_Services/debenture.service';
 const hijriSafe = require('hijri-date/lib/safe');
 const HijriDate = hijriSafe.default;
 const toHijri = hijriSafe.toHijri;
@@ -189,6 +190,7 @@ export class SalesBillComponent implements OnInit {
     private translate: TranslateService,
     private receiptService: ReceiptService,
     private formBuilder: FormBuilder,
+    private _debentureService: DebentureService,
     private api: RestApiService,
     private authenticationService: AuthenticationService,
     private _accountsreportsService: AccountsreportsService
@@ -755,6 +757,7 @@ export class SalesBillComponent implements OnInit {
     InvoiceNumber: null,
     JournalNumber: null,
     InvoicePayType: null,
+    storehouseId:null,
     Date: new Date(),
     HijriDate: null,
     Notes: null,
@@ -849,6 +852,7 @@ export class SalesBillComponent implements OnInit {
       InvoiceNumber: null,
       JournalNumber: null,
       InvoicePayType: null,
+      storehouseId:null,
       Date: new Date(),
       HijriDate: DateGre,
       Notes: null,
@@ -918,6 +922,7 @@ export class SalesBillComponent implements OnInit {
       this.FillCostCenterSelect_Invoices(null);
       this.FillCustomerSelectWProOnlyWithBranch();
     }
+    this.FillStorehouseSelect();
     this.resetInvoiceData();
     this.modalInvoice.popuptype = typepage;
     this.GetBranchOrganization();
@@ -1708,6 +1713,7 @@ export class SalesBillComponent implements OnInit {
     VoucherObj.InvoiceNotes = this.modalInvoice.InvoiceNotes;
     VoucherObj.Type = this.modalInvoice.Type;
     VoucherObj.InvoiceValue = this.modalInvoice.VoucherValue;
+    VoucherObj.StorehouseId = this.modalInvoice.storehouseId;
     VoucherObj.TotalValue = this.modalInvoice.TotalVoucherValueLbl;
     VoucherObj.TaxAmount = this.modalInvoice.taxAmountLbl;
     VoucherObj.ToAccountId = this.modalInvoice.ToAccountId;
@@ -1948,6 +1954,7 @@ export class SalesBillComponent implements OnInit {
   InvoiceView(data: any) {
     this.modalInvoice.AddOrView = 2;
     this.GetAllCustomerForDrop();
+    this.FillStorehouseSelect();
     if (data.addDate !== null) {
       var AddDate = this._sharedService.date_TO_String(new Date(data.addDate));
       //data.addUser
@@ -2059,6 +2066,7 @@ export class SalesBillComponent implements OnInit {
       InvoiceNumber: data.invoiceNumber,
       JournalNumber: data.journalNumber,
       InvoicePayType: null,
+      storehouseId:data.storehouseId,
       Date: date,
       HijriDate: DateGre,
       Notes: data.notes,
@@ -2266,6 +2274,7 @@ export class SalesBillComponent implements OnInit {
           InvoiceNumber: data.invoiceNumber,
           JournalNumber: data.journalNumber,
           InvoicePayType: null,
+          storehouseId:data.storehouseId,
           Date: date,
           HijriDate: DateGre,
           Notes: data.notes,
@@ -4291,4 +4300,87 @@ export class SalesBillComponent implements OnInit {
         });
     }
   }
+
+  //-----------------------------------Storehouse------------------------------------------------
+  //#region 
+
+  dataAdd: any = {
+    Storehouse: {
+      id: 0,
+      nameAr: null,
+      nameEn: null,
+    },
+  }
+  Storehouse: any;
+  StorehousePopup: any;
+
+  FillStorehouseSelect() {
+    this.Storehouse = [];
+    this.StorehousePopup = [];
+    this._debentureService.FillStorehouseSelect().subscribe((data) => {
+      this.Storehouse = data;
+      this.StorehousePopup = data;
+    });
+  }
+  StorehouseRowSelected: any;
+  getStorehouseRow(row: any) {
+    this.StorehouseRowSelected = row;
+  }
+  setStorehouseInSelect(data: any, model: any) {
+    this.modalInvoice.storehouseId = data.id;
+  }
+  resetStorehouse() {
+    this.dataAdd.Storehouse.id = 0;
+    this.dataAdd.Storehouse.nameAr = null;
+    this.dataAdd.Storehouse.nameEn = null;
+  }
+  saveStorehouse() {
+    if (
+      this.dataAdd.Storehouse.nameAr == null ||
+      this.dataAdd.Storehouse.nameEn == null
+    ) {
+      this.toast.error('من فضلك أكمل البيانات', 'رسالة');
+      return;
+    }
+    var StorehouseObj: any = {};
+    StorehouseObj.StorehouseId = this.dataAdd.Storehouse.id;
+    StorehouseObj.NameAr = this.dataAdd.Storehouse.nameAr;
+    StorehouseObj.NameEn = this.dataAdd.Storehouse.nameEn;
+    this._debentureService
+      .SaveStorehouse(StorehouseObj)
+      .subscribe((result: any) => {
+        if (result.statusCode == 200) {
+          this.toast.success(
+            this.translate.instant(result.reasonPhrase),
+            this.translate.instant('Message')
+          );
+          this.resetStorehouse();
+          this.FillStorehouseSelect();
+        } else {
+          this.toast.error(
+            this.translate.instant(result.reasonPhrase),
+            this.translate.instant('Message')
+          );
+        }
+      });
+  }
+  confirmStorehouseDelete() {
+    this._debentureService
+      .DeleteStorehouse(this.StorehouseRowSelected.id)
+      .subscribe((result: any) => {
+        if (result.statusCode == 200) {
+          this.toast.success(
+            this.translate.instant(result.reasonPhrase),this.translate.instant('Message')
+          );
+          this.FillStorehouseSelect();
+        } else {
+          this.toast.error(
+            this.translate.instant(result.reasonPhrase),this.translate.instant('Message')
+          );
+        }
+      });
+  }
+  //#endregion
+  //----------------------------------(End)-Storehouse---------------------------------------------
+
 }

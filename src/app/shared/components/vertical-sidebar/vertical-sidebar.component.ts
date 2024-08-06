@@ -1038,6 +1038,19 @@ export class VerticalSidebarComponent implements OnInit {
                     : '/assets/sidebar-icons/Group 40280.png',
                 show: this.userG?.userPrivileges.includes(13180810),
               },
+              {
+                name: {
+                  ar: 'الكميات',
+                  en: 'Quantities',
+                },
+                link: '/accounts/Quantities',
+                type: 'single',
+                icon:
+                  this.lang == 'ar'
+                    ? '/assets/sidebar-icons/Group 40278.png'
+                    : '/assets/sidebar-icons/Group 40280.png',
+                show: this.userG?.userPrivileges.includes(13180810),
+              },
             ],
           },
           {

@@ -1261,6 +1261,8 @@
   "Beginningbalance": "Beginningbalance",
   "SerialNumber": "Serial Number",
   "ItemCode": "Item Code",
+  "Storehouse Qty": "Storehouse Qty",
+  "The total quantity": "The total quantity",
 
 
   "AttentionAddService": "Attention: It is preferable to add detailed service details (Arabic / English) to show them in the price offer and in the customer contracts",
