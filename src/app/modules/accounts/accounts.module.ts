@@ -118,6 +118,11 @@ import { YearlyinvoiceswitMonthsComponent } from './components/yearlyinvoiceswit
     InvoicedueComponent,
     SalesBillDraftsComponent,
     DebenturesComponent,
+    QuantitiesComponent,
+    TransferDebenturesComponent,
+    YearlyinvoiceswitMonthsComponent,
+    MonthlyinvoiceswithdayesComponent,
+    MonthlyInvoicesComponent
   ],
   imports: [
     CommonModule,

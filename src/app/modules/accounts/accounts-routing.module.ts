@@ -97,6 +97,12 @@ const routes: Routes = [
   { path: 'Closed', component: ClosedComponent },
   { path: 'Suppliers', component: SuppliersComponent },
   { path: 'Debentures', component: DebenturesComponent },
+   { path: 'TransferDebentures', component: TransferDebenturesComponent },
+  { path: 'Quantities', component: QuantitiesComponent },
+   { path: 'daily-invoice-with-details', component: DailyInvoiceWithDetailsComponent },
+    { path: 'monthly-invoices', component: MonthlyInvoicesComponent },
+    { path: 'monthlyinvoiceswithdayes', component: MonthlyinvoiceswithdayesComponent },
+    { path: 'yearlyinvoiceswit-months', component: YearlyinvoiceswitMonthsComponent },
 ];
 
 @NgModule({
