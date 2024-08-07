@@ -1031,6 +1031,58 @@ export class VerticalSidebarComponent implements OnInit {
                     : '/assets/sidebar-icons/Group 40280.png',
                 show: this.userG?.userPrivileges.includes(13180810),
               },
+                    {
+                name: {
+                  ar: 'المبيعات والارباح اليوميه',
+                  en: 'Daily Payments and earns',
+                },
+                link: '/accounts/daily-invoice-with-details',
+                type: 'single',
+                icon:
+                  this.lang == 'ar'
+                    ? '/assets/sidebar-icons/Group 40278.png'
+                    : '/assets/sidebar-icons/Group 40280.png',
+                show: this.userG?.userPrivileges.includes(13180810),
+              },
+                           {
+                name: {
+                  ar: 'المبيعات والارباح الشهريه',
+                  en: 'Monthly Payments and earns',
+                },
+                link: '/accounts/monthly-invoices',
+                type: 'single',
+                icon:
+                  this.lang == 'ar'
+                    ? '/assets/sidebar-icons/Group 40278.png'
+                    : '/assets/sidebar-icons/Group 40280.png',
+                show: this.userG?.userPrivileges.includes(13180810),
+              },
+                               {
+                name: {
+                  ar: 'المبيعات والارباح والمردودالشهريه',
+                  en: 'Monthly Payments and earns',
+                },
+                link: '/accounts/monthlyinvoiceswithdayes',
+                type: 'single',
+                icon:
+                  this.lang == 'ar'
+                    ? '/assets/sidebar-icons/Group 40278.png'
+                    : '/assets/sidebar-icons/Group 40280.png',
+                show: this.userG?.userPrivileges.includes(13180810),
+              },
+                {
+                name: {
+                  ar: 'ارباح المبيعات والمردود السنوي',
+                  en: 'Yearly Payments and earns',
+                },
+                link: '/accounts/yearlyinvoiceswit-months',
+                type: 'single',
+                icon:
+                  this.lang == 'ar'
+                    ? '/assets/sidebar-icons/Group 40278.png'
+                    : '/assets/sidebar-icons/Group 40280.png',
+                show: this.userG?.userPrivileges.includes(13180810),
+              },
             ],
           },
           {

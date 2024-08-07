@@ -1,0 +1,538 @@
+<div class="expense-follow-up">
+  <app-navigator [title]="title"></app-navigator>
+
+  <!-- inputs -->
+  <div class="container-fluid">
+    <div class="flex flex-wrap gap-4 align-items-end">
+      <div class="form-group">
+        <label class="col-form-label"> {{ "Payment type" | translate }}</label>
+        <ng-select
+          class="w-full p-0"
+          placeholder="{{ 'Chose' | translate }}"
+          [(ngModel)]="data.filter.customerId"
+          name="customerId"
+          (change)="RefreshData()"
+        >
+       <ng-option
+                *ngFor="let type of Paytype"
+                [value]="type.id"
+                [translate]="'name'"
+                [translateParams]="{ ar: type.name?.ar, en: type.name?.en }"
+              >
+              </ng-option>
+        </ng-select>
+      </div>
+
+        <div class="form-group timeInput">
+              <label class="col-form-label" for="phone"
+                >{{ "Date" | translate }}
+                <span class="text-danger">*</span></label
+              >
+         
+               <input
+    placeholder="{{ 'Choose Date' | translate }}"
+    type="text"
+    class="form-control"
+    id="date"
+    name="date"
+    [(ngModel)]="data.filter.date"
+    bsDatepicker
+    [bsConfig]="{ minMode: 'month', dateInputFormat: 'MMMM YYYY' }"
+    (bsValueChange)="onMonthSelect($event)"
+
+    autocomplete="off"
+  />
+            </div>
+
+      
+
+      <div class="flex gap-3 justify-content-center">
+        <button type="button" class="flex gap-1 btn btn-success" (click)="getPrintdata('report')">
+          {{ "Print" | translate }}
+          <i class="fa-solid fa-print"></i>
+        </button>
+
+        <button type="button" class="flex gap-1 btn btn-outline-secondary"(click)="exportData()">
+          {{ "exportExcel" | translate }}
+        </button>
+      </div>
+    </div>
+
+    <!-- table -->
+    <div class="overflow-auto mt-4">
+      <table
+        mat-table
+        [dataSource]="projectsDataSource"
+        matSort
+        class="mat-elevation-z8 rounded-t-lg overflow-hidden w-max"
+      >
+        
+
+        <ng-container matColumnDef="Date">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>اليوم</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.invoiceDate }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="InvoiceValue">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>المبلغ</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.invoiceValue }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="TaxAmount">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>الضريبه</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.taxAmount }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="DiscountValue">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>الخصم</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.discountValue }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="TotalValue">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>الاجمالي</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.totalValue }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Cost">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>التكلفه</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.cost }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Earnings">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>الربح</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.earnings }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="Mardod">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>المردود</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.mardod }}
+          </td>
+        </ng-container>
+
+             <ng-container matColumnDef="FinalEarnings">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>الربح النهائي</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.finalEarnings }}
+          </td>
+        </ng-container>
+
+   <!-- <ng-container matColumnDef="AdditionalRow">
+    <td mat-footer-cell *matFooterCellDef [attr.colspan]="2">
+      Additional footer row spanning all columns
+    </td>
+  </ng-container> -->
+
+        <tr mat-header-row *matHeaderRowDef="projectDisplayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: projectDisplayedColumns"></tr>
+        <!-- <tr mat-footer-row *matFooterRowDef="projectDisplayedColumns"></tr> -->
+           <!-- <tr mat-footer-row *matFooterRowDef="['AdditionalRow']"></tr> -->
+
+      </table>
+    </div>
+    <mat-paginator [pageSizeOptions]="[10, 25]"> </mat-paginator>
+  </div>
+<div style="display: none;">
+  <div id="report"   [ngStyle]="{ direction: lang == 'ar' ? 'rtl' : 'ltr' }" style="position: absolute;">
+    <!--Header-->
+    <div
+      class="report-header"
+      style="
+        display: flex;
+        align-items: center;
+        gap: 100px;
+        padding: 3px 0px;
+        margin-bottom: 20px;
+      "
+    >
+      <div class="headerNe-right-side">
+     <img
+            *ngIf="logourl"
+            src="{{ logourl }}"
+            alt="logo"
+            style="
+              height: 200px;
+              width: 200px;
+              max-width: 200px;
+              object-fit: fill;
+            "
+          />
+      </div>
+
+      <div class="headerNe-lefy-side" style="width: 100%">
+        <h1
+          style="
+            letter-spacing: 0.25px;
+            font-size: 23px;
+            margin: 0;
+            margin-bottom: 5px;
+          "
+        >
+        {{userG?.companyName}}
+        </h1>
+ 
+        <div class="line" style="position: relative; padding: 5px 0px 10px">
+          <span
+            style="
+              position: absolute;
+              right: 0;
+              width: 100%;
+              height: 2px;
+              background-color: #e5e5e5;
+              z-index: 1;
+            "
+          ></span>
+          <span
+            style="
+              position: absolute;
+              right: 0;
+              width: 70%;
+              height: 2px;
+              background-color: #ec1c24;
+              z-index: 2;
+            "
+          ></span>
+        </div>
+
+        <h1
+          style="
+            margin-bottom: 0;
+            font-size: 34px;
+            color: #0c8191;
+            margin-bottom: 0;
+            margin-top: 30px;
+            font-weight: 500;
+          "
+          [translate]="'name'"
+          [translateParams]="{
+            ar: 'المبيعات والارباح والمردود الشهريه',
+            en: 'Monthly Payment and Earns'
+          }"
+        ></h1>
+      </div>
+    </div>
+    <!--/Header-->
+
+    <div style="margin-bottom: 10px">
+      <p>
+        <span
+          [translate]="'name'"
+          [translateParams]="{
+            ar: 'التاريخ: ',
+            en: 'Date: '
+          }"
+        ></span>
+        <span> {{dateprint | date : "dd-MM-yyyy"}} </span>
+      </p>
+    </div>
+
+    <div style="margin-bottom: 10px ;text-align: center;"  *ngIf="data.filter.date != null">
+      <p>
+        <span
+            [translate]="'name'"
+          [translateParams]="{
+            ar: 'المبيعات والارباح لشهر : ',
+            en: 'Payments and earns or month: '
+          }"
+        ></span>
+        <span> {{data.filter.date | date : "MM-yyyy"}} </span>
+       
+      </p>
+    </div>
+
+ 
+ 
+    <div class="services" style="width: 100%; margin-bottom: 20px">
+      <div class="content">
+        <table style="text-align: center; vertical-align: middle; width: 100%">
+          <thead>
+         
+            <td
+              style="
+                font-size: 16px;
+                background-color: #fff;
+                padding: 14px 4px;
+                text-align: center;
+                color: #272727;
+                word-wrap: break-word;
+                border-inline-start: 1px dashed #0c8191;
+                border: 1px dashed #272727;
+                font-weight: 600;
+              "
+            >تاريخ الفاتورة</td>
+            <td
+              style="
+                font-size: 16px;
+                background-color: #f7f7f7;
+                padding: 14px 4px;
+                text-align: center;
+                color: #272727;
+                word-wrap: break-word;
+                border-inline-start: 1px dashed #0c8191;
+                border: 1px dashed #272727;
+                font-weight: 600;
+              "
+            >المبلغ</td>
+            <td
+              style="
+                font-size: 16px;
+                background-color: #f7f7f7;
+                padding: 14px 4px;
+                text-align: center;
+                color: #272727;
+                word-wrap: break-word;
+                border-inline-start: 1px dashed #0c8191;
+                border: 1px dashed #272727;
+                font-weight: 600;
+              "
+            >الضريبه</td>
+            <td
+              style="
+                font-size: 16px;
+                background-color: #fff;
+                padding: 14px 4px;
+                text-align: center;
+                color: #272727;
+                word-wrap: break-word;
+                border-inline-start: 1px dashed #0c8191;
+                border: 1px dashed #272727;
+                font-weight: 600;
+              "
+            >الخصم</td>
+            <td
+              style="
+                font-size: 16px;
+                background-color: #fff;
+                padding: 14px 4px;
+                text-align: center;
+                color: #272727;
+                word-wrap: break-word;
+                border-inline-start: 1px dashed #0c8191;
+                border: 1px dashed #272727;
+                font-weight: 600;
+              "
+            >الاجمالي</td>
+            <td
+              style="
+                font-size: 16px;
+                background-color: #fff;
+                padding: 14px 4px;
+                text-align: center;
+                color: #272727;
+                word-wrap: break-word;
+                border-inline-start: 1px dashed #0c8191;
+                border: 1px dashed #272727;
+                font-weight: 600;
+              "
+            >التكلفه</td>
+            <td
+              style="
+                font-size: 16px;
+                background-color: #fff;
+                padding: 14px 4px;
+                text-align: center;
+                color: #272727;
+                word-wrap: break-word;
+                border-inline-start: 1px dashed #0c8191;
+                border: 1px dashed #272727;
+                font-weight: 600;
+              "
+            >الربح</td>
+                 <td
+              style="
+                font-size: 16px;
+                background-color: #fff;
+                padding: 14px 4px;
+                text-align: center;
+                color: #272727;
+                word-wrap: break-word;
+                border-inline-start: 1px dashed #0c8191;
+                border: 1px dashed #272727;
+                font-weight: 600;
+              "
+            >المردود</td>
+         
+        <td
+        style="
+          font-size: 16px;
+          background-color: #fff;
+          padding: 14px 4px;
+          text-align: center;
+          color: #272727;
+          word-wrap: break-word;
+          border-inline-start: 1px dashed #0c8191;
+          border: 1px dashed #272727;
+          font-weight: 600;
+        "
+      >الربح النهائي</td>
+    </thead>
+          <tbody>
+            <tr *ngFor="let item of projectsDataSourcedata">
+              
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  padding: 10px 0px;
+                  border: 1px dashed #272727;
+                  color: #272727;
+                  border-inline-start: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+              >
+              {{item.invoiceDate}}
+              </td>
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  padding: 10px 0px;
+                  border: 1px dashed #272727;
+                  color: #272727;
+                  border-inline-start: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+              >
+              {{item.invoiceValue}}
+              </td>
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  border: 1px dashed #272727;
+                  padding: 10px 0px;
+                  color: #272727;
+                  border-inline-start: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+              >
+              {{item.taxAmount}}
+              </td>
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  border: 1px dashed #272727;
+                  padding: 10px 0px;
+                  color: #272727;
+                  border-inline-start: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+              >
+              {{item.discountValue}}
+              </td>
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  padding: 10px 0px;
+                  border: 1px dashed #272727;
+                  color: #272727;
+                  border-inline-start: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+              >
+              {{item.totalValue}}
+              </td>
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  border: 1px dashed #272727;
+                  padding: 10px 0px;
+                  color: #272727;
+                  border-inline-start: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+              >
+              {{item.cost}}
+              </td>
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  padding: 10px 0px;
+                  border: 1px dashed #272727;
+                  color: #272727;
+                  border-inline-start: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+              >
+              {{item.earnings}}
+              </td>
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  padding: 10px 0px;
+                  border: 1px dashed #272727;
+                  color: #272727;
+                  border-inline-start: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+              >
+              {{item.mardod}}
+              </td>
+       
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  border: 1px dashed #272727;
+                  padding: 10px 0px;
+                  color: #272727;
+                  border-inline-start: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+              >
+              {{item.finalEarnings}}
+              </td>
+            </tr>
+        
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>

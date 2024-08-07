@@ -64,6 +64,10 @@ import { SuppliersComponent } from './components/suppliers/suppliers.component';
 import { InvoicedueComponent } from './components/invoicedue/invoicedue.component';
 import { SalesBillDraftsComponent } from './components/sales-bill-drafts/sales-bill-drafts.component';
 import { DebenturesComponent } from './components/debentures/debentures.component';
+import { DailyInvoiceWithDetailsComponent } from './components/daily-invoice-with-details/daily-invoice-with-details.component';
+import { MonthlyInvoicesComponent } from './components/monthly-invoices/monthly-invoices.component';
+import { MonthlyinvoiceswithdayesComponent } from './components/monthlyinvoiceswithdayes/monthlyinvoiceswithdayes.component';
+import { YearlyinvoiceswitMonthsComponent } from './components/yearlyinvoiceswit-months/yearlyinvoiceswit-months.component';
 
 
 @NgModule({
@@ -97,6 +101,7 @@ import { DebenturesComponent } from './components/debentures/debentures.componen
     ProjectManagersRevenueComponent,
     CustomerRevenueComponent,
     ExpenseFollowUpComponent,
+    DailyInvoiceWithDetailsComponent,
     FollowUpRevenuesAndExpensesComponent,
     FollowUpOnCreditAndDebitNotesComponent,
     AccountsGuideComponent,
@@ -111,6 +116,10 @@ import { DebenturesComponent } from './components/debentures/debentures.componen
     InvoicedueComponent,
     SalesBillDraftsComponent,
     DebenturesComponent,
+    DailyInvoiceWithDetailsComponent,
+    MonthlyInvoicesComponent,
+    MonthlyinvoiceswithdayesComponent,
+    YearlyinvoiceswitMonthsComponent,
   ],
   imports: [
     CommonModule,

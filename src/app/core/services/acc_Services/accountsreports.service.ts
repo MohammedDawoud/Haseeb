@@ -39,6 +39,34 @@ export class AccountsreportsService {
       model
     );
   }
+
+    GetDayilypaymentsandearns(model: any) {
+    return this.http.post<any>(
+      `${this.apiEndPoint}Account/GetDayilypaymentsandearns`,
+      model
+    );
+  }
+
+    GetMonthlypaymentsandearns(model: any) {
+    return this.http.post<any>(
+      `${this.apiEndPoint}Account/GetMonthlypaymentsandearns`,
+      model
+    );
+  }
+
+     GetMonthlypaymentsandearns_WithDayes(model: any) {
+    return this.http.post<any>(
+      `${this.apiEndPoint}Account/GetMonthlypaymentsandearns_WithDayes`,
+      model
+    );
+  }
+
+     GetyearlyInvoicesWithDetails_ByYear(model: any) {
+    return this.http.post<any>(
+      `${this.apiEndPoint}Account/GetyearlyInvoicesWithDetails_ByYear`,
+      model
+    );
+  }
   DetailedExpensesdReportGrid(model: any) {
     return this.http.post<any>(
       `${this.apiEndPoint}Account/DetailedExpensesdReportGrid`,
