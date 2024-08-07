@@ -757,6 +757,13 @@ export class VerticalSidebarComponent implements OnInit {
             show: this.userG?.userPrivileges.includes(131003),
           },
           {
+            name: { ar: 'سند نقل', en: 'Inventory Debenture' },
+            link: '/accounts/TransferDebentures',
+            type: 'single',
+            icon: '/assets/sidebar-icons/cash_outline.png',
+            show: this.userG?.userPrivileges.includes(131003),
+          },
+          {
             name: { ar: 'مردود المصروفات', en: 'Expense return' },
             link: '/accounts/Expense_return',
             type: 'single',
@@ -1024,6 +1031,19 @@ export class VerticalSidebarComponent implements OnInit {
                   en: 'Debt aging schedule',
                 },
                 link: '/accounts/Invoicedue',
+                type: 'single',
+                icon:
+                  this.lang == 'ar'
+                    ? '/assets/sidebar-icons/Group 40278.png'
+                    : '/assets/sidebar-icons/Group 40280.png',
+                show: this.userG?.userPrivileges.includes(13180810),
+              },
+              {
+                name: {
+                  ar: 'الكميات',
+                  en: 'Quantities',
+                },
+                link: '/accounts/Quantities',
                 type: 'single',
                 icon:
                   this.lang == 'ar'

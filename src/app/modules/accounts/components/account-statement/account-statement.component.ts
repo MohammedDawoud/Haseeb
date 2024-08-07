@@ -26,6 +26,8 @@ import { AuthenticationService } from 'src/app/core/services/authentication.serv
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { EntryvoucherService } from 'src/app/core/services/acc_Services/entryvoucher.service';
 import { ReceiptService } from 'src/app/core/services/acc_Services/receipt.service';
+import { DebentureService } from 'src/app/core/services/acc_Services/debenture.service';
+import { ToastrService } from 'ngx-toastr';
 const hijriSafe = require('hijri-date/lib/safe');
 const HijriDate = hijriSafe.default;
 const toHijri = hijriSafe.toHijri;
@@ -226,6 +228,8 @@ export class AccountStatementComponent implements OnInit {
     private _accountsreportsService: AccountsreportsService,
     private api: RestApiService,
     private _invoiceService: InvoiceService,
+    private _debentureService: DebentureService,
+    private toast: ToastrService,
     private receiptService: ReceiptService,
     private print: NgxPrintElementService,
     private formBuilder: FormBuilder,
@@ -1788,6 +1792,7 @@ export class AccountStatementComponent implements OnInit {
   InvoiceView(data: any) {
     this.modalInvoice.AddOrView = 2;
     this.GetAllCustomerForDrop();
+    this.FillStorehouseSelect();
     if (data.addDate !== null) {
       var AddDate = this._sharedService.date_TO_String(new Date(data.addDate));
       //data.addUser
@@ -1899,6 +1904,7 @@ export class AccountStatementComponent implements OnInit {
       InvoiceNumber: data.invoiceNumber,
       JournalNumber: data.journalNumber,
       InvoicePayType: null,
+      storehouseId:data.storehouseId,
       Date: date,
       HijriDate: DateGre,
       Notes: data.notes,
@@ -3106,5 +3112,87 @@ export class AccountStatementComponent implements OnInit {
   }
 
   //#endregion
+
+    //-----------------------------------Storehouse------------------------------------------------
+  //#region 
+
+  dataAdd: any = {
+    Storehouse: {
+      id: 0,
+      nameAr: null,
+      nameEn: null,
+    },
+  }
+  Storehouse: any;
+  StorehousePopup: any;
+
+  FillStorehouseSelect() {
+    this.Storehouse = [];
+    this.StorehousePopup = [];
+    this._debentureService.FillStorehouseSelect().subscribe((data) => {
+      this.Storehouse = data;
+      this.StorehousePopup = data;
+    });
+  }
+  StorehouseRowSelected: any;
+  getStorehouseRow(row: any) {
+    this.StorehouseRowSelected = row;
+  }
+  setStorehouseInSelect(data: any, model: any) {
+    this.modalInvoice.storehouseId = data.id;
+  }
+  resetStorehouse() {
+    this.dataAdd.Storehouse.id = 0;
+    this.dataAdd.Storehouse.nameAr = null;
+    this.dataAdd.Storehouse.nameEn = null;
+  }
+  saveStorehouse() {
+    if (
+      this.dataAdd.Storehouse.nameAr == null ||
+      this.dataAdd.Storehouse.nameEn == null
+    ) {
+      this.toast.error('من فضلك أكمل البيانات', 'رسالة');
+      return;
+    }
+    var StorehouseObj: any = {};
+    StorehouseObj.StorehouseId = this.dataAdd.Storehouse.id;
+    StorehouseObj.NameAr = this.dataAdd.Storehouse.nameAr;
+    StorehouseObj.NameEn = this.dataAdd.Storehouse.nameEn;
+    this._debentureService
+      .SaveStorehouse(StorehouseObj)
+      .subscribe((result: any) => {
+        if (result.statusCode == 200) {
+          this.toast.success(
+            this.translate.instant(result.reasonPhrase),
+            this.translate.instant('Message')
+          );
+          this.resetStorehouse();
+          this.FillStorehouseSelect();
+        } else {
+          this.toast.error(
+            this.translate.instant(result.reasonPhrase),
+            this.translate.instant('Message')
+          );
+        }
+      });
+  }
+  confirmStorehouseDelete() {
+    this._debentureService
+      .DeleteStorehouse(this.StorehouseRowSelected.id)
+      .subscribe((result: any) => {
+        if (result.statusCode == 200) {
+          this.toast.success(
+            this.translate.instant(result.reasonPhrase),this.translate.instant('Message')
+          );
+          this.FillStorehouseSelect();
+        } else {
+          this.toast.error(
+            this.translate.instant(result.reasonPhrase),this.translate.instant('Message')
+          );
+        }
+      });
+  }
+  //#endregion
+  //----------------------------------(End)-Storehouse---------------------------------------------
 
 }

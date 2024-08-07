@@ -6555,6 +6555,36 @@
         <div class="col-sm-4 col-md-2 col-lg-1 mb-3" *ngIf="!showPrice">
           <span style="color: red"> {{ "shifta" | translate }}</span>
         </div>
+        <div class="col-sm-6 col-md-3 col-lg-3 mb-0">
+          <div class="form-group">
+            <label for="StorehouseId" class="text-right col-form-label block">
+              {{ "Storehouse" | translate }}</label
+            >
+            <div class="flex">
+              <ng-select
+              class="w-full p-0"
+              placeholder="{{ 'Chose' | translate }}"
+              [(ngModel)]="modalInvoice.storehouseId"
+              [ngModelOptions]="{ standalone: true }"
+              [disabled]="modalInvoice.AddOrView != 1"
+              name="storehouseId"
+              >
+                <ng-option *ngFor="let user of Storehouse" [value]="user.id">{{
+                  user.name
+                }}</ng-option>
+              </ng-select>
+              <button
+                type="button"
+                [disabled]="modalInvoice.AddOrView != 1"
+                class="btn bg-base text-white"
+                style="padding: 5px 10px"
+                (click)="open(StorehouseModal)"
+              >
+                <i class="fa fa-plus"></i>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="row mb-3">
@@ -6799,7 +6829,7 @@
               }}</label>
             </div>
 
-            <div class="form-group row my-4 me-3">
+            <div class="form-group row me-3">
               <label for="Statement" class="col-sm-2 col-form-label">{{
                 "Statement" | translate
               }}</label>
@@ -6817,7 +6847,7 @@
               </div>
             </div>
 
-            <div class="form-group row my-4 me-3">
+            <div class="form-group row me-3">
               <label for="theNotes" class="col-sm-2 col-form-label">{{
                 "theNotes" | translate
               }}</label>
@@ -7345,3 +7375,164 @@
     </div>
   </div>
 </ng-template>
+
+  <!-- btn add  -->
+  <ng-template #StorehouseModal let-modal>
+    <div class="modal-header bg-base text-white">
+      <h4
+        class="modal-title mb-0"
+        id="modal-basic-title"
+        [translate]="'name'"
+        [translateParams]="{ ar: 'اضافة جديدة', en: 'Add New' }"
+      ></h4>
+      <button
+        type="button"
+        class="text-2xl text-white m-0"
+        (click)="modal.dismiss('Cross click')"
+      >
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <div class="modal-body text-center">
+      <form #addStorehouse="ngForm" class="grid grid-cols-1 md:grid-cols-2 gap-2">
+        <div class="form-group">
+          <label for="BuildNameArtxt" class="text-right col-form-label block">
+            {{ "nameAr" | translate }}
+            <span class="text-danger">*</span></label
+          >
+          <input
+            required
+            #StorehouseNameAr="ngModel"
+            ngModel
+            [(ngModel)]="dataAdd.Storehouse.nameAr"
+            class="form-control"
+            type="text"
+            id="StorehouseNameArtxt"
+            name="StorehouseNameArtxt"
+            autocomplete="off"
+            [placeholder]="('Write' | translate) + ' ' + ('nameAr' | translate)"
+          />
+        </div>
+        <div class="form-group">
+          <label for="StorehouseNameEntxt" class="text-right col-form-label block">
+            {{ "nameEn" | translate }}
+            <span class="text-danger">*</span></label
+          >
+          <div style="display: inline-flex; width: 100%">
+            <input
+              required
+              #StorehouseNameEnValue
+              #StorehouseNameEn="ngModel"
+              [(ngModel)]="dataAdd.Storehouse.nameEn"
+              ngModel
+              class="form-control"
+              type="text"
+              id="StorehouseNameEntxt"
+              name="StorehouseNameEntxt"
+              autocomplete="off"
+              [placeholder]="('Write' | translate) + ' ' + ('nameEn' | translate)"
+            />
+            <a
+              class="btn"
+              id="CopyStorehouseName2"
+              (click)="dataAdd.Storehouse.nameEn = dataAdd.Storehouse.nameAr"
+              ><i class="fa fa-copy"></i
+            ></a>
+          </div>
+        </div>
+      </form>
+      <div class="max-h-80 overflow-auto px-2">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>{{ "nameAr" | translate }}</th>
+              <th>{{ "nameEn" | translate }}</th>
+              <th
+                [translate]="'name'"
+                [translateParams]="{
+                  ar: 'خيارات',
+                  en: 'Operations'
+                }"
+              ></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let type of StorehousePopup"
+              (dblclick)="
+                setStorehouseInSelect(type, StorehouseModal);
+                modal.dismiss('Cross click')
+              "
+            >
+              <td>{{ type.name }}</td>
+              <td>{{ type.nameEn }}</td>
+              <td class="flex gap-2 justify-center">
+                <button
+                  class="p-2 bg-orange-100 hover:bg-orange-500 rounded-lg duration-300 hover:text-white aspect-square w-10"
+                  (click)="
+                    dataAdd.Storehouse.nameAr = type.name;
+                    dataAdd.Storehouse.nameEn = type.nameEn;
+                    dataAdd.Storehouse.id = type.id
+                  "
+                >
+                  <i class="fa-regular fa-pen-to-square"></i>
+                </button>
+                <button
+                  (click)="getStorehouseRow(type); open(deleteStorehouse)"
+                  class="p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white aspect-square w-10"
+                >
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="flex gap-2 mt-3 pt-3 border-t border-neutral-300">
+        <button
+          class="btn bg-base text-white"
+          type="submit"
+          [disabled]="addStorehouse.invalid"
+          (click)="saveStorehouse()"
+        >
+          {{ "Save" | translate }}
+        </button>
+        <button (click)="modal.dismiss('Cross click')" class="btn btn-secondary">
+          {{ "Back" | translate }}
+        </button>
+        <button (click)="resetStorehouse()" class="btn bg-base text-white">
+          {{ "جديد" | translate }}
+        </button>
+      </div>
+    </div>
+  </ng-template>
+  
+  <ng-template #deleteStorehouse let-modal>
+    <div class="modal-body text-center">
+      <p
+        [translate]="'name'"
+        [translateParams]="{
+          ar: 'هل تريد بالتأكيد حذف هذا الصف',
+          en: 'Are you sure to delete this row ?'
+        }"
+      ></p>
+      <div class="flex gap-2 justify-center mt-3">
+        <button
+          type="button"
+          mat-raised-button
+          color="warn"
+          (click)="confirmStorehouseDelete(); modal.dismiss()"
+        >
+          {{ "Yes" | translate }}
+        </button>
+        <button
+          type="button"
+          (click)="modal.dismiss()"
+          mat-raised-button
+          color="basic"
+        >
+          {{ "No" | translate }}
+        </button>
+      </div>
+    </div>
+  </ng-template>

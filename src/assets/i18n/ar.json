@@ -217,6 +217,9 @@
   "buildingType": "نوع البناء",
   "Storehouses": "المستودعات",
   "Storehouse": "المستودع",
+  "FromStorehouse": "من مستودع",
+  "ToStorehouse": "الي مستودع",
+
   "offerPriceNo": "عرض سعر رقم",
   "offerPriceNoProject": "هل المشروع مرتبط بعرض سعر سابق؟",
 
@@ -732,6 +735,8 @@
   "ResourceName_en": "اسم المورد انجليزي",
   "UnderDaily": "قيد يومية",
   "InventoryDebenture": "سند جرد",
+  "TransferDebenture": "سند نقل",
+
   "DebtShowFirst": "عرض مدين اولا ",
   "CreditOfferFirst": "عرض دائن اولا",
   "credit_debit": " دائن/مدين",
@@ -1327,6 +1332,8 @@
   "Beginningbalance": "رصيد أول الفترة",
   "SerialNumber": "الرقم التسلسلي",
   "ItemCode": "كود الصنف",
+  "Storehouse Qty": "كمية المستودع",
+  "The total quantity": "الكمية الإجمالية",
   "AttentionAddService": "تنبيه:يفضل إضافة تفاصيل الخدمة بشكل مفصل (عربي/إنجليزي)لإظهارها في عرض السعر، وفي عقود العميل",
   "ServiceType": "نوع الخدمة",
   "RS": "ر.س",

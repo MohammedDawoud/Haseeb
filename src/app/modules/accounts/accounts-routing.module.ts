@@ -43,6 +43,8 @@ import { SuppliersComponent } from './components/suppliers/suppliers.component';
 import { InvoicedueComponent } from './components/invoicedue/invoicedue.component';
 import { SalesBillDraftsComponent } from './components/sales-bill-drafts/sales-bill-drafts.component';
 import { DebenturesComponent } from './components/debentures/debentures.component';
+import { TransferDebenturesComponent } from './components/transfer-debentures/transfer-debentures.component';
+import { QuantitiesComponent } from './components/quantities/quantities.component';
 import { DailyInvoiceWithDetailsComponent } from './components/daily-invoice-with-details/daily-invoice-with-details.component';
 import { MonthlyInvoicesComponent } from './components/monthly-invoices/monthly-invoices.component';
 import { MonthlyinvoiceswithdayesComponent } from './components/monthlyinvoiceswithdayes/monthlyinvoiceswithdayes.component';
@@ -95,11 +97,6 @@ const routes: Routes = [
   { path: 'Closed', component: ClosedComponent },
   { path: 'Suppliers', component: SuppliersComponent },
   { path: 'Debentures', component: DebenturesComponent },
-    { path: 'daily-invoice-with-details', component: DailyInvoiceWithDetailsComponent },
-    { path: 'monthly-invoices', component: MonthlyInvoicesComponent },
-    { path: 'monthlyinvoiceswithdayes', component: MonthlyinvoiceswithdayesComponent },
-    { path: 'yearlyinvoiceswit-months', component: YearlyinvoiceswitMonthsComponent },
-
 ];
 
 @NgModule({
