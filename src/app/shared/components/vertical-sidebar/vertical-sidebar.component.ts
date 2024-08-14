@@ -1103,6 +1103,19 @@ export class VerticalSidebarComponent implements OnInit {
                     : '/assets/sidebar-icons/Group 40280.png',
                 show: this.userG?.userPrivileges.includes(13180810),
               },
+                {
+                name: {
+                  ar: 'المندوبين',
+                  en: 'Delegates',
+                },
+                link: '/accounts/paymentdelegates',
+                type: 'single',
+                icon:
+                  this.lang == 'ar'
+                    ? '/assets/sidebar-icons/Group 40278.png'
+                    : '/assets/sidebar-icons/Group 40280.png',
+                show: this.userG?.userPrivileges.includes(13180810),
+              },
             ],
           },
           {

@@ -348,6 +348,12 @@ export class AccountsreportsService {
       this.apiEndPoint + 'ControllingTask/FillAllUsersSelect'
     );
   }
+
+   FillAllUsersSelectAllByBranch() {
+    return this.http.get<any>(
+      this.apiEndPoint + 'ControllingTask/FillAllUsersSelectAllByBranch'
+    );
+  }
   GetGeneralManagerRevenueAMRDGV(_voucherFilterVM: any) {
     _voucherFilterVM.dateTo =
       _voucherFilterVM.dateTo == (undefined || null)
@@ -1305,4 +1311,16 @@ export class AccountsreportsService {
     return this.http.post(this.apiEndPoint + 'Account/GetInvoicedue',data);
   }
   //---------------------------------------------------------------------------------------------
+
+      GetDelegates(model: any) {
+    return this.http.post<any>(
+      `${this.apiEndPoint}Account/GetDelegates`,
+      model
+    );
+  }
+
+    GetInvoiceById(VoucherId: any) {
+    var url = `${environment.apiEndPoint}Voucher/GetInvoiceById?&VoucherId=${VoucherId}`;
+    return this.http.get<any>(url);
+  }
 }

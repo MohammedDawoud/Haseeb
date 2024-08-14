@@ -70,6 +70,7 @@ import { DailyInvoiceWithDetailsComponent } from './components/daily-invoice-wit
 import { MonthlyInvoicesComponent } from './components/monthly-invoices/monthly-invoices.component';
 import { MonthlyinvoiceswithdayesComponent } from './components/monthlyinvoiceswithdayes/monthlyinvoiceswithdayes.component';
 import { YearlyinvoiceswitMonthsComponent } from './components/yearlyinvoiceswit-months/yearlyinvoiceswit-months.component';
+import { PaymentdelegatesComponent } from './components/paymentdelegates/paymentdelegates.component';
 
 
 @NgModule({
@@ -122,7 +123,8 @@ import { YearlyinvoiceswitMonthsComponent } from './components/yearlyinvoiceswit
     TransferDebenturesComponent,
     YearlyinvoiceswitMonthsComponent,
     MonthlyinvoiceswithdayesComponent,
-    MonthlyInvoicesComponent
+    MonthlyInvoicesComponent,
+    PaymentdelegatesComponent
   ],
   imports: [
     CommonModule,

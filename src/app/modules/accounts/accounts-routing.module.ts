@@ -49,6 +49,7 @@ import { DailyInvoiceWithDetailsComponent } from './components/daily-invoice-wit
 import { MonthlyInvoicesComponent } from './components/monthly-invoices/monthly-invoices.component';
 import { MonthlyinvoiceswithdayesComponent } from './components/monthlyinvoiceswithdayes/monthlyinvoiceswithdayes.component';
 import { YearlyinvoiceswitMonthsComponent } from './components/yearlyinvoiceswit-months/yearlyinvoiceswit-months.component';
+import { PaymentdelegatesComponent } from './components/paymentdelegates/paymentdelegates.component';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'Sales_bill' },
@@ -102,7 +103,9 @@ const routes: Routes = [
    { path: 'daily-invoice-with-details', component: DailyInvoiceWithDetailsComponent },
     { path: 'monthly-invoices', component: MonthlyInvoicesComponent },
     { path: 'monthlyinvoiceswithdayes', component: MonthlyinvoiceswithdayesComponent },
-    { path: 'yearlyinvoiceswit-months', component: YearlyinvoiceswitMonthsComponent },
+  { path: 'yearlyinvoiceswit-months', component: YearlyinvoiceswitMonthsComponent },
+        { path: 'paymentdelegates', component: PaymentdelegatesComponent },
+
 ];
 
 @NgModule({
