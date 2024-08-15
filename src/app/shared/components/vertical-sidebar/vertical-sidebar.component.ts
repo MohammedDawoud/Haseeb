@@ -1062,7 +1062,7 @@ export class VerticalSidebarComponent implements OnInit {
                   this.lang == 'ar'
                     ? '/assets/sidebar-icons/Group 40278.png'
                     : '/assets/sidebar-icons/Group 40280.png',
-                show: this.userG?.userPrivileges.includes(13180810),
+                show: this.userG?.userPrivileges.includes(13180811),
               },
                            {
                 name: {
@@ -1075,7 +1075,7 @@ export class VerticalSidebarComponent implements OnInit {
                   this.lang == 'ar'
                     ? '/assets/sidebar-icons/Group 40278.png'
                     : '/assets/sidebar-icons/Group 40280.png',
-                show: this.userG?.userPrivileges.includes(13180810),
+                show: this.userG?.userPrivileges.includes(13180812),
               },
                                {
                 name: {
@@ -1088,7 +1088,7 @@ export class VerticalSidebarComponent implements OnInit {
                   this.lang == 'ar'
                     ? '/assets/sidebar-icons/Group 40278.png'
                     : '/assets/sidebar-icons/Group 40280.png',
-                show: this.userG?.userPrivileges.includes(13180810),
+                show: this.userG?.userPrivileges.includes(13180813),
               },
                 {
                 name: {
@@ -1101,7 +1101,7 @@ export class VerticalSidebarComponent implements OnInit {
                   this.lang == 'ar'
                     ? '/assets/sidebar-icons/Group 40278.png'
                     : '/assets/sidebar-icons/Group 40280.png',
-                show: this.userG?.userPrivileges.includes(13180810),
+                show: this.userG?.userPrivileges.includes(13180814),
               },
                 {
                 name: {
@@ -1114,7 +1114,7 @@ export class VerticalSidebarComponent implements OnInit {
                   this.lang == 'ar'
                     ? '/assets/sidebar-icons/Group 40278.png'
                     : '/assets/sidebar-icons/Group 40280.png',
-                show: this.userG?.userPrivileges.includes(13180810),
+                show: this.userG?.userPrivileges.includes(13180815),
               },
             ],
           },
