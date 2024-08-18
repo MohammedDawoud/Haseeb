@@ -96,7 +96,7 @@ export class NotificationsComponent {
       'SendUserName',
       'Description',
       'Date',
-      'ProjectNo',
+      // 'ProjectNo',
       'operations',
     ],
     notificationsent: [
@@ -105,7 +105,7 @@ export class NotificationsComponent {
       'ReceivedUserName',
       'Date',
       'IsRead',
-      'ProjectNo',
+      // 'ProjectNo',
       'operations',
     ],
   };

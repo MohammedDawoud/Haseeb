@@ -63,10 +63,10 @@ export class AccountsComponent {
     data: [],
   };
   displayedColumns: string[] = [
-    'Project Name',
-    'piece number',
-    'No. planned',
-    'Neighborhood',
+    // 'Project Name',
+    // 'piece number',
+    // 'No. planned',
+    // 'Neighborhood',
     'accTransactionDate',
     'statement',
     'transactionDate',
@@ -78,10 +78,10 @@ export class AccountsComponent {
     'Cost_Center',
   ];
   displayedColumns2: string[] = [
-    'Project Name2',
-    'piece number2',
-    'No. planned2',
-    'Neighborhood2',
+    // 'Project Name2',
+    // 'piece number2',
+    // 'No. planned2',
+    // 'Neighborhood2',
     'accTransactionDate2',
     'statement2',
     'transactionDate2',

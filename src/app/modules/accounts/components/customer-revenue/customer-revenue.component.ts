@@ -118,7 +118,7 @@ export class CustomerRevenueComponent implements OnInit {
   ];
   projectDisplayedColumns: string[] = [
     'date',
-    'project',
+    // 'project',
     'accountName',
     'transactionTypeName',
     'notes',

@@ -185,7 +185,7 @@ export class HomeComponent implements OnInit {
     projects: [
       'CustomerName',
       'Description',
-      'ProjectNumber',
+      // 'ProjectNumber',
       'ProjectType',
       'SubprojectType',
       'ProjectDuration',
@@ -195,7 +195,7 @@ export class HomeComponent implements OnInit {
     ],
     Supervisor: [
       'CustomerName',
-      'ProjectNumber',
+      // 'ProjectNumber',
       'SupervisionNo',
       'assignedEmployee',
       'receivingStatus',
@@ -206,7 +206,7 @@ export class HomeComponent implements OnInit {
     contracts: [
       'contractNumber',
       'contractDate',
-      'ProjectNumber',
+      // 'ProjectNumber',
       'ProjectName',
       'CustomerName',
       'totalAmount',
@@ -215,7 +215,7 @@ export class HomeComponent implements OnInit {
       'PaymentsDetails',
     ],
     tasksPerProjects: [
-      'ProjectNumber',
+      // 'ProjectNumber',
       'CustomerName',
       'ProjectName',
       'ProjectType',
@@ -232,7 +232,7 @@ export class HomeComponent implements OnInit {
       'taskName',
       'taskStatus',
       'taskDuration',
-      'ProjectNumber',
+      // 'ProjectNumber',
       'ProjectType',
       'ProjectStart',
       'ProjectDuration',
@@ -245,7 +245,7 @@ export class HomeComponent implements OnInit {
       'InvoiceStatus',
       'PostingDate',
       'customerName',
-      'projectNumber',
+      // 'projectNumber',
       'InvoiceOptions',
     ],
     DeferredSalesInvoices: [
@@ -255,7 +255,7 @@ export class HomeComponent implements OnInit {
       'InvoiceAmount',
       'PaymentType',
       'CustomerName',
-      'ProjectNumber',
+      // 'ProjectNumber',
       'DataEntryName',
       'InvoiceOptions',
     ],
@@ -315,7 +315,7 @@ export class HomeComponent implements OnInit {
     ],
     ProjectRevenuesAndExpenses: [
       'projectLocation',
-      'projectNumber',
+      // 'projectNumber',
       'ProjectDuration',
       'projectValue',
       'Revenues',

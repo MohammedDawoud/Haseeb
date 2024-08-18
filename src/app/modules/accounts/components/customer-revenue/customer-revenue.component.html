@@ -59,7 +59,7 @@
           placeholder="{{ 'Chose' | translate }}"
           [(ngModel)]="data.filter.search_CustomerName"
           name="Client"
-          (change)="FillProjectSelect();RefreshData();"
+          (change)="RefreshData();"
         >
           <ng-option *ngFor="let user of load_customers" [value]="user.id">{{
             user.name
@@ -67,7 +67,7 @@
         </ng-select>
       </div>
 
-      <div class="form-group" >
+      <!-- <div class="form-group" >
         <label class="col-form-label">
           {{ "Project Number" | translate }}</label
         >
@@ -82,7 +82,7 @@
             user.name
           }}</ng-option>
         </ng-select>
-      </div>
+      </div> -->
 
 
 
@@ -128,7 +128,7 @@
         matSort
         class="mat-elevation-z8 rounded-t-lg overflow-hidden w-max"
       >
-        <ng-container matColumnDef="project">
+        <!-- <ng-container matColumnDef="project">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>
             <span>{{ "project number" | translate }}</span>
           </th>
@@ -136,7 +136,7 @@
             {{ element.project }}
           </td>
           <td mat-footer-cell *matFooterCellDef class="bg-light"></td>
-        </ng-container>
+        </ng-container> -->
 
         <ng-container matColumnDef="date">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>
@@ -367,7 +367,7 @@
               border: 1px solid #dce0e4;
             "
           >{{ "Client" | translate }}</td>
-          <td
+          <!-- <td
             style="
               padding-inline: 0px !important;
               background-color: #f7f7f7;
@@ -376,7 +376,7 @@
               font-weight: 600;
               border: 1px solid #dce0e4;
             "
-          >{{ "Project Number" | translate }}</td>
+          >{{ "Project Number" | translate }}</td> -->
           <td
             style="
               line-height: 0 !important;
@@ -472,7 +472,7 @@
           >
             {{CustomerName}}
           </td>
-          <td
+          <!-- <td
             style="
               width: 25%;
               padding-inline: 0px !important;
@@ -485,7 +485,7 @@
             "
           >
             {{projectname}}
-          </td>
+          </td> -->
           <td
             style="
               width: 25%;
@@ -522,7 +522,7 @@
       <div class="content">
         <table style="text-align: center; vertical-align: middle; width: 100%">
           <thead>
-            <td
+            <!-- <td
               style="
                 font-size: 16px;
                 background-color: #fff;
@@ -534,10 +534,10 @@
                 border: 1px dashed #272727;
                 font-weight: 600;
               "
-            >{{ "project number" | translate }}</td>
+            >{{ "project number" | translate }}</td> -->
             <td
               style="
-                font-size: 16px;
+              font-size: 16px;
                 background-color: #fff;
                 padding: 14px 4px;
                 text-align: center;
@@ -629,7 +629,7 @@
           </thead>
           <tbody>
             <tr *ngFor="let item of printprojectsDataSource">
-              <td
+              <!-- <td
                 style="
                   background-color: #fff;
                   font-size: 15px;
@@ -642,7 +642,7 @@
                 "
               >
               {{item.project}}
-              </td>
+              </td> -->
               <td
                 style="
                   background-color: #fff;
