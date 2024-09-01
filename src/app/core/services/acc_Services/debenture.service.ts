@@ -27,6 +27,9 @@ export class DebentureService {
   GetAllquantities(formData:any){
     return this.http.post<any>(this.apiEndPoint+'Account/GetAllQuantities' ,formData );
   }
+  GetAllItemMovement(formData:any){
+    return this.http.post<any>(this.apiEndPoint+'Account/GetAllItemMovement' ,formData );
+  }
   SaveDebenture(formData:any){
     return this.http.post<any>(this.apiEndPoint+'Debentures/SaveDebenture' ,formData );
   }

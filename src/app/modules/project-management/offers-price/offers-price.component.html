@@ -843,6 +843,7 @@
                 <th>{{ "Unit" | translate }}</th>
                 <th>{{ "Quantity" | translate }}</th>
                 <th>{{ "price" | translate }}</th>
+                <th>{{ "totalBeforeTax" | translate }}</th>
                 <th>{{ "VATTax" | translate }}</th>
                 <th>{{ "netTax" | translate }}</th>
                 <th>{{ "action" | translate }}</th>
@@ -902,6 +903,19 @@
                       >ر.س</span
                     >
                   </div>
+                </td>
+                <td>
+                  <div class="flex">
+                  <input
+                    type="text"
+                    name="os-AmountBefore{{ item.idRow }}"
+                    [(ngModel)]="item.AmountBeforeTaxtxt"
+                    readonly
+                  />
+                  <span *ngIf="item.AmountBeforeTaxtxt" style="align-self: center"
+                  >ر.س</span
+                >
+                 </div>
                 </td>
 
                 <td>
@@ -2008,7 +2022,8 @@
       <div style="margin-bottom: 10px">
         <p>
           <span>{{ lang == "ar" ? "التاريخ" : "Date" }}</span>
-          <span> {{ OfferPrintData?.dateTimeNow }} </span>
+          <!-- <span> {{ OfferPrintData?.dateTimeNow }} </span> -->
+          <span> {{ OfferPrintData?.offers?.offerDate }} </span>
         </p>
         <p style="font-size: 15px">
           <span
