@@ -50,6 +50,7 @@ import { MonthlyInvoicesComponent } from './components/monthly-invoices/monthly-
 import { MonthlyinvoiceswithdayesComponent } from './components/monthlyinvoiceswithdayes/monthlyinvoiceswithdayes.component';
 import { YearlyinvoiceswitMonthsComponent } from './components/yearlyinvoiceswit-months/yearlyinvoiceswit-months.component';
 import { PaymentdelegatesComponent } from './components/paymentdelegates/paymentdelegates.component';
+import { ItemMovementComponent } from './components/item-movement/item-movement.component';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'Sales_bill' },
@@ -105,6 +106,7 @@ const routes: Routes = [
     { path: 'monthlyinvoiceswithdayes', component: MonthlyinvoiceswithdayesComponent },
   { path: 'yearlyinvoiceswit-months', component: YearlyinvoiceswitMonthsComponent },
         { path: 'paymentdelegates', component: PaymentdelegatesComponent },
+        { path: 'ItemMovement', component: ItemMovementComponent },
 
 ];
 

@@ -3421,6 +3421,7 @@ export class AddSearchComponent implements OnInit {
       QtyConst: null,
       accountJournaltxt: null,
       Amounttxt: null,
+      AmountBeforeTaxtxt:null,
       taxAmounttxt: null,
       TotalAmounttxt: null,
 
@@ -3664,6 +3665,9 @@ export class AddSearchComponent implements OnInit {
         ).toFixed(2);
         totalwithtax = +parseFloat(Value).toFixed(2);
       }
+      this.offerServices.filter(
+        (a: { idRow: any }) => a.idRow == element.idRow
+      )[0].AmountBeforeTaxtxt = parseFloat(FValIncludeT.toString()).toFixed(2);
       this.offerServices.filter(
         (a: { idRow: any }) => a.idRow == element.idRow
       )[0].taxAmounttxt = parseFloat(taxAmount.toString()).toFixed(2);
