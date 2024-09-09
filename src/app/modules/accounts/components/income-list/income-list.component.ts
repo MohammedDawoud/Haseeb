@@ -504,7 +504,15 @@ export class IncomeListComponent implements OnInit {
       return;
     }
     var FromDate_V = '';
-
+    var filttype=this.data.filter.filteringTypeAll;
+    if(this.data.filter.filteringTypeAll!=null)
+    {
+      filttype=this.data.filter.filteringTypeAll;
+    }
+    else
+    {
+      filttype=this.data.filter.filteringTypeAllTwo;
+    }
     if (
       this.data.filter.DateTo_P != '' &&
       this.data.filter.filteringTypeAll >= 0 &&
@@ -660,7 +668,8 @@ export class IncomeListComponent implements OnInit {
       var FilteringSelectAllTypevv = this.data.filter.filteringTypeAllTwo;
       if (FilteringSelectAllTypevv >= 0 && FilteringSelectAllTypevv <= 10) {
         PeriodFillterTypev = this.data.filter.filteringTypeAllTwo;
-        PeriodCounterv = 0;
+        PeriodCounterv = this.data.filter.filtertypeid;     
+        //PeriodCounterv = 0;
         if (!(PeriodCounterv > 0)) {
           PeriodCounterv = 0;
         }
