@@ -1,10 +1,9 @@
 export const environment = {
   production: true,
-  apiEndPoint: 'https://api.tameercloud.com/api/',
-  PhotoURL: 'https://api.tameercloud.com',
+  apiEndPoint: 'https://api.madareng.net/api/',
+  PhotoURL: 'https://api.madareng.net',
   LabaikEndpoint: 'https://api2.tameercloud.com/api/',
   labaikphoto: 'https://api2.tameercloud.com',
-
   printConfig: {
     printMode: 'template', // template
     popupProperties:

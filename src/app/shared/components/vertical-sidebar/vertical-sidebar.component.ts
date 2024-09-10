@@ -177,6 +177,13 @@ export class VerticalSidebarComponent implements OnInit {
 
         children: [
           {
+            name: { ar: 'عروض الأسعار', en: 'Quotations' },
+            link: '/projects/offers-price',
+            type: 'single',
+            icon: '/assets/sidebar-icons/offer_broken.png',
+            show: this.userG?.userPrivileges.includes(121308),
+          },
+          {
             name: { ar: 'الإضافة والبحث', en: 'Search and inquire' },
             link: '/customers/search',
             type: 'single',

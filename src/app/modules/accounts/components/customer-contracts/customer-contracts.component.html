@@ -349,7 +349,7 @@
                       <i class="fa-solid fa-plus"></i>
                     </button>
                      <!-- ="  طباعة العقد" -->
-                    <button *ngIf="element.type==1 || element.type==2"
+                    <!-- <button *ngIf="element.type==1 || element.type==2"
                       type="button"
                       class="current-tasks btn btn-outline-success btn-sm waves-effect"
                       data-toggle="tooltip"
@@ -359,9 +359,9 @@
                       (click)="GetDofAsaatContractsPrint(element);open(printDivContracts_DofAsaatModal);"
                     >
                       <i class="fa-solid fa-print"></i>
-                    </button>
+                    </button> -->
                     <!--   طباعة عقد الهيئة السعودية الهندسية  -->
-                    <button *ngIf="element.type==3 || element.type==4 || element.type==5"
+                    <!-- <button *ngIf="element.type==3 || element.type==4 || element.type==5"
                       type="button"
                       class="EditProjectPhasesTasks btn btn-outline-success btn-sm waves-effect"
                       data-toggle="tooltip"
@@ -371,7 +371,7 @@
                       (click)="Get3ContractsPrint(element);(element.type==3 && open(printDivContracts_SupModal));(element.type==4 && open(printDivContracts_ConModal));(element.type==5 && open(printDivContracts_DesModal));"
                     >
                       <i class="fa-solid fa-print"></i>
-                    </button>
+                    </button> -->
                   </span>
                 </div>
               </div>
