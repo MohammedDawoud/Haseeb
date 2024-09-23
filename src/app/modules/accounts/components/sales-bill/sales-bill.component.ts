@@ -2826,8 +2826,8 @@ export class SalesBillComponent implements OnInit {
   //----------------------------ServicePrice----------------------------
   //#region
   ServiceTypelist = [
-    { id: 1, name: 'خدمة' },
-    { id: 2, name: 'تقرير' },
+    { id: 1, name: 'قطعة' },
+    { id: 2, name: 'وحدة' },
   ];
 
   CostCenterSelectlist: any = [];
@@ -2931,7 +2931,7 @@ export class SalesBillComponent implements OnInit {
         // ProjectId: this.SerivceModalForm.controls["ProjectType"].value,
         // ProjectSubTypeID: this.SerivceModalForm.controls["SubprojectType"].value,
         ServiceName_EN: this.SerivceModalForm.controls["ServiceNameEN"].value,
-        // ServiceType: this.SerivceModalForm.controls["ServiceType"].value,
+        ServiceType: this.SerivceModalForm.controls["ServiceType"].value,
         ServicesId: this.SerivceModalForm.controls["id"].value,
         servicesName: this.SerivceModalForm.controls["ServiceName"].value,
 

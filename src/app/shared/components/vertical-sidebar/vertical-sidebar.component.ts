@@ -181,7 +181,7 @@ export class VerticalSidebarComponent implements OnInit {
             link: '/projects/offers-price',
             type: 'single',
             icon: '/assets/sidebar-icons/offer_broken.png',
-            show: this.userG?.userPrivileges.includes(121308),
+            show: this.userG?.userPrivileges.includes(1214),
           },
           {
             name: { ar: 'الإضافة والبحث', en: 'Search and inquire' },

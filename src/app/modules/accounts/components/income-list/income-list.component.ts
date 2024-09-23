@@ -499,6 +499,7 @@ export class IncomeListComponent implements OnInit {
     return dateYy;
   }
   SetStartDate() {
+    debugger
     if (this.data.filter.DateTo_P == null) {
       this.toast.error(this.translate.instant('Date Choose'));
       return;
@@ -515,11 +516,11 @@ export class IncomeListComponent implements OnInit {
     }
     if (
       this.data.filter.DateTo_P != '' &&
-      this.data.filter.filteringTypeAll >= 0 &&
+      filttype >= 0 &&
       this.data.filter.filtertypeid > 0
     ) {
       var date = new Date(this.data.filter.DateTo_P);
-      if (this.data.filter.filteringTypeAll == 1) {
+      if (filttype == 1) {
         var NEWDate = this.subtractYears(date, 1);
         NEWDate = this.addDays(NEWDate, 1);
         FromDate_V = this._sharedService.date_TO_String(NEWDate);
@@ -527,7 +528,7 @@ export class IncomeListComponent implements OnInit {
         this.data.filter.DateTo_P = this._sharedService.date_TO_String(
           this.data.filter.DateTo_P
         );
-      } else if (this.data.filter.filteringTypeAll == 2) {
+      } else if (filttype == 2) {
         var NEWDate = this.subtractMonths(date, 6);
         NEWDate = this.addDays(NEWDate, 1);
         FromDate_V = this._sharedService.date_TO_String(NEWDate);
@@ -535,7 +536,7 @@ export class IncomeListComponent implements OnInit {
         this.data.filter.DateTo_P = this._sharedService.date_TO_String(
           this.data.filter.DateTo_P
         );
-      } else if (this.data.filter.filteringTypeAll == 3) {
+      } else if (filttype == 3) {
         var NEWDate = this.subtractMonths(date, 3);
         NEWDate = this.addDays(NEWDate, 1);
         FromDate_V = this._sharedService.date_TO_String(NEWDate);
@@ -543,7 +544,7 @@ export class IncomeListComponent implements OnInit {
         this.data.filter.DateTo_P = this._sharedService.date_TO_String(
           this.data.filter.DateTo_P
         );
-      } else if (this.data.filter.filteringTypeAll == 4) {
+      } else if (filttype == 4) {
         var NEWDate = this.subtractMonths(date, 1);
         NEWDate = this.addDays(NEWDate, 1);
         FromDate_V = this._sharedService.date_TO_String(NEWDate);
@@ -551,7 +552,7 @@ export class IncomeListComponent implements OnInit {
         this.data.filter.DateTo_P = this._sharedService.date_TO_String(
           this.data.filter.DateTo_P
         );
-      } else if (this.data.filter.filteringTypeAll == 5) {
+      } else if (filttype == 5) {
         var NEWDate = this.subtractDays(date, 7);
         NEWDate = this.addDays(NEWDate, 1);
         FromDate_V = this._sharedService.date_TO_String(NEWDate);
@@ -559,14 +560,14 @@ export class IncomeListComponent implements OnInit {
         this.data.filter.DateTo_P = this._sharedService.date_TO_String(
           this.data.filter.DateTo_P
         );
-      } else if (this.data.filter.filteringTypeAll == 6) {
+      } else if (filttype == 6) {
         var NEWDate = this.subtractDays(date, 0);
         FromDate_V = this._sharedService.date_TO_String(NEWDate);
         this.data.filter.DateFrom_P = FromDate_V;
         this.data.filter.DateTo_P = this._sharedService.date_TO_String(
           this.data.filter.DateTo_P
         );
-      } else if (this.data.filter.filteringTypeAll == 7) {
+      } else if (filttype == 7) {
         var NEWDate: any = this.GetStartYear(date);
         FromDate_V = this._sharedService.date_TO_String(NEWDate);
         this.data.filter.DateFrom_P = FromDate_V;

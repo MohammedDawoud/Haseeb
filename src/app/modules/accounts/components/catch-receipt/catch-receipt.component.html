@@ -6,6 +6,7 @@
       <div class="btns mb-3 w-100">
         <div class="row d-md-flex">
           <button
+          *ngIf="userG?.userPrivileges.includes(13100205)"
             type="button"
             class="flex gap-1 btn btn-danger mb-3 col-md-2"
             [disabled]="this.selection.selected.length == 0"
@@ -1510,6 +1511,7 @@
     <div class="d-flex justify-content-end">
       <div>
         <button
+        *ngIf="userG?.userPrivileges.includes(13100207)"
           (click)="modal?.dismiss()"
           class="btn text-white"
           style="background-color: var(--base-color)"
@@ -2163,6 +2165,7 @@
           (click)="SaveVoucher(modal, 'PostVouchers')"
           class="btn text-white"
           style="background-color: var(--base-color)"
+          *ngIf="userG?.userPrivileges.includes(13100207)"
           [disabled]="  disableButtonSave_Voucher ||
             this.ReceiptVoucherForm.controls['recipientName'].value == null ||
             this.ReceiptVoucherForm.controls['AmountOf'].value == null ||

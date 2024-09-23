@@ -3205,6 +3205,7 @@
       <div class="pt-1 m-1" *ngIf="invoicepop != 2">
         <button
           [disabled]="disableButtonSave_Invoice"
+          *ngIf="userG?.userPrivileges.includes(13100107)"
           (click)="
             modalInvoice.WhichClick = 2;
             open(

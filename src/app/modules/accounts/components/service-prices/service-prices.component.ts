@@ -586,13 +586,14 @@ export class ServicePricesComponent implements OnInit {
       // this.FillProjectTypeSelect();
       this.FillPackagesSelect();
       this.SerivceModalDetails = data;
+      debugger
       this.SerivceModalForm.controls["id"].setValue(data.servicesId)
       this.SerivceModalForm.controls["nameAccount"].setValue(data.accountName)
       // this.SerivceModalForm.controls["ProjectType"].setValue(data.projectId)
       // this.SerivceModalForm.controls["SubprojectType"].setValue(data.projectSubTypeID)
       this.SerivceModalForm.controls["ServiceName"].setValue(data.servicesName)
       this.SerivceModalForm.controls["ServiceNameEN"].setValue(data.serviceName_EN)
-      // this.SerivceModalForm.controls["ServiceType"].setValue(data.serviceType)
+      this.SerivceModalForm.controls["ServiceType"].setValue(data.serviceType)
       this.SerivceModalForm.controls["amount"].setValue(data.amount)
       // this.SerivceModalForm.controls["costCenter"].setValue(data.costCenterId)
       this.SerivceModalForm.controls["ServiceRevenueAccount"].setValue(data.accountId)
@@ -663,8 +664,8 @@ export class ServicePricesComponent implements OnInit {
     }
   }
   ServiceTypelist = [
-    { id: 1, name: 'خدمة' },
-    { id: 2, name: 'تقرير' }
+    { id: 1, name: 'قطعة' },
+    { id: 2, name: 'وحدة' },
   ]
 
   CostCenterSelectlist: any = []
@@ -783,6 +784,7 @@ export class ServicePricesComponent implements OnInit {
   details: any = []
 
   SaveServicePriceWithDetails(modal?: any) {
+    debugger
     this.ServiceAccountlist.forEach((element: any) => {
       if (this.SerivceModalForm.controls["ServiceRevenueAccount"].value == element.id) {
         this.SerivceModalForm.controls["nameAccount"].setValue(element.name)
@@ -806,7 +808,7 @@ export class ServicePricesComponent implements OnInit {
         // ProjectId: this.SerivceModalForm.controls["ProjectType"].value,
         // ProjectSubTypeID: this.SerivceModalForm.controls["SubprojectType"].value,
         ServiceName_EN: this.SerivceModalForm.controls["ServiceNameEN"].value,
-        // ServiceType: this.SerivceModalForm.controls["ServiceType"].value,
+        ServiceType: this.SerivceModalForm.controls["ServiceType"].value,
         ServicesId: this.SerivceModalForm.controls["id"].value,
         servicesName: this.SerivceModalForm.controls["ServiceName"].value,
 

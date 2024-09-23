@@ -57,7 +57,7 @@
       </button>
 
       <button
-        *ngIf="userG?.userPrivileges.includes(1213101)"
+        *ngIf="userG?.userPrivileges.includes(121401)"
         type="button"
         class="btn bg-base text-white"
         (click)="open(addOfferPrice, null, 'add')"
@@ -382,7 +382,7 @@
               </button>
 
               <button
-                *ngIf="userG?.userPrivileges.includes(1213102)"
+                *ngIf="userG?.userPrivileges.includes(121402)"
                 class="p-2 bg-orange-100 hover:bg-orange-500 rounded-lg duration-300 hover:text-white w-10"
                 (click)="open(addOfferPrice, element, 'edit'); getrow(element)"
               >
@@ -391,7 +391,7 @@
               <button
                 *ngIf="
                   element.projectId == 0 &&
-                  userG?.userPrivileges.includes(1213103)
+                  userG?.userPrivileges.includes(121403)
                 "
                 class="p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white w-10"
                 (click)="open(deleteModal, null, 'delete'); getrow(element)"
@@ -5302,6 +5302,8 @@
       <div class="pt-3 m-3" *ngIf="invoicepop != 2">
         <button
           [disabled]="disableButtonSave_Invoice"
+          *ngIf="userG?.userPrivileges.includes(13100107)"
+
           (click)="
             modalInvoice.WhichClick = 2;
             open(
@@ -5610,7 +5612,7 @@
           </div>
         </div>
 
-        <div class="col-sm-6 col-md-3 mb-3" style="display: none;">
+        <div class="col-sm-6 col-md-3 mb-3">
           <div class="form-group">
             <label class="col-form-label">
               {{ "ServiceType" | translate }}</label

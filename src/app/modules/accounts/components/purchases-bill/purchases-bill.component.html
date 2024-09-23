@@ -5,6 +5,7 @@
     <div class="btns mb-3 w-100 flex justify-between items-center flex-wrap">
       <div class="row d-md-flex">
         <button
+        *ngIf="userG?.userPrivileges.includes(13100405)"
           type="button"
           class="flex gap-1 btn btn-danger mb-3 col-md-2"
           [disabled]="this.selection.selected.length == 0"
@@ -1443,6 +1444,7 @@
     <div class="d-flex justify-content-end" *ngIf="modalInvoice.AddOrView == 1">
       <div class="pt-1 m-1">
         <button
+        *ngIf="userG?.userPrivileges.includes(13100407)"
           [disabled]="
             disableButtonSave_Invoice || modalInvoice.supplierId == null
           "
@@ -2045,6 +2047,7 @@
       </div>
       <div>
         <button
+        *ngIf="userG?.userPrivileges.includes(13100307)"
           class="btn text-white"
           style="background-color: var(--base-color)"
           (click)="savevoucher(1, modal)"

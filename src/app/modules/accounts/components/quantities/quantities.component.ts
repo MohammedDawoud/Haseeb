@@ -184,7 +184,19 @@ export class QuantitiesComponent {
     this.api.lang.subscribe((res) => {
       this.lang = res;
     });
+    this.FillStorehouseSelect();
+    this.FillServiceSelect();
   }
+
+  serviceList: any;
+
+  FillServiceSelect() {
+    this.serviceList = [];
+    this._invoiceService.GetAllServicesPrice().subscribe((data) => {
+      this.serviceList = data.result;
+    });
+  }
+
 
   dataQuantitieVoucher: any = {
     filter: {
@@ -208,6 +220,7 @@ export class QuantitiesComponent {
   DebentureSourceTemp: any = [];
 
   LoadDataQuantities() {
+    debugger
     var formData = new FormData();
     if (this.dataQuantitieVoucher.filter.DateFrom_P != null &&this.dataQuantitieVoucher.filter.DateFrom_P != null) {
       formData.append('FromDate', this.dataQuantitieVoucher.filter.DateFrom_P);

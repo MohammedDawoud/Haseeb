@@ -13,15 +13,15 @@
             class="btn bg-base text-white mb-3 col-md-2"
             (click)="open(NewInvoiceModal, null, 'addInvoicewithoutProject')"
           >
-            {{ "draft (without project)" | translate }}
+            {{ "NewsDraftInvoice" | translate }}
           </button>
-          <button
+          <!-- <button
             type="button"
             class="btn bg-base text-white mb-3 col-md-2"
             (click)="open(NewInvoiceModal, null, 'addInvoice')"
           >
             {{ "Add an draftProject" | translate }}
-          </button>
+          </button> -->
           <button
             type="button"
             class="flex gap-1 btn btn-success mb-3 col-md-2"
@@ -3853,7 +3853,7 @@
             </div>
           </div>
   
-          <div class="col-sm-6 col-md-3 mb-3" style="display: none;">
+          <div class="col-sm-6 col-md-3 mb-3">
             <div class="form-group">
               <label class="col-form-label">
                 {{ "ServiceType" | translate }}</label
