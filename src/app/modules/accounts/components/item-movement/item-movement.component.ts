@@ -101,13 +101,13 @@ export class ItemMovementComponent {
   pathurl = environment.PhotoURL;
   projectDisplayedColumns: string[] = [
     // 'select',
-    'itemCode',
-    'servicesName',
-    'amount',
-    'amountPur',
-    'begbalance',
-    'qtyStorehouse',
-    'qtyTotal',
+    'name',
+    'qty',
+    'date',
+    'typeName',
+    'qtyCredit',
+    'invoiceNumber',
+    'totalAmount',
   ];
 
   modalDebenture: any = {
@@ -183,7 +183,20 @@ export class ItemMovementComponent {
     this.api.lang.subscribe((res) => {
       this.lang = res;
     });
+    this.FillStorehouseSelect();
+    this.FillServiceSelect();
   }
+
+
+  serviceList: any;
+
+  FillServiceSelect() {
+    this.serviceList = [];
+    this._invoiceService.GetAllServicesPrice().subscribe((data) => {
+      this.serviceList = data.result;
+    });
+  }
+
 
   dataQuantitieVoucher: any = {
     filter: {

@@ -14,6 +14,7 @@ import { AccountsreportsService } from 'src/app/core/services/acc_Services/accou
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateService } from '@ngx-translate/core';
+import { DebentureService } from 'src/app/core/services/acc_Services/debenture.service';
 
 @Component({
   selector: 'app-service-prices',
@@ -295,6 +296,7 @@ export class ServicePricesComponent implements OnInit {
     private formBuilder: FormBuilder,
     private translate: TranslateService,
     private api: RestApiService,
+    private _debentureService: DebentureService,
     private _accountsreportsService: AccountsreportsService,
     private router: Router
   ) {
@@ -312,114 +314,12 @@ export class ServicePricesComponent implements OnInit {
       { id: 2, Name: 'محمود نافع' },
     ];
 
-    this.delayedProjects = [
-      {
-        user: 'adwawd',
-        customerName: 'adawdv',
-        projectStatus: 4,
-        startDate: new Date(),
-        endDate: new Date(),
-      },
-    ];
-    this.latedProjects = [
-      {
-        user: 'adwawd',
-        customerName: 'adawdv',
-        projectStatus: 0,
-        startDate: new Date(),
-        endDate: new Date(),
-      },
-    ];
+    this.delayedProjects = [];
+    this.latedProjects = [];
 
-    this.projects = [
-      {
-        ProjectType: '000056',
-        SubprojectType: '2023-06-13',
-        ServiceName: 'أجل',
-        price: 50,
-        progress: 50,
-      },
-      {
-        ProjectType: '000056',
-        SubprojectType: '2023-06-13',
-        ServiceName: 'أجل',
-        price: 50,
-        progress: 50,
-      },
-      {
-        ProjectType: '000056',
-        SubprojectType: '2023-06-13',
-        ServiceName: 'أجل',
-        price: 50,
-        progress: 50,
-      },
-      {
-        ProjectType: '000056',
-        SubprojectType: '2023-06-13',
-        ServiceName: 'أجل',
-        price: 50,
-        progress: 50,
-      },
-      {
-        ProjectType: '000056',
-        SubprojectType: '2023-06-13',
-        ServiceName: 'أجل',
-        price: 50,
-        progress: 50,
-      },
-    ];
+    this.projects = [];
 
-    this.userPermissions = [
-      {
-        userName: 'adawdawd',
-        watch: false,
-        add: true,
-        edit: true,
-        delete: false,
-      },
-      {
-        userName: 'adawdawd',
-        watch: false,
-        add: true,
-        edit: true,
-        delete: false,
-      },
-      {
-        userName: 'adawdawd',
-        watch: false,
-        add: true,
-        edit: true,
-        delete: true,
-      },
-      {
-        userName: 'adawdawd',
-        watch: false,
-        add: false,
-        edit: true,
-        delete: false,
-      },
-      {
-        userName: 'adawdawd',
-        watch: false,
-        add: true,
-        edit: true,
-        delete: false,
-      },
-      {
-        userName: 'adawdawd',
-        watch: true,
-        add: true,
-        edit: true,
-        delete: false,
-      },
-      {
-        userName: 'adawdawd',
-        watch: true,
-        add: true,
-        edit: true,
-        delete: true,
-      },
-    ];
+    this.userPermissions = [];
     this.projectsDataSource = new MatTableDataSource();
 
     this.userPermissionsDataSource = new MatTableDataSource(
@@ -568,6 +468,7 @@ export class ServicePricesComponent implements OnInit {
     this.AllcostCenterlist = [];
       this.SubprojecttypeList = [];
       this.intialModelBranchOrganization();
+      this.FillStorehouseSelect();
       this.FillServiceAccount();
       this.FillServiceAccountPurchase();
       this.FillCostCenterSelect();
@@ -580,6 +481,7 @@ export class ServicePricesComponent implements OnInit {
       this.details = [];
       this.AllcostCenterlist = [];
       this.intialModelBranchOrganization();
+      this.FillStorehouseSelect();
       this.FillServiceAccount();
       this.FillServiceAccountPurchase();
       this.FillCostCenterSelect();
@@ -604,8 +506,9 @@ export class ServicePricesComponent implements OnInit {
       this.SerivceModalForm.controls["Begbalance"].setValue(data.begbalance)
       this.SerivceModalForm.controls["SerialNumber"].setValue(data.serialNumber)
       this.SerivceModalForm.controls["ItemCode"].setValue(data.itemCode)
+      this.SerivceModalForm.controls["storehouseId"].setValue(data.storehouseId)
 
-
+      
       // this._accountsreportsService.FillProjectSubTypesSelect(this.SerivceModalForm.controls["ProjectType"].value).subscribe(data => {
       //   this.SubprojecttypeList = data;
       // });
@@ -775,8 +678,7 @@ export class ServicePricesComponent implements OnInit {
       Begbalance: [null],
       SerialNumber: [null],
       ItemCode: [null, [Validators.required]],
-
-
+      storehouseId: [null, [Validators.required]],
 
     })
   }
@@ -817,6 +719,9 @@ export class ServicePricesComponent implements OnInit {
         begbalance: this.SerivceModalForm.controls["Begbalance"].value,
         serialNumber: this.SerivceModalForm.controls["SerialNumber"].value,
         itemCode: this.SerivceModalForm.controls["ItemCode"].value,
+        storehouseId: this.SerivceModalForm.controls["storehouseId"].value,
+
+        
 
       },
       details: this.details
@@ -1451,5 +1356,89 @@ export class ServicePricesComponent implements OnInit {
     window.location.reload();
   }
 
+
+
+  //-----------------------------------Storehouse------------------------------------------------
+  //#region 
+
+  dataAdd: any = {
+    Storehouse: {
+      id: 0,
+      nameAr: null,
+      nameEn: null,
+    },
+  }
+  Storehouse: any;
+  StorehousePopup: any;
+
+  FillStorehouseSelect() {
+    this.Storehouse = [];
+    this.StorehousePopup = [];
+    this._debentureService.FillStorehouseSelect().subscribe((data) => {
+      this.Storehouse = data;
+      this.StorehousePopup = data;
+    });
+  }
+  StorehouseRowSelected: any;
+  getStorehouseRow(row: any) {
+    this.StorehouseRowSelected = row;
+  }
+  setStorehouseInSelect(data: any, model: any) {
+    // this.modalInvoice.storehouseId = data.id;
+    this.SerivceModalForm.controls["storehouseId"].setValue(data.id)
+  }
+  resetStorehouse() {
+    this.dataAdd.Storehouse.id = 0;
+    this.dataAdd.Storehouse.nameAr = null;
+    this.dataAdd.Storehouse.nameEn = null;
+  }
+  saveStorehouse() {
+    if (
+      this.dataAdd.Storehouse.nameAr == null ||
+      this.dataAdd.Storehouse.nameEn == null
+    ) {
+      this.toast.error('من فضلك أكمل البيانات', 'رسالة');
+      return;
+    }
+    var StorehouseObj: any = {};
+    StorehouseObj.StorehouseId = this.dataAdd.Storehouse.id;
+    StorehouseObj.NameAr = this.dataAdd.Storehouse.nameAr;
+    StorehouseObj.NameEn = this.dataAdd.Storehouse.nameEn;
+    this._debentureService
+      .SaveStorehouse(StorehouseObj)
+      .subscribe((result: any) => {
+        if (result.statusCode == 200) {
+          this.toast.success(
+            this.translate.instant(result.reasonPhrase),
+            this.translate.instant('Message')
+          );
+          this.resetStorehouse();
+          this.FillStorehouseSelect();
+        } else {
+          this.toast.error(
+            this.translate.instant(result.reasonPhrase),
+            this.translate.instant('Message')
+          );
+        }
+      });
+  }
+  confirmStorehouseDelete() {
+    this._debentureService
+      .DeleteStorehouse(this.StorehouseRowSelected.id)
+      .subscribe((result: any) => {
+        if (result.statusCode == 200) {
+          this.toast.success(
+            this.translate.instant(result.reasonPhrase),this.translate.instant('Message')
+          );
+          this.FillStorehouseSelect();
+        } else {
+          this.toast.error(
+            this.translate.instant(result.reasonPhrase),this.translate.instant('Message')
+          );
+        }
+      });
+  }
+  //#endregion
+  //----------------------------------(End)-Storehouse---------------------------------------------
 
 }
