@@ -5,6 +5,7 @@
       <div class="btns mb-3 w-100">
         <div class="row d-md-flex">
   
+  
           <!-- <button 
             *ngIf="userG?.userPrivileges.includes(13110201)"
             (click)="Printdiffrentvoucher()"
@@ -22,15 +23,101 @@
           >
             {{ "exportExcel" | translate }}
           </button> -->
+          <div class="flex flex-wrap gap-4 align-items-end">
+            <div class="form-group">
+              <label class="col-form-label"> {{ "search" | translate }}</label>
+    
+              <input
+                type="text "
+                class="w-full p-2 inputType"
+                name="user"
+                placeholder="{{ 'search' | translate }}"
+                [(ngModel)]="dataQuantitieVoucher.filter.search_Input"
+                (keyup)="applyFilter($event)"
+              />
+            </div>
+    
   
-          <button
-            type="button"
-            class="flex gap-1 btn btn-success mb-3 col-md-2"
-            (click)="showFilters = !showFilters; ResetRefresh()"
-          >
-            {{ "research" | translate }}
-            <i class="fa-solid fa-search"></i>
-          </button>
+            <div class="col-sm-6 col-md-3 col-lg-3 mb-0">
+              <div class="form-group">
+                <label for="StorehouseId" class="text-right col-form-label block">
+                  {{ "Storehouse" | translate }}</label
+                >
+                <div class="flex">
+                  <ng-select
+                  class="w-full p-0"
+                  placeholder="{{ 'Chose' | translate }}"
+                  [(ngModel)]="dataQuantitieVoucher.filter.StorehouseId"
+                  [ngModelOptions]="{ standalone: true }"
+                  (change)="LoadDataItemMovement()"
+                  name="storehouseId"
+                  >
+                    <ng-option *ngFor="let user of Storehouse" [value]="user.id">{{
+                      user.name
+                    }}</ng-option>
+                  </ng-select>
+                  <!-- <button
+                    type="button"
+                    class="btn bg-base text-white"
+                    style="padding: 5px 10px"
+                    (click)="open(StorehouseModal)"
+                  >
+                    <i class="fa fa-plus"></i>
+                  </button> -->
+                </div>
+              </div>
+            </div>
+  
+            <div class="col-sm-6 col-md-3 col-lg-3 mb-0">
+              <div class="form-group">
+                <label for="ServiceId" class="text-right col-form-label block">
+                  {{ "Service Name" | translate }}</label
+                >
+                <div class="flex">
+                  <ng-select
+                  class="w-full p-0"
+                  placeholder="{{ 'Chose' | translate }}"
+                  [(ngModel)]="dataQuantitieVoucher.filter.ServiceId"
+                  [ngModelOptions]="{ standalone: true }"
+                  (change)="LoadDataItemMovement()"
+                  name="ServiceId"
+                  >
+                    <ng-option *ngFor="let user of serviceList" [value]="user.servicesId">{{
+                      user.servicesName
+                    }}</ng-option>
+                  </ng-select>
+                </div>
+              </div>
+            </div>
+            <!-- <div class="flex justify-content-center gap-3">
+              <button
+                class="btn btn-primary"
+                (click)="
+                  dataQuantitieVoucher.filter.enable = !dataQuantitieVoucher.filter.enable
+                "
+                [translate]="'name'"
+                [translateParams]="{
+                  ar: 'فلترة بالوقت',
+                  en: 'Time Filter'
+                }"
+              ></button>
+              <div
+                class="form-group col-md-2 timeInput"
+                *ngIf="dataQuantitieVoucher.filter.enable"
+              >
+                <input
+                  placeholder="{{ 'Chose Date' | translate }}"
+                  [(ngModel)]="dataQuantitieVoucher.filter.date"
+                  type="text"
+                  (ngModelChange)="CheckDate($event)"
+                  class="form-control"
+                  [bsConfig]="{ rangeInputFormat: 'DD/MM/YYYY' }"
+                  bsDaterangepicker
+                  #dpr="bsDaterangepicker"
+                />
+              </div>
+            </div> -->
+          </div>
         </div>
       </div>
     </div>
@@ -118,7 +205,7 @@
   
         <ng-container matColumnDef="name">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>
-            <span>{{ "name" | translate }}</span>
+            <span>{{ "Customer Name" | translate }} / {{ "Supplier" | translate }}</span>
           </th>
           <td mat-cell *matCellDef="let element">
             {{ element.name }}
@@ -127,7 +214,7 @@
   
         <ng-container matColumnDef="qty">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>
-            <span>{{ "qty" | translate }}</span>
+            <span>{{ "Quantity" | translate }}</span>
           </th>
           <td mat-cell *matCellDef="let element">
             {{ element.qty }}
@@ -145,7 +232,7 @@
   
         <ng-container matColumnDef="typeName">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>
-            <span>{{ "typeName" | translate }}</span>
+            <span>{{ "Operation type" | translate }}</span>
           </th>
           <td mat-cell *matCellDef="let element">
             {{ element.typeName }}
@@ -154,7 +241,7 @@
   
         <ng-container matColumnDef="qtyCredit">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>
-            <span>{{ "qtyCredit" | translate }}</span>
+            <span>{{ "balance" | translate }}</span>
           </th>
           <td mat-cell *matCellDef="let element">
             {{ element.qtyCredit }}
@@ -162,7 +249,7 @@
         </ng-container>
         <ng-container matColumnDef="invoiceNumber">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>
-            <span>{{ "invoiceNumber" | translate }}</span>
+            <span>{{ "Invoice Number" | translate }}</span>
           </th>
           <td mat-cell *matCellDef="let element">
             {{ element.invoiceNumber }}
@@ -170,7 +257,7 @@
         </ng-container>
         <ng-container matColumnDef="totalAmount">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>
-            <span>{{ "totalAmount" | translate }}</span>
+            <span>{{ "price" | translate }}</span>
           </th>
           <td mat-cell *matCellDef="let element">
             {{ element.totalAmount }}
