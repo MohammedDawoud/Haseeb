@@ -398,6 +398,8 @@ export class OrganizationComponent implements OnInit {
       this.Getemployeebyid();
       this.getcityName();
     });
+    this.GetLaw_Regulations();
+    this.GetLaw_Regulations();
 
     this.intialModelBranchOrganization();
     this.intialModel();
@@ -4192,6 +4194,64 @@ export class OrganizationComponent implements OnInit {
       return;
     }
     this.organizationService.SendMail_test(mail).subscribe(
+      (result: any) => {
+        if (result.statusCode == 200) {
+          this.toast.success(
+            this.translate.instant(result.reasonPhrase),
+            this.translate.instant('Message')
+          );
+        } else {
+          this.toast.error(
+            this.translate.instant(result.reasonPhrase),
+            this.translate.instant('Message')
+          );
+        }
+      },
+      (error) => {
+        this.toast.error(
+          this.translate.instant(error.reasonPhrase),
+          this.translate.instant('Message')
+        );
+      }
+    );
+  }
+
+  emp_LateLists: any;
+  emp_AbsenceLists: any;
+  GetLaw_Regulations() {
+    this.organizationService.GetLaw_Regulations().subscribe((result: any) => {
+      this.emp_LateLists = result.emp_LateLists;
+      this.emp_AbsenceLists = result.emp_AbsenceLists;
+    });
+  }
+
+    saveLateLaw(data:any) {
+    
+    this.organizationService.saveLateLaw(data).subscribe(
+      (result: any) => {
+        if (result.statusCode == 200) {
+          this.toast.success(
+            this.translate.instant(result.reasonPhrase),
+            this.translate.instant('Message')
+          );
+        } else {
+          this.toast.error(
+            this.translate.instant(result.reasonPhrase),
+            this.translate.instant('Message')
+          );
+        }
+      },
+      (error) => {
+        this.toast.error(
+          this.translate.instant(error.reasonPhrase),
+          this.translate.instant('Message')
+        );
+      }
+    );
+  }
+  saveAbsenceLaw(data:any) {
+    
+    this.organizationService.saveAbsenceLaw(data).subscribe(
       (result: any) => {
         if (result.statusCode == 200) {
           this.toast.success(

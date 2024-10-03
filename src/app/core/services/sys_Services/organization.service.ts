@@ -459,4 +459,21 @@ export class OrganizationService {
       null
     );
   }
+
+   //////////////////////////////////////
+   GetLaw_Regulations() {
+    return this.http.get<any>(this.apiEndPoint + 'LawRelegations/GetLaw_Regulations');
+  }
+
+   saveAbsenceLaw(modal: any): Observable<any> {
+    // const headers = { 'content-type': 'application/json' }
+    // const body = JSON.stringify(modal);
+    return this.http.post(this.apiEndPoint + 'LawRelegations/saveAbsenceLaw', modal);
+  }
+
+   saveLateLaw(modal: any): Observable<any> {
+    // const headers = { 'content-type': 'application/json' }
+    // const body = JSON.stringify(modal);
+    return this.http.post(this.apiEndPoint + 'LawRelegations/saveLateLaw', modal);
+  }
 }

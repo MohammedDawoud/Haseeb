@@ -1854,6 +1854,249 @@
             </div>
           </div>
         </tab>
+
+        
+        <!--------------------------------------- Law Regulations------------------------------------------------->
+
+        <tab heading="{{ 'المخالفات والجزاءات' | translate }}">
+          <div class="content">
+
+            <!----------late law-------->
+              <h3
+                [translate]="'name'"
+                [translateParams]="{
+                  ar: ' ضبط لائحة التاخير',
+                  en: 'Late Law'
+                }"
+                class="my-4 text-base fw-bold"
+              ></h3>
+              <div *ngFor="let item of emp_LateLists" class="row">
+                <div class="col-md-5">
+                  <div class="form-group">
+                    <label for="lateTime-{{item.id}}" class="text-right col-form-label block">
+                      {{ "نوع المخالفه" | translate }}
+                    </label>
+                    <input
+                      class="form-control"
+                      type="text"
+                      id="lateTime-{{item.id}}"
+                      name="lateTime"
+                      autocomplete="off"
+                      [(ngModel)]="item.lateTime"
+                      disabled
+                    />
+                  </div>
+                </div>
+               <div class="col-md-1">
+                <div class="form-group">
+                  <label for="first-{{item.id}}" class="text-right col-form-label block">
+                    {{ "المرة الاولي" | translate }}
+                  </label>
+                  <div class="input-group">
+                    <input
+                      class="form-control"
+                      placeholder="0"
+                      type="text"
+                      autocomplete="off"
+                      id="first-{{item.id}}"
+                      name="first"
+                      [(ngModel)]="item.first"
+                    />
+                    <span class="input-group-text">%</span>
+                  </div>
+                </div>
+              </div>
+
+                <div class="col-md-1">
+                  <div class="form-group">
+                    <label for="second-{{item.id}}" class="text-right col-form-label block">
+                      {{ "المرة الثانية" | translate }}
+                    </label>
+                     <div class="input-group">
+                    <input
+                      class="form-control"
+                      placeholder="0"
+                      type="text"
+                      autocomplete="off"
+                      id="second-{{item.id}}"
+                      name="second"
+                      [(ngModel)]="item.second"
+                    />
+                      <span class="input-group-text">%</span>
+                  </div>
+                  </div>
+                </div>
+       
+
+                <div class="col-md-1">
+                  <div class="form-group">
+                    <label for="third-{{item.id}}" class="text-right col-form-label block">
+                      {{ " المرة الثالثة" | translate }}
+                    </label>
+                     <div class="input-group">
+                    <input
+                      class="form-control"
+                      placeholder="0"
+                      type="text"
+                      autocomplete="off"
+                      id="third-{{item.id}}"
+                      name="third"
+                      [(ngModel)]="item.third"
+                    />
+                     <span class="input-group-text">%</span>
+                  </div>
+                  </div>
+                </div>
+
+                <div class="col-md-1">
+                  <div class="form-group">
+                    <label for="fourth-{{item.id}}" class="text-right col-form-label block">
+                      {{ "المرة الرابعة" | translate }}
+                    </label>
+                     <div class="input-group">
+                    <input
+                      class="form-control"
+                      placeholder="0"
+                      type="text"
+                      autocomplete="off"
+                      id="fourth-{{item.id}}"
+                      name="fourth"
+                      [(ngModel)]="item.fourth"
+                    />
+                     <span class="input-group-text">%</span>
+                  </div>
+                  </div>
+                </div>
+ 
+
+                  <div class="col-md-2 align-self-end">
+    <button class="btn btn-primary" (click)="saveLateLaw(item)">
+      {{ "تعديل" | translate }}
+    </button>
+  </div>
+                </div>
+
+                <!-------------absence law------>
+                <br />
+                <br />
+    <h3
+                [translate]="'name'"
+                [translateParams]="{
+                  ar: ' ظبط لائحة الغياب',
+                  en: 'Absence Law'
+                }"
+                class="my-4 text-base fw-bold"
+              ></h3>
+              <div *ngFor="let item of emp_AbsenceLists" class="row">
+                <div class="col-md-5">
+                  <div class="form-group">
+                    <label for="absenceTime-{{item.id}}" class="text-right col-form-label block">
+                      {{ "نوع المخالفه" | translate }}
+                    </label>
+                    <input
+                      class="form-control"
+                      type="text"
+                      id="absenceTime-{{item.id}}"
+                      name="absenceTime"
+                      autocomplete="off"
+                      [(ngModel)]="item.absenceTime"
+                      disabled
+                    />
+                  </div>
+                </div>
+                <div class="col-md-1">
+                  <div class="form-group">
+                    <label for="first-{{item.id}}" class="text-right col-form-label block">
+                      {{ "المرة الاولي " | translate }}
+                    </label>
+                     <div class="input-group">
+                    <input
+                      class="form-control"
+                      placeholder="0"
+                      type="text"
+                      autocomplete="off"
+                      id="first-{{item.id}}"
+                      name="first"
+                      [(ngModel)]="item.first"
+                    />
+                     <span class="input-group-text">يوم</span>
+                  </div>
+                  </div>
+                </div>
+                <div class="col-md-1">
+                  <div class="form-group">
+                    <label for="second-{{item.id}}" class="text-right col-form-label block">
+                      {{ " المرة الثانية" | translate }}
+                    </label>
+                     <div class="input-group">
+                    <input
+                      class="form-control"
+                      placeholder="0"
+                      type="text"
+                      autocomplete="off"
+                      id="second-{{item.id}}"
+                      name="second"
+                      [(ngModel)]="item.second"
+                    />
+                     <span class="input-group-text">يوم</span>
+                  </div>
+                  </div>
+                </div>
+       
+
+                <div class="col-md-1">
+                  <div class="form-group">
+                    <label for="third-{{item.id}}" class="text-right col-form-label block">
+                      {{ " المرة الثالثة" | translate }}
+                    </label>
+                     <div class="input-group">
+                    <input
+                      class="form-control"
+                      placeholder="0"
+                      type="text"
+                      autocomplete="off"
+                      id="third-{{item.id}}"
+                      name="third"
+                      [(ngModel)]="item.third"
+                    />
+                     <span class="input-group-text">يوم</span>
+                  </div>
+                  </div>
+                </div>
+
+                              <div class="col-md-1">
+                  <div class="form-group">
+                    <label for="fourth-{{item.id}}" class="text-right col-form-label block">
+                      {{ " المرة الرابعة" | translate }}
+                    </label>
+                     <div class="input-group">
+                    <input
+                      class="form-control"
+                      placeholder="0"
+                      type="text"
+                      autocomplete="off"
+                      id="fourth-{{item.id}}"
+                      name="fourth"
+                      [(ngModel)]="item.fourth"
+                    />
+                     <span class="input-group-text">يوم</span>
+                  </div>
+                  </div>
+                </div>
+ 
+
+                                  <div class="col-md-2 align-self-end">
+    <button class="btn btn-primary" (click)="saveAbsenceLaw(item)">
+      {{ "تعديل" | translate }}
+    </button>
+  </div>
+                </div>
+      
+          </div>
+        </tab>
+        <!----------------------------------------------------------------------------------------->
+
+
       </tabset>
     </div>
   </div>

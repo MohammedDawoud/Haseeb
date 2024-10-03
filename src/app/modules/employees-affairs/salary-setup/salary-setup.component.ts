@@ -92,6 +92,8 @@ export class SalarySetupComponent implements OnInit {
     'Insurances',
     'absence',
     'deductedSalary',
+    'latediscount',
+    'absencediscount',
     'net',
     'operations',
   ];
@@ -156,6 +158,8 @@ export class SalarySetupComponent implements OnInit {
   TTotalRewards = 0;
   TTotalySalaries = 0;
   TTotalTaamen = 0;
+  TTotalLate = 0;
+  TTotalabsence = 0;
   TTotalPaidVacations = 0;
 
   employeeDisscount: any;
@@ -495,6 +499,8 @@ export class SalarySetupComponent implements OnInit {
         this.TTotalRewards = 0;
         this.TTotalySalaries = 0;
         this.TTotalTaamen = 0;
+        this.TTotalLate = 0;
+        this.TTotalabsence = 0;
 
         for (var i = 0; i < data.length; i++) {
           debugger;
@@ -510,6 +516,8 @@ export class SalarySetupComponent implements OnInit {
           this.TTotalDiscounts += data[i].totalDiscounts;
           this.TTotalTaamen += parseInt(data[i].taamen);
           this.TTotalDayAbs += parseInt(data[i].totalAbsDays);
+          this.TTotalLate += data[i].totalLateDiscount;
+          this.TTotalabsence +=data[i].totalAbsenceDiscount
           this.TTotalRewards += data[i].totalRewards;
           this.TTotalySalaries += data[i].totalSalaryOfThisMonth;
           this.TTotalPaidVacations += data[i].totalVacations;
@@ -539,9 +547,9 @@ export class SalarySetupComponent implements OnInit {
         totalDayAbs: this.tempdatasource[index].totalDayAbs,
         totalRewards: this.tempdatasource[index].totalRewards,
         totalVacations: this.tempdatasource[index].totalVacations,
-
-        totalSalaryOfThisMonth:
-          this.tempdatasource[index].totalSalaryOfThisMonth,
+        totalLate: this.tempdatasource[index].totalLateDiscount,
+        totalabsencediscount: this.tempdatasource[index].totalAbsenceDiscount,
+        totalSalaryOfThisMonth: this.tempdatasource[index].totalSalaryOfThisMonth,
       });
     }
     debugger;

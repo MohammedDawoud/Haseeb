@@ -53,6 +53,8 @@ export class PayrollMarchesComponent implements OnInit {
     'discounts',
     'insurances',
     'absenceDays',
+    'latediscount',
+     'absencediscount',
     'net',
   ];
 
@@ -82,6 +84,9 @@ export class PayrollMarchesComponent implements OnInit {
   TTotalRewards = 0;
   TTotalySalaries = 0;
   TTotalTaamen = 0;
+  TTotalLate = 0;
+  TTotalAbsence = 0;
+
 Months: any;
   lang: any = 'ar';
   userG: any = {};
@@ -289,6 +294,9 @@ Months: any;
         this.TTotalRewards = 0;
         this.TTotalySalaries = 0;
         this.TTotalTaamen = 0;
+        this.TTotalLate = 0;
+        this.TTotalAbsence = 0;
+
 
         for (var i = 0; i < data.length; i++) {
           this.TSalary += data[i].salary;
@@ -302,6 +310,9 @@ Months: any;
           this.TBonus += data[i].bonus;
           this.TTotalDiscounts += data[i].totalDiscounts;
           this.TTotalTaamen += parseInt(data[i].taamen);
+          this.TTotalLate += data[i].totalLateDiscount;
+          this.TTotalAbsence += data[i].totalAbsenceDiscount;
+
           this.TTotalDayAbs += data[i].totalDayAbs;
           this.TTotalRewards += data[i].totalRewards;
           this.TTotalySalaries += data[i].totalySalaries;
@@ -330,6 +341,8 @@ Months: any;
         taamen: this.tempdatasource[index].taamen,
         totalDayAbs: this.tempdatasource[index].totalDayAbs,
         totalRewards: this.tempdatasource[index].totalRewards,
+        totallate: this.tempdatasource[index].totalLateDiscount,
+        totalabsencediscount: this.tempdatasource[index].totalAbsenceDiscount,
         totalySalaries: this.tempdatasource[index].totalySalaries,
       });
     }
