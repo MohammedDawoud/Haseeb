@@ -2,8 +2,8 @@ export const environment = {
   production: false,
   // apiEndPoint: "https://api.tameercloud.com/api/",
   // PhotoURL:"https://localhost:44345/",
-  apiEndPoint: 'http://127.0.0.1:5000/api/',
-  PhotoURL: 'http://127.0.0.1:5000',
+  apiEndPoint: 'https://haseeb.tameercloud.com/api/',
+  PhotoURL: 'https://haseeb.tameercloud.com/',
   // apiEndPoint: "http://164.68.110.173:5010/api/",
   // PhotoURL:"http://164.68.110.173:5010"
   //apiEndPoint: 'https://api.tameercloud.com/api/',
