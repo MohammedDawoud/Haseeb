@@ -179,16 +179,16 @@ export class BackupComponent {
 
   fillbackupdata(data: any) {
     debugger;
-    this.BackupatisticsModel.projectCount = data.projectCount;
-    this.BackupatisticsModel.projectArchivedCount = data.projectArchivedCount;
+    // this.BackupatisticsModel.projectCount = data.projectCount;
+    // this.BackupatisticsModel.projectArchivedCount = data.projectArchivedCount;
     this.BackupatisticsModel.branchesCount = data.branchesCount;
     this.BackupatisticsModel.usersCount = data.usersCount;
     this.BackupatisticsModel.customercount = data.customercount;
     this.BackupatisticsModel.totalDetailedExpensed = data.totalDetailedExpensed;
     this.BackupatisticsModel.totalDetailedRevenu = data.totalDetailedRevenu;
 
-    this.BackupatisticsModel.lastProjectId = data.lastProject.projectId;
-    this.BackupatisticsModel.lastProjectNo = data.lastProject.projectNo;
+    // this.BackupatisticsModel.lastProjectId = data.lastProject.projectId;
+    // this.BackupatisticsModel.lastProjectNo = data.lastProject.projectNo;
 
     this.BackupatisticsModel.lastInvoiceId = data.lastInvoice.invoiceId;
     this.BackupatisticsModel.lastInvoiceNumber = data.lastInvoice.invoiceNumber;
@@ -233,8 +233,8 @@ export class BackupComponent {
   filldata(data: any) {
     this._backup.GetBackupById(data.backupId).subscribe((data) => {
       debugger;
-      this.BackupatisticsModel.projectCount = data.projectCount;
-      this.BackupatisticsModel.projectArchivedCount = data.projectArchivedCount;
+      // this.BackupatisticsModel.projectCount = data.projectCount;
+      // this.BackupatisticsModel.projectArchivedCount = data.projectArchivedCount;
       this.BackupatisticsModel.branchesCount = data.branchesCount;
       this.BackupatisticsModel.usersCount = data.usersCount;
       this.BackupatisticsModel.customercount = data.customercount;
@@ -242,8 +242,8 @@ export class BackupComponent {
         data.totalDetailedExpensed;
       this.BackupatisticsModel.totalDetailedRevenu = data.totalDetailedRevenu;
 
-      this.BackupatisticsModel.lastProjectId = data.lastProject.projectId;
-      this.BackupatisticsModel.lastProjectNo = data.lastProject.projectNo;
+      // this.BackupatisticsModel.lastProjectId = data.lastProject.projectId;
+      // this.BackupatisticsModel.lastProjectNo = data.lastProject.projectNo;
 
       this.BackupatisticsModel.lastInvoiceId = data.lastInvoice.invoiceId;
       this.BackupatisticsModel.lastInvoiceNumber =
@@ -331,8 +331,8 @@ export class BackupComponent {
     var _back = new DatabaseBackup();
     _back.backupId = this.BackupatisticsModel.backupId;
 
-    _back.totalProject = this.BackupatisticsModel.projectCount;
-    _back.totalarchiveProject = this.BackupatisticsModel.projectArchivedCount;
+    // _back.totalProject = this.BackupatisticsModel.projectCount;
+    // _back.totalarchiveProject = this.BackupatisticsModel.projectArchivedCount;
     _back.totalClient = this.BackupatisticsModel.customercount;
     _back.totalExp =
       this.BackupatisticsModel.totalDetailedExpensed == null
@@ -344,7 +344,7 @@ export class BackupComponent {
         : this.BackupatisticsModel.totalDetailedRevenu.toString();
     _back.totalBranches = this.BackupatisticsModel.branchesCount;
     _back.totalUsers = this.BackupatisticsModel.usersCount;
-    _back.lastPro = this.BackupatisticsModel.lastProjectId;
+    // _back.lastPro = this.BackupatisticsModel.lastProjectId;
     _back.lastinvoice = this.BackupatisticsModel.lastInvoiceId;
 
     _back.lastVoucherRet = this.BackupatisticsModel.lastInvoiceRetId;
@@ -388,8 +388,8 @@ export class BackupComponent {
     var _back = new DatabaseBackup();
     _back.backupId = this.BackupatisticsModel.backupId;
 
-    _back.totalProject = this.BackupatisticsModel.projectCount;
-    _back.totalarchiveProject = this.BackupatisticsModel.projectArchivedCount;
+    // _back.totalProject = this.BackupatisticsModel.projectCount;
+    // _back.totalarchiveProject = this.BackupatisticsModel.projectArchivedCount;
     _back.totalClient = this.BackupatisticsModel.customercount;
     _back.totalExp =
       this.BackupatisticsModel.totalDetailedExpensed == null
@@ -401,7 +401,7 @@ export class BackupComponent {
         : this.BackupatisticsModel.totalDetailedRevenu.toString();
     _back.totalBranches = this.BackupatisticsModel.branchesCount;
     _back.totalUsers = this.BackupatisticsModel.usersCount;
-    _back.lastPro = this.BackupatisticsModel.lastProjectId;
+    // _back.lastPro = this.BackupatisticsModel.lastProjectId;
     _back.lastinvoice = this.BackupatisticsModel.lastInvoiceId;
 
     _back.lastVoucherRet = this.BackupatisticsModel.lastInvoiceRetId;

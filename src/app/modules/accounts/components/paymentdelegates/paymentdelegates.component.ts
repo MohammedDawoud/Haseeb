@@ -252,9 +252,9 @@ export class PaymentdelegatesComponent {
   RefreshData() {
     debugger
    const formData: FormData = new FormData();
-    if(this.data.filter.customerId!=null)
+    if(this.data.filter.search_CustomerName!=null)
     {
-      formData.append('UserId',this.data.filter.customerId);
+      formData.append('UserId',this.data.filter.search_CustomerName);
     }
     if(this.data.filter.DateTo_P!=null )
     {
