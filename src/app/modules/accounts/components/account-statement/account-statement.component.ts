@@ -803,6 +803,7 @@ export class AccountStatementComponent implements OnInit {
       DateFrom_P: null,
       DateTo_P: null,
       isChecked: false,
+      isCheckedYear: false,
     }
   };
   projectsDataSourceTemp: any = [];
@@ -814,6 +815,7 @@ export class AccountStatementComponent implements OnInit {
   afterDate: boolean = false
   RefreshData() {
     var _voucherFilterVM = new ReportCustomer();
+    _voucherFilterVM.isCheckedYear = this.data.filter.isCheckedYear;
     _voucherFilterVM.accountId = this.data.filter.search_accountId;
     _voucherFilterVM.customerId = this.data.filter.search_costCenterId;
     if (this.data.filter.DateFrom_P != null && this.data.filter.DateTo_P != null) {
@@ -939,6 +941,12 @@ export class AccountStatementComponent implements OnInit {
     // this.BalanceBeforeObj.Show = false;
 
   }
+  changeAccountYear() {
+    if(this.data.filter.search_accountId)
+      this.RefreshData_ByDate(this.data.filter.DateFrom_P ?? '', this.data.filter.DateTo_P ?? '');
+    // this.BalanceBeforeObj.Show = false;
+
+  }
   ResetSearchTime() {
     if (!this.data.filter.enable) {
       this.RefreshData_ByDate("", "");
@@ -981,6 +989,7 @@ export class AccountStatementComponent implements OnInit {
     }
 
     var _voucherFilterVM = new ReportCustomer();
+    _voucherFilterVM.isCheckedYear = this.data.filter.isCheckedYear;
     _voucherFilterVM.accountId = this.data.filter.search_accountId;
     _voucherFilterVM.customerId = this.data.filter.search_costCenterId;
     _voucherFilterVM.dateFrom = '';
@@ -1216,6 +1225,7 @@ export class AccountStatementComponent implements OnInit {
   BranchName:any
   getPrintdata(id: any) {
     var _voucherFilterVM = new ReportCustomer();
+    _voucherFilterVM.isCheckedYear = this.data.filter.isCheckedYear;
     _voucherFilterVM.accountId = this.data.filter.search_accountId;
     _voucherFilterVM.customerId = this.data.filter.search_costCenterId;
     _voucherFilterVM.rasedBefore= this.BalanceBeforeObj.BalanceBefore;

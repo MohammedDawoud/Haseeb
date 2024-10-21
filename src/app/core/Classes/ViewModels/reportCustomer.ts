@@ -7,6 +7,7 @@ export class ReportCustomer {
   isPost: number |string | null;
   projectId: number |string | null;
   isChecked: boolean |string | null;
+  isCheckedYear: boolean |string | null;
   isDeleted: boolean |string | null;
   customerId: number |string | null;
   status: number |string | null;

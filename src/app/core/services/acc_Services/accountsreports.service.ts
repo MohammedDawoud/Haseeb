@@ -846,6 +846,9 @@ export class AccountsreportsService {
     data.rasedBefore == (undefined || null)
       ? ''
       : formData.append('RasedBefore', data.rasedBefore);
+      data.isCheckedYear == (undefined || null)
+      ? false
+      : formData.append('isCheckedYear', data.isCheckedYear??false);
 
     // formData.append("ToDate", data.dateTo);
     // formData.append("FromDate", data.dateFrom);

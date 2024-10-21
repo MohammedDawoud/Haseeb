@@ -97,6 +97,26 @@
 
       <div class="btns w-100">
         <div class="row d-md-flex justify-content-center">
+          <div  class="col-md-2" *ngIf="userG?.userPrivileges.includes(131905)">
+            <div class="form-check form-switch position-relative mt-2 mb-2">
+              <input
+                class="form-check-input position-absolute end-25"
+                type="checkbox"
+                role="switch"
+                [checked]="data.filter.isCheckedYear"
+                id="flexSwitchCheckDefault"
+                (change)="data.filter.isCheckedYear = !data.filter.isCheckedYear;changeAccountYear()"
+              />
+              <label
+                class="form-check-label me-5"
+                for="flexSwitchCheckDefault"
+                style="width: max-content"
+              >
+                {{ "كل السنوات المالية" | translate }}
+              </label>
+            </div>
+          </div>
+
           <div class="col-md-2">
             <div class="form-group">
             <input type="text " placeholder="بحث" class="w-full p-2 inputType"autocomplete="off" name="search" (keyup)="applyFilter($event)"#input/>
