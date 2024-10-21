@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "node --max_old_space_size=8048 ./node_modules/@angular/cli/bin/ng serve -o",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
@@ -60,6 +60,7 @@
     "ngx-toastr": "^15.0.0",
     "ngx-treeview": "^10.0.2",
     "ngx-typed-js": "^2.1.1",
+    "esri-loader": "^3.7.0",
     "ngx-webcam": "^0.4.1",
     "print-js": "^1.6.0",
     "rxjs": "~7.5.0",
