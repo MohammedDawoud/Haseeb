@@ -1,0 +1,29 @@
+<div class="p-4">
+  <app-navigator [title]="title"></app-navigator>
+  <div class="row justify-between">
+    <a
+      routerLink="/employees/attendencelocationnew/new"
+      class="btn btn-primary col-md-2"
+      >{{ "اضافه موقع" | translate }} </a
+    >
+    <div class="col-md-3" style="display: none;">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Username"
+        aria-label="Username"
+        aria-describedby="addon-wrapping"
+      />
+    </div>
+  </div>
+  <div class="card-container row mt-4">
+    <ng-container *ngFor="let item of attendanceData">
+      <app-attendaceCard
+        class="col-md-3"
+        [taskName]="item.name"
+        [locationid]="item.attendenceLocationSettingsId"
+        [employeeCount]="item.employeeCount"
+      ></app-attendaceCard>
+    </ng-container>
+  </div>
+</div>

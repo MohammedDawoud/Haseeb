@@ -21,6 +21,11 @@ import { SalarySetupComponent } from './salary-setup/salary-setup.component';
 import { AdvanceToEmployeesComponent } from './advance-to-employees/advance-to-employees.component';
 import { CarMovementComponent } from './car-movement/car-movement.component';
 import { EmployeesArchiveComponent } from './employees-archive/employees-archive.component';
+import { AttendencelocationComponent } from './attendencelocation/attendencelocation.component';
+import { AttendenceLocationListComponent } from './attendence-location-list/attendence-location-list.component';
+import { AttendanceListComponent } from './attendanceList/attendanceList.component';
+import { AttendencelocationnewComponent } from './attendencelocationnew/attendencelocationnew.component';
+import { EditattendencelocationComponent } from './editattendencelocation/editattendencelocation.component';
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'generalAlert' },
   { path: 'generalAlert', component: GeneralAlertComponent },
@@ -48,6 +53,26 @@ const routes: Routes = [
   {
     path: 'AttendanceAndDeparture',
     component: AttendanceAndDepartureComponent,
+  },
+  {
+    path: 'attendencelocation',
+    component: AttendencelocationComponent,
+  },
+  {
+    path: 'attendencelocationnew/:name',
+    component: AttendencelocationnewComponent,
+  },
+  {
+    path: 'attendence-location-list',
+    component: AttendenceLocationListComponent,
+  },
+  {
+    path: 'attendanceList',
+    component: AttendanceListComponent,
+  },
+  {
+    path: 'editattendencelocation',
+    component: EditattendencelocationComponent,
   },
 ];
 

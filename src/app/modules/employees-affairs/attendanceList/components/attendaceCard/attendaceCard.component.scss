@@ -1,0 +1,44 @@
+.card {
+  font-size: 0.875rem;
+  overflow: hidden;
+  box-shadow: 0 0 10px #aaa;
+  min-height: calc(200rem / 16);
+  border-radius: 1.5rem;
+  -webkit-border-radius: 1.5rem;
+  -moz-border-radius: 1.5rem;
+  -ms-border-radius: 1.5rem;
+  -o-border-radius: 1.5rem;
+  .info {
+    p {
+      font-size: large;
+      font-weight: 600;
+      text-align: center;
+      border-bottom: 1px solid #ccc;
+    }
+    span {
+      color: #c3c3c3;
+    }
+    button {
+      color: #006bcd;
+    }
+  }
+  .actions {
+    font-size: small;
+    color: white;
+    a {
+      background: #006bcd;
+      color: white;
+      text-decoration: none;
+      text-align: center;
+    }
+    button:last-of-type {
+      background: #ff0000;
+    }
+  }
+
+}
+
+.checkCustom:checked {
+  background-color: #e92121 !important;
+  border-color: #f87174 !important;
+}

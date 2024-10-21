@@ -63,6 +63,16 @@ import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { NgxEditorModule } from 'ngx-editor';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { AttendencelocationComponent } from './attendencelocation/attendencelocation.component';
+import { EmployeesDataComponent } from './attendanceList/components/employeesData/employeesData.component';
+import { AttendaceCardComponent } from './attendanceList/components/attendaceCard/attendaceCard.component';
+
+// import { EditattendencelocationComponent } from './editattendencelocation/editattendencelocation.component';
+// import { AttendencelocationnewComponent } from './attendencelocationnew/attendencelocationnew.component';
+import { AttendanceListComponent } from './attendanceList/attendanceList.component';
+import { AttendenceLocationListComponent } from './attendence-location-list/attendence-location-list.component';
+import { EditattendencelocationComponent } from './editattendencelocation/editattendencelocation.component';
+import { AttendencelocationnewComponent } from './attendencelocationnew/attendencelocationnew.component';
 @NgModule({
   declarations: [
     AbsenteeStaffComponent,
@@ -85,6 +95,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     AdvanceToEmployeesComponent,
     CarMovementComponent,
     EmployeesArchiveComponent,
+    AttendencelocationComponent,
+    AttendenceLocationListComponent,
+    EditattendencelocationComponent,
+    AttendencelocationnewComponent,
+    AttendanceListComponent,
+    AttendaceCardComponent,
+    EmployeesDataComponent,
   ],
   imports: [
     CommonModule,

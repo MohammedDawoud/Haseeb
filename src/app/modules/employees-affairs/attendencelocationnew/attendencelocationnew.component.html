@@ -1,0 +1,126 @@
+<div class="d-flex flex-col">
+    <div class="d-flex align-items-start gap-3 p-3">
+      <form
+        class="flex-grow-1 d-flex flex-col gap-3 justify-center"
+        
+        
+        >
+        <div>
+          <label for="location" style="margin-top: 4%;"
+            ><i class="fa-solid fa-location-dot"></i> {{ "Name of this locationoffice" | translate }}</label>
+          <!-- <input
+            [ngModel]="locationName !== 'new' ? locationName : ''"
+            type="text"
+            name="location"
+            id="location"
+            placeholder="{{ 'Name of this locationoffice' | translate }}"
+            autocomplete="off"
+            class="form-control"
+          /> -->
+
+          <input
+          
+          placeholder="{{ 'Name of this locationoffice' | translate }}"
+          class="form-control"
+          type="text"
+          autocomplete="off"
+          [(ngModel)]="locationNameNew"
+          [ngModelOptions]="{ standalone: true }"
+        />
+
+        </div>
+        <div class="d-flex gap-3">
+          <!-- <input type="submit" class="btn btn-primary flex-grow-1" value="{{ 'Save' | translate }}" /> -->
+          <button
+          (click)="open(saveLocModal, null, 'saveLoc')"
+          class="text-white me-2 btn btn-primary flex-grow-1"
+          style="background-color: var(--base-color)"
+        >
+          {{ "save" | translate }}
+        </button>
+
+          <a
+            routerLink="/employees/attendanceList"
+            class="btn btn-danger flex-grow-1"
+            >{{ "Back To Location" | translate }}</a
+          >
+        </div>
+        <label for="location"
+        ><i class="fa-solid fa-location-dot"></i> {{ "Locate Map" | translate }}</label>
+      </form>
+      <form
+        #latLonForm
+        class="latLonForm flex-grow-1 d-flex flex-col gap-3 justify-center"
+      >
+        <div>
+          <label for="lat"> {{ "Latitude" | translate }}</label>
+          <input
+            #lat
+            type="text"
+            id="lat"
+            name="lat"
+            autocomplete="off"
+            placeholder="{{ 'Latitude' | translate }}"
+            [(ngModel)]="Loc_Latitude"
+            [ngModelOptions]="{ standalone: true }"
+            class="form-control"
+          />
+        </div>
+        <div>
+          <label for="lng"> {{ "Longitude" | translate }}</label>
+          <input
+            #lng
+            type="text"
+            name="lng"
+            id="lng"
+            autocomplete="off"
+            placeholder="{{ 'Longitude' | translate }}"
+            [(ngModel)]="Loc_Longitude"
+            [ngModelOptions]="{ standalone: true }"
+            class="form-control"
+          />
+        </div>
+        <input type="submit" class="btn btn-primary" value="{{ 'Search' | translate }}" />
+      </form>
+    </div>
+    <div id="viewDiv" style="height: calc(100vh - 385px)"></div>
+  </div>
+  
+  <!-- saveLocModal -->
+  <ng-template #saveLocModal let-modal>
+    <div class="modal-body text-center">
+      <p *ngIf="checkEditOrSave==0"
+        [translate]="'name'"
+        [translateParams]="{
+          ar: 'هل تريد حفظ هذا الموقع',
+          en: 'Are you sure to save this location ?'
+        }"
+      ></p>
+
+      <p *ngIf="checkEditOrSave==1"
+      [translate]="'name'"
+      [translateParams]="{
+        ar: 'هل تريد تعديل هذا الموقع',
+        en: 'Are you sure to edit this location ?'
+      }"
+    ></p>
+
+      <div class="flex gap-2 justify-center">
+        <button style=" background: #006bcd;color: white;"
+          type="button"
+          mat-raised-button
+          (click)="saveLocationNew(); modal.dismiss()"
+        >
+          {{ "Yes" | translate }}
+        </button>
+        <button
+          type="button"
+          (click)="modal.dismiss()"
+          mat-raised-button
+          color="basic"
+        >
+          {{ "No" | translate }}
+        </button>
+      </div>
+    </div>
+  </ng-template>

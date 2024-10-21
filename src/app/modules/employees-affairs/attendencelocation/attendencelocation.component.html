@@ -1,0 +1,60 @@
+<div id="map" style="height: 500px;"></div>
+
+<div class="container">
+    <div class="row align-items-center">
+      
+      <!-- Search Bar -->
+      <div class="col-md-4">
+        <label class="col-form-label" for="name">بحث بالموقع
+          </label>
+        <div class="search-container d-flex">
+          <input 
+            class="form-control me-2" 
+            [(ngModel)]="searchInput" 
+            placeholder="Search for a place" />
+          <button 
+            class="btn btn-primary" 
+            (click)="searchPlace()">Search</button>
+        </div>
+      </div>
+      
+      <!-- Name Field -->
+      <div class="col-md-3">
+        <label class="col-form-label" for="name">اسم الموقع
+          <span class="text-danger">*</span>
+        </label>
+        <input
+          type="text"
+          class="form-control"
+          name="name"
+          id="name"
+          [(ngModel)]="attendenceobj.name"
+          title="Enter name."
+        />
+      </div>
+      
+      <!-- Distance Field -->
+      <div class="col-md-3">
+        <label class="col-form-label" for="distance">المسافة المسموح بها
+          <span class="text-danger">*</span>
+        </label>
+        <input
+          type="text"
+          class="form-control"
+          name="distance"
+          id="distance"
+          [(ngModel)]="attendenceobj.distance"
+          title="Enter distance."
+        />
+      </div>
+      
+      <!-- Save Location Button -->
+      <div class="col-md-2">
+        <button 
+          class="btn btn-success mt-4" 
+          (click)="saveLocation()">حفظ</button>
+      </div>
+  
+    </div>
+  </div>
+  
