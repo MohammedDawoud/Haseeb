@@ -374,12 +374,12 @@ export class AttendencelocationnewComponent {
     obj.attendenceLocationSettingsId=this.locationData.attendenceLocationSettingsId;
     obj.name=this.locationData.name;
     obj.distance =0;
-    obj.latitude=this.locationData.center.lat;
-    obj.longitude=this.locationData.center.lng;
-    obj.xmax=this.locationData.coordinates.xmax;
-    obj.xmin=this.locationData.coordinates.xmin;
-    obj.ymax=this.locationData.coordinates.ymax;
-    obj.ymin=this.locationData.coordinates.ymin;
+    obj.latitude=this.locationData.center.lat.toString();
+    obj.longitude=this.locationData.center.lng.toString();
+    obj.xmax=this.locationData.coordinates.xmax.toString();
+    obj.xmin=this.locationData.coordinates.xmin.toString();
+    obj.ymax=this.locationData.coordinates.ymax.toString();
+    obj.ymin=this.locationData.coordinates.ymin.toString();
 
     this._attLocation.SaveAttendenceLocation(obj).subscribe((result: any) => {
       if (result.statusCode == 200) {
