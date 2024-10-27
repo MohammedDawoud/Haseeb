@@ -2865,9 +2865,9 @@ export class OrganizationComponent implements OnInit {
         this.BranchInfoForm.controls['branchId'].setValue(item?.branchId);
         this.BranchInfoForm.controls['phone'].setValue(item?.phone);
         this.BranchInfoForm.controls['mailbox'].setValue(item?.mailbox);
-        this.BranchInfoForm.controls['engineeringLicense'].setValue(
-          item?.engineeringLicense
-        );
+        // this.BranchInfoForm.controls['engineeringLicense'].setValue(
+        //   item?.engineeringLicense
+        // );
         this.BranchInfoForm.controls['cityId'].setValue(
           item?.cityId ?? response?.result?.cityId
         );
@@ -2973,9 +2973,9 @@ export class OrganizationComponent implements OnInit {
       this.BranchInfoForm.controls['branchId'].setValue(item?.branchId);
       this.BranchInfoForm.controls['phone'].setValue(item?.phone);
       this.BranchInfoForm.controls['mailbox'].setValue(item?.mailbox);
-      this.BranchInfoForm.controls['engineeringLicense'].setValue(
-        item?.engineeringLicense
-      );
+      // this.BranchInfoForm.controls['engineeringLicense'].setValue(
+      //   item?.engineeringLicense
+      // );
       this.BranchInfoForm.controls['cityId'].setValue(item?.cityId);
 
       this.BranchInfoForm.controls['labLicense'].setValue(item?.labLicense);
