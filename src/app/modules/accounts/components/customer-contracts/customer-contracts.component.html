@@ -115,13 +115,13 @@
         type="button" class="btn btn-secondary mb-3 col-md-2">
           {{ "Print" | translate }}
         </button>
-        <!-- <button
+        <button
           type="button"
           class="btn bg-base text-white mb-3 col-md-2"
           (click)="open(draftFormsModal,null,'draftFormsModal')"
         >
           {{ "draftForms" | translate }}
-        </button> -->
+        </button>
       </div>
     </div>
 
@@ -273,6 +273,18 @@
                       "
                     >
                       <i class="fa-solid fa-circle-info"></i>
+                    </button>
+                    <!--مسودات العقد   -->
+                    <button *ngIf="element.type==1 || element.type==2"
+                      type="button"
+                      class="AddNewTaskbtn btn btn-outline-warning btn-sm waves-effect"
+                      data-toggle="tooltip"
+                      data-placement="top"
+                      title=" مسودات العقد  "
+                      data-original-title="مسودات العقد  "
+                      (click)="EditDarftsOpen2(element);"
+                    >
+                      <i class="fa-solid fa-file-contract"></i>
                     </button>
                     <!--مسودات العقد   -->
                     <button *ngIf="element.type==1 || element.type==2"

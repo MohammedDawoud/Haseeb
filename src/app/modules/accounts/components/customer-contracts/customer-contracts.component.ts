@@ -1880,9 +1880,11 @@ GetInvoicePrint(obj:any,TempCheck:any){
     this.open(this.DraftsContractModal, null, 'DraftsContractModal');
     stepper.selectedIndex = 4;
   }
+  contractdraftdata:any;
   EditDarftsOpen2(data:any){
     this.DraftsListObj=[];
     this.showAll=false;
+    this.contractdraftdata=data;
     this.GetAllDraftsDetailsbyProjectId(data.projectId);
     this.open(this.DraftsContractModal, data, 'DraftsContractModal');
   }
@@ -1951,13 +1953,15 @@ GetInvoicePrint(obj:any,TempCheck:any){
   ShowAllDrafts(){
     debugger
     this.showAll=!this.showAll;
-    if(this.showAll==true)
-    this.GetAllDraftsByProjectType(this.ContractRowSelected.projectTypeId);
-    else this.GetAllDraftsDetailsbyProjectId(this.ContractRowSelected.projectId);
+    // if(this.showAll==true)
+    this.GetAllDraftsByProjectType(this.ContractRowSelected.projectTypeId ??'');
+    // else this.GetAllDraftsDetailsbyProjectId(this.ContractRowSelected.projectId);
   }
   Connect_appendFile_Draft(data:any){
     debugger
-    this._contractService.Connect_appendFile_Draft(this.ContractRowSelected.projectId,data.draftUrl).subscribe((result: any)=>{
+    console.log(this.contractdraftdata);
+    
+    this._contractService.Connect_appendFile_Draft2(this.ContractRowSelected.contractId,data.draftId,data.draftUrl).subscribe((result: any)=>{
       if(result.statusCode==200){
           try
           {

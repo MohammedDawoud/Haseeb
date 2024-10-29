@@ -39,6 +39,10 @@ export class ContractService {
     return this.http.post(this.apiEndPoint+'Draft/Connect_appendFile_Draft', {}, { params:{ProjectId:ProjectId,uploadedFile:uploadedFile}});
   }
 
+
+  Connect_appendFile_Draft2(ContractId:any,DraftId:any,uploadedFile:any){
+    return this.http.post(this.apiEndPoint+'Draft/Connect_appendFile_Draft2', {}, { params:{ContractId:ContractId,DraftId:DraftId,uploadedFile:uploadedFile}});
+  }
     DownloadFile_Draft(ContractId:any){
     return this.http.post(this.apiEndPoint+'Contract/DownloadFile_Draft', {}, { params:{ContractId:ContractId}});
   }
