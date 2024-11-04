@@ -1610,7 +1610,7 @@ export class CatchReceiptComponent implements OnInit {
         invoiceNumber: this.GetAllVouchersList[index].invoiceNumber,
         date: this.GetAllVouchersList[index].date,
         customerName: this.GetAllVouchersList[index].customerName,
-        totalValue: this.GetAllVouchersList[index].totalValue,
+        totalValue:parseFloat( this.GetAllVouchersList[index].totalValue),
         payTypeName: this.GetAllVouchersList[index].payTypeName,
         statusName: this.GetAllVouchersList[index].statusName,
         journalNumber: this.GetAllVouchersList[index].journalNumber,

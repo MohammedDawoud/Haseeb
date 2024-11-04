@@ -1106,14 +1106,14 @@ export class TrialBalanceComponent implements OnInit {
         x.push({
           accCode: this.DataSource[index].accCode,
           acc_NameAr: this.DataSource[index].acc_NameAr,
-          opDipet: this.DataSource[index].opDipet,
-          opCredit: this.DataSource[index].opCredit,
-          debitTotal: this.DataSource[index].debitTotal,
-          creditTotal: this.DataSource[index].creditTotal,
-          netDebitTotal: this.DataSource[index].netDebitTotal,
-          netCreditTotal: this.DataSource[index].netCreditTotal,
-          totalDebitEnd: this.DataSource[index].totalDebitEnd,
-          totalCriditEnd: this.DataSource[index].totalCriditEnd,
+          opDipet:parseFloat( this.DataSource[index].opDipet),
+          opCredit:parseFloat( this.DataSource[index].opCredit),
+          debitTotal:parseFloat( this.DataSource[index].debitTotal),
+          creditTotal:parseFloat( this.DataSource[index].creditTotal),
+          netDebitTotal:parseFloat( this.DataSource[index].netDebitTotal),
+          netCreditTotal:parseFloat( this.DataSource[index].netCreditTotal),
+          totalDebitEnd:parseFloat( this.DataSource[index].totalDebitEnd),
+          totalCriditEnd:parseFloat( this.DataSource[index].totalCriditEnd),
         });
       }
     }
@@ -1123,14 +1123,14 @@ export class TrialBalanceComponent implements OnInit {
         x.push({
           accCode: null,
           acc_NameAr: ' الاجمالي',
-          opDipet: this.DataSource[index].opDipet,
-          opCredit: this.DataSource[index].opCredit,
-          debitTotal: this.DataSource[index].debitTotal,
-          creditTotal: this.DataSource[index].creditTotal,
-          netDebitTotal: this.DataSource[index].netDebitTotal,
-          netCreditTotal: this.DataSource[index].netCreditTotal,
-          totalDebitEnd: this.DataSource[index].totalDebitEnd,
-          totalCriditEnd: this.DataSource[index].totalCriditEnd,
+          opDipet:parseFloat( this.DataSource[index].opDipet),
+          opCredit:parseFloat( this.DataSource[index].opCredit),
+          debitTotal:parseFloat( this.DataSource[index].debitTotal),
+          creditTotal:parseFloat( this.DataSource[index].creditTotal),
+          netDebitTotal:parseFloat( this.DataSource[index].netDebitTotal),
+          netCreditTotal:parseFloat( this.DataSource[index].netCreditTotal),
+          totalDebitEnd:parseFloat( this.DataSource[index].totalDebitEnd),
+          totalCriditEnd:parseFloat( this.DataSource[index].totalCriditEnd),
         });
       }
     }

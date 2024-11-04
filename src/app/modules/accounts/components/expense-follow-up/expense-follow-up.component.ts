@@ -243,9 +243,9 @@ export class ExpenseFollowUpComponent implements OnInit{
         supplierInvoiceNo: this.projectsDataSourcedata[index].supplierInvoiceNo,
         accClauseName: this.projectsDataSourcedata[index].accClauseName,
         details: this.projectsDataSourcedata[index].details,
-        price: this.projectsDataSourcedata[index].price,
-        taxes: this.projectsDataSourcedata[index].taxes,
-        total: this.projectsDataSourcedata[index].total,
+        price:parseFloat( this.projectsDataSourcedata[index].price),
+        taxes:parseFloat( this.projectsDataSourcedata[index].taxes),
+        total:parseFloat( this.projectsDataSourcedata[index].total),
       })
       x.push({
         invoiceReference:null,
@@ -256,9 +256,9 @@ export class ExpenseFollowUpComponent implements OnInit{
         supplierInvoiceNo:null,
         accClauseName:null,
         details:null,
-        price:this.totalprice,
-        taxes:this.totaltaxes,
-        total:this.totaltotal,
+        price:parseFloat(this.totalprice),
+        taxes:parseFloat(this.totaltaxes),
+        total:parseFloat(this.totaltotal),
       })
     }
     this.lang == "ar" ? this._accountsreportsService.customExportExcel(x, "متابعة المصروفات") :

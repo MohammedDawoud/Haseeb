@@ -712,8 +712,8 @@ export class GeneralJournalComponent implements OnInit {
         accountCode: this.DataSource[index].accountCode,
         accountName: this.DataSource[index].accountName,
         notes: this.DataSource[index].notes,
-        depit: this.DataSource[index].depit,
-        credit: this.DataSource[index].credit,
+        depit:parseFloat( this.DataSource[index].depit),
+        credit:parseFloat( this.DataSource[index].credit),
       })
     }
     

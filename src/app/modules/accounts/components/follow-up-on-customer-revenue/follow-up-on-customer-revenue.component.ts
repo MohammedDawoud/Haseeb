@@ -390,9 +390,9 @@ export class FollowUpOnCustomerRevenueComponent implements OnInit {
         notes: this.DataSource[index].notes,
         project: this.DataSource[index].project,
         projectType: this.DataSource[index].projectType,
-        totalValue: this.DataSource[index].totalValue,
-        taxes: this.DataSource[index].taxes,
-        total: this.DataSource[index].total,
+        totalValue:parseFloat( this.DataSource[index].totalValue),
+        taxes:parseFloat( this.DataSource[index].taxes),
+        total:parseFloat( this.DataSource[index].total),
       })
       x.push({
         date:null,
@@ -402,9 +402,9 @@ export class FollowUpOnCustomerRevenueComponent implements OnInit {
         notes:null,
         project:null,
         projectType:null,
-        totalValue:this.sumTotalValue,
-        taxes:this.sumTaxes,
-        total:this.sumTotal,
+        totalValue:parseFloat(this.sumTotalValue),
+        taxes:parseFloat(this.sumTaxes),
+        total:parseFloat(this.sumTotal),
       })
     }
     this.lang == "ar" ? this._accountsreportsService.customExportExcel(x, "متابعة إيرادات العملاء") :

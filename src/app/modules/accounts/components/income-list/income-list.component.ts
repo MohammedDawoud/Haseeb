@@ -726,6 +726,7 @@ export class IncomeListComponent implements OnInit {
   }
 
   exportData() {
+    debugger
     var list: any = [];
     this.DataSource.forEach((element: any) => {
       if (element.accountCode == '00000') {
@@ -734,14 +735,17 @@ export class IncomeListComponent implements OnInit {
     });
 
     let x = this.DataSource.map((item: any) => {
-      let transformedObj: any = { accountNameCode: item.accountNameCode };
+      if (item.accountCode != '00000'){
+        //let transformedObj: any = { accountNameCode: item.accountNameCode };
+        let transformedObj: any = { accountCode: item.accountCode,accountName: item.accountName };
 
-      item.totalResult.forEach((result: any, index: any) => {
-        // transformedObj[`totalResult${index + 1}`] = result;
-        transformedObj[list[0][index]] = result;
-      });
-
-      return transformedObj;
+        item.totalResult.forEach((result: any, index: any) => {
+          // transformedObj[`totalResult${index + 1}`] = result;
+          transformedObj[list[0][index]] =parseFloat(result);
+        });
+  
+        return transformedObj;
+      }  
     });
 
     this.lang == 'ar'

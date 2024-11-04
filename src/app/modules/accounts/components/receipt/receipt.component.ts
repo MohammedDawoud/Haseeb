@@ -1787,7 +1787,7 @@ export class ReceiptComponent implements OnInit {
       x.push({
         invoiceNumber: this.GetAllVouchersList[index].invoiceNumber,
         date: this.GetAllVouchersList[index].date,
-        totalValue: this.GetAllVouchersList[index].totalValue,
+        totalValue:parseFloat( this.GetAllVouchersList[index].totalValue),
         payTypeName: this.GetAllVouchersList[index].payTypeName,
         statusName: this.GetAllVouchersList[index].statusName,
         supplierInvoiceNo: this.GetAllVouchersList[index].supplierInvoiceNo,

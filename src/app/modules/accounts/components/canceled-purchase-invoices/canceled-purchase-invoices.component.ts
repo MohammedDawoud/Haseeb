@@ -528,9 +528,9 @@ export class CanceledPurchaseInvoicesComponent implements OnInit{
         payTypeName: this.DataSource[index].payTypeName,
         journalNumber: this.DataSource[index].journalNumber,
         notes: this.DataSource[index].notes,
-        invoiceValue: this.DataSource[index].invoiceValue,
-        taxAmount: this.DataSource[index].taxAmount,
-        totalValue: this.DataSource[index].totalValue,
+        invoiceValue:parseFloat(this.DataSource[index].invoiceValue),
+        taxAmount: parseFloat(this.DataSource[index].taxAmount),
+        totalValue: parseFloat(this.DataSource[index].totalValue),
       })
     }
     this.lang == "ar" ? this.canceledPurchaseService.customExportExcel(x, " متابعة فواتير المشتريات الملغاة") :

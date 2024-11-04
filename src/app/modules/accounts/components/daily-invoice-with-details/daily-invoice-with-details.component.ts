@@ -249,10 +249,10 @@ userG:any
       x.push({
         'نوع الدفع': this.projectsDataSourcedata[index].payType,
         'تاريخ الفاتورة': this.projectsDataSourcedata[index].invoiceDate,
-        'المبلغ': this.projectsDataSourcedata[index].invoiceValue,
-        'الضريبه': this.projectsDataSourcedata[index].taxAmount,
+        'المبلغ':parseFloat( this.projectsDataSourcedata[index].invoiceValue),
+        'الضريبه':parseFloat( this.projectsDataSourcedata[index].taxAmount),
         'الخصم': this.projectsDataSourcedata[index].discountValue,
-        'الاجمالي': this.projectsDataSourcedata[index].totalValue,
+        'الاجمالي':parseFloat( this.projectsDataSourcedata[index].totalValue),
         'التكلفه': this.projectsDataSourcedata[index].cost,
         'المردود': this.projectsDataSourcedata[index].mardod,
         'الربح': this.projectsDataSourcedata[index].earnings,

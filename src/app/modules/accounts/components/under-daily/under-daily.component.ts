@@ -1142,6 +1142,28 @@ export class UnderDailyComponent implements OnInit {
 
   //#region
   //--------------------------------------------------
+
+  dataSourceExportExcel: any = [];
+
+  exportData() {
+    debugger
+    let x = [];
+    this.dataSourceExportExcel= this.EntryVoucherDataSource.data;
+    //this.dataSourceExportExcel=this.EntryVoucherSourceTemp
+    for (let index = 0; index < this.dataSourceExportExcel.length; index++) {
+      x.push({
+        invoiceNumber: this.dataSourceExportExcel[index].invoiceNumber,
+        date: this.dataSourceExportExcel[index].date,
+        totalValue: parseFloat(this.dataSourceExportExcel[index].totalValue),
+        journalNumber: this.dataSourceExportExcel[index].journalNumber,
+        statusName: this.dataSourceExportExcel[index].statusName,
+        postDate: this.dataSourceExportExcel[index].postDate,
+      })
+    }
+    this.lang == "ar" ? this._accountsreportsService.customExportExcel(x, " قيد اليومية") :
+    this._accountsreportsService.customExportExcel(x, "Daily Voucher");
+}
+
   key: any;
   isShift = false;
 

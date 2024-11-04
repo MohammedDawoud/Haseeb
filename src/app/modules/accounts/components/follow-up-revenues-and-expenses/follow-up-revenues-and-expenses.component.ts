@@ -246,15 +246,15 @@ export class FollowUpRevenuesAndExpensesComponent implements OnInit{
 
       x.push({
         costCenterName: this.projectsDataSourcedata[index].costCenterName,
-        exDepit: this.projectsDataSourcedata[index].exDepit,
-        reCredit: this.projectsDataSourcedata[index].reCredit,
-        eX_RE_Diff: this.projectsDataSourcedata[index].eX_RE_Diff,
+        exDepit:parseFloat( this.projectsDataSourcedata[index].exDepit),
+        reCredit:parseFloat( this.projectsDataSourcedata[index].reCredit),
+        eX_RE_Diff:parseFloat( this.projectsDataSourcedata[index].eX_RE_Diff),
       })
       x.push({
         costCenterName:'الاجمالي',
-        exDepit:this.totalexDepit,
-        reCredit:this.totalreCredit,
-        eX_RE_Diff:this.totaleX_RE_Diff,
+        exDepit:parseFloat(this.totalexDepit),
+        reCredit:parseFloat(this.totalreCredit),
+        eX_RE_Diff:parseFloat(this.totaleX_RE_Diff),
       })
     }
     this.lang == "ar" ? this._accountsreportsService.customExportExcel(x, "متابعة ايرادات و مصروفات مراكز التكلفة") :

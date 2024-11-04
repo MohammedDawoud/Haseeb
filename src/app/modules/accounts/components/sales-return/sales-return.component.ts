@@ -419,7 +419,7 @@ export class SalesReturnComponent implements OnInit{
     }
     else
     {
-      AccualValue = (((item.amount ?? 0) + (item.dDiscountValue_Det ?? 0)) / (item.qty ?? 1));
+      AccualValue = (((item.amount ?? 0) + (item.discountValue_Det ?? 0)) / (item.qty ?? 1));
     }
     return AccualValue;
   }
