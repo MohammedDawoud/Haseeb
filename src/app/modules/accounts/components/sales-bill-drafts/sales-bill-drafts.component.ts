@@ -2989,7 +2989,7 @@ export class SalesBillDraftsComponent implements OnInit {
         (item.qty ?? 1);
     } else {
       AccualValue =
-        ((item.amount ?? 0) + (item.dDiscountValue_Det ?? 0)) / (item.qty ?? 1);
+        ((item.amount ?? 0) + (item.discountValue_Det ?? 0)) / (item.qty ?? 1);
     }
     return AccualValue;
   }

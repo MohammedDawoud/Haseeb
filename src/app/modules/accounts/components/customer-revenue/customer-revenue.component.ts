@@ -578,8 +578,8 @@ export class CustomerRevenueComponent implements OnInit {
         transactionTypeName: this.DataSource[index].transactionTypeName,
         notes: this.DataSource[index].notes,
         payTypeName: this.DataSource[index].payTypeName,
-        totalValue: this.DataSource[index].totalValue,
-        totalValueDepit: this.DataSource[index].totalValueDepit,
+        totalValue:parseFloat(this.DataSource[index].totalValue),
+        totalValueDepit:parseFloat( this.DataSource[index].totalValueDepit),
       })
     }
     x.push({
@@ -589,8 +589,8 @@ export class CustomerRevenueComponent implements OnInit {
       transactionTypeName: "الاجمالي",
       notes:null,
       payTypeName: null,
-      totalValue: this.sumtotalValue,
-      totalValueDepit: this.sumtotalValueDepit,
+      totalValue:parseFloat( this.sumtotalValue),
+      totalValueDepit:parseFloat( this.sumtotalValueDepit),
     })
 
     this.lang == "ar" ? this._accountsreportsService.customExportExcel(x, "كشف بإيراد العميل (تفصيلي)") :

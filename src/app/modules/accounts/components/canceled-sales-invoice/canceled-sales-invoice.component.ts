@@ -483,9 +483,9 @@ export class CanceledSalesInvoiceComponent implements OnInit{
         journalNumber: this.DataSource[index].journalNumber,
         notes: this.DataSource[index].notes,
         customerName: this.DataSource[index].customerName,
-        invoiceValue: this.DataSource[index].invoiceValue,
-        taxAmount: this.DataSource[index].taxAmount,
-        totalValue: this.DataSource[index].totalValue,
+        invoiceValue:parseFloat( this.DataSource[index].invoiceValue),
+        taxAmount:parseFloat( this.DataSource[index].taxAmount),
+        totalValue:parseFloat( this.DataSource[index].totalValue),
       })
     }
     this.lang == "ar" ? this.canceledSalesService.customExportExcel(x, "متابعة الفواتير الملغاة") :

@@ -373,11 +373,11 @@ totalCredit=0
       x.push({
         transactionDate: this.DataSource[index].transactionDate,
         notes: this.DataSource[index].notes,
-        depit: this.DataSource[index].depit,
-        credit: this.DataSource[index].credit,
+        depit:parseFloat( this.DataSource[index].depit),
+        credit:parseFloat( this.DataSource[index].credit),
         typeName: this.DataSource[index].typeName,
         accountName: this.DataSource[index].accountName,
-        balance: this.DataSource[index].balance,
+        balance:parseFloat( this.DataSource[index].balance),
       })
     }
     x.push({
