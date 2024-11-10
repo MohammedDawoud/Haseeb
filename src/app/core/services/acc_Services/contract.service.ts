@@ -39,6 +39,9 @@ export class ContractService {
     return this.http.post(this.apiEndPoint+'Draft/Connect_appendFile_Draft', {}, { params:{ProjectId:ProjectId,uploadedFile:uploadedFile}});
   }
 
+  DeleteDraft_Templates(DraftId:any){
+    return this.http.post(this.apiEndPoint+'Drafts_Templates/DeleteDraft_Templates', {}, { params:{DraftId:DraftId}});
+  }
 
   Connect_appendFile_Draft2(ContractId:any,DraftId:any,uploadedFile:any){
     return this.http.post(this.apiEndPoint+'Draft/Connect_appendFile_Draft2', {}, { params:{ContractId:ContractId,DraftId:DraftId,uploadedFile:uploadedFile}});

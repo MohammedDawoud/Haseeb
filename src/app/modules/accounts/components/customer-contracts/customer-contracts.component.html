@@ -524,12 +524,12 @@
         {{ "close" | translate }}
       </button>
 
-      <button (click)="Connect_pro_draft();"
+      <!-- <button (click)="Connect_pro_draft();"
         class="btn text-white me-2"
         style="background-color: var(--base-color)"
       >
         {{ "LinkDraftProject" | translate }}
-      </button>
+      </button> -->
     </div>
   </ng-template>
 
@@ -588,7 +588,7 @@
             type="button"
             mat-raised-button
             color="warn"
-            (click)="confirmDeleteDraft(); modal.dismiss()"
+            (click)="confirmDeleteDraft_template(); modal.dismiss()"
           >
             {{ "confirem" | translate }}
           </button>

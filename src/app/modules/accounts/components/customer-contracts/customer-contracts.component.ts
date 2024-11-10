@@ -1920,6 +1920,16 @@ GetInvoicePrint(obj:any,TempCheck:any){
       else{this.toast.error(this.translate.instant(result.reasonPhrase),this.translate.instant("Message"))};
     });
   }
+
+  confirmDeleteDraft_template() {
+    this._contractService.DeleteDraft_Templates(this.PublicDraftRow.draftId).subscribe((result: any)=>{
+      if(result.statusCode==200){
+        this.toast.success(this.translate.instant(result.reasonPhrase),this.translate.instant("Message"));
+        this.GetAllDraftsByProjectType(this.ContractRowSelected.projectTypeId??'');
+      }
+      else{this.toast.error(this.translate.instant(result.reasonPhrase),this.translate.instant("Message"))};
+    });
+  }
   SaveDraftDetails(modal:any) {
     if(this.CheckedValue==null){
       this.toast.error(this.translate.instant("من فضلك أختر مسودة"),this.translate.instant("Message"));return;
