@@ -128,7 +128,7 @@
                 </div>
               </div>
 
-              <div class="col-sm-6 mb-0 mb-sm-3">
+              <!-- <div class="col-sm-6 mb-0 mb-sm-3">
                 <div class="form-group">
                   <label
                     for="Engineering_License"
@@ -161,7 +161,7 @@
                     [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}"
                   />
                 </div>
-              </div>
+              </div> -->
 
               <div class="col-sm-6 col-md-6 mb-0 mb-sm-3">
                 <div class="form-group">
@@ -654,7 +654,7 @@
             </div>
           </div>
 
-          <div class="d-flex w-100 justify-between items-center">
+          <div class="flex justify-between items-center flex-wrap">
             <button
               mat-button
               matStepperPrevious
@@ -662,18 +662,20 @@
             >
               {{ "Previous" | translate }}
             </button>
-            <button (click)="GetProjectById();"
+            <button
               mat-button
-              matStepperNext
+  
               class="btn bg-base text-white"
+              [disabled]="disableButtonSave_Contract"
+              (click)="saveContractbtn(stepper)"
             >
-              {{ "Next" | translate }}
+              {{ "confirem" | translate }}
             </button>
           </div>
         </form>
       </mat-step>
       <!-- 3 -->
-      <mat-step [stepControl]="FormGroup03">
+      <!-- <mat-step [stepControl]="FormGroup03">
         <ng-template matStepLabel>{{
           "operating expenses" | translate
         }}</ng-template>
@@ -823,7 +825,7 @@
             {{ "confirem" | translate }}
           </button>
         </div>
-      </mat-step>
+      </mat-step> -->
       <!-- 4 -->
       <mat-step [stepControl]="FormGroup04">
         <ng-template matStepLabel>{{
