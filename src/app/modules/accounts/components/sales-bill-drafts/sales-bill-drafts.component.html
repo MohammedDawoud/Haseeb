@@ -31,6 +31,29 @@
             <i class="fa-solid fa-search"></i>
           </button>
         </div>
+
+        <div class="row flex-wrap">
+          <div class="mt-2 d-flex flex-wrap w-max gap-4">
+            <div class="form-check form-switch me-3">
+              <label
+                class="form-check-label"
+                for="flexSwitchCheckDefault"
+                style="width: max-content"
+              >
+                {{ "إظهار جميع المسودات" | translate }}
+              </label>
+              <input
+                class="form-check-input"
+                type="checkbox"
+                role="switch"
+                id="flexSwitchCheckDefault"
+                [(ngModel)]="dataInvoice.filter.AllInvoice"
+                (change)="ShowAllVoucher()"
+              />
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   
