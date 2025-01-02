@@ -814,12 +814,15 @@ export class AccountsreportsService {
       data.accountId == (undefined || null) ? '' : data.accountId;
     data.customerId =
       data.customerId == (undefined || null) ? '' : data.customerId;
+    data.isCheckedYear =
+      data.isCheckedYear == (undefined || null) ? false : data.isCheckedYear;
 
     const formData: FormData = new FormData();
     formData.append('ToDate', data.dateTo);
     formData.append('FromDate', data.dateFrom);
     formData.append('AccountId', data.accountId);
     formData.append('CostCenterId', data.customerId);
+    formData.append('isCheckedYear', data.isCheckedYear??false);
 
     return this.http.post(
       this.apiEndPoint + 'Transactions/GetAllTransSearch_New',
