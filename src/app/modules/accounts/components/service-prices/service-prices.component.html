@@ -1057,30 +1057,43 @@
           </div>
         </div>
 
-        <div class="col-sm-6 col-md-3 mb-3" >
+        <div class="col-sm-6 col-md-2 mb-3" >
           <div class="form-group">
             <label class="col-form-label">
               {{ "ServiceType" | translate }}</label
             >
             <span class="text-danger">*</span>
-            <ng-select
+            <div class="flex">
+              <ng-select
               name="ServiceType"
               class="w-full p-0"
               placeholder="{{ 'Chose' | translate }}" autocomplete="off"
               formControlName="ServiceType"
             >
-              <ng-option *ngFor="let user of ServiceTypelist" [value]="user.id">{{
+              <ng-option *ngFor="let user of ServiceType" [value]="user.id">{{
                 user.name
               }}</ng-option>
             </ng-select>
+            <button
+            type="button"
+            class="btn bg-base text-white"
+            style="padding: 5px 10px"
+            (click)="open(ServiceTypeModal)"
+            >
+            <i class="fa fa-plus"></i>
+           </button>
             <div class="fieldrequired" *ngIf="
                       SerivceModalForm.controls['ServiceType']?.hasError('required') &&
                       SerivceModalForm.controls['ServiceType'].touched
                     ">
                     {{ "This field is required" | translate }}
-                  </div>
-
+           </div>
+            </div>
           </div>
+        </div>
+
+        <div class="col-sm-1 col-md-1 mb-3" >
+
         </div>
 
         <div class="col-sm-6 col-md-3 mb-3" *ngIf="SerivceModalForm.controls['PackageId'].value ==  null">
@@ -1323,7 +1336,6 @@
       this.SerivceModalForm.controls["amount"].value ==null|| this.SerivceModalForm.controls["amount"].value ==""||
       this.SerivceModalForm.controls["ServiceRevenueAccount"].value ==null || 
       this.SerivceModalForm.controls["ItemCode"].value ==null || this.SerivceModalForm.controls["ItemCode"].value ==""||
-      this.SerivceModalForm.controls["storehouseId"].value ==null || this.SerivceModalForm.controls["storehouseId"].value ==""||
       this.SerivceModalForm.controls["AccountIdPur"].value ==null'>
         {{ "Save" | translate }}
       </button>
@@ -2244,6 +2256,166 @@
           mat-raised-button
           color="warn"
           (click)="confirmStorehouseDelete(); modal.dismiss()"
+        >
+          {{ "Yes" | translate }}
+        </button>
+        <button
+          type="button"
+          (click)="modal.dismiss()"
+          mat-raised-button
+          color="basic"
+        >
+          {{ "No" | translate }}
+        </button>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #ServiceTypeModal let-modal>
+    <div class="modal-header bg-base text-white">
+      <h4
+        class="modal-title mb-0"
+        id="modal-basic-title"
+        [translate]="'name'"
+        [translateParams]="{ ar: 'اضافة جديدة', en: 'Add New' }"
+      ></h4>
+      <button
+        type="button"
+        class="text-2xl text-white m-0"
+        (click)="modal.dismiss('Cross click')"
+      >
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <div class="modal-body text-center">
+      <form #addServiceType="ngForm" class="grid grid-cols-1 md:grid-cols-2 gap-2">
+        <div class="form-group">
+          <label for="BuildNameArtxt" class="text-right col-form-label block">
+            {{ "nameAr" | translate }}
+            <span class="text-danger">*</span></label
+          >
+          <input
+            required
+            #ServiceTypeNameAr="ngModel"
+            ngModel
+            [(ngModel)]="dataAdd.ServiceType.nameAr"
+            class="form-control"
+            type="text"
+            id="ServiceTypeNameArtxt"
+            name="ServiceTypeNameArtxt"
+            autocomplete="off"
+            [placeholder]="('Write' | translate) + ' ' + ('nameAr' | translate)"
+          />
+        </div>
+        <div class="form-group">
+          <label for="ServiceTypeNameEntxt" class="text-right col-form-label block">
+            {{ "nameEn" | translate }}
+            <span class="text-danger">*</span></label
+          >
+          <div style="display: inline-flex; width: 100%">
+            <input
+              required
+              #ServiceTypeNameEnValue
+              #ServiceTypeNameEn="ngModel"
+              [(ngModel)]="dataAdd.ServiceType.nameEn"
+              ngModel
+              class="form-control"
+              type="text"
+              id="ServiceTypeNameEntxt"
+              name="ServiceTypeNameEntxt"
+              autocomplete="off"
+              [placeholder]="('Write' | translate) + ' ' + ('nameEn' | translate)"
+            />
+            <a
+              class="btn"
+              id="CopyServiceTypeName2"
+              (click)="dataAdd.ServiceType.nameEn = dataAdd.ServiceType.nameAr"
+              ><i class="fa fa-copy"></i
+            ></a>
+          </div>
+        </div>
+      </form>
+      <div class="max-h-80 overflow-auto px-2">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>{{ "nameAr" | translate }}</th>
+              <th>{{ "nameEn" | translate }}</th>
+              <th
+                [translate]="'name'"
+                [translateParams]="{
+                  ar: 'خيارات',
+                  en: 'Operations'
+                }"
+              ></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let type of ServiceTypePopup"
+              (dblclick)="
+                setServiceTypeInSelect(type, ServiceTypeModal);
+                modal.dismiss('Cross click')
+              "
+            >
+              <td>{{ type.name }}</td>
+              <td>{{ type.nameEn }}</td>
+              <td class="flex gap-2 justify-center">
+                <button
+                  class="p-2 bg-orange-100 hover:bg-orange-500 rounded-lg duration-300 hover:text-white aspect-square w-10"
+                  (click)="
+                    dataAdd.ServiceType.nameAr = type.name;
+                    dataAdd.ServiceType.nameEn = type.nameEn;
+                    dataAdd.ServiceType.id = type.id
+                  "
+                >
+                  <i class="fa-regular fa-pen-to-square"></i>
+                </button>
+                <button
+                  (click)="getServiceTypeRow(type); open(deleteServiceType)"
+                  class="p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white aspect-square w-10"
+                >
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="flex gap-2 mt-3 pt-3 border-t border-neutral-300">
+        <button
+          class="btn bg-base text-white"
+          type="submit"
+          [disabled]="addServiceType.invalid"
+          (click)="saveServiceType()"
+        >
+          {{ "Save" | translate }}
+        </button>
+        <button (click)="modal.dismiss('Cross click')" class="btn btn-secondary">
+          {{ "Back" | translate }}
+        </button>
+        <button (click)="resetServiceType()" class="btn bg-base text-white">
+          {{ "جديد" | translate }}
+        </button>
+      </div>
+    </div>
+  </ng-template>
+  
+  <ng-template #deleteServiceType let-modal>
+    <div class="modal-body text-center">
+      <p
+        [translate]="'name'"
+        [translateParams]="{
+          ar: 'هل تريد بالتأكيد حذف هذا الصف',
+          en: 'Are you sure to delete this row ?'
+        }"
+      ></p>
+      <div class="flex gap-2 justify-center mt-3">
+        <button
+          type="button"
+          mat-raised-button
+          color="warn"
+          (click)="confirmServiceTypeDelete(); modal.dismiss()"
         >
           {{ "Yes" | translate }}
         </button>

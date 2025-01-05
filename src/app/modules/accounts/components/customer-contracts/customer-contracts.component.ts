@@ -2321,14 +2321,13 @@ GetInvoicePrint(obj:any,TempCheck:any){
   InvoicePopup(typepage:any){
     var date = new Date();
     if (typepage == 2) {
-      //this.FillCostCenterSelect();
-      this.FillCostCenterSelect_Invoices(this.ContractRowSelected.projectId);
-
-      //this.FillAllCustomerSelectNotHaveProjWithBranch();
+      this.FillCostCenterSelect();
+      //this.FillCostCenterSelect_Invoices(this.ContractRowSelected.projectId);
       this.FillAllCustomerSelectWithBranch();
     }
     else if (typepage == 1) {
-      this.FillCostCenterSelect_Invoices(null);
+      this.FillCostCenterSelect();
+      //this.FillCostCenterSelect_Invoices(null);
       this.FillCustomerSelectWProOnlyWithBranch();
     }
     this.FillStorehouseSelect();

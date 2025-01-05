@@ -261,4 +261,21 @@ export class InvoiceService {
   DeleteVoucher(invId:any) {
     return this.http.post<any>(this.apiEndPoint + 'Voucher/DeleteVoucher?VoucherId='+invId,null);
   }
+  //----------------------------------ServiceTypes-------------------------------------------
+  GetAllServiceTypes() {
+    return this.http.get<any>(this.apiEndPoint+'ServiceType/GetAllServiceTypes');
+  }
+  SaveServiceType(formData:any){
+    return this.http.post<any>(this.apiEndPoint+'ServiceType/SaveServiceType' ,formData );
+  }
+  
+  DeleteServiceType(ServiceTypesId:any){
+    return this.http.post(this.apiEndPoint+'ServiceType/DeleteServiceType', {}, { params:{ServiceTypesId:ServiceTypesId}});
+  }
+  FillServiceTypesSelect() {
+    return this.http.get<any>(this.apiEndPoint+'ServiceType/FillServiceTypesSelect');
+  }
+  //-------------------------------------------------------------------------------
+
+
 }

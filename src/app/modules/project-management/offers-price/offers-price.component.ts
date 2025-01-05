@@ -499,6 +499,8 @@ export class OffersPriceComponent implements OnInit {
       this.AllcostCenterlist = [];
       this.SubprojecttypeList = [];
       this.intialModelBranchOrganization();
+      this.FillStorehouseSelect();
+      this.FillServiceTypesSelect();
       this.FillServiceAccount();
       this.FillServiceAccountPurchase();
       this.FillCostCenterSelect_Service();
@@ -3973,6 +3975,11 @@ export class OffersPriceComponent implements OnInit {
       nameAr: null,
       nameEn: null,
     },
+    ServiceType: {
+      id: 0,
+      nameAr: null,
+      nameEn: null,
+    },
   };
 
   //-----------------------------------Project Type------------------------------------------------
@@ -4696,6 +4703,7 @@ export class OffersPriceComponent implements OnInit {
       Begbalance: [null],
       SerialNumber: [null],
       ItemCode: [null, [Validators.required]],
+      storehouseId: [null, [Validators.required]],
 
     });
   }
@@ -4738,6 +4746,7 @@ export class OffersPriceComponent implements OnInit {
         begbalance: this.SerivceModalForm.controls["Begbalance"].value,
         serialNumber: this.SerivceModalForm.controls["SerialNumber"].value,
         itemCode: this.SerivceModalForm.controls["ItemCode"].value,
+        storehouseId: this.SerivceModalForm.controls["storehouseId"].value,
 
       },
       details: this.details,
@@ -5560,7 +5569,8 @@ export class OffersPriceComponent implements OnInit {
     this.StorehouseRowSelected = row;
   }
   setStorehouseInSelect(data: any, model: any) {
-    this.modalInvoice.storehouseId = data.id;
+    this.SerivceModalForm.controls["storehouseId"].setValue(data.id)
+
   }
   resetStorehouse() {
     this.dataAdd.Storehouse.id = 0;
@@ -5606,6 +5616,78 @@ export class OffersPriceComponent implements OnInit {
             this.translate.instant(result.reasonPhrase),this.translate.instant('Message')
           );
           this.FillStorehouseSelect();
+        } else {
+          this.toast.error(
+            this.translate.instant(result.reasonPhrase),this.translate.instant('Message')
+          );
+        }
+      });
+  }
+  //#endregion
+  //----------------------------------(End)-Storehouse---------------------------------------------
+
+    //-----------------------------------ServiceType------------------------------------------------
+  //#region 
+
+  ServiceType: any;
+  ServiceTypePopup: any;
+
+  FillServiceTypesSelect() {
+    this.ServiceType = [];
+    this.ServiceTypePopup = [];
+    this._invoiceService.FillServiceTypesSelect().subscribe((data) => {
+      this.ServiceType = data;
+      this.ServiceTypePopup = data;
+    });
+  }
+  ServiceTypeRowSelected: any;
+  getServiceTypeRow(row: any) {
+    this.ServiceTypeRowSelected = row;
+  }
+  setServiceTypeInSelect(data: any, model: any) {
+    this.SerivceModalForm.controls["ServiceType"].setValue(data.id)
+  }
+  resetServiceType() {
+    this.dataAdd.ServiceType.id = 0;
+    this.dataAdd.ServiceType.nameAr = null;
+    this.dataAdd.ServiceType.nameEn = null;
+  }
+  saveServiceType() {
+    if (
+      this.dataAdd.ServiceType.nameAr == null ||
+      this.dataAdd.ServiceType.nameEn == null
+    ) {
+      this.toast.error('من فضلك أكمل البيانات', 'رسالة');
+      return;
+    }
+    var ServiceTypeObj: any = {};
+    ServiceTypeObj.ServiceTypeId = this.dataAdd.ServiceType.id;
+    ServiceTypeObj.NameAr = this.dataAdd.ServiceType.nameAr;
+    ServiceTypeObj.NameEn = this.dataAdd.ServiceType.nameEn;
+    this._invoiceService.SaveServiceType(ServiceTypeObj)
+      .subscribe((result: any) => {
+        if (result.statusCode == 200) {
+          this.toast.success(
+            this.translate.instant(result.reasonPhrase),
+            this.translate.instant('Message')
+          );
+          this.resetServiceType();
+          this.FillServiceTypesSelect();
+        } else {
+          this.toast.error(
+            this.translate.instant(result.reasonPhrase),
+            this.translate.instant('Message')
+          );
+        }
+      });
+  }
+  confirmServiceTypeDelete() {
+    this._invoiceService.DeleteServiceType(this.ServiceTypeRowSelected.id).subscribe((result: any) => {
+        if (result.statusCode == 200) {
+          this.toast.success(
+            this.translate.instant(result.reasonPhrase),this.translate.instant('Message')
+          );
+          this.FillServiceTypesSelect();
         } else {
           this.toast.error(
             this.translate.instant(result.reasonPhrase),this.translate.instant('Message')
