@@ -209,6 +209,7 @@ export class UnderDailyComponent implements OnInit {
       DateTo_P: null,
       isSearch: false,
       StatusPost: null,
+      SearchType: null,
       Desc: null,
       Type: 8,
       AllEntryVoucher: false,
@@ -259,7 +260,45 @@ export class UnderDailyComponent implements OnInit {
   }
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.EntryVoucherDataSource.filter = filterValue.trim().toLowerCase();
+    var tempsource = this.EntryVoucherSourceTemp;
+
+    if(this.dataEntryVoucher.filter.SearchType==1)
+    {
+      if (filterValue) {
+        tempsource = this.EntryVoucherSourceTemp.filter((d: any) => {
+          return (d.invoiceNumber != null ? d.invoiceNumber.toString()?.trim().toLowerCase().indexOf(filterValue) !== -1 || !filterValue:"")
+        });
+      } 
+      this.EntryVoucherDataSource = new MatTableDataSource(tempsource);
+      this.EntryVoucherDataSource.paginator = this.paginator;
+      this.EntryVoucherDataSource.sort = this.sort; 
+    }
+    else if(this.dataEntryVoucher.filter.SearchType==2)
+    {
+      if (filterValue) {
+        tempsource = this.EntryVoucherSourceTemp.filter((d: any) => {
+          return (d.journalNumber != null ? d.journalNumber.toString()?.trim().toLowerCase().indexOf(filterValue) !== -1 || !filterValue:"")
+        });
+      }  
+      this.EntryVoucherDataSource = new MatTableDataSource(tempsource);
+      this.EntryVoucherDataSource.paginator = this.paginator;
+      this.EntryVoucherDataSource.sort = this.sort;
+    }
+    else if(this.dataEntryVoucher.filter.SearchType==3)
+      {
+        if (filterValue) {
+          tempsource = this.EntryVoucherSourceTemp.filter((d: any) => {
+            return (d.invoiceNotes != null ? d.invoiceNotes.toString()?.trim().toLowerCase().indexOf(filterValue) !== -1 || !filterValue:"")
+          });
+        }  
+        this.EntryVoucherDataSource = new MatTableDataSource(tempsource);
+        this.EntryVoucherDataSource.paginator = this.paginator;
+        this.EntryVoucherDataSource.sort = this.sort;
+      }
+    
+    else{
+      this.EntryVoucherDataSource.filter = filterValue.trim().toLowerCase();
+    }
   }
   CheckDate(event: any) {
     this.dataEntryVoucher.filter.isSearch = true;
@@ -285,6 +324,7 @@ export class UnderDailyComponent implements OnInit {
     }
   }
   EntryVouchertype: any;
+  EntryVoucherSearchtype: any;
 
   OrganizationData: any;
   environmentPho: any;
@@ -297,7 +337,12 @@ export class UnderDailyComponent implements OnInit {
       { id: 1, name: { ar: 'تم الترحيل', en: 'Posted' } },
       { id: 2, name: { ar: 'غير مرحل', en: 'Not Posted' } },
     ];
+    this.EntryVoucherSearchtype = [
+      { id: 1, name: { ar: 'برقم السند', en: 'By Voucher Num' } },
+      { id: 2, name: { ar: 'برقم القيد', en: 'By Journal Num' } },
+      { id: 3, name: { ar: 'بالبيان', en: 'By Note' } },
 
+    ];
     this.api.GetOrganizationDataLogin().subscribe((data: any) => {
       this.OrganizationData = data.result;
       this.dateprint =this._sharedService.date_TO_String(new Date());

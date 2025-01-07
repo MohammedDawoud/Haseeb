@@ -58,9 +58,29 @@
     <div class="container-fluid">
       <div class="flex flex-wrap gap-4 align-items-end">
         <div class="form-group">
+          <label class="col-form-label">
+            {{ "typeOfSearch" | translate }}</label
+          >
+          <ng-select
+            class="w-full p-0"
+            placeholder="{{ 'Chose' | translate }}"
+            [(ngModel)]="dataEntryVoucher.filter.SearchType"
+            
+          >
+            <ng-option
+              *ngFor="let ex of EntryVoucherSearchtype"
+              [value]="ex.id"
+              [translate]="'name'"
+              [translateParams]="{ ar: ex.name?.ar, en: ex.name?.en }"
+            >
+            </ng-option>
+          </ng-select>
+        </div>
+        <div class="form-group">
           <label class="col-form-label"> {{ "search" | translate }}</label>
 
           <input
+          autocomplete="off"
             type="text "
             class="w-full p-2 inputType"
             name="user"
