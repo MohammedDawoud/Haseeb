@@ -816,14 +816,15 @@ export class AccountsreportsService {
       data.customerId == (undefined || null) ? '' : data.customerId;
     data.isCheckedYear =
       data.isCheckedYear == (undefined || null) ? false : data.isCheckedYear;
-
+      data.isCheckedBranch =
+      data.isCheckedBranch == (undefined || null) ? false : data.isCheckedBranch;
     const formData: FormData = new FormData();
     formData.append('ToDate', data.dateTo);
     formData.append('FromDate', data.dateFrom);
     formData.append('AccountId', data.accountId);
     formData.append('CostCenterId', data.customerId);
     formData.append('isCheckedYear', data.isCheckedYear??false);
-
+    formData.append('isCheckedBranch', data.isCheckedBranch??false);
     return this.http.post(
       this.apiEndPoint + 'Transactions/GetAllTransSearch_New',
       formData
@@ -852,6 +853,9 @@ export class AccountsreportsService {
       data.isCheckedYear == (undefined || null)
       ? false
       : formData.append('isCheckedYear', data.isCheckedYear??false);
+      data.isCheckedBranch == (undefined || null)
+      ? false
+      : formData.append('isCheckedBranch', data.isCheckedBranch??false);
 
     // formData.append("ToDate", data.dateTo);
     // formData.append("FromDate", data.dateFrom);

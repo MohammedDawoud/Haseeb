@@ -8,6 +8,7 @@ export class ReportCustomer {
   projectId: number |string | null;
   isChecked: boolean |string | null;
   isCheckedYear: boolean |string | null;
+  isCheckedBranch: boolean |string | null;
   isDeleted: boolean |string | null;
   customerId: number |string | null;
   status: number |string | null;

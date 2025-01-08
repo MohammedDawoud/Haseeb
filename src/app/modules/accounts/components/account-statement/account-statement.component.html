@@ -115,6 +115,25 @@
                 {{ "كل السنوات المالية" | translate }}
               </label>
             </div>
+          </div> 
+          <div  class="col-md-2">
+            <div class="form-check form-switch position-relative mt-2 mb-2">
+              <input
+                class="form-check-input position-absolute end-25"
+                type="checkbox"
+                role="switch"
+                [checked]="data.filter.isCheckedBranch"
+                id="flexSwitchCheckDefault"
+                (change)="data.filter.isCheckedBranch = !data.filter.isCheckedBranch;changeAccountYear()"
+              />
+              <label
+                class="form-check-label me-5"
+                for="flexSwitchCheckDefault"
+                style="width: max-content"
+              >
+                {{ "فصل الفروع" | translate }}
+              </label>
+            </div>
           </div>
 
           <div class="col-md-2">

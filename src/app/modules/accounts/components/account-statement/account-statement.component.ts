@@ -804,6 +804,8 @@ export class AccountStatementComponent implements OnInit {
       DateTo_P: null,
       isChecked: false,
       isCheckedYear: false,
+      isCheckedBranch: false,
+
     }
   };
   projectsDataSourceTemp: any = [];
@@ -816,6 +818,8 @@ export class AccountStatementComponent implements OnInit {
   RefreshData() {
     var _voucherFilterVM = new ReportCustomer();
     _voucherFilterVM.isCheckedYear = this.data.filter.isCheckedYear;
+    _voucherFilterVM.isCheckedBranch = this.data.filter.isCheckedBranch;
+
     _voucherFilterVM.accountId = this.data.filter.search_accountId;
     _voucherFilterVM.customerId = this.data.filter.search_costCenterId;
     if (this.data.filter.DateFrom_P != null && this.data.filter.DateTo_P != null) {
@@ -990,6 +994,8 @@ export class AccountStatementComponent implements OnInit {
 
     var _voucherFilterVM = new ReportCustomer();
     _voucherFilterVM.isCheckedYear = this.data.filter.isCheckedYear;
+    _voucherFilterVM.isCheckedBranch = this.data.filter.isCheckedBranch;
+
     _voucherFilterVM.accountId = this.data.filter.search_accountId;
     _voucherFilterVM.customerId = this.data.filter.search_costCenterId;
     _voucherFilterVM.dateFrom = '';
@@ -1226,6 +1232,8 @@ export class AccountStatementComponent implements OnInit {
   getPrintdata(id: any) {
     var _voucherFilterVM = new ReportCustomer();
     _voucherFilterVM.isCheckedYear = this.data.filter.isCheckedYear;
+    _voucherFilterVM.isCheckedBranch = this.data.filter.isCheckedBranch;
+
     _voucherFilterVM.accountId = this.data.filter.search_accountId;
     _voucherFilterVM.customerId = this.data.filter.search_costCenterId;
     _voucherFilterVM.rasedBefore= this.BalanceBeforeObj.BalanceBefore;
