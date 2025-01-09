@@ -558,7 +558,7 @@ export class BillingServicesComponent implements OnInit {
       this.modalDetails.recurrenceRateId ?? '0'
     );
     formData.append('Notes', this.modalDetails.notes);
-    console.log(formData);
+    // console.log(formData);
 
     this._Service.SaveService(formData).subscribe(
       (data) => {
@@ -1007,15 +1007,12 @@ export class BillingServicesComponent implements OnInit {
   // Save row
   save(row: any, rowIndex: any) {
     this.isEditable[rowIndex] = !this.isEditable[rowIndex];
-    console.log('Row saved: ' + rowIndex);
-    console.log(row);
   }
 
   // Delete row
   delete(row: any, rowIndex: any) {
     this.isEditable[rowIndex] = !this.isEditable[rowIndex];
     this.rows.splice(rowIndex, 1);
-    console.log('Row deleted: ' + rowIndex);
   }
 
   selectGoalForProject(index: any) {}
@@ -1023,7 +1020,6 @@ export class BillingServicesComponent implements OnInit {
   addNewMission() {}
 
   onSort(event: any) {
-    console.log(event);
   }
 
   // upload img ]

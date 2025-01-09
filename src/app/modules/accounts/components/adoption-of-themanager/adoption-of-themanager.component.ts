@@ -1917,7 +1917,7 @@ export class AdoptionOfThemanagerComponent implements OnInit {
     this._payvoucherservice.GetAllClauses(this.searchClause ?? '').subscribe(
       (data) => {
         this.claselist = data.result;
-        console.log(this.claselist);
+        // console.log(this.claselist);
       },
       (error) => {}
     );
@@ -2544,15 +2544,12 @@ export class AdoptionOfThemanagerComponent implements OnInit {
   // Save row
   save(row: any, rowIndex: any) {
     this.isEditable[rowIndex] = !this.isEditable[rowIndex];
-    console.log('Row saved: ' + rowIndex);
-    console.log(row);
   }
 
   // Delete row
   delete(row: any, rowIndex: any) {
     this.isEditable[rowIndex] = !this.isEditable[rowIndex];
     this.rows.splice(rowIndex, 1);
-    console.log('Row deleted: ' + rowIndex);
   }
 
   selectGoalForProject(index: any) {}
@@ -2560,7 +2557,7 @@ export class AdoptionOfThemanagerComponent implements OnInit {
   addNewMission() {}
 
   onSort(event: any) {
-    console.log(event);
+    // console.log(event);
   }
 
   // upload img ]
