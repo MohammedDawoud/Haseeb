@@ -1804,8 +1804,7 @@ export class CatchReceiptComponent implements OnInit {
   // Save row
   save(row: any, rowIndex: any) {
     this.isEditable[rowIndex] = !this.isEditable[rowIndex];
-    console.log('Row saved: ' + rowIndex);
-    console.log(row);
+
   }
 
   // Delete row
@@ -1820,7 +1819,6 @@ export class CatchReceiptComponent implements OnInit {
   addNewMission() {}
 
   onSort(event: any) {
-    console.log(event);
   }
   // ############### send sms
 
@@ -1846,7 +1844,6 @@ export class CatchReceiptComponent implements OnInit {
   };
   modal?: BsModalRef;
   sendEMAIL(sms: any) {
-    console.log(sms);
     this.control.clear();
     this.modal?.hide();
   }
