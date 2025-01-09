@@ -1241,6 +1241,9 @@ export class OffersPriceComponent implements OnInit {
     );
     this.offerTerms.splice(index, 1);
   }
+  deleteTermAll() {
+    this.offerTerms=[];
+  }
 
   addPayments() {
     var maxVal = 0;
@@ -1290,6 +1293,9 @@ export class OffersPriceComponent implements OnInit {
       (d: { idRow: any }) => d.idRow == idRow
     );
     this.offerPayments.splice(index, 1);
+  }
+  deletePaymentsAll() {   
+    this.offerPayments=[];
   }
 
   addService() {

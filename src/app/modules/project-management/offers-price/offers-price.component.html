@@ -1041,7 +1041,13 @@
                 <th>{{ "English statement" | translate }}</th>
                 <th>{{ "Ratio" | translate }}</th>
                 <th>{{ "amount" | translate }}</th>
-                <th>{{ "action" | translate }}</th>
+                <th>{{ "action" | translate }}
+                  <button
+                  class="hover:bg-red-500 rounded-lg duration-300 hover:text-white w-10"
+                  (click)="deletePaymentsAll()">
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+                </th>
                 <th>{{ "Installing" | translate }}</th>
               </tr>
             </thead>
@@ -1127,7 +1133,14 @@
               <tr>
                 <th>{{ "Statement" | translate }}</th>
                 <th>{{ "English statement" | translate }}</th>
-                <th>{{ "action" | translate }}</th>
+                <th>{{ "action" | translate }}
+                  <button
+                    class="hover:bg-red-500 rounded-lg duration-300 hover:text-white w-10"
+                    (click)="deleteTermAll()">
+                    <i class="fa-solid fa-trash-can"></i>
+                  </button>
+
+                </th>
                 <th>{{ "Installing" | translate }}</th>
               </tr>
             </thead>
