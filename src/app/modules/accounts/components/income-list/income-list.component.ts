@@ -1192,15 +1192,15 @@ export class IncomeListComponent implements OnInit {
     debugger;
     switch (entry.accountCode) {
       case '0':
-        return 'text-center h-full w-full bg-green-700 text-white';
+        return 'text-center h-full w-full bg-green-700 text-black';
       case '00':
-        return 'text-center h-full w-full bg-red-700 text-white';
+        return 'text-center h-full w-full bg-red-700 text-black';
       case '000':
-        return 'text-center h-full w-full bg-green-700 text-white';
+        return 'text-center h-full w-full bg-green-700 text-black';
       case '0000':
-        return 'text-center h-full w-full bg-red-700 text-white';
+        return 'text-center h-full w-full bg-red-700 text-black';
       case '00000':
-        return 'text-center h-full w-full bg-white-700 text-white';
+        return 'text-center h-full w-full bg-white-700 text-black';
       default:
         return '';
     }

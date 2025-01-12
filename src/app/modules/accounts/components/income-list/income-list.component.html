@@ -671,6 +671,27 @@
  
       </p>
     </div>
+    <div style="margin-bottom: 10px ;text-align: center;"  *ngIf="showFilters == true">
+      <p>
+        <span
+          [translate]="'name'"
+          [translateParams]="{
+            ar: 'من تاريخ: ',
+            en: 'From Date: '
+          }"
+        ></span>
+        <span> {{data.filter.DateFrom_P | date : "yyyy-MM-dd"}}</span> 
+        <span
+          [translate]="'name'"
+          [translateParams]="{
+            ar: 'الي تاريخ: ',
+            en: 'To Date: '
+          }"
+        ></span>
+        <span> {{data.filter.DateTo_P | date : "yyyy-MM-dd"}}</span> 
+
+      </p>
+    </div>
     <div class="services" style="width: 100%; margin-bottom: 20px">
       <div class="content">
         <table style="text-align: center; vertical-align: middle; width: 100%">
