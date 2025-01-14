@@ -1229,4 +1229,66 @@ export class UnderDailyComponent implements OnInit {
     }
   }
   //#endregion
+
+
+  //-------------------------------------CopyData----------------------------------------------
+  //#region 
+  CopyData:any=null;
+  
+  CopyDataFromRow(data:any){
+      this.CopyData=data;
+  }
+  PasteDataFromRow(){
+    debugger
+    this.CopyEntryVoucherPopup(this.CopyData);
+}
+
+
+CopyEntryVoucherPopup(data: any) {
+  var InvoiceNum=this.modalEntryVoucher.InvoiceNumber;
+  this.resetEntryData();
+
+  this.GetAllTransByVoucherId(data.invoiceId);
+  const DateHijri = toHijri(this._sharedService.String_TO_date(data.date));
+  var DateGre = new HijriDate(
+    DateHijri._year,
+    DateHijri._month,
+    DateHijri._date
+  );
+  DateGre._day = DateGre._date;
+
+  this.modalEntryVoucher = {
+    InvoiceId: 0,
+    InvoiceNumber: InvoiceNum,
+    JournalNumber: null,
+    Date: this._sharedService.String_TO_date(data.date),
+    HijriDate: DateGre,
+    Notes: data.notes,
+    InvoiceNotes: data.invoiceNotes,
+    Type: 8,
+    InvoiceValue: 0,
+    InvoiceReference: data.invoiceReference,
+    VoucherAdjustment: data.voucherAdjustment,
+    DunCalc: data.dunCalc,
+    CostCenterId: data.costCenterId,
+    Reference: null,
+    WhichClick: 1,
+    addUser: null,
+    addDate: null,
+    addedImg: null,
+  };
+  this.FillCostCenterSelect();
+  this.FillSubAccountLoadTable();
+  //this.GenerateEntryVoucherNumberForCopy();
+}
+
+GenerateEntryVoucherNumberForCopy() {
+  this._invoiceService.GenerateVoucherNumber(this.modalEntryVoucher.Type).subscribe((data) => {
+      this.modalEntryVoucher.InvoiceNumber = data.reasonPhrase;
+    });
+}
+
+//#endregion
+  //------------------------------------End-CopyData----------------------------------------------
+
 }

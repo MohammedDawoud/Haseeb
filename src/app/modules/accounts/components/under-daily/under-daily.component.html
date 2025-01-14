@@ -240,6 +240,16 @@
         <td mat-cell *matCellDef="let element">
           <div class="child-btns">
             <span class="dtr-data">
+              <button
+                type="button"
+                class="p-2 bg-green-200 hover:bg-green-500 rounded-lg duration-300 hover:text-white w-10 mx-1"
+                data-toggle="tooltip" data-placement="top"
+                title="نسخ " data-original-title="نسخ"
+                (click)="CopyDataFromRow(element)">
+                <i class="fa-regular fa-copy"></i>
+              </button>
+            </span>
+            <span class="dtr-data">
               <!--تعديل  -->
               <button
                 *ngIf="
@@ -506,6 +516,13 @@
     <h4 class="m-0">
       <span class="text-2xl">{{ "UnderDaily" | translate }}</span>
     </h4>
+    <button
+    *ngIf="WhichTypeAddEditView==1 && CopyData!=null"
+    type="button"
+    class="text-2xl text-white m-0"
+    (click)="PasteDataFromRow()">
+    <i class="fa-regular fa-paste"></i>
+    </button>
     <button
       type="button"
       class="text-2xl text-white m-0"

@@ -1960,4 +1960,101 @@ export class CatchReceiptComponent implements OnInit {
       }
     });
   }
+
+  //-------------------------------------CopyData----------------------------------------------
+  //#region 
+  CopyData:any=null;
+  
+  CopyDataFromRow(data:any){
+      this.CopyData=data;
+  }
+  PasteDataFromRow(){
+    debugger
+    this.CopyEntryVoucherPopup(this.CopyData);
+}
+
+
+CopyEntryVoucherPopup(data: any) {
+  var InvoiceNum = this.ReceiptVoucherForm.controls['VoucherNumber'].value;
+
+  this.uploadedFiles = [];
+  this.hijriDate = null;
+  this.ReceiptVoucherFormintial();
+  this.checkdetailsList = [];
+  this.Registrationnumber = null;
+  this.R_theInvoice = null;
+  this.referenceNumber = null;
+  this.ClientId = null;
+  this.paymenttype = null;
+  this.FillCustAccountsSelect2_Catch(null);
+  this.FillSubAccountLoad();
+  //this.GenerateVoucherNumber();
+  this.CopyCatch_Receipt(data);
+  this.ReceiptVoucherForm.controls['VoucherNumber'].setValue(InvoiceNum);
+  
+}
+CopyCatch_Receipt(element: any) {
+  this.receiptService.GetAllDetailsByVoucherId(element.invoiceId).subscribe((data) => {
+      this.addUser = null;
+      this.addDate = null;
+      this.addInvoiceImg = null;
+      this.DetailsByVoucher = data.result[0];
+
+      if (element.customerId == null) {
+        this.CustCheckPage = 'noCustomer';
+        this.ClientId = null;
+      } else {
+        this.CustCheckPage = 'withCustomer';
+        this.ClientId = element.customerId;
+      }
+      this.ReceiptVoucherForm.controls['dateM'].setValue(
+        new Date(element.date)
+      );
+      this.gethigridate();
+      this.ReceiptVoucherForm.controls['Notes'].setValue(element.notes);
+      this.ReceiptVoucherForm.controls['Statement'].setValue(element.invoiceNotes);
+      this.Registrationnumber = null;
+      this.ReceiptVoucherForm.controls['VoucherId'].setValue(0);
+      this.referenceNumber = element.invoiceReference;
+      this.R_theInvoice = element.toInvoiceId;
+      this.ReceiptVoucherForm.controls['AmountOf'].setValue(element.totalValue);
+      this.ConvertNumToString_Catch(this.ReceiptVoucherForm.controls['AmountOf'].value);
+      this.ReceiptVoucherForm.controls['recipientName'].setValue(element.recevierTxt);
+      this.paymenttype = element.payType;
+      this.FillCustAc(true);
+      this.ReceiptVoucherForm.controls['fromAccount'].setValue(element.toAccountId);
+      this.GetAccCodeFormID(this.ReceiptVoucherForm.controls['fromAccount'].value, 1 );
+      this.ReceiptVoucherForm.controls['toAccount'].setValue(this.DetailsByVoucher.accountId);
+      this.GetAccCodeFormID(this.ReceiptVoucherForm.controls['toAccount'].value,2);
+      this.ReceiptVoucherForm.controls['costCentersId'].setValue(this.DetailsByVoucher.costCenterId);
+      this.ReceiptVoucherForm.controls['AndThatFor'].setValue(this.DetailsByVoucher.description);
+      if (this.DetailsByVoucher.payType == 2 ||this.DetailsByVoucher.payType == 6 ||this.DetailsByVoucher.payType == 17 ) {
+        if (this.DetailsByVoucher.payType == 2) {
+          this.CheckDetailsForm.controls['paymenttypeName'].setValue('شيك');
+          this.CheckDetailsForm.controls['Check_transferNumber'].setValue(this.DetailsByVoucher.checkNo);
+          this.CheckDetailsForm.controls['dateCheck_transfer'].setValue(this.DetailsByVoucher.checkDate);
+          this.CheckDetailsForm.controls['BankId'].setValue(this.DetailsByVoucher.bankId );
+          this.CheckDetailsForm.controls['bankName'].setValue(this.DetailsByVoucher.bankName);
+        } else if (this.DetailsByVoucher.payType == 6) {
+          this.CheckDetailsForm.controls['paymenttypeName'].setValue('حوالة');
+          this.CheckDetailsForm.controls['Check_transferNumber'].setValue(this.DetailsByVoucher.moneyOrderNo);
+          this.CheckDetailsForm.controls['dateCheck_transfer'].setValue( this.DetailsByVoucher.moneyOrderDate);
+          this.CheckDetailsForm.controls['BankId'].setValue(this.DetailsByVoucher.bankId);
+          this.CheckDetailsForm.controls['bankName'].setValue( this.DetailsByVoucher.bankName);
+        } else if (this.DetailsByVoucher.payType == 17) {
+          this.CheckDetailsForm.controls['paymenttypeName'].setValue('نقاط بيع');
+          this.CheckDetailsForm.controls['Check_transferNumber'].setValue(this.DetailsByVoucher.moneyOrderNo);
+          this.CheckDetailsForm.controls['dateCheck_transfer'].setValue(this.DetailsByVoucher.moneyOrderDate);
+          this.CheckDetailsForm.controls['BankId'].setValue( this.DetailsByVoucher.bankId);
+          this.CheckDetailsForm.controls['bankName'].setValue(this.DetailsByVoucher.bankName);
+        }
+        this.checkdetailsTabel();
+      }
+    });
+}
+
+//#endregion
+  //------------------------------------End-CopyData----------------------------------------------
+
+
 }

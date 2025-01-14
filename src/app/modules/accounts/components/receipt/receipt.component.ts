@@ -2434,4 +2434,140 @@ export class ReceiptComponent implements OnInit {
       .UpdateVoucher_payed_bySupp(invId)
       .subscribe((result: any) => {});
   }
+
+    //-------------------------------------CopyData----------------------------------------------
+  //#region 
+  CopyData:any=null;
+  
+  CopyDataFromRow(data:any){
+      this.CopyData=data;
+  }
+  PasteDataFromRow(){
+    debugger
+    this.CopyEntryVoucherPopup(this.CopyData);
+}
+
+CopyEntryVoucherPopup(data: any) {
+  var InvoiceNum = this.vouchermodel.invoiceNumber
+  this.Copy_Receipt(data);
+  this.vouchermodel.invoiceNumber=InvoiceNum;
+}
+Copy_Receipt(data: any) {
+  this.resetvouchermodel();
+  const DateHijri = toHijri(this._sharedService.String_TO_date(data.date));
+  var DateGre = new HijriDate(DateHijri._year,DateHijri._month,DateHijri._date);
+  DateGre._day = DateGre._date;
+  this.vouchermodel.date = this._sharedService.String_TO_date(data.date);
+  this.vouchermodel.hijriDate = DateGre;
+  this.vouchermodel.notes = data.notes;
+  this.vouchermodel.invoiceNotes = data.invoiceNotes;
+  var VoucherValue = data.invoiceValue;
+  var TaxValue = 0;
+  this.vouchermodel.journalNumber = null;
+  var voucherId = parseInt(data.invoiceId);
+  this.vouchermodel.invoiceId = 0;
+  this.vouchermodel.supplierInvoiceNo = data.supplierInvoiceNo;
+  this.vouchermodel.recevierTxt = data.recevierTxt;
+  this.vouchermodel.invoiceReference = data.invoiceReference;
+  this.vouchermodel.invoiceValue = data.invoiceValue;
+  this.vouchermodel.reVoucherNValueText = data.invoiceValueText;
+
+  if (parseInt(data.invoiceValue) == parseInt(data.totalValue)) {
+    if (data.taxAmount != null) {
+      this.vouchermodel.valuebefore = parseFloat(
+        (parseFloat(data.invoiceValue.toString()) -parseFloat(data.taxAmount.toString())).toString()
+      ).toFixed(this.DigitalNumGlobal);
+    } else {
+      this.vouchermodel.valuebefore = parseFloat(data.invoiceValue).toFixed(this.DigitalNumGlobal);
+    }
+  } else {
+    this.vouchermodel.valuebefore = parseFloat(data.invoiceValue).toFixed(this.DigitalNumGlobal);
+  }
+  this.vouchermodel.taxAmount = data.taxAmount;
+  this.vouchermodel.valueafter = data.totalValue;
+  if (parseFloat(data.taxAmount).toFixed(2).toString() == '0.00') {
+    this.Taxchechdisabl = false;
+    this.vouchermodel.taxcheck1 = true;
+  } else {
+    this.Taxchechdisabl = false;
+    this.vouchermodel.taxcheck1 = false;
+  }
+
+  var DunCalcV = data.dunCalc;
+  debugger;
+  if (DunCalcV == true) {
+    this.vouchermodel.dunCalc = true;
+  } else {
+    this.vouchermodel.dunCalc = false;
+  }
+  var taxType =parseInt(data.totalValue) === parseInt(data.tnvoiceValue) ? 3 : 2; 
+    this.vouchermodel.taxtype = taxType;
+
+  this.vouchermodel.clauseId = data.clauseId;
+  this.vouchermodel.supplierId = data.supplierId;
+  this.GetTaxNoBySuppId(data.supplierId);
+  var payType = parseInt(data.payType);
+  this.vouchermodel.payType = payType;
+  this.FillSubAccountLoad();
+  if (payType == 1) {
+    this.FillCustAccountsSelect2(1);
+  } else if (payType == 2 || payType == 6) {
+    this.FillCustAccountsSelect2(6);
+  } else if (payType == 3) {
+    this.FillCustAccountsSelect2(4);
+  } else if (payType == 4) {
+    this.FillCustAccountsSelect2(5);
+  } else if (payType == 5) {
+    this.FillCustAccountsSelect2(6);
+  } else if (payType == 9) {
+    this.FillCustAccountsSelect2(9);
+  } else if (payType == 15) {
+    this.FillCustAccountsSelect2(15);
+  } else if (payType == 16) {
+    this.FillCustAccountsSelect2(16);
+  } else if (payType == 17) {
+    this.FillCustAccountsSelect2(17);
+  } else {
+    this.FillCustAccountsSelect2(0);
+  }
+  this._payvoucherservice.GetAllDetailsByVoucherId(voucherId).subscribe((data2) => {
+      this.vouchermodel.toAccountId = data2.result[0].toAccountId;
+      this.vouchermodel.CostCenterId = data2.result[0].costCenterId;
+      this.vouchermodel.accountId = data2.result[0].accountId;
+      this.vouchermodel.notes = data2.result[0].description;
+      this.getaccountcode(data2.result[0].accountId, 2);
+      this.getaccountcode(data2.result[0].toAccountId, 1);
+      this.vouchermodel.amount = data2.result[0].amount;
+      this.vouchermodel.taxtype = data2.result[0].taxType;
+      this.vouchermodel.taxAmount = data2.result[0].taxAmount;
+      this.vouchermodel.totalAmount = data2.result[0].totalAmount;
+      this.vouchermodel.payType = data2.result[0].payType;
+      this.vouchermodel.referenceNumber = data2.result[0].referenceNumber;
+      if (data2.result[0].payType == 2 ||data2.result[0].payType == 6 ||data2.result[0].payType == 17) {
+        this.CheckDetailsIntial();
+        if (data2.result[0].payType == 2) {
+          this.CheckDetailsForm.controls['paymenttypeName'].setValue('شيك');
+          this.CheckDetailsForm.controls['Check_transferNumber'].setValue(data2.result[0].checkNo);
+          this.CheckDetailsForm.controls['dateCheck_transfer'].setValue(new Date(data2.result[0].checkDate));
+          this.CheckDetailsForm.controls['BankId'].setValue(data2.result[0].bankId);
+          this.CheckDetailsForm.controls['bankName'].setValue(data2.result[0].bankName);
+        } else if (data2.result[0].payType == 6) {
+          this.CheckDetailsForm.controls['paymenttypeName'].setValue('حوالة');
+          this.CheckDetailsForm.controls['Check_transferNumber'].setValue(data2.result[0].moneyOrderNo);
+          this.CheckDetailsForm.controls['dateCheck_transfer'].setValue(new Date(data2.result[0].moneyOrderDate));
+          this.CheckDetailsForm.controls['BankId'].setValue( data2.result[0].bankId);
+          this.CheckDetailsForm.controls['bankName'].setValue(data2.result[0].bankName);
+        } else if (data2.result[0].payType == 17) {this.CheckDetailsForm.controls['paymenttypeName'].setValue('نقاط بيع');
+          this.CheckDetailsForm.controls['Check_transferNumber'].setValue(data2.result[0].moneyOrderNo);
+          this.CheckDetailsForm.controls['dateCheck_transfer'].setValue(new Date(data2.result[0].moneyOrderDate));
+          this.CheckDetailsForm.controls['BankId'].setValue(data2.result[0].bankId);
+          this.CheckDetailsForm.controls['bankName'].setValue(data2.result[0].bankName);
+        }
+        this.checkdetailsTabel();
+      }
+    });
+}
+
+//#endregion
+  //------------------------------------End-CopyData----------------------------------------------
 }
