@@ -1734,11 +1734,11 @@
       <div *ngFor="let item of serviceDetails" class="example-box" cdkDrag>
         <div class="col-md-11" style="font-size: 20px">
           <i
-            *ngIf="(item?.SureService ?? 0) != 1 && OfferPopupAddorEdit == 0"
+            *ngIf="(item?.sureService ?? 0) != 1 && (OfferPopupAddorEdit == 0 || OfferPopupAddorEdit == 2)"
             class="fa fa-xmark text-danger"
           ></i>
           <i
-            *ngIf="(item?.SureService ?? 0) == 1 && OfferPopupAddorEdit == 0"
+            *ngIf="(item?.sureService ?? 0) == 1 && (OfferPopupAddorEdit == 0 || OfferPopupAddorEdit == 2)"
             class="fa fa-check text-success"
           ></i>
           <i
@@ -1747,9 +1747,9 @@
           ></i>
           <span class="text-base mx-2">{{ item?.name }}</span>
         </div>
-        <div class="serviceBtns" *ngIf="OfferPopupAddorEdit == 0">
+        <div class="serviceBtns" *ngIf="(OfferPopupAddorEdit == 0 || OfferPopupAddorEdit == 2)">
           <button
-            *ngIf="(item?.SureService ?? 0) != 1"
+            *ngIf="(item?.sureService ?? 0) != 1"
             (click)="MarkServiceDetails(item)"
             type="button"
             class="btn btn-outline-success"
@@ -1757,7 +1757,7 @@
             {{ "Insert" | translate }}
           </button>
           <button
-            *ngIf="(item?.SureService ?? 0) == 1"
+            *ngIf="(item?.sureService ?? 0) == 1"
             (click)="UnMarkServiceDetails(item)"
             type="button"
             class="btn btn-outline-danger"

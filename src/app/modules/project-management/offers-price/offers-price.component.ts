@@ -399,7 +399,8 @@ export class OffersPriceComponent implements OnInit {
       this.ListDataServices = [];
       this.SureServiceList = [];
       this.editoffer(data);
-      this.OfferPopupAddorEdit = 1;
+      //this.OfferPopupAddorEdit = 1;
+      this.OfferPopupAddorEdit = 2;
     }
     if (type == 'serviceDetails' && data) {
       this.GetServicesPriceByParentId(data);
@@ -1002,16 +1003,16 @@ export class OffersPriceComponent implements OnInit {
       });
     } else {
       this.ListDataServices.forEach((elementService: any) => {
-        let dataSer = elementService.filter(
-          (d: { SureService: any }) => d.SureService == 1
-        );
-        dataSer.forEach((element: any) => {
+        // let dataSer = elementService.filter(
+        //   (d: { sureService: any }) => d.sureService == 1
+        // );
+        elementService.forEach((element: any) => {
           var Detailsobj: any = {};
           counter++;
           Detailsobj.ServicesIdVou = 0;
           Detailsobj.ServicesId = element.servicesId;
           Detailsobj.ParentId = element.parentId;
-          Detailsobj.SureService = element.SureService ?? 0;
+          Detailsobj.SureService = element.sureService ?? 0;
           Detailsobj.LineNumber = counter;
           DetailsList.push(Detailsobj);
         });
@@ -1787,9 +1788,7 @@ export class OffersPriceComponent implements OnInit {
     this.serviceDetails = [];
     if (element.AccJournalid != null) {
       if (this.OfferPopupAddorEdit == 0) {
-        this._offerpriceService
-          .GetServicesPriceByParentId(element.AccJournalid)
-          .subscribe((data) => {
+        this._offerpriceService.GetServicesPriceByParentId(element.AccJournalid).subscribe((data) => {
             this.serviceDetails = data.result;
             debugger;
             var Check = true;
@@ -1816,19 +1815,13 @@ export class OffersPriceComponent implements OnInit {
           });
       } else {
         this._offerpriceService
-          .GetServicesPriceVouByParentId(
-            element.AccJournalid,
-            this.SelectedRowTable.offersPricesId
-          )
-          .subscribe((data) => {
+          .GetServicesPriceVouByParentId( element.AccJournalid,this.SelectedRowTable.offersPricesId ).subscribe((data) => {
             this.serviceDetails = data.result;
             debugger;
             var Check = true;
             if (this.ListDataServices.length > 0) {
               for (let ele of this.ListDataServices) {
-                var val = ele.filter(
-                  (a: { parentId: any }) => a.parentId == element.AccJournalid
-                );
+                var val = ele.filter((a: { parentId: any }) => a.parentId == element.AccJournalid);
                 if (val.length == 0) {
                   Check = false;
                 } else {
@@ -1842,25 +1835,82 @@ export class OffersPriceComponent implements OnInit {
 
             if (Check == false) {
               this.ListDataServices.push(this.serviceDetails);
+              // let dataSer = this.serviceDetails.filter((d: { sureService: any }) => d.sureService == 1);
+              // if(dataSer.length>0)
+              // {
+              //   dataSer.forEach((element: any) => {
+              //     this.MarkServiceDetails(element);
+              //   });
+              // }
             }
+            
             this.serviceDetails.sort(
-              (a: { lineNumber: number }, b: { lineNumber: number }) =>
-                (a.lineNumber ?? 0) - (b.lineNumber ?? 0)
-            ); // b - a for reverse sort
-          });
+              (a: { lineNumber: number }, b: { lineNumber: number }) =>(a.lineNumber ?? 0) - (b.lineNumber ?? 0)); // b - a for reverse sort
+              // console.log("this.serviceDetails",this.serviceDetails)
+
+              console.log("this.SureServiceList",this.SureServiceList);
+
+              if(this.serviceDetails.length==0)
+                {
+                  this._offerpriceService.GetServicesPriceByParentId(element.AccJournalid).subscribe((data) => {
+                    this.serviceDetails = data.result;
+                    debugger;
+                    var Check = true;
+                    if (this.ListDataServices.length > 0) {
+                      for (let ele of this.ListDataServices) {
+                        var val = ele.filter(
+                          (a: { parentId: any }) => a.parentId == element.AccJournalid
+                        );
+                        if (val.length == 0) {
+                          Check = false;
+                        } else {
+                          Check = true;
+                          break;
+                        }
+                      }
+                    } else {
+                      Check = false;
+                    }
+        
+                    if (Check == false) {
+                      this.ListDataServices.push(this.serviceDetails);
+                    }
+                    this.SetDetailsCheck(this.serviceDetails);
+                  });
+                }
+
+            });
+
+
+
       }
     }
   }
 
   SureServiceList: any = [];
   MarkServiceDetails(item: any) {
-    if (item?.SureService == 1) item.SureService = 0;
-    else item.SureService = 1;
+    debugger
+    if (item?.sureService == 1) item.sureService = 0;
+    else item.sureService = 1;
     this.SureServiceList.push(item);
+
+    if(this.OfferPopupAddorEdit==2)
+    {
+      this.ListDataServices.forEach((elementService: any) => {
+
+        let newArray = elementService.filter((d: { servicesId: any }) => d.servicesId == item.servicesId);
+        if(newArray.length>0)
+        {
+          newArray[0].sureService=item.sureService;
+        }
+      });      
+    }
+
   }
   UnMarkServiceDetails(item: any) {
-    if (item?.SureService == 1) item.SureService = 0;
-    else item.SureService = 1;
+    debugger
+    if (item?.sureService == 1) item.sureService = 0;
+    else item.sureService = 1;
     if (this.SureServiceList.length > 0) {
       let index = this.SureServiceList.findIndex(
         (d: { servicesId: any }) => d.servicesId == item.servicesId
@@ -1869,6 +1919,16 @@ export class OffersPriceComponent implements OnInit {
         this.SureServiceList.splice(index, 1);
       }
     }
+    if(this.OfferPopupAddorEdit==2)
+      {
+        this.ListDataServices.forEach((elementService: any) => {        
+          let newArray = elementService.filter((d: { servicesId: any }) => d.servicesId == item.servicesId);
+          if(newArray.length>0)
+          {
+            newArray[0].sureService=item.sureService;
+          }
+        });      
+      }
   }
   RemoveServicesparent(ele: any) {
     {
@@ -5387,7 +5447,6 @@ export class OffersPriceComponent implements OnInit {
       // }
     }
   }
-
   SureServiceList_Invoice: any = [];
   MarkServiceDetails_Invoice(item: any) {
     if (item?.SureService == 1) item.SureService = 0;
