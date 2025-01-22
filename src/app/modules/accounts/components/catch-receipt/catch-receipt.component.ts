@@ -1811,7 +1811,6 @@ export class CatchReceiptComponent implements OnInit {
   delete(row: any, rowIndex: any) {
     this.isEditable[rowIndex] = !this.isEditable[rowIndex];
     this.rows.splice(rowIndex, 1);
-    console.log('Row deleted: ' + rowIndex);
   }
 
   selectGoalForProject(index: any) {}
@@ -1862,7 +1861,6 @@ export class CatchReceiptComponent implements OnInit {
   );
 
   sendSMS(sms: any) {
-    console.log(sms);
     this.modal?.hide();
   }
 

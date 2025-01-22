@@ -993,13 +993,11 @@ export class UnderDailyComponent implements OnInit {
   }
 
   onSort(event: any) {
-    console.log(event);
   }
   // ############### send sms
 
   modal?: BsModalRef;
   sendEMAIL(sms: any) {
-    console.log(sms);
     this.control.clear();
     this.modal?.hide();
   }
@@ -1288,6 +1286,7 @@ GenerateEntryVoucherNumberForCopy() {
     });
 }
 
+//copydata
 //#endregion
   //------------------------------------End-CopyData----------------------------------------------
 
