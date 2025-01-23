@@ -706,6 +706,7 @@ downloadFileUrl(file: any) {
   modalDetailsContractEdit:any={
     taxtype:2,
     total_amount:null,
+    ContractTax:null,
     total_amount_text:null,
   }
   resetmodalDetailsContractEdit(){
@@ -713,6 +714,7 @@ downloadFileUrl(file: any) {
     this.modalDetailsContractEdit={
       taxtype:2,
       total_amount:null,
+      ContractTax:null,
       total_amount_text:null,
     }
   }
@@ -729,11 +731,11 @@ downloadFileUrl(file: any) {
       var TaxV8erS = parseFloat((+parseFloat((+Value * vAT_TaxVal).toString()).toFixed(2) / 100).toString()).toFixed(2);
       var TaxVS =parseFloat((+Value- +parseFloat((+Value/((vAT_TaxVal / 100) + 1)).toString()).toFixed(2)).toString()).toFixed(2);
       if (this.modalDetailsContractEdit.taxtype == 2) {
-          taxAmount = +TaxV8erS;
+          taxAmount = +TaxV8erS * element.QtyConst;
           totalwithtax = +parseFloat((+parseFloat(Value) + +parseFloat(TaxV8erS)).toString()).toFixed(2);
       }
       else {
-          taxAmount=+TaxVS;
+          taxAmount=+TaxVS * element.QtyConst;
           FValIncludeT = +parseFloat((+parseFloat(Value).toFixed(2) - +TaxVS).toString()).toFixed(2);
           totalwithtax = +parseFloat(Value).toFixed(2);
       }
@@ -753,10 +755,13 @@ downloadFileUrl(file: any) {
   CalcSumTotal_ContractEdit(){
     debugger
     let sum=0;
+    let sumtax=0;
     this.ContractEditServices.forEach((element: any) => {
       sum= +sum + +parseFloat((element.TotalAmounttxt??0)).toFixed(2);
+      sumtax= +sumtax + +parseFloat((element.taxAmounttxt??0)).toFixed(2);   
     });
     this.modalDetailsContractEdit.total_amount=parseFloat(sum.toString()).toFixed(2);
+    this.modalDetailsContractEdit.ContractTax=parseFloat(sumtax.toString()).toFixed(2);
     this.ConvertNumToString_Contract(this.modalDetailsContractEdit.total_amount);
   }
   ConvertNumToString_Contract(val:any){
@@ -883,7 +888,8 @@ downloadFileUrl(file: any) {
     var input = { valid: true, message: "" };
     var ContractEditobj:any = {};
     ContractEditobj.ContractId=this.ContractRowSelected.contractId;
-    ContractEditobj.Value=this.modalDetailsContractEdit.total_amount;
+    //ContractEditobj.Value=this.modalDetailsContractEdit.total_amount;
+    ContractEditobj.Value =+parseFloat(this.modalDetailsContractEdit.total_amount.toString()).toFixed(2)- +parseFloat(this.modalDetailsContractEdit.ContractTax.toString()).toFixed(2);
     ContractEditobj.ValueText=this.modalDetailsContractEdit.total_amount_text;
     ContractEditobj.TaxType=this.modalDetailsContractEdit.taxtype;
     ContractEditobj.TotalValue=this.modalDetailsContractEdit.total_amount;
@@ -2676,11 +2682,11 @@ GetInvoicePrint(obj:any,TempCheck:any){
       var TaxVS =parseFloat((+Value- +parseFloat((+Value/((vAT_TaxVal / 100) + 1)).toString()).toFixed(2)).toString()).toFixed(2);
 
       if (this.modalInvoice.taxtype== 2) {
-          taxAmount = +TaxV8erS;
+          taxAmount = +TaxV8erS * element.QtyConst;
           totalwithtax = +parseFloat((+parseFloat(Value) + +parseFloat(TaxV8erS)).toString()).toFixed(2);
       }
       else {
-          taxAmount=+TaxVS;
+          taxAmount=+TaxVS * element.QtyConst;
           FValIncludeT = parseFloat((+parseFloat(Value).toFixed(2) - +TaxVS).toString()).toFixed(2);
           totalwithtax = +parseFloat(Value).toFixed(2);
       }

@@ -676,6 +676,8 @@ export class CustomerContractsAddComponent implements OnInit {
     modalDetailsContractNew:any={
       taxtype:2,
       total_amount:null,
+      ContractAmountBefore:null,
+      ContractTax:null,
       total_amount_text:null,
     }
     resetmodalDetailsContractNew(){
@@ -683,6 +685,8 @@ export class CustomerContractsAddComponent implements OnInit {
       this.modalDetailsContractNew={
         taxtype:2,
         total_amount:null,
+        ContractAmountBefore:null,
+        ContractTax:null,
         total_amount_text:null,
       }
     }
@@ -698,11 +702,11 @@ export class CustomerContractsAddComponent implements OnInit {
         var TaxV8erS = parseFloat((+parseFloat((+Value * vAT_TaxVal).toString()).toFixed(2) / 100).toString()).toFixed(2);
         var TaxVS =parseFloat((+Value- +parseFloat((+Value/((vAT_TaxVal / 100) + 1)).toString()).toFixed(2)).toString()).toFixed(2);
         if (this.modalDetailsContractNew.taxtype == 2) {
-            taxAmount = +TaxV8erS;
+            taxAmount = +TaxV8erS * element.QtyConst;
             totalwithtax = +parseFloat((+parseFloat(Value) + +parseFloat(TaxV8erS)).toString()).toFixed(2);
         }
         else {
-            taxAmount=+TaxVS;
+            taxAmount=+TaxVS * element.QtyConst;
             FValIncludeT = +parseFloat((+parseFloat(Value).toFixed(2) - +TaxVS).toString()).toFixed(2);
             totalwithtax = +parseFloat(Value).toFixed(2);
         }
@@ -721,10 +725,16 @@ export class CustomerContractsAddComponent implements OnInit {
     CalcSumTotal_ContractNew(){
       debugger
       let sum=0;
+      let sumbefore=0;
+      let sumtax=0;
       this.ContractNewServices.forEach((element: any) => {
         sum= +sum + +parseFloat((element.TotalAmounttxt??0)).toFixed(2);
+        sumbefore= +sumbefore + (+parseFloat((element.Amounttxt??0)).toFixed(2) * +parseFloat((element.QtyConst??0)).toFixed(2));
+        sumtax= +sumtax + +parseFloat((element.taxAmounttxt??0)).toFixed(2);   
       });
       this.modalDetailsContractNew.total_amount=parseFloat(sum.toString()).toFixed(2);
+      this.modalDetailsContractNew.ContractAmountBefore=parseFloat(sumbefore.toString()).toFixed(2);
+      this.modalDetailsContractNew.ContractTax=parseFloat(sumtax.toString()).toFixed(2);
       this.ConvertNumToString_Contract(this.modalDetailsContractNew.total_amount);
     }
     ConvertNumToString_Contract(val:any){
@@ -842,7 +852,8 @@ export class CustomerContractsAddComponent implements OnInit {
       ContractObj.ProjectId = this.FormGroup01.controls['ContractProjSelectId'].value;
       ContractObj.Type = this.ContractModalCustom.ContractType;
 
-      ContractObj.Value = this.modalDetailsContractNew.total_amount;
+      //ContractObj.Value = this.modalDetailsContractNew.total_amount;
+      ContractObj.Value =+parseFloat(this.modalDetailsContractNew.total_amount.toString()).toFixed(2)- +parseFloat(this.modalDetailsContractNew.ContractTax.toString()).toFixed(2);
       ContractObj.ValueText = this.modalDetailsContractNew.total_amount_text;
       ContractObj.TaxType = this.modalDetailsContractNew.taxtype;
       ContractObj.TaxesValue = null;

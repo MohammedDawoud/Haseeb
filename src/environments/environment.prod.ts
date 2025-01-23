@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
-  apiEndPoint: 'https://api.haseeb.tameercloud.com/api/',
-  PhotoURL: 'https://api.haseeb.tameercloud.com',
+  apiEndPoint: 'https://api.haseeb-API.tameercloud.com/api/',
+  PhotoURL: 'https://api.haseeb-API.tameercloud.com',
   LabaikEndpoint: 'https://api2.tameercloud.com/api/',
   labaikphoto: 'https://api2.tameercloud.com',
   printConfig: {
