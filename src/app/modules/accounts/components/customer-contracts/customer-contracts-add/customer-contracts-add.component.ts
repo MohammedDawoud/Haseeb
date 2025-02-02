@@ -46,7 +46,6 @@ export class CustomerContractsAddComponent implements OnInit {
       console.log(this.userG);
     }
     ngOnInit(): void {
-      console.log(this.contractAdd);
       this.SetContractDefData();
     }
 

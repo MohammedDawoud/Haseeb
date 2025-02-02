@@ -631,8 +631,6 @@ export class CanceledSalesInvoiceComponent implements OnInit{
   // Save row
   save(row: any, rowIndex: any) {
     this.isEditable[rowIndex] = !this.isEditable[rowIndex];
-    console.log('Row saved: ' + rowIndex);
-    console.log(row);
   }
 
   // Delete row

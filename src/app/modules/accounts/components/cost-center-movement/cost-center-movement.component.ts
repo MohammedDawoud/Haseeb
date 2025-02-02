@@ -525,8 +525,6 @@ getPrintdata(id:any) {
   // Save row
   save(row: any, rowIndex: any) {
     this.isEditable[rowIndex] = !this.isEditable[rowIndex];
-    console.log('Row saved: ' + rowIndex);
-    console.log(row);
   }
 
 
@@ -535,7 +533,6 @@ getPrintdata(id:any) {
   addNewMission() { }
 
   onSort(event: any) {
-    console.log(event);
   }
 
   // upload img ]

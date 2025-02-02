@@ -1039,15 +1039,12 @@ export class CostCentresComponent implements OnInit {
   // Save row
   save(row: any, rowIndex: any) {
     this.isEditable[rowIndex] = !this.isEditable[rowIndex];
-    console.log('Row saved: ' + rowIndex);
-    console.log(row);
   }
 
   // Delete row
   delete(row: any, rowIndex: any) {
     this.isEditable[rowIndex] = !this.isEditable[rowIndex];
     this.rows.splice(rowIndex, 1);
-    console.log('Row deleted: ' + rowIndex);
   }
 
   selectGoalForProject(index: any) {}
@@ -1081,7 +1078,6 @@ export class CostCentresComponent implements OnInit {
   };
   modal?: BsModalRef;
   sendEMAIL(sms: any) {
-    console.log(sms);
     this.control.clear();
     this.modal?.hide();
   }

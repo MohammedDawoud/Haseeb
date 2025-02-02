@@ -52,10 +52,8 @@ export class CustomerContractsAddMainComponent implements OnInit {
     private dateFormatterSev: DateFormatterService,
     private translate: TranslateService,) {
       this.userG = this.authenticationService.userGlobalObj;
-      console.log(this.userG);
     }
     ngOnInit(): void {
-      console.log(this.contractAdd);
       this.SetContractDefData();
     }
 
@@ -992,10 +990,6 @@ export class CustomerContractsAddMainComponent implements OnInit {
       ContractObj.ServicesPriceOffer = DetailsList;
 
 
-      // console.log("ContractObj");
-      // console.log("-------------------------");
-      // console.log(ContractObj);
-
       //return;
 
       this.disableButtonSave_Contract = true;
@@ -1460,16 +1454,6 @@ export class CustomerContractsAddMainComponent implements OnInit {
 
     SetDistTable(){
       this.GetAllFollowProj();
-      // console.log("this.RowValue");
-      // console.log(this.RowValue);
-
-      // var CostE= this.GetvalCostE(this.RowValue);
-      // var CostS= this.GetvalCostS(this.RowValue);
-      // console.log("CostS");
-
-      // console.log(CostE);
-      // console.log(CostS);
-
 
       //this.GetChartCalc(this.RowValue.projectNo,CostE,CostS);
     }

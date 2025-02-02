@@ -1422,9 +1422,6 @@ GetInvoicePrint(obj:any,TempCheck:any){
     else{
       this.CustomData.footerurl=null;
     }
-    // console.log("this.CustomData");
-    // console.log(this.CustomData);
-    // this.printDiv("divHtml_a");
   });
 }
   GetAccualValue(item:any){
@@ -3573,9 +3570,6 @@ GetInvoicePrint(obj:any,TempCheck:any){
       }
     });
     this.ListDataServices_Invoice.push(this.serviceDetails_Invoice);
-
-    // console.log(this.serviceDetails_Invoice);
-    // console.log(this.ListDataServices_Invoice);
     }
 
 

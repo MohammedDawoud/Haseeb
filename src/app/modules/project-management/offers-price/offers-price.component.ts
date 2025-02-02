@@ -3081,6 +3081,11 @@ export class OffersPriceComponent implements OnInit {
       this.ValidateObjMsgInvoice = { status: false, msg: 'من فضلك اختر خدمة' };
       return this.ValidateObjMsgInvoice;
     }
+    if(this.modalInvoice.ToAccountId==null || this.modalInvoice.ToAccountId=="")
+      {
+        this.ValidateObjMsgInvoice = { status: false, msg: 'من فضلك أختر الحساب' };
+        return this.ValidateObjMsgInvoice;
+      }
 
     this.ValidateObjMsgInvoice = { status: true, msg: null };
     return this.ValidateObjMsgInvoice;
