@@ -558,7 +558,6 @@ export class BillingServicesComponent implements OnInit {
       this.modalDetails.recurrenceRateId ?? '0'
     );
     formData.append('Notes', this.modalDetails.notes);
-    // console.log(formData);
 
     this._Service.SaveService(formData).subscribe(
       (data) => {

@@ -1298,14 +1298,12 @@ export class AdoptionOfThemanagerComponent implements OnInit {
       this.GetAllVouchersList = data;
       this.projectsDataSourceR.paginator = this.paginator;
       this.projectsDataSourceR.sort = this.sort;
-      console.log('alldata', data);
     });
   }
   FillClausesSelect() {
     this._payvoucherservice.FillClausesSelect().subscribe(
       (data) => {
         this.clauseseleted = data;
-        console.log(this.clauseseleted);
       },
       (error) => {}
     );
@@ -1917,7 +1915,6 @@ export class AdoptionOfThemanagerComponent implements OnInit {
     this._payvoucherservice.GetAllClauses(this.searchClause ?? '').subscribe(
       (data) => {
         this.claselist = data.result;
-        // console.log(this.claselist);
       },
       (error) => {}
     );
@@ -2557,7 +2554,6 @@ export class AdoptionOfThemanagerComponent implements OnInit {
   addNewMission() {}
 
   onSort(event: any) {
-    // console.log(event);
   }
 
   // upload img ]

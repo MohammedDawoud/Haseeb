@@ -731,7 +731,6 @@ export class CostCentresComponent implements OnInit {
   NameLat: any;
 
   onAccountCodeClick(data: any) {
-    console.log('aaaaa', data);
     this.refreshcostcenter();
     this.costCenterModel.costCenterId = data.costCenterId;
     this.costCenterModel.code = data.code;

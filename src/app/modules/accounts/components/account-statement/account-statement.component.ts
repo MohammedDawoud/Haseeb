@@ -1149,7 +1149,6 @@ export class AccountStatementComponent implements OnInit {
 
   //     }
   //  return   this.totalbalance = this.CurrentBalance;
-  //  console.log(this.totalbalance )
 
   //   }
 

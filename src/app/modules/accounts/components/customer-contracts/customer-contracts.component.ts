@@ -1031,7 +1031,6 @@ GetAllCustomerPayments(){
     var TotalAmount=0; var PaidVlue=0;
     this._contractService.GetAllCustomerPayments(ContractId).subscribe(data=>{
       this.paymentsDetails.CustomerPayments=data.result;
-      console.log(this.paymentsDetails.CustomerPayments);
       debugger
       data.result.forEach((element: any) => {
         if(element.isCanceled!=true)
@@ -1155,7 +1154,6 @@ saveNewPaymentbtn() {
   PayObj.TaxAmount = this.PaymentObj.TotalPayTaxTxt;
   PayObj.TotalAmount = this.PaymentObj.TotalPayAmountTxt;
   PayObj.ServiceId = this.PaymentObj.ServicesValue;
-  console.log(PayObj);
 
 
   this.disableButtonSave_Payment = true;
@@ -1646,7 +1644,6 @@ GetInvoicePrint(obj:any,TempCheck:any){
   selectGoalForProject(index: any) {}
 
   onSort(event: any) {
-    console.log(event);
   }
   // ############### send sms
 
@@ -1972,7 +1969,6 @@ GetInvoicePrint(obj:any,TempCheck:any){
   }
   Connect_appendFile_Draft(data:any){
     debugger
-    console.log(this.contractdraftdata);
     
     this._contractService.Connect_appendFile_Draft2(this.ContractRowSelected.contractId,data.draftId,data.draftUrl).subscribe((result: any)=>{
       if(result.statusCode==200){
@@ -3291,7 +3287,6 @@ GetInvoicePrint(obj:any,TempCheck:any){
       if(this.AllContractPrintData?.org_VD.logoUrl)
       this.CustomDataAllContract.OrgImg=environment.PhotoURL+this.AllContractPrintData?.org_VD.logoUrl;
       else this.CustomDataAllContract.OrgImg=null;
-      console.log(this.AllContractPrintData);
       this.AllContractPrintData?.someContracts.forEach((element: any) => {
         this.CustomDataAllContract.SumtotalPaidPayment=this.CustomDataAllContract.SumtotalPaidPayment+element.totalPaidPayment;
         this.CustomDataAllContract.SumtotalRemainingPayment=this.CustomDataAllContract.SumtotalRemainingPayment+element.totalRemainingPayment;

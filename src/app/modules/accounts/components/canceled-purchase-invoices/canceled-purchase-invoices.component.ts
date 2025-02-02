@@ -659,14 +659,12 @@ export class CanceledPurchaseInvoicesComponent implements OnInit{
   addNewMission() {}
 
   onSort(event: any) {
-    console.log(event);
   }
 // ############### send sms
 
 
   modal?: BsModalRef;
   sendEMAIL(sms: any) {
-    console.log(sms);
     this.control.clear();
     this.modal?.hide();
   }

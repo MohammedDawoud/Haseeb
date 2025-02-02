@@ -853,7 +853,6 @@ downloadFile(data: any) {
 
 
   onSort(event: any) {
-    console.log(event);
   }
   // ############### send sms
 

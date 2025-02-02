@@ -1316,7 +1316,6 @@ export class AccountsGuideComponent implements OnInit {
   addNewMission() { }
 
   onSort(event: any) {
-    console.log(event);
   }
   // ############### send sms
 
@@ -1362,7 +1361,6 @@ export class AccountsGuideComponent implements OnInit {
   public uploadedFiles: Array<File> = [];
 
   sendSMS(sms: any) {
-    console.log(sms);
     this.modal?.hide();
   }
 
