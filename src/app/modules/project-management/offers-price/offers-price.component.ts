@@ -5768,4 +5768,41 @@ export class OffersPriceComponent implements OnInit {
   //#endregion
   //----------------------------------(End)-Storehouse---------------------------------------------
 
+  //-------------------------------------CopyData----------------------------------------------
+  //#region 
+  CopyData:any=null;
+  
+  CopyDataFromRow(data:any){
+      this.CopyData=data;
+  }
+  PasteDataFromRow(){
+    debugger
+    this.CopyOfferPricePopup(this.CopyData);
+}
+
+CopyOfferPricePopup(data: any) {
+  var offer_no=this.modalDetailsOffer.offer_no;
+  this.ResetInsideSpacesAndFloors();
+  this.GetAllFloors();
+  this.resetLandArea();
+  this.ResetModel();
+  this.setdataModals(data);
+  this.GetOfferservicenByid(data.offersPricesId);
+  this.GetAllCustomerPaymentsboffer(data.offersPricesId);
+  this.GetOfferConditionbyid(data.offersPricesId);
+  this.modalDetailsOffer.offer_no=null;
+  this.modalDetailsOffer.id=0;
+  this.Getnextoffernum();
+}
+
+// GenerateOfferPriceNumberForCopy() {
+//   this._invoiceService.GenerateVoucherNumber(this.modalDetailsOffer.Type).subscribe((data) => {
+//       this.modalDetailsOffer.InvoiceNumber = data.reasonPhrase;
+//     });
+// }
+
+//#endregion
+  //------------------------------------End-CopyData----------------------------------------------
+
+
 }
