@@ -732,13 +732,13 @@
                   <th>{{ "delete" | translate }}</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr
+              <tbody cdkDropList (cdkDropListDropped)="drop($event)">
+                <tr cdkDrag cdkDragLockAxis="y"
                   *ngFor="let item of EntryVoucherDetailsRows; let i = index"
                   style="line-height: 5px"
                 >
-                  <td>{{ item.idRow }}</td>
-                  <td>
+                  <td style="cursor: pointer;" cdkDragHandle>{{ item.idRow }}</td>
+                  <td cdkDragHandle>
                     <input
                       type="number"
                       [(ngModel)]="item.Amounttxt"

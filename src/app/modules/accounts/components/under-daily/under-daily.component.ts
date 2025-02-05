@@ -34,6 +34,8 @@ import { DateType } from 'ngx-hijri-gregorian-datepicker';
 import { PrintreportsService } from 'src/app/core/services/acc_Services/printreports.service';
 import { RestApiService } from 'src/app/shared/services/api.service';
 const hijriSafe = require('hijri-date/lib/safe');
+import {CdkDragDrop,moveItemInArray,transferArrayItem,} from '@angular/cdk/drag-drop';
+
 const HijriDate = hijriSafe.default;
 const toHijri = hijriSafe.toHijri;
 
@@ -1289,5 +1291,11 @@ GenerateEntryVoucherNumberForCopy() {
 //copydata
 //#endregion
   //------------------------------------End-CopyData----------------------------------------------
+
+
+  drop(event: CdkDragDrop<string[]>) {
+    console.log(this.EntryVoucherDetailsRows);
+    moveItemInArray(this.EntryVoucherDetailsRows, event.previousIndex, event.currentIndex);
+  }
 
 }
