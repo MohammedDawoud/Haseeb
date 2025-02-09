@@ -18,7 +18,7 @@
       </div>
         <div class="col-xxl-3 col-md-4 col-sm-6 mb-3">
           <div class="form-group">
-            <ng-select class="w-full p-0" style="min-width: 250px !important" (change)="RefreshData();" placeholder="{{ 'choose level' | translate }}"
+            <ng-select class="w-full p-0" style="min-width: 250px !important" placeholder="{{ 'choose level' | translate }}"
             [ngModelOptions]="{standalone: true}"
             [(ngModel)]="data.filter.choseid" name="Chose">
               <ng-option *ngFor="let user of ChoseList" [value]="user.id">{{
@@ -41,7 +41,7 @@
         </div>
         <div class="col-xxl-3 col-md-4 col-sm-6 mb-3">
           <div class="form-group">
-            <ng-select class="w-full p-0" style="min-width: 250px !important" (change)="RefreshData();"
+            <ng-select class="w-full p-0" style="min-width: 250px !important"
             [ngModelOptions]="{standalone: true}" [multiple]="true"
             [(ngModel)]="data.filter.FilteringTypeStr">
               <ng-option *ngFor="let user of FilteringTypeStrList" [value]="user.id">{{
@@ -58,9 +58,7 @@
               placeholder="{{ 'accountName' | translate }}"
               [ngModelOptions]="{standalone: true}"
               [(ngModel)]="data.filter.search_accountId"
-              name="accountName"
-              (change)="RefreshData()"
-            >
+              name="accountName">
               <ng-option *ngFor="let user of load_accountIds" [value]="user.id">{{
                 user.name
               }}</ng-option>
@@ -74,9 +72,7 @@
               placeholder="{{ 'Chose' | translate }}"
               [ngModelOptions]="{standalone: true}"
               [(ngModel)]="data.filter.costCenter"
-              name="withCostCenter"
-              (change)="RefreshData()"
-            >
+              name="withCostCenter">
               <ng-option *ngFor="let user of load_costCenters" [value]="user.id">{{user.name}}</ng-option>
             </ng-select>
           </div>
@@ -112,7 +108,7 @@
           </div>
         </div>
 
-        <div class="col-xxl-3 col-md-4 col-sm-6 mb-3">
+        <div class="col-md-2">
           <div class="form-check form-switch position-relative mb-2">
             <input
               class="form-check-input position-absolute end-25"
@@ -120,7 +116,7 @@
               role="switch"
               [checked]="showTablezeroCheck"
               id="flexSwitchCheckDefault3"
-              (change)="showTablezeroCheck = !showTablezeroCheck;RefreshData()"
+              (change)="showTablezeroCheck = !showTablezeroCheck;"
             />
             <label
               class="form-check-label me-5"
@@ -131,6 +127,38 @@
             </label>
           </div>
         </div>
+
+        <div  class="col-md-2" *ngIf="userG?.userPrivileges.includes(131905)">
+          <div class="form-check form-switch position-relative">
+            <input
+              class="form-check-input position-absolute end-25"
+              type="checkbox"
+              role="switch"
+              [checked]="data.filter.isCheckedYear"
+              id="isCheckedYearCheckDefault"
+              (change)="data.filter.isCheckedYear = !data.filter.isCheckedYear;"
+            />
+            <label
+              class="form-check-label me-5"
+              for="isCheckedYearCheckDefault"
+              style="width: max-content"
+            >
+              {{ "كل السنوات المالية" | translate }}
+            </label>
+          </div>
+        </div>
+
+        <div  class="col-md-8" *ngIf="data.filter.isCheckedYear">
+          <div class="form-check form-switch position-relative">
+            <p
+            style="text-align: center;color: red;
+              font-weight: bold;font-size: 14px;"
+            class="p-1 bg-red-100">
+            تنبيه ( فى حالة تفعيل السنوات المالية يرجى التأكد من عدم تدوير الأرصدة للحصول على نتائج دقيقة ) لانه في حالة التدوير سيضاف الختامى للسنة السابقة كأفتتاحى فى السنة الجديدة كعملية منفصلة
+          </p>
+          </div>
+        </div>
+
       </div>
       <div class="head flex gap-2 flex-wrap items-end justify-between">
         <!-- all buttons  -->

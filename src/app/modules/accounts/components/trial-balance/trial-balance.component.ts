@@ -456,6 +456,7 @@ export class TrialBalanceComponent implements OnInit {
       DateTo_P: null,
       filteringType: null,
       costCenter: null,
+      isCheckedYear: false,
       ZeroCheck: null,
       FilteringTypeStr: [],
       TypeF: null,
@@ -473,6 +474,7 @@ export class TrialBalanceComponent implements OnInit {
         DateTo_P: null,
         filteringType: null,
         costCenter: null,
+        isCheckedYear: false,
         ZeroCheck: null,
         FilteringTypeStr: [],
         TypeF: null,
@@ -530,6 +532,7 @@ export class TrialBalanceComponent implements OnInit {
     _voucherFilterVM.filteringType = this.data.filter.filteringType;
     _voucherFilterVM.FilteringTypeStr = this.data.filter.FilteringTypeStr;
     _voucherFilterVM.CostCenter = this.data.filter.costCenter;
+    _voucherFilterVM.isCheckedYear = this.data.filter.isCheckedYear;
     _voucherFilterVM.search_accountId = this.data.filter.search_accountId;
 
     if (this.showTablezeroCheck == true) {
@@ -861,6 +864,7 @@ export class TrialBalanceComponent implements OnInit {
       FromDate: this.data.filter.DateFrom_P,
       ToDate: this.data.filter.DateTo_P,
       CostCenter: this.data.filter.costCenter,
+      isCheckedYear: this.data.filter.isCheckedYear,
       FilteringType: this.data.filter.filteringType,
       FilteringTypeStr: this.data.filter.FilteringTypeStr,
       AccountId: item.accountId,
@@ -934,6 +938,7 @@ export class TrialBalanceComponent implements OnInit {
       FromDate: this.data.filter.DateFrom_P,
       ToDate: this.data.filter.DateTo_P,
       CostCenter: this.data.filter.costCenter,
+      isCheckedYear: this.data.filter.isCheckedYear,
       FilteringType: this.data.filter.filteringType,
       FilteringTypeStr: this.data.filter.FilteringTypeStr,
       AccountId: item.accountId,
@@ -987,6 +992,7 @@ export class TrialBalanceComponent implements OnInit {
       FromDate: this.data.filter.DateFrom_P,
       ToDate: this.data.filter.DateTo_P,
       CostCenter: this.data.filter.costCenter,
+      isCheckedYear: this.data.filter.isCheckedYear,
       FilteringType: this.data.filter.filteringType,
       FilteringTypeStr: this.data.filter.FilteringTypeStr,
       AccountId: item.accountId,
@@ -1041,6 +1047,7 @@ export class TrialBalanceComponent implements OnInit {
       FromDate: this.data.filter.DateFrom_P,
       ToDate: this.data.filter.DateTo_P,
       CostCenter: this.data.filter.costCenter,
+      isCheckedYear: this.data.filter.isCheckedYear,
       FilteringType: this.data.filter.filteringType,
       FilteringTypeStr: this.data.filter.FilteringTypeStr,
       AccountId: item.accountId,

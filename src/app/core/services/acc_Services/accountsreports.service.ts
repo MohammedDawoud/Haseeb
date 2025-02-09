@@ -970,6 +970,7 @@ export class AccountsreportsService {
     formData.append('ToDate', data.dateTo);
     formData.append('FromDate', data.dateFrom);
     formData.append('CostCenter', data.CostCenter);
+    formData.append('isCheckedYear', data.isCheckedYear);
     formData.append('FilteringType', data.filteringType);
     formData.append('AccountCode', data.AccountCode);
     formData.append('LVL', data.lvl);
@@ -1007,6 +1008,7 @@ export class AccountsreportsService {
     formData.append('ToDate', data.dateTo);
     formData.append('FromDate', data.dateFrom);
     formData.append('CostCenter', data.CostCenter);
+    formData.append('isCheckedYear', data.isCheckedYear);
     formData.append('FilteringType', data.filteringType);
     formData.append('AccountCode', data.AccountCode);
     formData.append('LVL', data.lvl);
@@ -1052,6 +1054,8 @@ export class AccountsreportsService {
         modal.ToDate +
         '&CostCenter=' +
         modal.CostCenter +
+        '&isCheckedYear=' +
+        modal.isCheckedYear +
         '&FilteringType=' +
         modal.FilteringType +
         '&FilteringTypeStr=' +
