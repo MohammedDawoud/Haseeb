@@ -224,6 +224,19 @@
           <td mat-footer-cell *matFooterCellDef class="bg-light"></td>
         </ng-container>
 
+        <ng-container matColumnDef="invoiceNumber2">
+          <th mat-header-cell *matHeaderCellDef><span></span></th>
+        </ng-container>
+        <ng-container matColumnDef="invoiceNumber">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "Bond number" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.invoiceNumber }}
+          </td>
+          <td mat-footer-cell *matFooterCellDef class="bg-light"></td>
+        </ng-container>
+
 
         <ng-container matColumnDef="depit2">
           <th mat-header-cell *matHeaderCellDef><span></span></th>
