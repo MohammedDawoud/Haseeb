@@ -1142,6 +1142,30 @@ export class ReceiptComponent implements OnInit {
 
   saveandpostvoucher2(modal: any) {
     debugger;
+    var list: any = [];
+    list.push(this.vouchermodel.invoiceId.toString());
+    this.receiptService.PostVouchersCheckBox(list).subscribe(
+      (data) => {
+        if (data.statusCode == 200) {
+          modal.dismiss();
+          this.GetAllVouchersLastMonth();
+          this.toast.success(
+            this.translate.instant('Deported'),
+            this.translate.instant('Message')
+          );
+        }
+      },
+      (error) => {
+        this.toast.error(
+          this.translate.instant(error.reasonPhrase),
+          this.translate.instant('Message')
+        );
+      }
+    );
+  }
+
+  saveandpostvoucher22(modal: any) {
+    debugger;
     console.log('voucher', this.vouchermodel);
 
     if (
