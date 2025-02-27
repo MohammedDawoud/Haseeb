@@ -33,6 +33,7 @@ import { environment } from 'src/environments/environment';
 import { NgxPrintElementService } from 'ngx-print-element';
 import { RestApiService } from 'src/app/shared/services/api.service';
 import printJS from 'print-js';
+import { InvoiceService } from 'src/app/core/services/acc_Services/invoice.service';
 const hijriSafe = require('hijri-date/lib/safe');
 const HijriDate = hijriSafe.default;
 const toHijri = hijriSafe.toHijri;
@@ -318,7 +319,7 @@ export class ReceiptComponent implements OnInit {
     private receiptService: ReceiptService,
     // private formBuilder: FormBuilder,
     private formBuilder: FormBuilder,
-
+    private _invoiceService: InvoiceService,
     private _sharedService: SharedService,
     private translate: TranslateService,
     private toast: ToastrService,
@@ -329,6 +330,7 @@ export class ReceiptComponent implements OnInit {
     private api: RestApiService
   ) {
     this.userG = this.authenticationService.userGlobalObj;
+    this.GetBranchByBranchIdCheck();
 
     this.dataSource = new MatTableDataSource([{}]);
     this.currentDate = new Date();
@@ -336,6 +338,22 @@ export class ReceiptComponent implements OnInit {
       this.lang = res;
     });
     this.userG = this.authenticationService.userGlobalObj;
+  }
+
+  TaxCodeCheck:boolean=false
+  GetBranchByBranchIdCheck(){
+    this._invoiceService.GetBranchByBranchIdCheck().subscribe(data=>{
+      debugger
+      if(!(data.result.taxCode=="" || data.result.taxCode==null))
+      {
+        this.TaxCodeCheck=true;
+      }
+      else
+      {
+        this.TaxCodeCheck=false;
+        this.toast.error(this.translate.instant("من فضلك قم بحفظ اعدادات الفرع و تأكد من الرقم الضريبي للفرع"),this.translate.instant('Message'));
+      }
+    });
   }
 
   ngOnInit(): void {

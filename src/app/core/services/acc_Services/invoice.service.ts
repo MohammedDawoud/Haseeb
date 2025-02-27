@@ -150,6 +150,9 @@ export class InvoiceService {
   GetBranch_Costcenter() {
     return this.http.get<any>(this.apiEndPoint+'CostCenter/GetBranch_Costcenter');
   }
+  GetBranchByBranchIdCheck() {
+    return this.http.get<any>(this.apiEndPoint+'Branches/GetBranchByBranchIdCheck');
+  }
   GenerateVoucherNumber(Type:any) {
     var url=`${environment.apiEndPoint}Voucher/GenerateVoucherNumber?&Type=${Type}`;
     return this.http.get<any>(url);

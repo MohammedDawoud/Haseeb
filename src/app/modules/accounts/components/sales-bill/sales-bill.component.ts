@@ -199,9 +199,24 @@ export class SalesBillComponent implements OnInit {
     console.log(this.userG);
     this.dataSource = new MatTableDataSource([{}]);
     this.currentDate = new Date();
-
+    this.GetBranchByBranchIdCheck();
     this.api.lang.subscribe((res) => {
       this.lang = res;
+    });
+  }
+  TaxCodeCheck:boolean=false
+  GetBranchByBranchIdCheck(){
+    this._invoiceService.GetBranchByBranchIdCheck().subscribe(data=>{
+      debugger
+      if(!(data.result.taxCode=="" || data.result.taxCode==null))
+      {
+        this.TaxCodeCheck=true;
+      }
+      else
+      {
+        this.TaxCodeCheck=false;
+        this.toast.error(this.translate.instant("من فضلك قم بحفظ اعدادات الفرع و تأكد من الرقم الضريبي للفرع"),this.translate.instant('Message'));
+      }
     });
   }
   invoicetype: any;

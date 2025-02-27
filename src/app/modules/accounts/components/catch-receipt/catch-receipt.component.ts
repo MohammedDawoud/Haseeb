@@ -30,6 +30,7 @@ import { DateType } from 'ngx-hijri-gregorian-datepicker';
 import { VoucherFilterVM } from 'src/app/core/Classes/ViewModels/voucherFilterVM';
 import printJS from 'print-js';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
+import { InvoiceService } from 'src/app/core/services/acc_Services/invoice.service';
 @Component({
   selector: 'app-catch-receipt',
   templateUrl: './catch-receipt.component.html',
@@ -320,6 +321,7 @@ export class CatchReceiptComponent implements OnInit {
   constructor(
     private modalService: NgbModal,
     private _accountsreportsService: AccountsreportsService,
+    private _invoiceService: InvoiceService,
     private receiptService: ReceiptService,
     private translate: TranslateService,
     private formBuilder: FormBuilder,
@@ -331,13 +333,28 @@ export class CatchReceiptComponent implements OnInit {
   ) {
     this.dataSource = new MatTableDataSource([{}]);
     this.currentDate = new Date();
+    this.GetBranchByBranchIdCheck();
 
     api.lang.subscribe((res) => {
       this.lang = res;
     });
     this.userG = this.authenticationService.userGlobalObj;
   }
-
+  TaxCodeCheck:boolean=false
+  GetBranchByBranchIdCheck(){
+    this._invoiceService.GetBranchByBranchIdCheck().subscribe(data=>{
+      debugger
+      if(!(data.result.taxCode=="" || data.result.taxCode==null))
+      {
+        this.TaxCodeCheck=true;
+      }
+      else
+      {
+        this.TaxCodeCheck=false;
+        this.toast.error(this.translate.instant("من فضلك قم بحفظ اعدادات الفرع و تأكد من الرقم الضريبي للفرع"),this.translate.instant('Message'));
+      }
+    });
+  }
   ngOnInit(): void {
     // this.users = [
     //   { id: 1, Name: 'محمود نافع' },
