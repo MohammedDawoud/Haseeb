@@ -60,6 +60,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { CustomerContractsAddMainComponent } from '../modules/accounts/components/customer-contracts/customer-contracts-add-main/customer-contracts-add-main.component';
 import { NgxEditorModule } from 'ngx-editor';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { WheelPreventDirective } from './directives/wheel-prevent.directive';
 
 @NgModule({
   declarations: [
@@ -79,6 +80,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     SupervisionsComponent,
     SafePipe,
     Imageipe,
+    WheelPreventDirective,
   ],
   imports: [
     CommonModule,
@@ -167,6 +169,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     GeneralAlertComponent,
     SafePipe,
     Imageipe,
+    WheelPreventDirective,
   ],
 })
 export class SharedModule {}
