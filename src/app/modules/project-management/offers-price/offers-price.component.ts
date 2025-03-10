@@ -195,8 +195,70 @@ export class OffersPriceComponent implements OnInit {
       this.dataSourceTemp = data;
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
+      this.FillSerachLists(data);
     });
   }
+
+  //-------------------------------------Search------------------------------------------
+  //#region 
+  dataSearch: any = {
+    filter: {
+      ListsalesEngineer:[],
+      salesEngineerId:null,
+    },
+  };
+  
+  FillSerachLists(dataT:any){
+    this.FillCustomerListsalesEngineer(dataT);
+  }
+  FillCustomerListsalesEngineer(dataT:any){
+    const ListLoad = dataT.map((item: { userId: any; presenter: any; }) => {
+      const container:any = {}; container.id = item.userId; container.name = item.presenter; console.log("container",container); return container;   
+    })
+    const key = 'id';
+    const arrayUniqueByKey = [...new Map(ListLoad.map((item: { [x: string]: any; }) => [item[key], item])).values()];
+    this.dataSearch.filter.ListsalesEngineer=arrayUniqueByKey;
+    this.dataSearch.filter.ListsalesEngineer = this.dataSearch.filter.ListsalesEngineer.filter((d: { id: any }) => (d.id !=null && d.id!=0));
+  }
+  RefreshDataCheck(from: any, to: any){
+    this.dataSource.data=this.dataSourceTemp;
+    // if(!(from==null || from=="" || to==null || to==""))
+    // {
+    //   debugger
+    //   this.dataSource.data = this.dataSource.data.filter((item: any) => {
+    //     var AccDate=new Date(item.date);
+    //     var AccFrom=new Date(from);
+    //     var AccTo=new Date(to);
+    //     return AccDate.getTime() >= AccFrom.getTime() &&
+    //     AccDate.getTime() <= AccTo.getTime();
+    // });
+    // }
+
+    // if(this.dataSearch.filter.customerId!=null && this.dataSearch.filter.customerId!="")
+    // {
+    //   this.dataSource.data = this.dataSource.data.filter((d: { customerId: any }) => d.customerId == this.dataSearch.filter.customerId);
+    // }
+    if(this.dataSearch.filter.salesEngineerId!=null && this.dataSearch.filter.salesEngineerId!="")
+    {
+      this.dataSource.data = this.dataSource.data.filter((d: { userId: any }) => d.userId == this.dataSearch.filter.salesEngineerId);
+    }
+   
+  }
+
+  RefreshData(){
+    debugger
+    if( this.dataSearch.filter.date==null)
+    {
+    this.RefreshDataCheck(null,null);
+    }
+    else
+    {
+    this.RefreshDataCheck(this.dataSearch.filter.date[0],this.dataSearch.filter.date[1]);
+    }
+  }
+  //#endregion
+  //------------------------------------End-Search------------------------------------------
+
   Getprojecttime(time: any) {
     if (time == '') return 'بدون';
     else return time;

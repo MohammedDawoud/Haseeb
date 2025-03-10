@@ -18,6 +18,24 @@
           >
         </ng-select>
       </div>
+
+      <div class="max-w-xs">
+        <label class="col-form-label"> {{ "مهندس المبيعات" | translate }}</label>
+  
+        <ng-select
+          #CustomerName
+          [items]="dataSearch.filter.ListsalesEngineer"
+          bindLabel="name"
+          bindValue="id"
+          [clearable]="true"
+          class="w-full p-0"
+          [(ngModel)]="dataSearch.filter.salesEngineerId"
+          placeholder="{{ 'Chose' | translate }}"
+          (change)="RefreshData()"
+        >
+        </ng-select>
+      </div>
+
       <div class="form-group relative">
         <i class="fa fa-search absolute"></i>
         <input
