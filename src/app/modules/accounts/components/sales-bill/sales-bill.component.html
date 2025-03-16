@@ -1668,12 +1668,9 @@
       </div>
 
       <div class="row mb-3">
-        <h3
-          class="flex items-center justify-start fw-bold"
-          style="display: none"
-        >
-          {{ "services" | translate }}
-          <button
+        <h3  style="display: none"
+          class="flex items-center justify-start fw-bold">       
+          <button style="display: none"
             *ngIf="modalInvoice.AddOrView == 1"
             type="button "
             class="add-btn mx-2"
@@ -1681,6 +1678,15 @@
           >
             <i class="fa fa-plus"></i>
           </button>
+
+          <button
+          (click)="open(addSerivceModal, null, 'addSerivceModal')"
+          type="button"
+          class="btn btn-outline-primary"
+          >
+            {{ "addServices" | translate }}
+          </button>
+
         </h3>
         <div
           class="editable shadow mb-2 block customTable"
