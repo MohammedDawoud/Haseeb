@@ -2755,15 +2755,23 @@
             </div>
           </div>
         </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-3 mb-0">
+          <button
+          (click)="open(addSerivceModal, null, 'addSerivceModal')"
+          type="button"
+          class="btn btn-outline-primary"
+          >
+          {{ "addServices" | translate }}
+          </button>
+        </div>
+
       </div>
 
       <div class="row mb-3">
-        <h3
-          class="flex items-center justify-start fw-bold"
-          style="display: none"
-        >
-          {{ "services" | translate }}
-          <button
+        <h3 style="display: none"
+          class="flex items-center justify-start fw-bold">
+          <button 
             *ngIf="modalInvoice.AddOrView == 1"
             type="button "
             class="add-btn mx-2"
@@ -2771,6 +2779,7 @@
           >
             <i class="fa fa-plus"></i>
           </button>
+
         </h3>
         <div
           class="editable shadow mb-2 block customTable"
@@ -3589,6 +3598,13 @@
           {{ "services" | translate }}
           <button type="button " class="add-btn mx-2" (click)="addService()">
             <i class="fa fa-plus"></i>
+          </button>
+          <button
+          (click)="open(addSerivceModal, null, 'addSerivceModal')"
+          type="button"
+          class="btn btn-outline-primary"
+          >
+          {{ "addServices" | translate }}
           </button>
         </h3>
 
@@ -6868,3 +6884,1492 @@
       </div>
     </div>
   </ng-template>
+
+  <ng-template #ServiceTypeModal let-modal>
+    <div class="modal-header bg-base text-white">
+      <h4
+        class="modal-title mb-0"
+        id="modal-basic-title"
+        [translate]="'name'"
+        [translateParams]="{ ar: 'اضافة جديدة', en: 'Add New' }"
+      ></h4>
+      <button
+        type="button"
+        class="text-2xl text-white m-0"
+        (click)="modal.dismiss('Cross click')"
+      >
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <div class="modal-body text-center">
+      <form #addServiceType="ngForm" class="grid grid-cols-1 md:grid-cols-2 gap-2">
+        <div class="form-group">
+          <label for="BuildNameArtxt" class="text-right col-form-label block">
+            {{ "nameAr" | translate }}
+            <span class="text-danger">*</span></label
+          >
+          <input
+            required
+            #ServiceTypeNameAr="ngModel"
+            ngModel
+            [(ngModel)]="dataAdd.ServiceType.nameAr"
+            class="form-control"
+            type="text"
+            id="ServiceTypeNameArtxt"
+            name="ServiceTypeNameArtxt"
+            autocomplete="off"
+            [placeholder]="('Write' | translate) + ' ' + ('nameAr' | translate)"
+          />
+        </div>
+        <div class="form-group">
+          <label for="ServiceTypeNameEntxt" class="text-right col-form-label block">
+            {{ "nameEn" | translate }}
+            <span class="text-danger">*</span></label
+          >
+          <div style="display: inline-flex; width: 100%">
+            <input
+              required
+              #ServiceTypeNameEnValue
+              #ServiceTypeNameEn="ngModel"
+              [(ngModel)]="dataAdd.ServiceType.nameEn"
+              ngModel
+              class="form-control"
+              type="text"
+              id="ServiceTypeNameEntxt"
+              name="ServiceTypeNameEntxt"
+              autocomplete="off"
+              [placeholder]="('Write' | translate) + ' ' + ('nameEn' | translate)"
+            />
+            <a
+              class="btn"
+              id="CopyServiceTypeName2"
+              (click)="dataAdd.ServiceType.nameEn = dataAdd.ServiceType.nameAr"
+              ><i class="fa fa-copy"></i
+            ></a>
+          </div>
+        </div>
+      </form>
+      <div class="max-h-80 overflow-auto px-2">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>{{ "nameAr" | translate }}</th>
+              <th>{{ "nameEn" | translate }}</th>
+              <th
+                [translate]="'name'"
+                [translateParams]="{
+                  ar: 'خيارات',
+                  en: 'Operations'
+                }"
+              ></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let type of ServiceTypePopup"
+              (dblclick)="
+                setServiceTypeInSelect(type, ServiceTypeModal);
+                modal.dismiss('Cross click')
+              "
+            >
+              <td>{{ type.name }}</td>
+              <td>{{ type.nameEn }}</td>
+              <td class="flex gap-2 justify-center">
+                <button
+                  class="p-2 bg-orange-100 hover:bg-orange-500 rounded-lg duration-300 hover:text-white aspect-square w-10"
+                  (click)="
+                    dataAdd.ServiceType.nameAr = type.name;
+                    dataAdd.ServiceType.nameEn = type.nameEn;
+                    dataAdd.ServiceType.id = type.id
+                  "
+                >
+                  <i class="fa-regular fa-pen-to-square"></i>
+                </button>
+                <button
+                  (click)="getServiceTypeRow(type); open(deleteServiceType)"
+                  class="p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white aspect-square w-10"
+                >
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="flex gap-2 mt-3 pt-3 border-t border-neutral-300">
+        <button
+          class="btn bg-base text-white"
+          type="submit"
+          [disabled]="addServiceType.invalid"
+          (click)="saveServiceType()"
+        >
+          {{ "Save" | translate }}
+        </button>
+        <button (click)="modal.dismiss('Cross click')" class="btn btn-secondary">
+          {{ "Back" | translate }}
+        </button>
+        <button (click)="resetServiceType()" class="btn bg-base text-white">
+          {{ "جديد" | translate }}
+        </button>
+      </div>
+    </div>
+  </ng-template>
+  
+  <ng-template #deleteServiceType let-modal>
+    <div class="modal-body text-center">
+      <p
+        [translate]="'name'"
+        [translateParams]="{
+          ar: 'هل تريد بالتأكيد حذف هذا الصف',
+          en: 'Are you sure to delete this row ?'
+        }"
+      ></p>
+      <div class="flex gap-2 justify-center mt-3">
+        <button
+          type="button"
+          mat-raised-button
+          color="warn"
+          (click)="confirmServiceTypeDelete(); modal.dismiss()"
+        >
+          {{ "Yes" | translate }}
+        </button>
+        <button
+          type="button"
+          (click)="modal.dismiss()"
+          mat-raised-button
+          color="basic"
+        >
+          {{ "No" | translate }}
+        </button>
+      </div>
+    </div>
+  </ng-template>
+
+
+  <!-- --------------Add Services------------------- -->
+<!-- addSerivceModal / edit -->
+<ng-template #addSerivceModal let-modal>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="m-0">
+      <span class="text-2xl">
+        {{ "AddNewService" | translate }}
+      </span>
+    </h4>
+    <button
+      type="button"
+      class="text-2xl text-white m-0"
+      (click)="modal.dismiss()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <!-- modal-body -->
+  <div class="modal-body">
+    <form [formGroup]="SerivceModalForm" >
+      <div class="row items-center">
+        <div class="col-sm-6 col-md-3 mb-3" style="display: none;">
+          <div class="form-group">
+            <label class="col-form-label">
+              {{ "Project Type" | translate }}</label
+            >
+            <span class="text-danger">*</span>
+            <ng-select
+              name="Project Type"
+              class="w-full p-0"
+              placeholder="{{ 'Chose' | translate }}" autocomplete="off"
+              formControlName="ProjectType"
+              (change)="ChangeProjectType()"
+            >
+              <ng-option *ngFor="let user of ProjectTypeList" [value]="user.id">{{
+                user.name
+              }}</ng-option>
+            </ng-select>
+            <div class="fieldrequired" *ngIf="
+                      SerivceModalForm.controls['ProjectType']?.hasError('required') &&
+                      SerivceModalForm.controls['ProjectType'].touched
+                    ">
+                    {{ "This field is required" | translate }}
+                  </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 mb-3" style="display: none;">
+          <button
+            type="button"
+
+            class="btn btn-success  mt-5 mb-2"
+            (click)="open(NewProjectType , null , 'NewProjectType')"
+            >
+            {{ "AddNewProjectType" | translate }}
+            <i class="fa-solid fa-plus"></i>
+          </button>
+        </div>
+
+        <div class="col-sm-6 col-md-3 mb-3" style="display: none;">
+          <div class="form-group">
+            <label class="col-form-label">
+              {{ "Subproject type" | translate }}</label
+            >
+            <span class="text-danger">*</span>
+            <ng-select
+              name="Subproject type"
+              class="w-full p-0"
+              placeholder="{{ 'Chose' | translate }}"
+              formControlName="SubprojectType" autocomplete="off"
+            >
+
+              <ng-option *ngFor="let user of SubprojecttypeList" [value]="user.id">{{
+                user.name
+              }}</ng-option>
+            </ng-select>
+            <div class="fieldrequired" *ngIf="
+                      SerivceModalForm.controls['SubprojectType']?.hasError('required') &&
+                      SerivceModalForm.controls['SubprojectType'].touched
+                    ">
+                    {{ "This field is required" | translate }}
+                  </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 mb-3" style="display: none;">
+          <button
+            type="button"
+
+            class="btn btn-success  mt-5 mb-2"
+            (click)="open(SubprojectTypeModal , null , 'SubprojectTypeModal')"
+            >
+            {{ "AddNewSubgenre" | translate }}
+            <i class="fa-solid fa-plus"></i>
+          </button>
+        </div>
+        <div class="col-sm-6 col-md-3 mb-3" *ngIf="this.SerivceModalForm.controls['ProjectType'].value == 1">
+          <div class="form-group">
+            <label class="col-form-label">
+              {{ "Packages" | translate }}</label
+            >
+            <ng-select
+              name="Packages"
+              class="w-full p-0"
+              placeholder="{{ 'Chose' | translate }}"
+              formControlName="PackageId" autocomplete="off"
+            >
+
+              <ng-option *ngFor="let user of packageList" [value]="user.id">{{
+                user.name
+              }}</ng-option>
+            </ng-select>
+            <!-- <div class="fieldrequired" *ngIf="
+                      SerivceModalForm.controls['PackageId']?.hasError('required') &&
+                      SerivceModalForm.controls['PackageId'].touched
+                    ">
+                    {{ "This field is required" | translate }}
+                  </div> -->
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 mb-3" style="display: none;">
+          <button
+            type="button"
+
+            class="btn btn-success  mt-5 mb-2"
+            (click)="open(PackagesModal , null , 'PackagesModal')"
+            >
+            {{ "AddNewPackages" | translate }}
+            <i class="fa-solid fa-plus"></i>
+          </button>
+        </div>
+        <!-- 2 -->
+        <div class="col-sm-6 col-md-3 mb-3">
+          <div class="form-group">
+            <label class="col-form-label">
+              {{ "ServiceName" | translate }}</label
+            >
+            <span class="text-danger">*</span>
+            <input
+              name="ServiceName"
+              placeholder="{{ 'ServiceName' | translate }}"
+              type="text"
+              class="form-control"
+              formControlName="ServiceName" autocomplete="off"
+            />
+            <div class="fieldrequired" *ngIf="
+                      SerivceModalForm.controls['ServiceName']?.hasError('required') &&
+                      SerivceModalForm.controls['ServiceName'].touched
+                    ">
+                    {{ "This field is required" | translate }}
+                  </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 mb-3">
+          <div class="form-group">
+            <label class="col-form-label">
+              {{ "ServiceNameEN" | translate }}</label
+            >
+            <span class="text-danger">*</span>
+            <input
+              name="ServiceNameEN"
+              placeholder="{{ 'ServiceNameEN' | translate }}"
+              type="text"
+              class="form-control"
+              formControlName="ServiceNameEN" autocomplete="off"
+            />
+            <div class="fieldrequired" *ngIf="
+                      SerivceModalForm.controls['ServiceNameEN']?.hasError('required') &&
+                      SerivceModalForm.controls['ServiceNameEN'].touched
+                    ">
+                    {{ "This field is required" | translate }}
+                  </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-2 mb-3" >
+          <div class="form-group">
+            <label class="col-form-label">
+              {{ "ServiceType" | translate }}</label
+            >
+            <span class="text-danger">*</span>
+            <div class="flex">
+              <ng-select
+              name="ServiceType"
+              class="w-full p-0"
+              placeholder="{{ 'Chose' | translate }}" autocomplete="off"
+              formControlName="ServiceType"
+            >
+              <ng-option *ngFor="let user of ServiceType" [value]="user.id">{{
+                user.name
+              }}</ng-option>
+            </ng-select>
+            <button
+            type="button"
+            class="btn bg-base text-white"
+            style="padding: 5px 10px"
+            (click)="open(ServiceTypeModal)"
+            >
+            <i class="fa fa-plus"></i>
+           </button>
+            <div class="fieldrequired" *ngIf="
+                      SerivceModalForm.controls['ServiceType']?.hasError('required') &&
+                      SerivceModalForm.controls['ServiceType'].touched
+                    ">
+                    {{ "This field is required" | translate }}
+           </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-1 col-md-1 mb-3" >
+
+        </div>
+
+        <div class="col-sm-6 col-md-3 mb-3" *ngIf="SerivceModalForm.controls['PackageId'].value ==  null">
+          <div class="form-group">
+            <label class="col-form-label"> {{ "PriceRev" | translate }}</label>
+            <span class="text-danger">*</span>
+            <div class="d-flex">
+              <input
+                name="price"
+                placeholder="{{ 'PriceRev' | translate }}"
+                type="text"
+                class="form-control" autocomplete="off"
+                formControlName="amount"
+              />
+              <SPAN class="me-1"> {{ "RS" | translate }}</SPAN>
+            </div>
+            <div class="fieldrequired" *ngIf="
+                      SerivceModalForm.controls['amount']?.hasError('required') &&
+                      SerivceModalForm.controls['amount'].touched
+                    ">
+                    {{ "This field is required" | translate }}
+                  </div>
+          </div>
+        </div>
+
+        <!-- 3 -->
+        <div class="col-sm-6 col-md-3 mb-3" style="display: none;">
+          <div class="form-group">
+            <label class="col-form-label">
+              {{ "costCenter" | translate }}</label
+            >
+            <ng-select
+              name="costCenter"
+              class="w-full p-0"
+              placeholder="{{ 'Chose' | translate }}"
+              formControlName="costCenter" autocomplete="off"
+            >
+              <ng-option *ngFor="let user of CostCenterSelectlist" [value]="user.id">{{
+                user.name
+              }}</ng-option>
+            </ng-select>
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-3 mb-3">
+          <div class="form-group">
+            <label class="col-form-label">
+              {{ "AddServiceDetails" | translate }}</label
+            >
+          <button
+            type="button"
+
+            class="btn btn-outline-success "
+            (click)="open(costCenterModal ,null , 'costCenterModal')"
+            >
+            {{ "AddServiceDetails" | translate }}
+            <i class="fa-solid fa-plus"></i>
+          </button>
+        </div>
+      </div>
+
+        <div class="col-sm-6 col-md-3 mb-3">
+          <div class="form-group">
+            <label class="col-form-label">
+              {{ "ServiceRevenueAccount" | translate }}</label
+            >
+            <span class="text-danger">*</span>
+            <ng-select
+              name="ServiceRevenueAccount"
+              class="w-full p-0"
+              placeholder="{{ 'Chose' | translate }}" autocomplete="off"
+              formControlName="ServiceRevenueAccount"
+            >
+              <ng-option *ngFor="let user of ServiceAccountlist" [value]="user.id">{{
+                user.name
+              }}</ng-option>
+            </ng-select>
+            <div class="fieldrequired" *ngIf="
+                      SerivceModalForm.controls['ServiceRevenueAccount']?.hasError('required') &&
+                      SerivceModalForm.controls['ServiceRevenueAccount'].touched
+                    ">
+                    {{ "This field is required" | translate }}
+                  </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 mb-3" *ngIf="SerivceModalForm.controls['PackageId'].value ==  null">
+          <div class="form-group">
+            <label class="col-form-label"> {{ "PricePur" | translate }}</label>
+            <span class="text-danger">*</span>
+            <div class="d-flex">
+              <input
+                name="AmountPur"
+                placeholder="{{ 'PricePur' | translate }}"
+                type="text"
+                class="form-control" autocomplete="off"
+                formControlName="AmountPur"
+              />
+              <SPAN class="me-1"> {{ "RS" | translate }}</SPAN>
+            </div>
+            <div class="fieldrequired" *ngIf="
+                      SerivceModalForm.controls['AmountPur']?.hasError('required') &&
+                      SerivceModalForm.controls['AmountPur'].touched
+                    ">
+                    {{ "This field is required" | translate }}
+                  </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 mb-3">
+          <div class="form-group">
+            <label class="col-form-label">
+              {{ "ServicePurAccount" | translate }}</label
+            >
+            <span class="text-danger">*</span>
+            <ng-select
+              name="AccountIdPur"
+              class="w-full p-0"
+              placeholder="{{ 'Chose' | translate }}" autocomplete="off"
+              formControlName="AccountIdPur"
+            >
+              <ng-option *ngFor="let user of ServiceAccountPurlist" [value]="user.id">{{
+                user.name
+              }}</ng-option>
+            </ng-select>
+            <div class="fieldrequired" *ngIf="
+                      SerivceModalForm.controls['AccountIdPur']?.hasError('required') &&
+                      SerivceModalForm.controls['AccountIdPur'].touched
+                    ">
+                    {{ "This field is required" | translate }}
+                  </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 mb-3">
+          <div class="form-group">
+            <label class="col-form-label">
+              {{ "Beginningbalance" | translate }}</label
+            >
+            <span class="text-danger">*</span>
+            <input
+              name="Begbalance"
+              placeholder="{{ 'Beginningbalance' | translate }}"
+              type="text"
+              class="form-control"
+              formControlName="Begbalance" autocomplete="off"
+            />
+            <div class="fieldrequired" *ngIf="
+                      SerivceModalForm.controls['Begbalance']?.hasError('required') &&
+                      SerivceModalForm.controls['Begbalance'].touched
+                    ">
+                    {{ "This field is required" | translate }}
+                  </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 mb-3">
+          <div class="form-group">
+            <label class="col-form-label">
+              {{ "SerialNumber" | translate }}</label
+            >
+            <span class="text-danger">*</span>
+            <input
+              name="SerialNumber"
+              placeholder="{{ 'SerialNumber' | translate }}"
+              type="text"
+              class="form-control"
+              formControlName="SerialNumber" autocomplete="off"
+            />
+            <div class="fieldrequired" *ngIf="
+                      SerivceModalForm.controls['SerialNumber']?.hasError('required') &&
+                      SerivceModalForm.controls['SerialNumber'].touched
+                    ">
+                    {{ "This field is required" | translate }}
+                  </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 mb-3">
+          <div class="form-group">
+            <label class="col-form-label">
+              {{ "ItemCode" | translate }}</label
+            >
+            <span class="text-danger">*</span>
+            <input
+              name="ItemCode"
+              placeholder="{{ 'ItemCode' | translate }}"
+              type="text"
+              class="form-control"
+              formControlName="ItemCode" autocomplete="off"
+            />
+            <div class="fieldrequired" *ngIf="
+                      SerivceModalForm.controls['ItemCode']?.hasError('required') &&
+                      SerivceModalForm.controls['ItemCode'].touched
+                    ">
+                    {{ "This field is required" | translate }}
+                  </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-2 mb-3">
+          <div class="form-group">
+            <label for="StorehouseId" class="text-right col-form-label block">
+              {{ "Storehouse" | translate }}</label
+            >
+            <div class="flex">
+              <ng-select
+              class="w-full p-0"
+              placeholder="{{ 'Chose' | translate }}"
+              formControlName="storehouseId"
+              name="storehouseId"
+              >
+                <ng-option *ngFor="let user of Storehouse" [value]="user.id">{{
+                  user.name
+                }}</ng-option>
+              </ng-select>
+              <button
+                type="button"
+                class="btn bg-base text-white"
+                style="padding: 5px 10px"
+                (click)="open(StorehouseModal)"
+              >
+                <i class="fa fa-plus"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </form>
+    <p class="w-fit bg-red-100 text-danger mx-auto my-3 p-1">
+      {{ "AttentionAddService" | translate }}
+    </p>
+    <div
+      class="flex gap-2 justify-end pt-3 border-t border-neutral-300 col-span-1 md:col-span-2 mt-2"
+    >
+    <button class="btn bg-base text-white" type="submit"(click)="SaveServicePriceWithDetails(modal)"   [disabled]='
+    this.SerivceModalForm.controls["ServiceName"].value ==null|| this.SerivceModalForm.controls["ServiceName"].value ==""||
+    this.SerivceModalForm.controls["ServiceNameEN"].value ==null|| this.SerivceModalForm.controls["ServiceNameEN"].value ==""||
+    this.SerivceModalForm.controls["AmountPur"].value ==null|| this.SerivceModalForm.controls["AmountPur"].value ==""||
+    this.SerivceModalForm.controls["amount"].value ==null|| this.SerivceModalForm.controls["amount"].value ==""||
+    this.SerivceModalForm.controls["ServiceRevenueAccount"].value ==null || 
+    this.SerivceModalForm.controls["ItemCode"].value ==null || this.SerivceModalForm.controls["ItemCode"].value ==""||
+    this.SerivceModalForm.controls["AccountIdPur"].value ==null'>
+        {{ "Save" | translate }}
+      </button>
+      <button (click)="modal?.dismiss()" class="btn btn-secondary">
+        {{ "close" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- NewProjectType -->
+<ng-template #NewProjectType let-modal>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="m-0">
+      <span class="text-2xl">
+        <span>{{ "NewProjectType" | translate }}</span>
+        <!-- <span *ngIf="modalDetails?.type == 'newSub'">{{ "NewSubprojectType" | translate }}</span>
+        <span *ngIf="modalDetails?.type == 'ServiceDetails'">{{ "Add New Item" | translate }}</span> -->
+      </span>
+    </h4>
+    <button
+      type="button"
+      class="text-2xl text-white m-0"
+      (click)="modal.dismiss()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body max-h-100 overflow-x-scroll overflow-y-scroll p-4">
+    <form class="" #smsForm="ngForm">
+      <div class="row align-items-end mb-4 mx-3">
+        <!-- 1 line -->
+
+        <div class="col-sm-6 col-md-3 col-lg-6 mb-0 mb-sm-3">
+          <div class="form-group">
+            <label for="nameAr" class="text-right col-form-label block">
+              {{ "nameAr" | translate }}
+              <span class="text-danger">*</span>
+            </label>
+            <input
+              required
+              class="form-control"
+              autocomplete="off"
+              [placeholder]="
+                ('Write' | translate) + ' ' + ('nameAr' | translate)
+              "
+              [(ngModel)]="ProjectTypenameAr"
+              type="text"
+              [ngModelOptions]="{ standalone: true }"
+            />
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-3 col-lg-6 mb-0 mb-sm-3">
+          <div class="form-group">
+            <label class="text-right col-form-label block">
+              {{ "nameEn" | translate }}
+              <span class="text-danger">*</span></label
+            >
+            <input
+              class="form-control"
+              [(ngModel)]="ProjectTypenameEn"
+              autocomplete="off"
+              type="text"
+              [ngModelOptions]="{ standalone: true }"
+              [placeholder]="
+                ('Write' | translate) + ' ' + ('nameEn' | translate)
+              "
+            />
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-12 mb-0 mb-sm-3 text-center">
+          <button
+            type="button"
+            (click)="SaveProjectType()"
+            [disabled]="ProjectTypenameEn == null || ProjectTypenameAr == null"
+            class="flex gap-1 btn text-white mb-3 col-md-2 me-3"
+            style="background-color: var(--base-color)"
+          >
+            {{ "save" | translate }}
+          </button>
+
+          <button
+            type="button"
+            (click)="modal.dismiss()"
+            class="flex gap-1 btn btn-secondary mb-3 col-md-2"
+          >
+            {{ "close" | translate }}
+          </button>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-12 mb-0 mb-sm-3 text-center">
+          <input
+            name="dateCheck_transfer"
+            (keyup)="applyFilterProjectType($event)"
+            placeholder="{{ 'search' | translate }}"
+            type="text"
+            class="form-control"
+          />
+        </div>
+      </div>
+
+      <div class="editable shadow mb-4">
+        <table
+          class="table table-responsive table-striped table-bordered text-center"
+          style="vertical-align: middle; font-size: 14px"
+        >
+          <thead
+            class="bg-base text-white"
+            style="line-height: 30px; font-size: 13px"
+          >
+            <tr>
+              <th>{{ "nameAr" | translate }}</th>
+              <th>{{ "nameEn" | translate }}</th>
+              <th>{{ "operations" | translate }}</th>
+              <!-- <th   *ngIf="modalDetails?.type == 'newSub'" >{{ "ApproximatePeriod" | translate }}</th> -->
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let item of AllProjectTypelist; let i = index"
+              style="line-height: 5px"
+            >
+              <td>{{ item.nameAr }}</td>
+              <td>{{ item.nameEn }}</td>
+              <td>
+                <button
+                  (click)="updateProjectType(item)"
+                  class="p-2 bg-orange-100 hover:bg-orange-500 rounded-lg duration-300 hover:text-white w-10"
+                >
+                  <i class="fa-regular fa-pen-to-square"></i>
+                </button>
+
+                <button
+                  class="p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white w-10 me-3"
+                  (click)="
+                    open(deleteProjectTypeModal, item, 'deleteProjectTypeModal')
+                  "
+                >
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+<!-- deleteProjectTypeModal -->
+<ng-template #deleteProjectTypeModal let-modal>
+  <div class="modal-body text-center">
+    <p
+      [translate]="'name'"
+      [translateParams]="{
+        ar: 'هل تريد حذف هذا العنصر ؟',
+        en: 'Do you want to delete this item?'
+      }"
+    ></p>
+    <div class="flex gap-2 justify-center">
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "close" | translate }}
+      </button>
+
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="DeleteProjectType(modal)"
+      >
+        {{ "confirem" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- SubprojectTypeModal -->
+<ng-template #SubprojectTypeModal let-modal>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="m-0">
+      <span class="text-2xl">
+        <span>{{ "NewSubprojectType" | translate }}</span>
+        <!--  <span *ngIf="modalDetails?.type == 'ServiceDetails'">{{ "Add New Item" | translate }}</span> -->
+      </span>
+    </h4>
+    <button
+      type="button"
+      class="text-2xl text-white m-0"
+      (click)="modal.dismiss()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body max-h-100 overflow-x-scroll overflow-y-scroll p-4">
+    <form class="" #smsForm="ngForm">
+      <div class="row align-items-end mb-4 mx-3">
+        <!-- 1 line -->
+
+        <div class="col-sm-6 col-md-3 col-lg-6 mb-0 mb-sm-3">
+          <div class="form-group">
+            <label for="nameAr" class="text-right col-form-label block">
+              {{ "nameAr" | translate }}
+              <span class="text-danger">*</span>
+            </label>
+            <input
+              required
+              class="form-control"
+              autocomplete="off"
+              [placeholder]="
+                ('Write' | translate) + ' ' + ('nameAr' | translate)
+              "
+              [(ngModel)]="SubprojectTypenameAr"
+              type="text"
+              [ngModelOptions]="{ standalone: true }"
+            />
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-6 mb-0 mb-sm-3">
+          <div class="form-group">
+            <label class="text-right col-form-label block">
+              {{ "nameEn" | translate }}
+              <span class="text-danger">*</span></label
+            >
+            <input
+              class="form-control"
+              [(ngModel)]="SubprojectTypenameEn"
+              autocomplete="off"
+              type="text"
+              [ngModelOptions]="{ standalone: true }"
+              [placeholder]="
+                ('Write' | translate) + ' ' + ('nameEn' | translate)
+              "
+            />
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-3 col-lg-6 mb-0 mb-sm-3">
+          <div class="form-group">
+            <label class="text-right col-form-label block">
+              {{ "TimePeriodStr" | translate }}</label
+            >
+            <input
+              class="form-control"
+              [(ngModel)]="TimePeriodStr"
+              autocomplete="off"
+              type="text"
+              [ngModelOptions]="{ standalone: true }"
+              [placeholder]="
+                ('Write' | translate) + ' ' + ('TimePeriodStr' | translate)
+              "
+            />
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-12 mb-0 mb-sm-3 text-center">
+          <button
+            type="button"
+            (click)="SaveSubprojectType()"
+            [disabled]="
+              SubprojectTypenameAr == null || SubprojectTypenameEn == null
+            "
+            class="flex gap-1 btn text-white mb-3 col-md-2 me-3"
+            style="background-color: var(--base-color)"
+          >
+            {{ "save" | translate }}
+          </button>
+
+          <button
+            type="button"
+            (click)="modal.dismiss()"
+            class="flex gap-1 btn btn-secondary mb-3 col-md-2"
+          >
+            {{ "close" | translate }}
+          </button>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-12 mb-0 mb-sm-3 text-center">
+          <input
+            name="dateCheck_transfer"
+            (keyup)="applyFilterSubsByProjectTypeId($event)"
+            placeholder="{{ 'search' | translate }}"
+            type="text"
+            class="form-control"
+          />
+        </div>
+      </div>
+
+      <div class="editable shadow mb-4">
+        <table
+          class="table table-responsive table-striped table-bordered text-center"
+          style="vertical-align: middle; font-size: 14px"
+        >
+          <thead
+            class="bg-base text-white"
+            style="line-height: 30px; font-size: 13px"
+          >
+            <tr>
+              <th>{{ "nameAr" | translate }}</th>
+              <th>{{ "nameEn" | translate }}</th>
+              <th>{{ "TimePeriodStr" | translate }}</th>
+              <th>{{ "operations" | translate }}</th>
+              <!-- <th   *ngIf="modalDetails?.type == 'newSub'" >{{ "ApproximatePeriod" | translate }}</th> -->
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="
+                let item of AllProjectSubsByProjectTypelist;
+                let i = index
+              "
+              style="line-height: 5px"
+            >
+              <td>{{ item.nameAr }}</td>
+              <td>{{ item.nameEn }}</td>
+              <td>
+                {{ item.timePeriodStr }}
+              </td>
+              <td>
+                <button
+                  (click)="updateSubprojectType(item)"
+                  class="p-2 bg-orange-100 hover:bg-orange-500 rounded-lg duration-300 hover:text-white w-10"
+                >
+                  <i class="fa-regular fa-pen-to-square"></i>
+                </button>
+
+                <button
+                  class="p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white w-10 me-3"
+                  (click)="
+                    open(
+                      deleteSubprojectTypeModal,
+                      item,
+                      'deleteSubprojectTypeModal'
+                    )
+                  "
+                >
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </form>
+  </div>
+
+  <!-- <div class="flex justify-end p-3">
+    <button
+      (click)="modal?.dismiss()"
+      class="btn text-white"
+      style="background-color: var(--base-color)"
+    >
+      {{ "save" | translate }}
+    </button>
+
+    <button class="btn me-2 btn-secondary">
+      {{ "close" | translate }}
+    </button>
+  </div> -->
+</ng-template>
+<!-- deleteSubprojectTypeModal -->
+<ng-template #deleteSubprojectTypeModal let-modal>
+  <div class="modal-body text-center">
+    <p
+      [translate]="'name'"
+      [translateParams]="{
+        ar: 'هل تريد حذف هذا العنصر ؟',
+        en: 'Do you want to delete this item?'
+      }"
+    ></p>
+    <div class="flex gap-2 justify-center">
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "close" | translate }}
+      </button>
+
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="DeleteProjectSubTypes(modal)"
+      >
+        {{ "confirem" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- PackagesModal -->
+<ng-template #PackagesModal let-modal>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="m-0">
+      <span class="text-2xl">
+        <span>{{ "Packages" | translate }}</span>
+      </span>
+    </h4>
+    <button
+      type="button"
+      class="text-2xl text-white m-0"
+      (click)="modal.dismiss()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body max-h-100 overflow-x-scroll overflow-y-scroll p-4">
+    <form class="" #smsForm="ngForm">
+      <div class="row align-items-end mb-4 mx-3">
+        <!-- 1 line -->
+
+        <div class="col-sm-6 col-md-3 col-lg-6 mb-0 mb-sm-3">
+          <div class="form-group">
+            <label for="nameAr" class="text-right col-form-label block">
+              {{ "PackageName" | translate }}
+              <span class="text-danger">*</span>
+            </label>
+            <input
+              required
+              class="form-control"
+              autocomplete="off"
+              [placeholder]="
+                ('Write' | translate) + ' ' + ('PackageName' | translate)
+              "
+              [(ngModel)]="PackageName"
+              type="text"
+              [ngModelOptions]="{ standalone: true }"
+            />
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-6 mb-0 mb-sm-3">
+          <div class="form-group">
+            <label class="text-right col-form-label block">
+              {{ "MeterPrice1" | translate }}
+              <span class="text-danger">*</span></label
+            >
+            <input
+              class="form-control"
+              [(ngModel)]="MeterPrice1"
+              autocomplete="off"
+              type="text"
+              [ngModelOptions]="{ standalone: true }"
+              [placeholder]="
+                ('Write' | translate) + ' ' + ('MeterPrice1' | translate)
+              "
+            />
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-3 col-lg-6 mb-0 mb-sm-3">
+          <div class="form-group">
+            <label class="text-right col-form-label block">
+              {{ "MeterPrice2" | translate }}</label
+            >
+            <input
+              class="form-control"
+              [(ngModel)]="MeterPrice2"
+              autocomplete="off"
+              type="text"
+              [ngModelOptions]="{ standalone: true }"
+              [placeholder]="
+                ('Write' | translate) + ' ' + ('MeterPrice2' | translate)
+              "
+            />
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-3 col-lg-6 mb-0 mb-sm-3">
+          <div class="form-group">
+            <label class="text-right col-form-label block">
+              {{ "MeterPrice3" | translate }}</label
+            >
+            <input
+              class="form-control"
+              [(ngModel)]="MeterPrice3"
+              autocomplete="off"
+              type="text"
+              [ngModelOptions]="{ standalone: true }"
+              [placeholder]="
+                ('Write' | translate) + ' ' + ('MeterPrice3' | translate)
+              "
+            />
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-3 col-lg-6 mb-0 mb-sm-3">
+          <div class="form-group">
+            <label class="text-right col-form-label block">
+              {{ "PackageRatio1" | translate }}</label
+            >
+            <input
+              class="form-control"
+              [(ngModel)]="PackageRatio1"
+              autocomplete="off"
+              type="text"
+              [ngModelOptions]="{ standalone: true }"
+              [placeholder]="
+                ('Write' | translate) + ' ' + ('PackageRatio1' | translate)
+              "
+            />
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-3 col-lg-6 mb-0 mb-sm-3">
+          <div class="form-group">
+            <label class="text-right col-form-label block">
+              {{ "PackageRatio2" | translate }}</label
+            >
+            <input
+              class="form-control"
+              [(ngModel)]="PackageRatio2"
+              autocomplete="off"
+              type="text"
+              [ngModelOptions]="{ standalone: true }"
+              [placeholder]="
+                ('Write' | translate) + ' ' + ('PackageRatio2' | translate)
+              "
+            />
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-3 col-lg-6 mb-0 mb-sm-3">
+          <div class="form-group">
+            <label class="text-right col-form-label block">
+              {{ "PackageRatio3" | translate }}</label
+            >
+            <input
+              class="form-control"
+              [(ngModel)]="PackageRatio3"
+              autocomplete="off"
+              type="text"
+              [ngModelOptions]="{ standalone: true }"
+              [placeholder]="
+                ('Write' | translate) + ' ' + ('PackageRatio3' | translate)
+              "
+            />
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-3 col-lg-12 mb-0 mb-sm-3 text-center">
+          <button
+            type="button"
+            (click)="SavePackages()"
+            [disabled]="
+              PackageRatio3 == null ||
+              PackageRatio2 == null ||
+              PackageRatio1 == null ||
+              MeterPrice3 == null ||
+              MeterPrice2 == null ||
+              MeterPrice1 == null ||
+              PackageName == null
+            "
+            class="flex gap-1 btn text-white mb-3 col-md-2 me-3"
+            style="background-color: var(--base-color)"
+          >
+            {{ "save" | translate }}
+          </button>
+
+          <button
+            type="button"
+            (click)="modal.dismiss()"
+            class="flex gap-1 btn btn-secondary mb-3 col-md-2"
+          >
+            {{ "close" | translate }}
+          </button>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-12 mb-0 mb-sm-3 text-center">
+          <input
+            name="dateCheck_transfer"
+            (keyup)="applyFilterPackages($event)"
+            placeholder="{{ 'search' | translate }}"
+            type="text"
+            class="form-control"
+          />
+        </div>
+      </div>
+
+      <div class="editable shadow mb-4">
+        <table
+          class="table table-responsive table-striped table-bordered text-center"
+          style="vertical-align: middle; font-size: 14px"
+        >
+          <thead
+            class="bg-base text-white"
+            style="line-height: 30px; font-size: 13px"
+          >
+            <tr>
+              <th>{{ "PackageName" | translate }}</th>
+              <th>{{ "operations" | translate }}</th>
+              <!-- <th   *ngIf="modalDetails?.type == 'newSub'" >{{ "ApproximatePeriod" | translate }}</th> -->
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let item of AllPackageslist; let i = index"
+              style="line-height: 5px"
+            >
+              <td>{{ item.packageName }}</td>
+              <td>
+                <button
+                  (click)="updatePackages(item)"
+                  class="p-2 bg-orange-100 hover:bg-orange-500 rounded-lg duration-300 hover:text-white w-10"
+                >
+                  <i class="fa-regular fa-pen-to-square"></i>
+                </button>
+
+                <button
+                  class="p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white w-10 me-3"
+                  (click)="
+                    open(deletePackagesModal, item, 'deletePackagesModal')
+                  "
+                >
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </form>
+  </div>
+
+  <!-- <div class="flex justify-end p-3">
+    <button
+      (click)="modal?.dismiss()"
+      class="btn text-white"
+      style="background-color: var(--base-color)"
+    >
+      {{ "save" | translate }}
+    </button>
+
+    <button class="btn me-2 btn-secondary">
+      {{ "close" | translate }}
+    </button>
+  </div> -->
+</ng-template>
+<!-- deletePackagesModal -->
+<ng-template #deletePackagesModal let-modal>
+  <div class="modal-body text-center">
+    <p
+      [translate]="'name'"
+      [translateParams]="{
+        ar: 'هل تريد حذف هذا العنصر ؟',
+        en: 'Do you want to delete this item?'
+      }"
+    ></p>
+    <div class="flex gap-2 justify-center">
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "close" | translate }}
+      </button>
+
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="DeletePackages(modal)"
+      >
+        {{ "confirem" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- costCenterModal -->
+<ng-template #costCenterModal let-modal>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="m-0">
+      <span class="text-2xl">
+        <span>{{ "AddServiceDetails" | translate }}</span>
+      </span>
+    </h4>
+    <button
+      type="button"
+      class="text-2xl text-white m-0"
+      (click)="modal.dismiss()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body max-h-100 overflow-x-scroll overflow-y-scroll p-4">
+    <form class="" #smsForm="ngForm">
+      <div class="row align-items-end mb-4 mx-3">
+        <!-- 1 line -->
+
+        <div class="col-sm-6 col-md-3 col-lg-6 mb-0 mb-sm-3">
+          <div class="form-group">
+            <label for="nameAr" class="text-right col-form-label block">
+              {{ "nameAr" | translate }}
+              <span class="text-danger">*</span>
+            </label>
+            <input
+              required
+              class="form-control"
+              autocomplete="off"
+              [placeholder]="
+                ('Write' | translate) + ' ' + ('nameAr' | translate)
+              "
+              [(ngModel)]="servicesName"
+              type="text"
+              [ngModelOptions]="{ standalone: true }"
+            />
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-3 col-lg-6 mb-0 mb-sm-3">
+          <div class="form-group">
+            <label class="text-right col-form-label block">
+              {{ "nameEn" | translate }}
+              <span class="text-danger">*</span></label
+            >
+            <input
+              class="form-control"
+              [(ngModel)]="accountName"
+              autocomplete="off"
+              type="text"
+              [ngModelOptions]="{ standalone: true }"
+              [placeholder]="
+                ('Write' | translate) + ' ' + ('nameEn' | translate)
+              "
+            />
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-12 mb-0 mb-sm-3 text-center">
+          <button
+            type="button"
+            (click)="SavecostCenter()"
+            [disabled]="accountName == null || servicesName == null"
+            class="flex gap-1 btn text-white mb-3 col-md-2 me-3"
+            style="background-color: var(--base-color)"
+          >
+            {{ "add" | translate }}
+          </button>
+
+          <button
+            type="button"
+            (click)="modal.dismiss()"
+            class="flex gap-1 btn btn-secondary mb-3 col-md-2"
+          >
+            {{ "close" | translate }}
+          </button>
+        </div>
+
+        <!-- <div class="col-sm-6 col-md-3 col-lg-12 mb-0 mb-sm-3 text-center">
+          <input
+            name="dateCheck_transfer"(keyup)="applyFiltercostCenter($event)"
+            placeholder="{{ 'search' | translate }}"
+            type="text"
+            class="form-control"
+          />
+        </div> -->
+      </div>
+
+      <div class="editable shadow mb-4">
+        <table
+          class="table table-responsive table-striped table-bordered text-center"
+          style="vertical-align: middle; font-size: 14px"
+        >
+          <thead
+            class="bg-base text-white"
+            style="line-height: 30px; font-size: 13px"
+          >
+            <tr>
+              <th>{{ "nameAr" | translate }}</th>
+              <th>{{ "nameEn" | translate }}</th>
+              <th>{{ "operations" | translate }}</th>
+              <!-- <th   *ngIf="modalDetails?.type == 'newSub'" >{{ "ApproximatePeriod" | translate }}</th> -->
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let item of AllcostCenterlist; let i = index"
+              style="line-height: 5px"
+            >
+              <td>{{ item.servicesName }}</td>
+              <td>{{ item.accountName }}</td>
+              <td>
+                <button
+                  (click)="updatecostCenter(item)"
+                  class="p-2 bg-orange-100 hover:bg-orange-500 rounded-lg duration-300 hover:text-white w-10"
+                >
+                  <i class="fa-regular fa-pen-to-square"></i>
+                </button>
+
+                <button
+                  class="p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white w-10 me-3"
+                  (click)="
+                    open(
+                      deletecostCenterModal,
+                      item,
+                      'deletecostCenterModal',
+                      i
+                    )
+                  "
+                >
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </form>
+  </div>
+
+  <!-- <div class="flex justify-end p-3">
+    <button
+      (click)="modal?.dismiss()"
+      class="btn text-white"
+      style="background-color: var(--base-color)"
+    >
+      {{ "save" | translate }}
+    </button>
+
+    <button class="btn me-2 btn-secondary">
+      {{ "close" | translate }}
+    </button>
+  </div> -->
+</ng-template>
+<!-- deletecostCenterModal -->
+<ng-template #deletecostCenterModal let-modal>
+  <div class="modal-body text-center">
+    <p
+      [translate]="'name'"
+      [translateParams]="{
+        ar: 'هل تريد حذف هذا العنصر ؟',
+        en: 'Do you want to delete this item?'
+      }"
+    ></p>
+    <div class="flex gap-2 justify-center">
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "close" | translate }}
+      </button>
+
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="DeleteService(modal)"
+      >
+        {{ "confirem" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
