@@ -72,9 +72,11 @@ export class AttendanceAndDepartureOfEmployeesComponent {
       this.branchselect = data;
     });
   }
+  isLoading: boolean = false;
 
   Getattendenceanddeptrure(issearch: any) {
     debugger;
+    this.isLoading=true;
     if (this.data.filter.branchid == null) {
       this.branchid = '0';
     } else {
@@ -96,9 +98,11 @@ export class AttendanceAndDepartureOfEmployeesComponent {
           this.data.fingerAttendence = data.result;
           this.alldata = data.result;
           console.log(data.result);
+          this.isLoading=false;
         },
         error: (error) => {
           console.log(error);
+          this.isLoading=false;
         },
       });
   }

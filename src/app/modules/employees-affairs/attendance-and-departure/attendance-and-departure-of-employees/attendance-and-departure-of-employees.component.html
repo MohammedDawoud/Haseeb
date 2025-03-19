@@ -67,7 +67,9 @@
         </button> -->
       </div>
     </div>
-
+    <div *ngIf="isLoading" class="loader-overlay">
+      <div class="spinner"></div>
+    </div>
     <!-- table -->
     <div class="overflow-auto mt-3">
       <table
