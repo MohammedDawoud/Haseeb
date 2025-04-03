@@ -2689,82 +2689,175 @@ GetInvoicePrint(obj:any,TempCheck:any){
     this.modalInvoice.PaidValue=0;
     this.CalculateTotal(type);
   }
-  CalculateTotal(type:any){
-    var totalwithtaxes = 0;var totalAmount = 0;var totalDisc = 0;var totalDiscWithamountAll = 0; var totaltax = 0;
-    var totalAmountIncludeT = 0; var vAT_TaxVal = parseFloat(this.userG.orgVAT??0);
+  CalculateTotal(type: any) {
+    var totalwithtaxes = 0;
+    var totalAmount = 0;
+    var totalDisc = 0;
+    var totalDiscWithamountAll = 0;
+    var totaltax = 0;
+    var totalAmountIncludeT = 0;
+    var vAT_TaxVal = parseFloat(this.userG.orgVAT ?? 0);
     this.InvoiceDetailsRows.forEach((element: any) => {
-      var ValueAmount = parseFloat((element.Amounttxt??0).toString()).toFixed(2);
-      ValueAmount = parseFloat((+ValueAmount * element.QtyConst).toString()).toFixed(2);
+      var ValueAmount = parseFloat((element.Amounttxt ?? 0).toString()).toFixed(
+        2
+      );
+      ValueAmount = parseFloat(
+        (+ValueAmount * element.QtyConst).toString()
+      ).toFixed(2);
       var DiscountValue_Det;
       if (type == 1) {
-          DiscountValue_Det = parseFloat((element.DiscountValueConst??0).toString()).toFixed(2);
+        DiscountValue_Det = parseFloat(
+          (element.DiscountValueConst ?? 0).toString()
+        ).toFixed(2);
+      } else {
+        var Discountper_Det = parseFloat(
+          (element.DiscountPercentageConst ?? 0).toString()
+        ).toFixed(2);
+        DiscountValue_Det = parseFloat(
+          ((+Discountper_Det * +ValueAmount) / 100).toString()
+        ).toFixed(2);
+        this.InvoiceDetailsRows.filter(
+          (a: { idRow: any }) => a.idRow == element.idRow
+        )[0].DiscountValueConst = parseFloat(
+          DiscountValue_Det.toString()
+        ).toFixed(2);
       }
-      else {
-          var Discountper_Det = parseFloat((element.DiscountPercentageConst??0).toString()).toFixed(2);
-          DiscountValue_Det = parseFloat(((+Discountper_Det * +ValueAmount) / 100).toString()).toFixed(2);
-          this.InvoiceDetailsRows.filter((a: { idRow: any; })=>a.idRow==element.idRow)[0].DiscountValueConst= parseFloat(DiscountValue_Det.toString()).toFixed(2);
-      }
-      var Value = parseFloat((+ValueAmount - +DiscountValue_Det).toString()).toFixed(2);
+      var Value = parseFloat(
+        (+ValueAmount - +DiscountValue_Det).toString()
+      ).toFixed(2);
       if (!(+Value >= 0)) {
-        this.InvoiceDetailsRows.filter((a: { idRow: any; })=>a.idRow==element.idRow)[0].DiscountValueConst= 0;
-        this.InvoiceDetailsRows.filter((a: { idRow: any; })=>a.idRow==element.idRow)[0].DiscountPercentageConst= 0;
-          DiscountValue_Det = 0;
-          Value = parseFloat((+ValueAmount - +DiscountValue_Det).toString()).toFixed(2);
+        this.InvoiceDetailsRows.filter(
+          (a: { idRow: any }) => a.idRow == element.idRow
+        )[0].DiscountValueConst = 0;
+        this.InvoiceDetailsRows.filter(
+          (a: { idRow: any }) => a.idRow == element.idRow
+        )[0].DiscountPercentageConst = 0;
+        DiscountValue_Det = 0;
+        Value = parseFloat(
+          (+ValueAmount - +DiscountValue_Det).toString()
+        ).toFixed(2);
       }
       if (type == 1) {
         var DiscountPercentage_Det;
         if (+ValueAmount > 0) {
-            DiscountPercentage_Det = +DiscountValue_Det * 100 / +ValueAmount;
+          DiscountPercentage_Det = (+DiscountValue_Det * 100) / +ValueAmount;
+        } else {
+          DiscountPercentage_Det = 0;
         }
-        else {
-            DiscountPercentage_Det = 0;
-        }
-        DiscountPercentage_Det = parseFloat(DiscountPercentage_Det.toString()).toFixed(2);
-        this.InvoiceDetailsRows.filter((a: { idRow: any; })=>a.idRow==element.idRow)[0].DiscountPercentageConst= DiscountPercentage_Det;
+        DiscountPercentage_Det = parseFloat(
+          DiscountPercentage_Det.toString()
+        ).toFixed(2);
+        this.InvoiceDetailsRows.filter(
+          (a: { idRow: any }) => a.idRow == element.idRow
+        )[0].DiscountPercentageConst = DiscountPercentage_Det;
       }
 
-      var FValDisc = DiscountValue_Det; var FValAmountAll = ValueAmount; var FVal = Value;
-      var FValIncludeT = FVal; var taxAmount = 0; var totalwithtax = 0;
+      var FValDisc = DiscountValue_Det;
+      var FValAmountAll = ValueAmount;
+      var FVal = Value;
+      var FValIncludeT = FVal;
+      var taxAmount = 0;
+      var totalwithtax = 0;
 
-      var TaxV8erS = parseFloat((+parseFloat((+Value * vAT_TaxVal).toString()).toFixed(2) / 100).toString()).toFixed(2);
-      var TaxVS =parseFloat((+Value- +parseFloat((+Value/((vAT_TaxVal / 100) + 1)).toString()).toFixed(2)).toString()).toFixed(2);
+      var TaxV8erS = parseFloat(
+        (
+          +parseFloat((+Value * vAT_TaxVal).toString()).toFixed(2) / 100
+        ).toString()
+      ).toFixed(2);
+      var TaxVS = parseFloat(
+        (
+          +Value -
+          +parseFloat((+Value / (vAT_TaxVal / 100 + 1)).toString()).toFixed(2)
+        ).toString()
+      ).toFixed(2);
 
-      if (this.modalInvoice.taxtype== 2) {
-          taxAmount = +TaxV8erS * element.QtyConst;
-          totalwithtax = +parseFloat((+parseFloat(Value) + +parseFloat(TaxV8erS)).toString()).toFixed(2);
+      if (this.modalInvoice.taxtype == 2) {
+        taxAmount = +TaxV8erS;
+        totalwithtax = +parseFloat(
+          (+parseFloat(Value) + +parseFloat(TaxV8erS)).toString()
+        ).toFixed(2);
+      } else {
+        taxAmount = +TaxVS;
+        FValIncludeT = parseFloat(
+          (+parseFloat(Value).toFixed(2) - +TaxVS).toString()
+        ).toFixed(2);
+        totalwithtax = +parseFloat(Value).toFixed(2);
       }
-      else {
-          taxAmount=+TaxVS * element.QtyConst;
-          FValIncludeT = parseFloat((+parseFloat(Value).toFixed(2) - +TaxVS).toString()).toFixed(2);
-          totalwithtax = +parseFloat(Value).toFixed(2);
-      }
 
-      this.InvoiceDetailsRows.filter((a: { idRow: any; })=>a.idRow==element.idRow)[0].AmountBeforeTaxtxt = parseFloat(FValIncludeT.toString()).toFixed(2);
-      this.InvoiceDetailsRows.filter((a: { idRow: any; })=>a.idRow==element.idRow)[0].taxAmounttxt = parseFloat(taxAmount.toString()).toFixed(2);
-      this.InvoiceDetailsRows.filter((a: { idRow: any; })=>a.idRow==element.idRow)[0].TotalAmounttxt = parseFloat(totalwithtax.toString()).toFixed(2);
+      this.InvoiceDetailsRows.filter(
+        (a: { idRow: any }) => a.idRow == element.idRow
+      )[0].AmountBeforeTaxtxt = parseFloat(FValIncludeT.toString()).toFixed(2);
+      this.InvoiceDetailsRows.filter(
+        (a: { idRow: any }) => a.idRow == element.idRow
+      )[0].taxAmounttxt = parseFloat(taxAmount.toString()).toFixed(2);
+      this.InvoiceDetailsRows.filter(
+        (a: { idRow: any }) => a.idRow == element.idRow
+      )[0].TotalAmounttxt = parseFloat(totalwithtax.toString()).toFixed(2);
 
-      totalwithtaxes = +parseFloat((+parseFloat(totalwithtaxes.toString()).toFixed(2) + +parseFloat(totalwithtax.toString()).toFixed(2)).toString()).toFixed(2);
-      totalAmount = +parseFloat((+parseFloat(totalAmount.toString()).toFixed(2) + +parseFloat(FVal).toFixed(2)).toString()).toFixed(2);
-      totalAmountIncludeT = +parseFloat((+parseFloat(totalAmountIncludeT.toString()).toFixed(2) + +parseFloat(totalwithtax.toString()).toFixed(2)).toString()).toFixed(2);
-      totaltax = +parseFloat((+parseFloat(totaltax.toString()).toFixed(2) + +parseFloat(taxAmount.toString()).toFixed(2)).toString()).toFixed(2);
-      totalDisc = +parseFloat((+parseFloat(totalDisc.toString()).toFixed(2) + +parseFloat(FValDisc.toString()).toFixed(2)).toString()).toFixed(2);
-      totalDiscWithamountAll = +parseFloat((+parseFloat(totalDiscWithamountAll.toString()).toFixed(2) + +parseFloat(FValAmountAll).toFixed(2)).toString()).toFixed(2);
+      totalwithtaxes = +parseFloat(
+        (
+          +parseFloat(totalwithtaxes.toString()).toFixed(2) +
+          +parseFloat(totalwithtax.toString()).toFixed(2)
+        ).toString()
+      ).toFixed(2);
+      totalAmount = +parseFloat(
+        (
+          +parseFloat(totalAmount.toString()).toFixed(2) +
+          +parseFloat(FVal).toFixed(2)
+        ).toString()
+      ).toFixed(2);
+      totalAmountIncludeT = +parseFloat(
+        (
+          +parseFloat(totalAmountIncludeT.toString()).toFixed(2) +
+          +parseFloat(totalwithtax.toString()).toFixed(2)
+        ).toString()
+      ).toFixed(2);
+      totaltax = +parseFloat(
+        (
+          +parseFloat(totaltax.toString()).toFixed(2) +
+          +parseFloat(taxAmount.toString()).toFixed(2)
+        ).toString()
+      ).toFixed(2);
+      totalDisc = +parseFloat(
+        (
+          +parseFloat(totalDisc.toString()).toFixed(2) +
+          +parseFloat(FValDisc.toString()).toFixed(2)
+        ).toString()
+      ).toFixed(2);
+      totalDiscWithamountAll = +parseFloat(
+        (
+          +parseFloat(totalDiscWithamountAll.toString()).toFixed(2) +
+          +parseFloat(FValAmountAll).toFixed(2)
+        ).toString()
+      ).toFixed(2);
     });
 
-    this.modalInvoice.totalAmount = parseFloat(totalDiscWithamountAll.toString()).toFixed(2);
-    this.modalInvoice.discounMoneytVal = parseFloat(totalDisc.toString()).toFixed(2);
-    this.modalInvoice.total_= parseFloat(totalAmount.toString()).toFixed(2);
-    this.modalInvoice.totalWithDiscount = parseFloat(totalAmount.toString()).toFixed(2);
+    this.modalInvoice.totalAmount = parseFloat(
+      totalDiscWithamountAll.toString()
+    ).toFixed(2);
+    this.modalInvoice.discounMoneytVal = parseFloat(
+      totalDisc.toString()
+    ).toFixed(2);
+    this.modalInvoice.total_ = parseFloat(totalAmount.toString()).toFixed(2);
+    this.modalInvoice.totalWithDiscount = parseFloat(
+      totalAmount.toString()
+    ).toFixed(2);
     this.modalInvoice.taxAmountLbl = parseFloat(totaltax.toString()).toFixed(2);
 
-
-    if (this.modalInvoice.taxtype== 2) {
-      this.modalInvoice.VoucherValue=parseFloat(totalAmount.toString()).toFixed(2);
-      this.modalInvoice.TotalVoucherValueLbl=parseFloat((+totalAmount + +totaltax).toString()).toFixed(2);
-    }
-    else {
-      this.modalInvoice.VoucherValue=parseFloat((+totalAmount - +totaltax).toString()).toFixed(2);
-      this.modalInvoice.TotalVoucherValueLbl=parseFloat(totalAmount.toString()).toFixed(2);
+    if (this.modalInvoice.taxtype == 2) {
+      this.modalInvoice.VoucherValue = parseFloat(
+        totalAmount.toString()
+      ).toFixed(2);
+      this.modalInvoice.TotalVoucherValueLbl = parseFloat(
+        (+totalAmount + +totaltax).toString()
+      ).toFixed(2);
+    } else {
+      this.modalInvoice.VoucherValue = parseFloat(
+        (+totalAmount - +totaltax).toString()
+      ).toFixed(2);
+      this.modalInvoice.TotalVoucherValueLbl = parseFloat(
+        totalAmount.toString()
+      ).toFixed(2);
     }
     this.checkRemainder();
   }
