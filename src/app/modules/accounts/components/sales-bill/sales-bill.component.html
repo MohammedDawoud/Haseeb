@@ -1660,8 +1660,18 @@
               >
                 <i class="fa fa-plus"></i>
               </button>
+
             </div>
           </div>
+        </div>
+        <div class="col-sm-6 col-md-4 col-lg-3 mb-0">
+          <button
+          (click)="open(addSerivceModal, null, 'addSerivceModal')"
+          type="button"
+          class="btn btn-outline-primary"
+          >
+            {{ "addServices" | translate }}
+          </button>
         </div>
 
 
@@ -1677,14 +1687,6 @@
             (click)="addInvoiceRow()"
           >
             <i class="fa fa-plus"></i>
-          </button>
-
-          <button
-          (click)="open(addSerivceModal, null, 'addSerivceModal')"
-          type="button"
-          class="btn btn-outline-primary"
-          >
-            {{ "addServices" | translate }}
           </button>
 
         </h3>

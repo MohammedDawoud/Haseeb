@@ -20,7 +20,7 @@ import {
   FileUploadValidators,
 } from '@iplab/ngx-file-upload';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DateType } from 'ngx-hijri-gregorian-datepicker';
 import { ContractsVM } from 'src/app/core/Classes/ViewModels/contractsVM';
 import { ContractService } from 'src/app/core/services/acc_Services/contract.service';
@@ -36,6 +36,7 @@ import { InvoiceService } from 'src/app/core/services/acc_Services/invoice.servi
 import { ProjectService } from 'src/app/core/services/pro_Services/project.service';
 import {CdkDragDrop,CdkDrag,CdkDropList,CdkDropListGroup,moveItemInArray,transferArrayItem,} from '@angular/cdk/drag-drop';
 import { DebentureService } from 'src/app/core/services/acc_Services/debenture.service';
+import { AccountsreportsService } from 'src/app/core/services/acc_Services/accountsreports.service';
 
 const hijriSafe= require('hijri-date/lib/safe');
 const HijriDate =  hijriSafe.default;
@@ -246,6 +247,8 @@ export class CustomerContractsComponent implements OnInit {
     private _invoiceService: InvoiceService,
     private _debentureService: DebentureService,
     private _projectService: ProjectService,
+    private _accountsreportsService: AccountsreportsService,
+    private formBuilder: FormBuilder,
 
 
   ) {
@@ -1564,6 +1567,58 @@ GetInvoicePrint(obj:any,TempCheck:any){
       this.selectedServiceRow = idRow;
     }
 
+    if (type == 'NewProjectType') {
+      this.GetAllProjectType();
+    }
+    if (type == 'deleteProjectTypeModal') {
+      this.pTypeId = data.typeId;
+    }
+
+    if (type == 'SubprojectTypeModal') {
+      if (this.SerivceModalForm.controls['ProjectType'].value == null) {
+        this.toast.error('من فضلك أختر نوع المشروع',this.translate.instant("Message"));
+        return;
+      }
+      this.GetAllProjectSubsByProjectTypeId();
+    }
+    if (type == 'deleteSubprojectTypeModal') {
+      this.psubTypeId = data.subTypeId;
+    }
+
+    if (type == 'PackagesModal') {
+      this.GetAllPackages();
+    }
+    if (type == 'deletePackagesModal') {
+      this.PackageIdD = data.packageId;
+    }
+
+    if (type == 'costCenterModal') {
+      this.servicesId = 0;
+      this.accountName = null;
+      this.servicesName = null;
+      this.GetAllcostCenter();
+    }
+    if (type == 'deletecostCenterModal') {
+      this.ServicesPriceIdindex = idRow;
+      this.ServicesPriceId = data.servicesId;
+    }
+    if (type == 'servicesList') {
+      //this.GetAllCategory();
+      this.GetAllServicesPrice();
+    }
+    if (type == 'addSerivceModal') {
+      this.details = [];
+      this.AllcostCenterlist = [];
+      this.SubprojecttypeList = [];
+      this.intialModelBranchOrganization();
+      this.FillStorehouseSelect();
+      this.FillServiceTypesSelect();
+      this.FillServiceAccount();
+      this.FillServiceAccountPurchase();
+      this.FillCostCenterSelect_Service();
+      //this.FillProjectTypeSelectService();
+      this.FillPackagesSelect();
+    }
 
     if (type == 'serviceDetails' && data) {
       this.GetServicesPriceByParentId(data);
@@ -2634,82 +2689,175 @@ GetInvoicePrint(obj:any,TempCheck:any){
     this.modalInvoice.PaidValue=0;
     this.CalculateTotal(type);
   }
-  CalculateTotal(type:any){
-    var totalwithtaxes = 0;var totalAmount = 0;var totalDisc = 0;var totalDiscWithamountAll = 0; var totaltax = 0;
-    var totalAmountIncludeT = 0; var vAT_TaxVal = parseFloat(this.userG.orgVAT??0);
+  CalculateTotal(type: any) {
+    var totalwithtaxes = 0;
+    var totalAmount = 0;
+    var totalDisc = 0;
+    var totalDiscWithamountAll = 0;
+    var totaltax = 0;
+    var totalAmountIncludeT = 0;
+    var vAT_TaxVal = parseFloat(this.userG.orgVAT ?? 0);
     this.InvoiceDetailsRows.forEach((element: any) => {
-      var ValueAmount = parseFloat((element.Amounttxt??0).toString()).toFixed(2);
-      ValueAmount = parseFloat((+ValueAmount * element.QtyConst).toString()).toFixed(2);
+      var ValueAmount = parseFloat((element.Amounttxt ?? 0).toString()).toFixed(
+        2
+      );
+      ValueAmount = parseFloat(
+        (+ValueAmount * element.QtyConst).toString()
+      ).toFixed(2);
       var DiscountValue_Det;
       if (type == 1) {
-          DiscountValue_Det = parseFloat((element.DiscountValueConst??0).toString()).toFixed(2);
+        DiscountValue_Det = parseFloat(
+          (element.DiscountValueConst ?? 0).toString()
+        ).toFixed(2);
+      } else {
+        var Discountper_Det = parseFloat(
+          (element.DiscountPercentageConst ?? 0).toString()
+        ).toFixed(2);
+        DiscountValue_Det = parseFloat(
+          ((+Discountper_Det * +ValueAmount) / 100).toString()
+        ).toFixed(2);
+        this.InvoiceDetailsRows.filter(
+          (a: { idRow: any }) => a.idRow == element.idRow
+        )[0].DiscountValueConst = parseFloat(
+          DiscountValue_Det.toString()
+        ).toFixed(2);
       }
-      else {
-          var Discountper_Det = parseFloat((element.DiscountPercentageConst??0).toString()).toFixed(2);
-          DiscountValue_Det = parseFloat(((+Discountper_Det * +ValueAmount) / 100).toString()).toFixed(2);
-          this.InvoiceDetailsRows.filter((a: { idRow: any; })=>a.idRow==element.idRow)[0].DiscountValueConst= parseFloat(DiscountValue_Det.toString()).toFixed(2);
-      }
-      var Value = parseFloat((+ValueAmount - +DiscountValue_Det).toString()).toFixed(2);
+      var Value = parseFloat(
+        (+ValueAmount - +DiscountValue_Det).toString()
+      ).toFixed(2);
       if (!(+Value >= 0)) {
-        this.InvoiceDetailsRows.filter((a: { idRow: any; })=>a.idRow==element.idRow)[0].DiscountValueConst= 0;
-        this.InvoiceDetailsRows.filter((a: { idRow: any; })=>a.idRow==element.idRow)[0].DiscountPercentageConst= 0;
-          DiscountValue_Det = 0;
-          Value = parseFloat((+ValueAmount - +DiscountValue_Det).toString()).toFixed(2);
+        this.InvoiceDetailsRows.filter(
+          (a: { idRow: any }) => a.idRow == element.idRow
+        )[0].DiscountValueConst = 0;
+        this.InvoiceDetailsRows.filter(
+          (a: { idRow: any }) => a.idRow == element.idRow
+        )[0].DiscountPercentageConst = 0;
+        DiscountValue_Det = 0;
+        Value = parseFloat(
+          (+ValueAmount - +DiscountValue_Det).toString()
+        ).toFixed(2);
       }
       if (type == 1) {
         var DiscountPercentage_Det;
         if (+ValueAmount > 0) {
-            DiscountPercentage_Det = +DiscountValue_Det * 100 / +ValueAmount;
+          DiscountPercentage_Det = (+DiscountValue_Det * 100) / +ValueAmount;
+        } else {
+          DiscountPercentage_Det = 0;
         }
-        else {
-            DiscountPercentage_Det = 0;
-        }
-        DiscountPercentage_Det = parseFloat(DiscountPercentage_Det.toString()).toFixed(2);
-        this.InvoiceDetailsRows.filter((a: { idRow: any; })=>a.idRow==element.idRow)[0].DiscountPercentageConst= DiscountPercentage_Det;
+        DiscountPercentage_Det = parseFloat(
+          DiscountPercentage_Det.toString()
+        ).toFixed(2);
+        this.InvoiceDetailsRows.filter(
+          (a: { idRow: any }) => a.idRow == element.idRow
+        )[0].DiscountPercentageConst = DiscountPercentage_Det;
       }
 
-      var FValDisc = DiscountValue_Det; var FValAmountAll = ValueAmount; var FVal = Value;
-      var FValIncludeT = FVal; var taxAmount = 0; var totalwithtax = 0;
+      var FValDisc = DiscountValue_Det;
+      var FValAmountAll = ValueAmount;
+      var FVal = Value;
+      var FValIncludeT = FVal;
+      var taxAmount = 0;
+      var totalwithtax = 0;
 
-      var TaxV8erS = parseFloat((+parseFloat((+Value * vAT_TaxVal).toString()).toFixed(2) / 100).toString()).toFixed(2);
-      var TaxVS =parseFloat((+Value- +parseFloat((+Value/((vAT_TaxVal / 100) + 1)).toString()).toFixed(2)).toString()).toFixed(2);
+      var TaxV8erS = parseFloat(
+        (
+          +parseFloat((+Value * vAT_TaxVal).toString()).toFixed(2) / 100
+        ).toString()
+      ).toFixed(2);
+      var TaxVS = parseFloat(
+        (
+          +Value -
+          +parseFloat((+Value / (vAT_TaxVal / 100 + 1)).toString()).toFixed(2)
+        ).toString()
+      ).toFixed(2);
 
-      if (this.modalInvoice.taxtype== 2) {
-          taxAmount = +TaxV8erS * element.QtyConst;
-          totalwithtax = +parseFloat((+parseFloat(Value) + +parseFloat(TaxV8erS)).toString()).toFixed(2);
+      if (this.modalInvoice.taxtype == 2) {
+        taxAmount = +TaxV8erS;
+        totalwithtax = +parseFloat(
+          (+parseFloat(Value) + +parseFloat(TaxV8erS)).toString()
+        ).toFixed(2);
+      } else {
+        taxAmount = +TaxVS;
+        FValIncludeT = parseFloat(
+          (+parseFloat(Value).toFixed(2) - +TaxVS).toString()
+        ).toFixed(2);
+        totalwithtax = +parseFloat(Value).toFixed(2);
       }
-      else {
-          taxAmount=+TaxVS * element.QtyConst;
-          FValIncludeT = parseFloat((+parseFloat(Value).toFixed(2) - +TaxVS).toString()).toFixed(2);
-          totalwithtax = +parseFloat(Value).toFixed(2);
-      }
 
-      this.InvoiceDetailsRows.filter((a: { idRow: any; })=>a.idRow==element.idRow)[0].AmountBeforeTaxtxt = parseFloat(FValIncludeT.toString()).toFixed(2);
-      this.InvoiceDetailsRows.filter((a: { idRow: any; })=>a.idRow==element.idRow)[0].taxAmounttxt = parseFloat(taxAmount.toString()).toFixed(2);
-      this.InvoiceDetailsRows.filter((a: { idRow: any; })=>a.idRow==element.idRow)[0].TotalAmounttxt = parseFloat(totalwithtax.toString()).toFixed(2);
+      this.InvoiceDetailsRows.filter(
+        (a: { idRow: any }) => a.idRow == element.idRow
+      )[0].AmountBeforeTaxtxt = parseFloat(FValIncludeT.toString()).toFixed(2);
+      this.InvoiceDetailsRows.filter(
+        (a: { idRow: any }) => a.idRow == element.idRow
+      )[0].taxAmounttxt = parseFloat(taxAmount.toString()).toFixed(2);
+      this.InvoiceDetailsRows.filter(
+        (a: { idRow: any }) => a.idRow == element.idRow
+      )[0].TotalAmounttxt = parseFloat(totalwithtax.toString()).toFixed(2);
 
-      totalwithtaxes = +parseFloat((+parseFloat(totalwithtaxes.toString()).toFixed(2) + +parseFloat(totalwithtax.toString()).toFixed(2)).toString()).toFixed(2);
-      totalAmount = +parseFloat((+parseFloat(totalAmount.toString()).toFixed(2) + +parseFloat(FVal).toFixed(2)).toString()).toFixed(2);
-      totalAmountIncludeT = +parseFloat((+parseFloat(totalAmountIncludeT.toString()).toFixed(2) + +parseFloat(totalwithtax.toString()).toFixed(2)).toString()).toFixed(2);
-      totaltax = +parseFloat((+parseFloat(totaltax.toString()).toFixed(2) + +parseFloat(taxAmount.toString()).toFixed(2)).toString()).toFixed(2);
-      totalDisc = +parseFloat((+parseFloat(totalDisc.toString()).toFixed(2) + +parseFloat(FValDisc.toString()).toFixed(2)).toString()).toFixed(2);
-      totalDiscWithamountAll = +parseFloat((+parseFloat(totalDiscWithamountAll.toString()).toFixed(2) + +parseFloat(FValAmountAll).toFixed(2)).toString()).toFixed(2);
+      totalwithtaxes = +parseFloat(
+        (
+          +parseFloat(totalwithtaxes.toString()).toFixed(2) +
+          +parseFloat(totalwithtax.toString()).toFixed(2)
+        ).toString()
+      ).toFixed(2);
+      totalAmount = +parseFloat(
+        (
+          +parseFloat(totalAmount.toString()).toFixed(2) +
+          +parseFloat(FVal).toFixed(2)
+        ).toString()
+      ).toFixed(2);
+      totalAmountIncludeT = +parseFloat(
+        (
+          +parseFloat(totalAmountIncludeT.toString()).toFixed(2) +
+          +parseFloat(totalwithtax.toString()).toFixed(2)
+        ).toString()
+      ).toFixed(2);
+      totaltax = +parseFloat(
+        (
+          +parseFloat(totaltax.toString()).toFixed(2) +
+          +parseFloat(taxAmount.toString()).toFixed(2)
+        ).toString()
+      ).toFixed(2);
+      totalDisc = +parseFloat(
+        (
+          +parseFloat(totalDisc.toString()).toFixed(2) +
+          +parseFloat(FValDisc.toString()).toFixed(2)
+        ).toString()
+      ).toFixed(2);
+      totalDiscWithamountAll = +parseFloat(
+        (
+          +parseFloat(totalDiscWithamountAll.toString()).toFixed(2) +
+          +parseFloat(FValAmountAll).toFixed(2)
+        ).toString()
+      ).toFixed(2);
     });
 
-    this.modalInvoice.totalAmount = parseFloat(totalDiscWithamountAll.toString()).toFixed(2);
-    this.modalInvoice.discounMoneytVal = parseFloat(totalDisc.toString()).toFixed(2);
-    this.modalInvoice.total_= parseFloat(totalAmount.toString()).toFixed(2);
-    this.modalInvoice.totalWithDiscount = parseFloat(totalAmount.toString()).toFixed(2);
+    this.modalInvoice.totalAmount = parseFloat(
+      totalDiscWithamountAll.toString()
+    ).toFixed(2);
+    this.modalInvoice.discounMoneytVal = parseFloat(
+      totalDisc.toString()
+    ).toFixed(2);
+    this.modalInvoice.total_ = parseFloat(totalAmount.toString()).toFixed(2);
+    this.modalInvoice.totalWithDiscount = parseFloat(
+      totalAmount.toString()
+    ).toFixed(2);
     this.modalInvoice.taxAmountLbl = parseFloat(totaltax.toString()).toFixed(2);
 
-
-    if (this.modalInvoice.taxtype== 2) {
-      this.modalInvoice.VoucherValue=parseFloat(totalAmount.toString()).toFixed(2);
-      this.modalInvoice.TotalVoucherValueLbl=parseFloat((+totalAmount + +totaltax).toString()).toFixed(2);
-    }
-    else {
-      this.modalInvoice.VoucherValue=parseFloat((+totalAmount - +totaltax).toString()).toFixed(2);
-      this.modalInvoice.TotalVoucherValueLbl=parseFloat(totalAmount.toString()).toFixed(2);
+    if (this.modalInvoice.taxtype == 2) {
+      this.modalInvoice.VoucherValue = parseFloat(
+        totalAmount.toString()
+      ).toFixed(2);
+      this.modalInvoice.TotalVoucherValueLbl = parseFloat(
+        (+totalAmount + +totaltax).toString()
+      ).toFixed(2);
+    } else {
+      this.modalInvoice.VoucherValue = parseFloat(
+        (+totalAmount - +totaltax).toString()
+      ).toFixed(2);
+      this.modalInvoice.TotalVoucherValueLbl = parseFloat(
+        totalAmount.toString()
+      ).toFixed(2);
     }
     this.checkRemainder();
   }
@@ -3579,6 +3727,11 @@ GetInvoicePrint(obj:any,TempCheck:any){
       nameAr: null,
       nameEn: null,
     },
+    ServiceType: {
+      id: 0,
+      nameAr: null,
+      nameEn: null,
+    },
   }
   Storehouse: any;
   StorehousePopup: any;
@@ -3651,5 +3804,697 @@ GetInvoicePrint(obj:any,TempCheck:any){
   }
   //#endregion
   //----------------------------------(End)-Storehouse---------------------------------------------
+
+    //-----------------------------------ServiceType------------------------------------------------
+  //#region 
+
+  ServiceType: any;
+  ServiceTypePopup: any;
+
+  FillServiceTypesSelect() {
+    this.ServiceType = [];
+    this.ServiceTypePopup = [];
+    this._invoiceService.FillServiceTypesSelect().subscribe((data) => {
+      this.ServiceType = data;
+      this.ServiceTypePopup = data;
+    });
+  }
+  ServiceTypeRowSelected: any;
+  getServiceTypeRow(row: any) {
+    this.ServiceTypeRowSelected = row;
+  }
+  setServiceTypeInSelect(data: any, model: any) {
+    this.SerivceModalForm.controls["ServiceType"].setValue(data.id)
+  }
+  resetServiceType() {
+    this.dataAdd.ServiceType.id = 0;
+    this.dataAdd.ServiceType.nameAr = null;
+    this.dataAdd.ServiceType.nameEn = null;
+  }
+  saveServiceType() {
+    if (
+      this.dataAdd.ServiceType.nameAr == null ||
+      this.dataAdd.ServiceType.nameEn == null
+    ) {
+      this.toast.error('من فضلك أكمل البيانات', 'رسالة');
+      return;
+    }
+    var ServiceTypeObj: any = {};
+    ServiceTypeObj.ServiceTypeId = this.dataAdd.ServiceType.id;
+    ServiceTypeObj.NameAr = this.dataAdd.ServiceType.nameAr;
+    ServiceTypeObj.NameEn = this.dataAdd.ServiceType.nameEn;
+    this._invoiceService.SaveServiceType(ServiceTypeObj)
+      .subscribe((result: any) => {
+        if (result.statusCode == 200) {
+          this.toast.success(
+            this.translate.instant(result.reasonPhrase),
+            this.translate.instant('Message')
+          );
+          this.resetServiceType();
+          this.FillServiceTypesSelect();
+        } else {
+          this.toast.error(
+            this.translate.instant(result.reasonPhrase),
+            this.translate.instant('Message')
+          );
+        }
+      });
+  }
+  confirmServiceTypeDelete() {
+    this._invoiceService.DeleteServiceType(this.ServiceTypeRowSelected.id).subscribe((result: any) => {
+        if (result.statusCode == 200) {
+          this.toast.success(
+            this.translate.instant(result.reasonPhrase),this.translate.instant('Message')
+          );
+          this.FillServiceTypesSelect();
+        } else {
+          this.toast.error(
+            this.translate.instant(result.reasonPhrase),this.translate.instant('Message')
+          );
+        }
+      });
+  }
+  //#endregion
+  //----------------------------------(End)-ServiceType---------------------------------------------
+
+  //----------------------------ServicePrice----------------------------
+  //#region
+  ServiceTypelist = [
+    { id: 1, name: 'قطعة' },
+    { id: 2, name: 'وحدة' },
+  ];
+
+  CostCenterSelectlist: any = [];
+  ServiceAccountlist: any = [];
+  ServiceAccountPurlist: any = [];
+  FillCostCenterSelect_Service() {
+    this._accountsreportsService.FillCostCenterSelect().subscribe((data) => {
+      this.CostCenterSelectlist = data;
+    });
+  }
+  FillServiceAccount() {
+    this._accountsreportsService.FillServiceAccount().subscribe((data) => {
+      this.ServiceAccountlist = data;
+    });
+  }
+  FillServiceAccountPurchase() {
+    this._accountsreportsService.FillSubAccountLoad().subscribe(data => {
+      this.ServiceAccountPurlist = data.result;
+    });
+  }
+  packageList: any = [];
+  FillPackagesSelect() {
+    this._accountsreportsService.FillPackagesSelect().subscribe((data) => {
+      this.packageList = data;
+    });
+  }
+  ProjectTypeList: any = [];
+  SubprojecttypeList: any = [];
+  ProjectTypeId: any;
+  SubprojecttypeId: any;
+  ServiceName: any;
+  FillProjectTypeSelectService() {
+    this._accountsreportsService.FillProjectTypeSelect().subscribe((data) => {
+      this.ProjectTypeList = data;
+    });
+  }
+  FillProjectSubTypesSelectService(id: any) {
+    this._accountsreportsService
+      .FillProjectSubTypesSelect(id)
+      .subscribe((data) => {
+        this.SubprojecttypeList = data;
+      });
+  }
+
+  projectsDataSourceTemp: any = [];
+  DataSource: any = [];
+
+  SerivceModalForm: FormGroup;
+  SerivceModalDetails: any;
+
+  intialModelBranchOrganization() {
+    this.SerivceModalForm = this.formBuilder.group({
+      id: ['0', [Validators.required]],
+      ProjectType: [null, [Validators.required]],
+      SubprojectType: [null, [Validators.required]],
+      ServiceName: [null, [Validators.required]],
+      ServiceNameEN: [null, [Validators.required]],
+      ServiceType: [null, [Validators.required]],
+      amount: [null, [Validators.required]],
+      costCenter: [null, [Validators.required]],
+      ServiceRevenueAccount: [null, [Validators.required]],
+      nameAccount: [null, [Validators.required]],
+      PackageId: [null, [Validators.required]],
+
+      AmountPur: [null, [Validators.required]],
+      AccountIdPur: [null, [Validators.required]],
+      Begbalance: [null],
+      SerialNumber: [null],
+      ItemCode: [null, [Validators.required]],
+      storehouseId: [null, [Validators.required]],
+
+    });
+  }
+
+  details: any = [];
+
+  SaveServicePriceWithDetails(modal?: any) {
+    this.ServiceAccountlist.forEach((element: any) => {
+      if (
+        this.SerivceModalForm.controls['ServiceRevenueAccount'].value ==
+        element.id
+      ) {
+        this.SerivceModalForm.controls['nameAccount'].setValue(element.name);
+      }
+    });
+    if (this.SerivceModalForm.controls['id'].value != 0) {
+      this.details = [];
+    } else {
+      this.details.forEach((element: any) => {
+        element.servicesId = 0;
+      });
+    }
+
+    const params = {
+      services_price: {
+        AccountId: this.SerivceModalForm.controls["ServiceRevenueAccount"].value,
+        accountName: 'ايرادات',
+        Amount: Number(this.SerivceModalForm.controls["amount"].value),
+        // CostCenterId: this.SerivceModalForm.controls["costCenter"].value,
+        // PackageId: this.SerivceModalForm.controls["PackageId"].value,
+        // ProjectId: this.SerivceModalForm.controls["ProjectType"].value,
+        // ProjectSubTypeID: this.SerivceModalForm.controls["SubprojectType"].value,
+        ServiceName_EN: this.SerivceModalForm.controls["ServiceNameEN"].value,
+        ServiceType: this.SerivceModalForm.controls["ServiceType"].value,
+        ServicesId: this.SerivceModalForm.controls["id"].value,
+        servicesName: this.SerivceModalForm.controls["ServiceName"].value,
+
+        amountPur: this.SerivceModalForm.controls["AmountPur"].value,
+        accountIdPur: this.SerivceModalForm.controls["AccountIdPur"].value,
+        begbalance: this.SerivceModalForm.controls["Begbalance"].value,
+        serialNumber: this.SerivceModalForm.controls["SerialNumber"].value,
+        itemCode: this.SerivceModalForm.controls["ItemCode"].value,
+        storehouseId: this.SerivceModalForm.controls["storehouseId"].value,
+
+      },
+      details: this.details,
+    };
+
+    this._accountsreportsService
+      .SaveServicePriceWithDetails(params)
+      .subscribe((result: any) => {
+        if (result.statusCode == 200) {
+          this.toast.success(
+            this.translate.instant(result.reasonPhrase),
+            this.translate.instant('Message')
+          );
+          // this.GetAllServicesPrice()
+          modal.dismiss();
+        } else {
+          this.toast.error(
+            this.translate.instant(result.reasonPhrase),
+            this.translate.instant('Message')
+          );
+        }
+      });
+  }
+  AllProjectTypelist: any = [];
+  GetAllProjectType() {
+    this._accountsreportsService.GetAllProjectType().subscribe((data) => {
+      this.AllProjectTypelist = data;
+    });
+  }
+  applyFilterProjectType(event: any) {
+    const val = event.target.value.toLowerCase();
+    this._accountsreportsService.GetAllProjectType(val).subscribe((data) => {
+      this.AllProjectTypelist = [];
+      this.AllProjectTypelist = data.result;
+    });
+  }
+  TypeId: any = '0';
+  ProjectTypenameEn: any;
+  ProjectTypenameAr: any;
+  SaveProjectType() {
+    if (this.ProjectTypenameEn != null && this.ProjectTypenameAr != null) {
+      const prames = {
+        TypeId: this.TypeId.toString(),
+        NameEn: this.ProjectTypenameEn,
+        NameAr: this.ProjectTypenameAr,
+      };
+      this._accountsreportsService.SaveProjectType(prames).subscribe(
+        (data) => {
+          this.ProjectTypenameEn = null;
+          this.ProjectTypenameAr = null;
+          this.TypeId = '0';
+          this.FillProjectTypeSelectService();
+          this.GetAllProjectType();
+          this.toast.success(data.reasonPhrase,this.translate.instant("Message"));
+        },
+        (error) => {
+          this.toast.error(error.reasonPhrase,this.translate.instant("Message"));
+        }
+      );
+    }
+  }
+  updateProjectType(group: any) {
+    this.TypeId = group.typeId;
+    this.ProjectTypenameEn = group.nameEn;
+    this.ProjectTypenameAr = group.nameAr;
+  }
+  pTypeId: any;
+
+  DeleteProjectType(modal?: any) {
+    this._accountsreportsService.DeleteProjectType(this.pTypeId).subscribe(
+      (data) => {
+        if (data.statusCode == 200) {
+          this.toast.success(data.reasonPhrase,this.translate.instant("Message"));
+          this.FillProjectTypeSelectService();
+          this.GetAllProjectType();
+          this.pTypeId = null;
+          modal.dismiss();
+        }
+      },
+      (error) => {
+        this.pTypeId = null;
+        this.toast.error(error.reasonPhrase,this.translate.instant("Message"));
+      }
+    );
+  }
+
+  AllProjectSubsByProjectTypelist: any = [];
+  GetAllProjectSubsByProjectTypeId(search?: any) {
+    this._accountsreportsService
+      .GetAllProjectSubsByProjectTypeId(
+        search,
+        this.SerivceModalForm.controls['ProjectType'].value
+      )
+      .subscribe((data) => {
+        this.AllProjectSubsByProjectTypelist = data;
+      });
+  }
+  applyFilterSubsByProjectTypeId(event: any) {
+    const val = event.target.value.toLowerCase();
+    this._accountsreportsService
+      .GetAllProjectSubsByProjectTypeId(
+        val,
+        this.SerivceModalForm.controls['ProjectType'].value
+      )
+      .subscribe((data) => {
+        this.AllProjectSubsByProjectTypelist = [];
+        this.AllProjectSubsByProjectTypelist = data.result;
+      });
+  }
+
+  SubTypeId: any = '0';
+  SubprojectTypenameEn: any;
+  SubprojectTypenameAr: any;
+  TimePeriodStr: any;
+  SaveSubprojectType() {
+    if (
+      this.SubprojectTypenameEn != null &&
+      this.SubprojectTypenameAr != null
+    ) {
+      const prames = {
+        SubTypeId: this.SubTypeId.toString(),
+        NameEn: this.SubprojectTypenameEn,
+        NameAr: this.SubprojectTypenameAr,
+        ProjectTypeId: this.SerivceModalForm.controls['ProjectType'].value,
+        TimePeriod: this.TimePeriodStr,
+      };
+      this._accountsreportsService.SaveProjectSubType(prames).subscribe(
+        (data) => {
+          this.TimePeriodStr = null;
+          this.SubprojectTypenameAr = null;
+          this.SubprojectTypenameEn = null;
+          this.SubTypeId = '0';
+          this.FillProjectSubTypesSelectService(
+            this.SerivceModalForm.controls['ProjectType'].value
+          );
+          this.GetAllProjectSubsByProjectTypeId();
+          this.toast.success(data.reasonPhrase,this.translate.instant("Message"));
+        },
+        (error) => {
+          this.toast.error(error.reasonPhrase,this.translate.instant("Message"));
+        }
+      );
+    }
+  }
+  updateSubprojectType(group: any) {
+    this.SubTypeId = group.subTypeId;
+    this.SubprojectTypenameEn = group.nameEn;
+    this.TimePeriodStr = group.timePeriod;
+    this.SubprojectTypenameAr = group.nameAr;
+  }
+  psubTypeId: any;
+
+  DeleteProjectSubTypes(modal?: any) {
+    this._accountsreportsService
+      .DeleteProjectSubTypes(this.psubTypeId)
+      .subscribe(
+        (data) => {
+          if (data.statusCode == 200) {
+            this.toast.success(data.reasonPhrase,this.translate.instant("Message"));
+            this.FillProjectSubTypesSelectService(
+              this.SerivceModalForm.controls['ProjectType'].value
+            );
+            this.GetAllProjectSubsByProjectTypeId();
+            this.psubTypeId = null;
+            modal.dismiss();
+          }
+        },
+        (error) => {
+          this.psubTypeId = null;
+          this.toast.error(error.reasonPhrase,this.translate.instant("Message"));
+        }
+      );
+  }
+
+  ChangeProjectType() {
+    if (this.SerivceModalForm.controls['ProjectType'].value) {
+      this.FillProjectSubTypesSelectService(
+        this.SerivceModalForm.controls['ProjectType'].value
+      );
+    } else {
+      this.SubprojecttypeList = [];
+    }
+  }
+
+  AllPackageslist: any = [];
+  GetAllPackages() {
+    this._accountsreportsService.GetAllPackages().subscribe((data) => {
+      this.AllPackageslist = data.result;
+    });
+  }
+  applyFilterPackages(event: any) {
+    const val = event.target.value.toLowerCase();
+    this._accountsreportsService.GetAllPackages(val).subscribe((data) => {
+      this.AllPackageslist = [];
+      this.AllPackageslist = data.result;
+    });
+  }
+
+  PackageId: any = '0';
+  PackageName: any;
+  MeterPrice1: any;
+  MeterPrice2: any;
+  MeterPrice3: any;
+  PackageRatio1: any;
+  PackageRatio2: any;
+  PackageRatio3: any;
+  SavePackages() {
+    if (
+      this.PackageName != null &&
+      this.MeterPrice1 != null &&
+      this.MeterPrice2 != null &&
+      this.MeterPrice3 != null &&
+      this.PackageRatio1 != null &&
+      this.PackageRatio2 != null &&
+      this.PackageRatio3 != null
+    ) {
+      const prames = {
+        PackageId: this.PackageId.toString(),
+        PackageName: this.PackageName,
+        MeterPrice3: this.MeterPrice3,
+        MeterPrice2: this.MeterPrice2,
+        MeterPrice1: this.MeterPrice1,
+        PackageRatio1: this.PackageRatio1,
+        PackageRatio2: this.PackageRatio2,
+        PackageRatio3: this.PackageRatio3,
+      };
+      this._accountsreportsService.SavePackage(prames).subscribe(
+        (data) => {
+          this.PackageName = null;
+          this.MeterPrice1 = null;
+          this.MeterPrice2 = null;
+          this.MeterPrice3 = null;
+          this.PackageRatio1 = null;
+          this.PackageRatio2 = null;
+          this.PackageRatio3 = null;
+          this.PackageId = '0';
+          this.FillPackagesSelect();
+          this.GetAllPackages();
+          this.toast.success(data.reasonPhrase,this.translate.instant("Message"));
+        },
+        (error) => {
+          this.toast.error(error.reasonPhrase,this.translate.instant("Message"));
+        }
+      );
+    }
+  }
+  updatePackages(group: any) {
+    this.PackageId = group.packageId;
+    this.PackageName = group.packageName;
+    this.MeterPrice1 = group.meterPrice1;
+    this.MeterPrice2 = group.meterPrice2;
+    this.MeterPrice3 = group.meterPrice3;
+    this.PackageRatio1 = group.packageRatio1;
+    this.PackageRatio2 = group.packageRatio2;
+    this.PackageRatio3 = group.packageRatio3;
+  }
+  PackageIdD: any;
+
+  DeletePackages(modal?: any) {
+    this._accountsreportsService.DeletePackage(this.PackageIdD).subscribe(
+      (data) => {
+        if (data.statusCode == 200) {
+          this.toast.success(data.reasonPhrase,this.translate.instant("Message"));
+          this.FillPackagesSelect();
+          this.GetAllPackages();
+          this.PackageIdD = null;
+          modal.dismiss();
+        }
+      },
+      (error) => {
+        this.PackageIdD = null;
+        this.toast.error(error.reasonPhrase,this.translate.instant("Message"));
+      }
+    );
+  }
+
+  AllcostCenterlist: any = [];
+  GetAllcostCenter() {
+    if (this.SerivceModalForm.controls['id'].value != 0) {
+      this._accountsreportsService
+        .GetServicesPriceByParentId(this.SerivceModalForm.controls['id'].value)
+        .subscribe((data) => {
+          this.AllcostCenterlist = data.result;
+        });
+    }
+  }
+
+  servicesId: any = '0';
+  accountName: any;
+  servicesName: any;
+  SavecostCenter() {
+    if (this.accountName != null && this.servicesName != null) {
+      if (this.SerivceModalForm.controls['id'].value == 0) {
+        var obj = this.details.filter((ele: any) => {
+          return ele.servicesId == this.servicesId;
+        });
+        if (obj.length > 0) {
+          this.details.forEach((element: any) => {
+            if (obj[0].servicesId == element.servicesId) {
+              element.accountName = this.accountName;
+              element.servicesName = this.servicesName;
+              return;
+            }
+          });
+          this.servicesId = 0;
+          this.accountName = null;
+          this.servicesName = null;
+          return;
+        }
+        this.details.push({
+          servicesId: this.details.length + 1,
+          accountName: this.accountName,
+          servicesName: this.servicesName,
+          ParentId: this.SerivceModalForm.controls['id'].value,
+        });
+        this.AllcostCenterlist = [];
+        this.AllcostCenterlist = this.details;
+        this.accountName = null;
+        this.servicesName = null;
+      } else {
+        const prames = {
+          servicesId: this.servicesId ?? 0,
+          accountName: this.accountName,
+          servicesName: this.servicesName,
+          ParentId: this.SerivceModalForm.controls['id'].value,
+        };
+        this._accountsreportsService.SaveServicesPrice(prames).subscribe(
+          (data) => {
+            this.accountName = null;
+            this.servicesName = null;
+            this.servicesId = '0';
+            this.GetAllcostCenter();
+            this.toast.success(data.reasonPhrase,this.translate.instant("Message"));
+          },
+          (error) => {
+            this.toast.error(error.reasonPhrase,this.translate.instant("Message"));
+          }
+        );
+      }
+    }
+  }
+  updatecostCenter(group: any) {
+    this.servicesId = group.servicesId;
+    this.accountName = group.accountName;
+    this.servicesName = group.servicesName;
+  }
+  ServicesPriceId: any;
+  ServicesPriceIdindex: any;
+  DeleteService(modal?: any) {
+    if (this.SerivceModalForm.controls['id'].value == 0) {
+      this.details.splice(this.ServicesPriceIdindex, 1);
+      this.AllcostCenterlist = [];
+      this.AllcostCenterlist = this.details;
+      modal.dismiss();
+    } else {
+      this._accountsreportsService
+        .DeleteService(this.ServicesPriceId)
+        .subscribe(
+          (data) => {
+            if (data.statusCode == 200) {
+              this.toast.success(data.reasonPhrase,this.translate.instant("Message"));
+              this.GetAllcostCenter();
+              this.ServicesPriceId = null;
+              modal.dismiss();
+            }
+          },
+          (error) => {
+            this.ServicesPriceId = null;
+            this.toast.error(error.reasonPhrase,this.translate.instant("Message"));
+          }
+        );
+    }
+  }
+
+  AllTotalSpacesRangelist: any = [];
+  GetAllTotalSpacesRange() {
+    this._accountsreportsService.GetAllTotalSpacesRange().subscribe((data) => {
+      this.AllTotalSpacesRangelist = data.result;
+    });
+  }
+  applyFilterTotalSpacesRange(event: any) {
+    const val = event.target.value.toLowerCase();
+    this._accountsreportsService
+      .GetAllTotalSpacesRange(val)
+      .subscribe((data) => {
+        this.AllTotalSpacesRangelist = [];
+        this.AllTotalSpacesRangelist = data.result;
+      });
+  }
+  TotalSpacesRangeId: any = '0';
+  rangeName: any;
+  RangeValue: any;
+  SaveTotalSpacesRange() {
+    if (this.rangeName != null && this.RangeValue != null) {
+      const prames = {
+        TotalSpacesRangeId: this.TotalSpacesRangeId.toString(),
+        TotalSpacesRengeName: this.rangeName,
+        RangeValue: this.RangeValue,
+      };
+      this._accountsreportsService.SaveTotalSpacesRange(prames).subscribe(
+        (data) => {
+          this.rangeName = null;
+          this.RangeValue = null;
+          this.TotalSpacesRangeId = '0';
+          this.GetAllTotalSpacesRange();
+          this.toast.success(data.reasonPhrase,this.translate.instant("Message"));
+        },
+        (error) => {
+          this.toast.error(error.reasonPhrase,this.translate.instant("Message"));
+        }
+      );
+    }
+  }
+  updateTotalSpacesRange(group: any) {
+    this.TotalSpacesRangeId = group.totalSpacesRangeId;
+    this.rangeName = group.totalSpacesRengeName;
+    this.RangeValue = group.rangeValue;
+  }
+  DTotalSpacesRangeId: any;
+
+  deleteTotalSpaces(modal?: any) {
+    this._accountsreportsService
+      .DeleteTotalSpacesRange(this.DTotalSpacesRangeId)
+      .subscribe(
+        (data) => {
+          if (data.statusCode == 200) {
+            this.toast.success(data.reasonPhrase,this.translate.instant("Message"));
+            this.GetAllTotalSpacesRange();
+            this.DTotalSpacesRangeId = null;
+            modal.dismiss();
+          }
+        },
+        (error) => {
+          this.pTypeId = null;
+          this.toast.error(error.reasonPhrase,this.translate.instant("Message"));
+        }
+      );
+  }
+
+  AllFloorslist: any = [];
+  GetAllFloorsService() {
+    this._accountsreportsService.GetAllFloors().subscribe((data) => {
+      this.AllFloorslist = data.result;
+    });
+  }
+  applyFilterFloor(event: any) {
+    const val = event.target.value.toLowerCase();
+    this._accountsreportsService.GetAllFloors(val).subscribe((data) => {
+      this.AllFloorslist = [];
+      this.AllFloorslist = data.result;
+    });
+  }
+  FloorId: any = '0';
+  FloorName: any;
+  FloorRatio: any;
+  SaveFloor() {
+    if (this.FloorName != null && this.FloorRatio != null) {
+      const prames = {
+        FloorId: this.FloorId.toString(),
+        FloorName: this.FloorName,
+        FloorRatio: this.FloorRatio,
+      };
+      this._accountsreportsService.SaveFloor(prames).subscribe(
+        (data) => {
+          this.FloorName = null;
+          this.FloorRatio = null;
+          this.FloorId = '0';
+          this.GetAllFloorsService();
+          this.toast.success(data.reasonPhrase,this.translate.instant("Message"));
+        },
+        (error) => {
+          this.toast.error(error.reasonPhrase,this.translate.instant("Message"));
+        }
+      );
+    }
+  }
+  updatefloor(group: any) {
+    this.FloorId = group.floorId;
+    this.FloorName = group.floorName;
+    this.FloorRatio = group.floorRatio;
+  }
+  DFloors: any;
+  DeleteFloor(modal?: any) {
+    this._accountsreportsService.DeleteFloor(this.DFloors).subscribe(
+      (data) => {
+        if (data.result.statusCode == 200) {
+          this.GetAllFloorsService();
+          this.toast.success(data.reasonPhrase,this.translate.instant("Message"));
+          this.DFloors = null;
+          modal.dismiss();
+        }
+      },
+      (error) => {
+        this.DFloors = null;
+        this.toast.error(error.reasonPhrase,this.translate.instant("Message"));
+      }
+    );
+  }
+  //#endregion
+  //--------------------------End--ServicePrice----------------------------
+
 
 }
