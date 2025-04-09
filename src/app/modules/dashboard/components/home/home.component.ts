@@ -1658,6 +1658,9 @@ export class HomeComponent implements OnInit {
   TasksByUserCount: any;
   vacatiocounts: any;
   backupload: any = null;
+  monthName:any='';
+  absenceCount:any=0;
+  dawam:any=null;
   getstatistics() {
     this._homesernice.GetStatisticsCount().subscribe((data) => {
       this.GetUserProjects = data.getUserProjects;
@@ -1669,6 +1672,10 @@ export class HomeComponent implements OnInit {
       this.TasksByUserCount = data.tasksByUserCount;
       this.vacatiocounts = data.vacationBalance;
       this.backupload = data.backupAlertLoad_M;
+      this.monthName = data.absenceData.monthName;
+      this.absenceCount = data.absenceData.absenceCount;
+      this.dawam = data.absenceData.dawam;
+console.log(data.absenceData);
     });
   }
 

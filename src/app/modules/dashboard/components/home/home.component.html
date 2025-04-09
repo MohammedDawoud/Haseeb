@@ -54,114 +54,77 @@
     </div>
   </div>
   <!--  -->
-  <div class="flex gap-3 flex-wrap">
-    <div
-      (click)="open(followLoanModal, null, null, null, 'client')"
-      class="flex flex-grow gap-4 items-center bg-orange-400 text-white rounded-2xl p-4"
-    >
-      <img class="w-10" src="assets/icons/moneybag@2x.png" alt="" />
-      <span
-        class="text-xl"
-        [translate]="'name'"
-        [translateParams]="{
-          ar: 'طلب سلفة جديد',
-          en: 'Predecessor Application '
-        }"
-      ></span>
-    </div>
-    <div
-      (click)="open(followVacationsModal, null, null, null, 'vacationclient')"
-      class="flex flex-grow gap-4 items-center bg-cyan-600 text-white rounded-2xl p-4"
-    >
-      <img class="w-10" src="assets/icons/on-holiday-line@2x.png" alt="" />
-      <span
-        class="text-xl"
-        [translate]="'name'"
-        [translateParams]="{
-          ar: 'طلب اجازة جديد',
-          en: 'Vacation Application'
-        }"
-      ></span>
-    </div>
-    <!-- <div
-      (click)="open(Reports, null, null, null, 'openreport')"
-      class="flex flex-grow gap-4 items-center bg-zinc-600 text-white rounded-2xl p-4"
-    >
-      <img class="w-10" src="assets/icons/report@2x.png" alt="" />
-      <span
-        class="text-xl"
-        [translate]="'name'"
-        [translateParams]="{
-          ar: 'التقارير',
-          en: 'Reports'
-        }"
-      ></span>
-    </div>
-    <div
-      (click)="open(supervision, null, null, null, 'supervisions')"
-      class="flex flex-grow gap-4 items-center bg-emerald-600 text-white rounded-2xl p-4"
-    >
-      <img class="w-10" src="assets/icons/airline-manage-gates@2x.png" alt="" />
-      <span
-        class="text-xl"
-        [translate]="'name'"
-        [translateParams]="{
-          ar: 'طلعات الاشراف',
-          en: 'Supervisions'
-        }"
-      ></span>
-    </div> -->
-    <div class="flex flex-col gap-2">
-      <div>
-        <div
-          *ngIf="selectedYear != currentyear"
-          class="rounded-xl bg-black text-white flex items-center gap-2 h-full p-2"
-        >
-          <i class="fas fa-location"></i>
-          <span
-            [translate]="'name'"
-            [translateParams]="{
-              ar: 'انت في السنه المالية : ',
-              en: 'You Are in the financial year : '
-            }"
-          >
-          </span>
-          <span>{{ selectedYear }}</span>
-        </div>
-        <!-- <mat-menu mat-menu #menu3="matMenu" overlapTrigger="false">
-          <span>
-            <button
-              mat-menu-item
-              *ngFor="let year of years"
-              (click)="selectedYear = year"
-            >
-              <span class="flag-name">{{ year }}</span>
-            </button>
-          </span>
-        </mat-menu> -->
-      </div>
-      <div *ngIf="backupload != null">
-        <div
-          class="rounded-xl bg-danger text-white flex items-center gap-2 h-full p-2"
-        >
-          <i class="fas fa-location"></i>
-          <span
-            [translate]="'name'"
-            [translateParams]="{
-              ar: 'تنبيه بضرورة إجراء نسخ احتياطي',
-              en: 'You have a backup order'
-            }"
-          >
-          </span>
 
-          <i
-            style="margin-inline-start: auto"
-            class="fas w-6 text-center fa-xmark p-1 rounded-full bg-white text-black"
-          ></i>
+  <div class="w-full overflow-hidden">
+    <div class="w-full flex gap-3 flex-nowrap overflow-x-auto">
+      <!-- Maximized Cards (wider) -->
+      <div
+        (click)="open(followLoanModal, null, null, null, 'client')"
+        class="flex-shrink-0 flex min-w-[160px] gap-2 items-center bg-orange-400 text-white rounded-2xl p-3"
+      >
+        <img class="w-5" src="assets/icons/moneybag@2x.png" alt="" />
+        <span class="text-sm" [translate]="'name'" [translateParams]="{ ar: 'طلب سلفة', en: 'Predecessor Application' }"></span>
+      </div>
+  
+      <div
+        (click)="open(followVacationsModal, null, null, null, 'vacationclient')"
+        class="flex-shrink-0 flex min-w-[160px] gap-2 items-center bg-cyan-600 text-white rounded-2xl p-3"
+      >
+        <img class="w-5" src="assets/icons/on-holiday-line@2x.png" alt="" />
+        <span class="text-sm" [translate]="'name'" [translateParams]="{ ar: 'طلب اجازة', en: 'Vacation Application' }"></span>
+      </div>
+  
+      <div
+        (click)="open(Reports, null, null, null, 'openreport')"
+        class="flex-shrink-0 flex min-w-[160px] gap-2 items-center bg-zinc-600 text-white rounded-2xl p-3"
+      >
+        <img class="w-5" src="assets/icons/report@2x.png" alt="" />
+        <span class="text-sm" [translate]="'name'" [translateParams]="{ ar: 'التقارير', en: 'Reports' }"></span>
+      </div>
+  
+      <div
+        (click)="open(supervision, null, null, null, 'supervisions')"
+        class="flex-shrink-0 flex min-w-[160px] gap-2 items-center bg-emerald-600 text-white rounded-2xl p-3"
+      >
+        <img class="w-5" src="assets/icons/airline-manage-gates@2x.png" alt="" />
+        <span class="text-sm" [translate]="'name'" [translateParams]="{ ar: 'طلعات الاشراف', en: 'Supervisions' }"></span>
+      </div>
+  
+      <!-- Table Box -->
+      <div class="flex-shrink-0 flex bg-blue-600 text-white rounded-2xl p-2 min-w-[300px] items-center">
+        <table class="table-fixed text-center text-xs border-separate border-spacing-1">
+          <tr>
+            <td class="border border-white px-5 py-0.5" style="color: red; font-weight: bold;">غياب</td>
+            <td class="border border-white px-5 py-0.5">{{monthName}}</td>
+            <td class="border border-white px-2 py-0.5">{{absenceCount}}</td>
+          </tr>
+          <!-- Combined Conditions for absenceCount and dawam -->
+          <tr *ngIf="(dawam == null || dawam == '') || absenceCount > 3" style="color: red; font-weight: bold;">
+            <td class="border border-white px-2 py-0.5 text-[11px]" colspan="3">
+              <ng-container *ngIf="(dawam == null || dawam == '') && absenceCount > 3">
+                راجع شؤون الموظفين / الموظف غير مرتبط بدوام
+              </ng-container>
+              <ng-container *ngIf="(dawam == null || dawam == '') && absenceCount <= 3">
+                الموظف غير مرتبط بدوام
+              </ng-container>
+              <ng-container *ngIf="(dawam != null && dawam != '') && absenceCount > 3">
+                راجع شؤون الموظفين
+              </ng-container>
+            </td>
+          </tr>
+        </table>
+      </div>
+  
+      <!-- Compact Alerts -->
+      <div class="flex-shrink-0 flex flex-col justify-center gap-1 px-1 min-w-[150px]">
+        <div *ngIf="backupload != null" class="bg-danger text-white text-[10px] rounded-md px-2 py-1 flex items-center gap-1">
+          <i class="fas fa-location text-xs"></i>
+          <span [translate]="'name'" [translateParams]="{ ar: 'تنبيه بضرورة إجراء نسخ احتياطي', en: 'You have a backup order' }"></span>
         </div>
       </div>
     </div>
   </div>
+  
   <!--  -->
   <div class="shaped-tab box relative">
     <div class="info">
