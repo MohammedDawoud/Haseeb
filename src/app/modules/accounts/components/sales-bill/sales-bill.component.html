@@ -2630,7 +2630,7 @@
         mat-table
         [dataSource]="serviceListDataSource"
         class="mat-elevation-z8 table table-responsive table-striped table-bordered text-center"
-        style="vertical-align: middle; font-size: 14px"
+        style="vertical-align: middle; font-size: 14px;min-width: fit-content;"
       >
         <!-- Name Column -->
         <ng-container matColumnDef="name">
@@ -6077,7 +6077,7 @@
         <button
           class="btn text-white"
           style="background-color: var(--base-color)"
-          (click)="SaveVoucher(modal)"
+          (click)="open(SaveReceiptSVoucherConfirmModal,null,'SaveReceiptSVoucherConfirmModal',null,null, modal)"
           [disabled]="disableButtonSave_Voucher ||
             this.ReceiptVoucherForm.controls['recipientName'].value == null ||
             this.ReceiptVoucherForm.controls['AmountOf'].value == null ||
@@ -6814,3 +6814,36 @@
       </div>
     </div>
   </ng-template>
+  <!-- SaveReceiptSVoucherConfirmModal -->
+<ng-template #SaveReceiptSVoucherConfirmModal let-modal>
+  <div
+    class="modal-body text-center"
+    style="background-color: #cdcdcd !important"
+  >
+    <p
+      [translate]="'name'"
+      [translateParams]="{
+        ar: 'هل تريد الحفظ ',
+        en: 'Are you sure to save ?'
+      }"
+    ></p>
+    <div class="flex gap-2 justify-center mt-3">
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="SaveVoucher(); modal.dismiss()"
+      >
+        {{ "Yes" | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "No" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>

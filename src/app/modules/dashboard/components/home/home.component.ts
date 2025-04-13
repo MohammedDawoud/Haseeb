@@ -5346,7 +5346,7 @@ debugger
         }
         this.InvPrintData?.voucherDetailsVM_VD?.forEach((element: any) => {
           DiscountValue_Det_Total_withqty =
-            DiscountValue_Det_Total_withqty + element.discountValue_Det ?? 0;
+            DiscountValue_Det_Total_withqty + (element.discountValue_Det ?? 0);
         });
 
         this.CustomData.DiscPer = parseFloat(
@@ -5453,7 +5453,7 @@ debugger
         }
         this.InvPrintData?.voucherDetailsVM_VD?.forEach((element: any) => {
           DiscountValue_Det_Total_withqty =
-            DiscountValue_Det_Total_withqty + element.discountValue_Det ?? 0;
+            DiscountValue_Det_Total_withqty + (element.discountValue_Det ?? 0);
         });
 
         this.CustomData.DiscPer = parseFloat(

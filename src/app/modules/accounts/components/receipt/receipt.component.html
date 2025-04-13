@@ -2622,7 +2622,7 @@
           *ngIf="userG?.userPrivileges.includes(13100307)"
           class="btn text-white"
           style="background-color: var(--base-color)"
-          (click)="saveandpostvoucher(1, modal)"
+          (click)="open(SaveReceiptSVoucherConfirmModal,null,'SavePostReceiptSVoucherConfirmModal',null, modal)"
         >
           {{ "Save_CarryOver" | translate }}
         </button>
@@ -2643,7 +2643,7 @@
         <button
           class="btn text-white"
           style="background-color: var(--base-color)"
-          (click)="saveandpostvoucher(2, modal)"
+          (click)="open(SaveReceiptSVoucherConfirmModal,null,'SaveReceiptSVoucherConfirmModal',null, modal)"
         >
           {{ "save" | translate }}
         </button>
@@ -4123,5 +4123,38 @@
     >
       {{ "No" | translate }}
     </button>
+  </div>
+</ng-template>
+<!-- SaveReceiptSVoucherConfirmModal -->
+<ng-template #SaveReceiptSVoucherConfirmModal let-modal>
+  <div
+    class="modal-body text-center"
+    style="background-color: #cdcdcd !important"
+  >
+    <p
+      [translate]="'name'"
+      [translateParams]="{
+        ar: 'هل تريد الحفظ ',
+        en: 'Are you sure to save ?'
+      }"
+    ></p>
+    <div class="flex gap-2 justify-center mt-3">
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="saveandpostvoucher(); modal.dismiss()"
+      >
+        {{ "Yes" | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "No" | translate }}
+      </button>
+    </div>
   </div>
 </ng-template>

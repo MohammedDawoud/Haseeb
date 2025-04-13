@@ -608,6 +608,7 @@ export class AddSearchComponent implements OnInit {
   publicidRow: any;
 
   InvoiceModelPublic: any;
+  savemodal:any;
 
   open(content: any, data?: any, type?: any, idRow?: any, model?: any) {
     this.publicidRow = 0;
@@ -615,7 +616,7 @@ export class AddSearchComponent implements OnInit {
     if (idRow != null) {
       this.selectedServiceRow = idRow;
     }
-    if (data) {
+    if (data && type!='savecust') {
       this.modalDetails = data;
       this.emailModalDetils = data;
       this.modalSMSDetails = data;
@@ -661,6 +662,9 @@ export class AddSearchComponent implements OnInit {
       }
     } else if (type == 'serviceDetails' && data) {
       this.GetServicesPriceByParentId(data);
+    }
+    if(type=='savecust'){
+      this.savemodal=data;
     }
 
     if (type == 'addproject') {
@@ -831,6 +835,7 @@ export class AddSearchComponent implements OnInit {
           this.translate.instant(result.reasonPhrase),
           this.translate.instant('Message')
         );
+        this.savemodal.dismiss();
         this.resetSMsModal();
         modal?.dismiss();
       } else {
@@ -897,7 +902,7 @@ export class AddSearchComponent implements OnInit {
   }
   disableButtonSave_Customer = false;
 
-  addCustomer() {
+  addCustomer(modal:any) {
     // this.ngbModalService.dismissAll();
     // this.ngbModalService.open(this.optionsModal, { size: 'xl',backdrop : 'static',keyboard : false });
     // //var branname=this.load_BranchUserId.filter((a: { id: any; })=>a.id==this.modalDetails.branchId)[0].name;
@@ -979,6 +984,7 @@ export class AddSearchComponent implements OnInit {
           this.translate.instant(result.reasonPhrase),
           this.translate.instant('Message')
         );
+        modal.dismiss();
         this.decline();
         this.getData();
         this.ngbModalService.dismissAll();
@@ -993,6 +999,7 @@ export class AddSearchComponent implements OnInit {
           )[0].name;
           this.GetCustomersByCustomerId_Cust(result.returnedParm, branname);
         }
+        this.savemodal.dismiss();
       } else {
         this.toast.error(result.reasonPhrase, 'رسالة');
       }
@@ -1456,6 +1463,7 @@ export class AddSearchComponent implements OnInit {
       this.SaveCustomerFiles();
       this.toast.success('تم الحفظ', 'رسالة');
       modal?.dismiss();
+      this.savemodal.dismiss();
       this.data.documents = [];
       //this.getFiles();
     }
@@ -1567,6 +1575,7 @@ export class AddSearchComponent implements OnInit {
           this.translate.instant(result.reasonPhrase),
           this.translate.instant('Message')
         );
+        this.savemodal.dismiss();
         this.control.clear();
         modal?.dismiss();
         this.resetEmailModal();
@@ -5640,6 +5649,7 @@ export class AddSearchComponent implements OnInit {
           this.control.clear();
           this.selection.clear();
           this.modal?.hide();
+          this.savemodal.dismiss();
         } else {
           this.toast.error(this.translate.instant(result.reasonPhrase),this.translate.instant("Message"));
         }
@@ -5722,6 +5732,7 @@ export class AddSearchComponent implements OnInit {
       }
       this.service.SaveCustomerMail(formData).subscribe((result) => {
         if (result.statusCode == 200) {
+          this.savemodal.dismiss();
           this.toast.success(
             this.translate.instant(result.reasonPhrase),
             this.translate.instant('Message')
