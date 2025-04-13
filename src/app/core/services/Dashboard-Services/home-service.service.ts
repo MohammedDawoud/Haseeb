@@ -1000,4 +1000,8 @@ export class HomeServiceService {
   ActiveYear() {
     return this.http.get<any>(this.apiEndPoint + 'Home/ActiveYear');
   }
+
+  GetHostingExpireAlert() {
+    return this.http.get<any>(this.apiEndPoint + 'Home/GetHostingExpireAlert');
+  }
 }

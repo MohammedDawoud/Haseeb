@@ -54,51 +54,56 @@
     </div>
   </div>
   <!--  -->
-
-  <div class="w-full overflow-hidden">
-    <div class="w-full flex gap-3 flex-nowrap overflow-x-auto">
-      <!-- Maximized Cards (wider) -->
+  <div class="w-full overflow-x-auto">
+    <div class="flex gap-3 flex-nowrap">
+      <!-- Card 1 -->
       <div
         (click)="open(followLoanModal, null, null, null, 'client')"
-        class="flex-shrink-0 flex min-w-[160px] gap-2 items-center bg-orange-400 text-white rounded-2xl p-3"
+        class="flex min-w-[220px] gap-2 items-center bg-orange-400 text-white rounded-2xl p-3"
+        style="cursor: pointer"
       >
         <img class="w-5" src="assets/icons/moneybag@2x.png" alt="" />
         <span class="text-sm" [translate]="'name'" [translateParams]="{ ar: 'طلب سلفة', en: 'Predecessor Application' }"></span>
       </div>
   
+      <!-- Card 2 -->
       <div
         (click)="open(followVacationsModal, null, null, null, 'vacationclient')"
-        class="flex-shrink-0 flex min-w-[160px] gap-2 items-center bg-cyan-600 text-white rounded-2xl p-3"
+        class="flex min-w-[220px] gap-2 items-center bg-cyan-600 text-white rounded-2xl p-3"
+        style="cursor: pointer"
       >
         <img class="w-5" src="assets/icons/on-holiday-line@2x.png" alt="" />
         <span class="text-sm" [translate]="'name'" [translateParams]="{ ar: 'طلب اجازة', en: 'Vacation Application' }"></span>
       </div>
   
+      <!-- Card 3 -->
       <div
         (click)="open(Reports, null, null, null, 'openreport')"
-        class="flex-shrink-0 flex min-w-[160px] gap-2 items-center bg-zinc-600 text-white rounded-2xl p-3"
+        class="flex min-w-[220px] gap-2 items-center bg-zinc-600 text-white rounded-2xl p-3"
+        style="cursor: pointer"
       >
         <img class="w-5" src="assets/icons/report@2x.png" alt="" />
         <span class="text-sm" [translate]="'name'" [translateParams]="{ ar: 'التقارير', en: 'Reports' }"></span>
       </div>
   
+      <!-- Card 4 -->
       <div
         (click)="open(supervision, null, null, null, 'supervisions')"
-        class="flex-shrink-0 flex min-w-[160px] gap-2 items-center bg-emerald-600 text-white rounded-2xl p-3"
+        class="flex min-w-[220px] gap-2 items-center bg-emerald-600 text-white rounded-2xl p-3"
+        style="cursor: pointer"
       >
         <img class="w-5" src="assets/icons/airline-manage-gates@2x.png" alt="" />
         <span class="text-sm" [translate]="'name'" [translateParams]="{ ar: 'طلعات الاشراف', en: 'Supervisions' }"></span>
       </div>
   
       <!-- Table Box -->
-      <div class="flex-shrink-0 flex bg-blue-600 text-white rounded-2xl p-2 min-w-[300px] items-center">
-        <table class="table-fixed text-center text-xs border-separate border-spacing-1">
+      <div class="flex min-w-[300px] bg-blue-600 text-white rounded-2xl p-2 items-center">
+        <table class="table-fixed text-center text-xs border-separate border-spacing-1 w-full">
           <tr>
             <td class="border border-white px-5 py-0.5" style="color: red; font-weight: bold;">غياب</td>
-            <td class="border border-white px-5 py-0.5">{{monthName}}</td>
-            <td class="border border-white px-2 py-0.5">{{absenceCount}}</td>
+            <td class="border border-white px-5 py-0.5">{{ monthName }}</td>
+            <td class="border border-white px-2 py-0.5">{{ absenceCount }}</td>
           </tr>
-          <!-- Combined Conditions for absenceCount and dawam -->
           <tr *ngIf="(dawam == null || dawam == '') || absenceCount > 3" style="color: red; font-weight: bold;">
             <td class="border border-white px-2 py-0.5 text-[11px]" colspan="3">
               <ng-container *ngIf="(dawam == null || dawam == '') && absenceCount > 3">
@@ -115,8 +120,13 @@
         </table>
       </div>
   
-      <!-- Compact Alerts -->
-      <div class="flex-shrink-0 flex flex-col justify-center gap-1 px-1 min-w-[150px]">
+      <!-- Alerts -->
+      <div class="flex flex-col justify-center gap-1 px-1 min-w-[200px]">
+        <div *ngIf="Hosting_Message" class="bg-danger text-white text-[10px] rounded-md px-2 py-1 flex items-center gap-1">
+          <i class="fas fa-location text-xs"></i>
+          <span>{{ Hosting_Message }}</span>
+        </div>
+  
         <div *ngIf="backupload != null" class="bg-danger text-white text-[10px] rounded-md px-2 py-1 flex items-center gap-1">
           <i class="fas fa-location text-xs"></i>
           <span [translate]="'name'" [translateParams]="{ ar: 'تنبيه بضرورة إجراء نسخ احتياطي', en: 'You have a backup order' }"></span>
@@ -124,6 +134,7 @@
       </div>
     </div>
   </div>
+  
   
   <!--  -->
   <div class="shaped-tab box relative">

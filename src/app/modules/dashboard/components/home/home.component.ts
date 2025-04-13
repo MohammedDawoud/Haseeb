@@ -2248,6 +2248,7 @@ console.log(data.absenceData);
 
     this.ActiveYear();
     this.GetOrganizationData();
+    this.GetHostingExpireAlert();
 
     //this.getALERTData();
 
@@ -6726,4 +6727,18 @@ debugger
       event.pageSize
     );
   }
+
+   ///////////////////////////////////////////expire server date ////////////////////////////////////////////////
+   Hosting_Message:any=null;
+   GetHostingExpireAlert() {
+     this._homesernice.GetHostingExpireAlert().subscribe((data) => {
+       if(data !=null){
+         //debugger
+       this.Hosting_Message = data.message ;
+       }
+     });
+   }
+
 }
+
+
