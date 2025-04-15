@@ -1169,8 +1169,6 @@ export class CustomerContractsAddMainComponent implements OnInit {
     ContractObj.GregorianHijriPay = this.WizardData.georgianOrhigri;
     ContractObj.PayType = this.WizardData.PaymentType;
 
-    // console.log(ContractObj);
-    // return;
 
     this._contractService.GenerateCustomerPayments(ContractObj).subscribe((result: any)=>{
       debugger
@@ -1531,9 +1529,6 @@ export class CustomerContractsAddMainComponent implements OnInit {
         FollowProj.ConfirmRate=false;
         this.FollowProjList.push(FollowProj);
       });
-
-      console.log("this.FollowProjList");
-      console.log(this.FollowProjList);
       this.FollowProjListData.FollowProj=this.FollowProjList;
 
       var obj=this.FollowProjListData;

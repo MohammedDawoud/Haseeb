@@ -876,8 +876,6 @@ export class IncomeListComponent implements OnInit {
   @ViewChild('DetailsMonitorModal') DetailsMonitorModal: any;
 
   GetDetailsMonitor(item: any, id: any) {
-    console.log(item);
-    console.log(id);
     debugger;
     if (
       this.data.filter.DateFrom_P != null &&
@@ -1078,11 +1076,9 @@ export class IncomeListComponent implements OnInit {
       .GetIncomeStatmentDGVLevelsdetails(obj)
       .subscribe(
         (data: any) => {
-          console.log("data.result");
-          console.log(data.result);
+
           data.result.forEach((element: any) => {
-            console.log("element");
-            console.log(element);
+
 
 
             debugger

@@ -171,8 +171,6 @@ showTable : boolean = false ;
   onMonthSelect(date: Date): void {
     const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
     const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-    console.log('First Day of Month:', firstDay);
-    console.log('Last Day of Month:', lastDay);
     this.data.filter.startdate = firstDay;
         this.data.filter.enddate = lastDay;
 

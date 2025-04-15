@@ -324,8 +324,6 @@ export class SalesReturnComponent implements OnInit{
   GetInvoicePrint(obj:any,TempCheck:any){
     this.resetCustomData();
     this._printreportsService.ChangeInvoice_PDF(obj.invoiceId,TempCheck).subscribe(data=>{
-      console.log("GetInvoicePrint");
-      console.log(data);
       this.InvPrintData=data;
       this.CustomData.PrintType=TempCheck;
       if(TempCheck==29)this.CustomData.PrintTypeName='اشعار دائن';
