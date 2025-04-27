@@ -582,10 +582,22 @@ export class CatchReceiptComponent implements OnInit {
   CustCheckPage: any = null;
   modalType: any = 'Create';
   hijritype: boolean = false;
-  open(content: any, data?: any, type?: any, status?: any) {
+  ReceiptVoucherModelPublic: any;
+  ReceiptSaveType: any=1;
+
+
+  open(content: any, data?: any, type?: any, status?: any, model?: any) {
     if (data && type == 'edit') {
       this.modalDetails = data;
       this.modalDetails['id'] = 1;
+    }
+    if (type == 'SaveReceiptVoucherConfirmModal') {
+      this.ReceiptVoucherModelPublic = model;
+      this.ReceiptSaveType=1;
+    }
+    if (type == 'SavePostReceiptVoucherConfirmModal') {
+      this.ReceiptVoucherModelPublic = model;
+      this.ReceiptSaveType=2;
     }
     this.hijritype = false;
     if (type == 'ReceiptVoucherwithoutCustomerModal') {
@@ -1282,7 +1294,7 @@ export class CatchReceiptComponent implements OnInit {
   submitted: boolean = false;
   disableButtonSave_Voucher = false;
 
-  SaveVoucher(modal: any, PostVouchers?: any) {
+  SaveVoucher() {
     if (this.R_theInvoice != null && this.R_theInvoice != 0) {
       if (
         this.RemainingInvoiceValue <
@@ -1396,7 +1408,7 @@ export class CatchReceiptComponent implements OnInit {
           if (this.uploadedFiles.length > 0) {
             this.savefile(data.returnedParm);
           }
-          if (PostVouchers == 'PostVouchers') {
+          if (this.ReceiptSaveType == 2) {
             this.PostVouchers(data.returnedParm);
           }
           debugger;
@@ -1407,7 +1419,7 @@ export class CatchReceiptComponent implements OnInit {
             this.translate.instant(data.reasonPhrase),
             this.translate.instant('Message')
           );
-          modal.dismiss();
+          this.ReceiptVoucherModelPublic.dismiss();
           this.GetAllVouchers();
           this.submitted == false;
         } else {

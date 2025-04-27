@@ -324,8 +324,6 @@ export class SalesReturnComponent implements OnInit{
   GetInvoicePrint(obj:any,TempCheck:any){
     this.resetCustomData();
     this._printreportsService.ChangeInvoice_PDF(obj.invoiceId,TempCheck).subscribe(data=>{
-      console.log("GetInvoicePrint");
-      console.log(data);
       this.InvPrintData=data;
       this.CustomData.PrintType=TempCheck;
       if(TempCheck==29)this.CustomData.PrintTypeName='اشعار دائن';
@@ -347,7 +345,7 @@ export class SalesReturnComponent implements OnInit{
         TotalInvWithoutDisc = this.InvPrintData?.invoicesVM_VD?.invoiceValue;
       }
       this.InvPrintData?.voucherDetailsVM_VD?.forEach((element: any) => {
-        DiscountValue_Det_Total_withqty = DiscountValue_Det_Total_withqty + (element.discountValue_Det) ?? 0;
+        DiscountValue_Det_Total_withqty = DiscountValue_Det_Total_withqty + (element.discountValue_Det ?? 0);
       });
 
       this.CustomData.DiscPer=parseFloat(((DiscountValue_Det_Total_withqty * 100) / ((TotalInvWithoutDisc + DiscountValue_Det_Total_withqty))).toString()).toFixed(2);

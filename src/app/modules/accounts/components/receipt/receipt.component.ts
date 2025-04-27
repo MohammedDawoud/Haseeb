@@ -985,7 +985,7 @@ export class ReceiptComponent implements OnInit {
     });
   }
 
-  saveandpostvoucher(type: any, modal: any) {
+  saveandpostvoucher() {
     debugger;
     console.log('voucher', this.vouchermodel);
 
@@ -1086,20 +1086,20 @@ export class ReceiptComponent implements OnInit {
 
     VoucherObj.voucherDetails = VoucherDetailsList;
     console.log(VoucherObj);
-    if (type == 1) {
+    if (this.ReceiptSSaveType == 2) {
       this._payvoucherservice.SaveandPostVoucherP(VoucherObj).subscribe(
         (data) => {
           if (this.uploadedFiles.length > 0) {
             this.savefile(data.returnedParm);
             this.GetAllVouchersLastMonth();
-            modal.dismiss();
+            this.ReceiptSVoucherModelPublic.dismiss();
             this.toast.success(
               this.translate.instant(data.reasonPhrase),
               this.translate.instant('Message')
             );
           } else {
             this.GetAllVouchersLastMonth();
-            modal.dismiss();
+            this.ReceiptSVoucherModelPublic.dismiss();
 
             this.toast.success(
               this.translate.instant(data.reasonPhrase),
@@ -1126,7 +1126,7 @@ export class ReceiptComponent implements OnInit {
           if (this.uploadedFiles.length > 0) {
             this.savefile(data.returnedParm);
             this.GetAllVouchersLastMonth();
-            modal.dismiss();
+            this.ReceiptSVoucherModelPublic.dismiss();
 
             this.toast.success(
               this.translate.instant(data.reasonPhrase),
@@ -1134,7 +1134,7 @@ export class ReceiptComponent implements OnInit {
             );
           } else {
             this.GetAllVouchers();
-            modal.dismiss();
+            this.ReceiptSVoucherModelPublic.dismiss();
 
             this.toast.success(
               this.translate.instant(data.reasonPhrase),
@@ -2099,8 +2099,18 @@ export class ReceiptComponent implements OnInit {
   voucheriddeleted: any;
   popuptype = 0;
   invoiverefdelted: any;
-  open(content: any, data?: any, type?: any, status?: any) {
+  ReceiptSVoucherModelPublic: any;
+  ReceiptSSaveType: any=1;
+  open(content: any, data?: any, type?: any, status?: any, model?: any) {
     debugger;
+    if (type == 'SaveReceiptSVoucherConfirmModal') {
+      this.ReceiptSVoucherModelPublic = model;
+      this.ReceiptSSaveType=1;
+    }
+    if (type == 'SavePostReceiptSVoucherConfirmModal') {
+      this.ReceiptSVoucherModelPublic = model;
+      this.ReceiptSSaveType=2;
+    }
     if (data && type == 'edit') {
       this.modalDetails = data;
       this.modalDetails['id'] = 1;

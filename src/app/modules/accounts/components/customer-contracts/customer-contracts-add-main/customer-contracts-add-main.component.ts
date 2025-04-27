@@ -58,8 +58,8 @@ export class CustomerContractsAddMainComponent implements OnInit {
     }
 
     closeResult = '';
-
-    open(content: any, data?: any, type?: any, idRow?: any) {
+    stepperPub:any;
+    open(content: any, data?: any, type?: any, idRow?: any, model?: any) {
       // if(data!=null)
       // {
       //   this.ContractRowSelected=data;
@@ -85,7 +85,9 @@ export class CustomerContractsAddMainComponent implements OnInit {
         this.GetAllServicesPrice_ContractNew();
       }
 
-
+      if (type == 'SaveContractConfirmModal') {
+        this.stepperPub = model;
+      }
 
       this.modalService
         .open(content, {
@@ -864,7 +866,7 @@ export class CustomerContractsAddMainComponent implements OnInit {
 
     @ViewChild('MergeInvoiceDataModal') MergeInvoiceDataModal: any;
 
-    saveContractbtn(stepper: MatStepper){
+    saveContractbtn(){
       var InvoiceAmount=(this.FormGroup02.controls['InvoiceAmount'].value??0);
       var total_amount=(this.modalDetailsContractNew.total_amount??0);
 
@@ -875,7 +877,7 @@ export class CustomerContractsAddMainComponent implements OnInit {
       }
       if(this.ContractModalCustom.InvoiceId==null)
       {
-        this.ConfirmMergeInvoice(1,stepper);
+        this.ConfirmMergeInvoice(1,this.stepperPub);
       }
       else
       {
@@ -1167,8 +1169,6 @@ export class CustomerContractsAddMainComponent implements OnInit {
     ContractObj.GregorianHijriPay = this.WizardData.georgianOrhigri;
     ContractObj.PayType = this.WizardData.PaymentType;
 
-    // console.log(ContractObj);
-    // return;
 
     this._contractService.GenerateCustomerPayments(ContractObj).subscribe((result: any)=>{
       debugger
@@ -1529,9 +1529,6 @@ export class CustomerContractsAddMainComponent implements OnInit {
         FollowProj.ConfirmRate=false;
         this.FollowProjList.push(FollowProj);
       });
-
-      console.log("this.FollowProjList");
-      console.log(this.FollowProjList);
       this.FollowProjListData.FollowProj=this.FollowProjList;
 
       var obj=this.FollowProjListData;

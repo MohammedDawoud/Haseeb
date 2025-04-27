@@ -1108,7 +1108,6 @@ downloadFileUrl(file: any) {
   };
   modal?: BsModalRef;
   sendEMAIL(sms: any) {
-    console.log(sms);
     this.control.clear();
     this.modal?.hide();
   }

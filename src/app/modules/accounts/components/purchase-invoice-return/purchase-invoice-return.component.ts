@@ -543,7 +543,7 @@ export class PurchaseInvoiceReturnComponent implements OnInit{
         TotalInvWithoutDisc = this.InvPrintData?.invoicesVM_VD?.invoiceValue;
       }
       this.InvPrintData?.voucherDetailsVM_VD?.forEach((element: any) => {
-        DiscountValue_Det_Total_withqty = DiscountValue_Det_Total_withqty + (element.discountValue_Det) ?? 0;
+        DiscountValue_Det_Total_withqty = DiscountValue_Det_Total_withqty + (element.discountValue_Det?? 0) ;
       });
 
       this.CustomData.DiscPer=parseFloat(((DiscountValue_Det_Total_withqty * 100) / ((TotalInvWithoutDisc + DiscountValue_Det_Total_withqty))).toString()).toFixed(2);
