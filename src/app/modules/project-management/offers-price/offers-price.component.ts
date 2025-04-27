@@ -242,6 +242,20 @@ export class OffersPriceComponent implements OnInit {
     {
       this.dataSource.data = this.dataSource.data.filter((d: { userId: any }) => d.userId == this.dataSearch.filter.salesEngineerId);
     }
+
+
+    if(this.dataSearch.filter.Sstatus!=null && this.dataSearch.filter.Sstatus ==1)
+      {
+        this.dataSource.data = this.dataSource.data.filter((d: { offerStatus: any,customerStatus:any }) => d.offerStatus == 0 && d.customerStatus==0);
+      }
+      if(this.dataSearch.filter.Sstatus!=null && this.dataSearch.filter.Sstatus ==2)
+        {
+          this.dataSource.data = this.dataSource.data.filter((d: { offerStatus: any,customerStatus:any }) => d.offerStatus == 1 && d.customerStatus==0);
+        }
+        if(this.dataSearch.filter.Sstatus!=null && this.dataSearch.filter.Sstatus ==3)
+          {
+            this.dataSource.data = this.dataSource.data.filter((d: { offerStatus: any,customerStatus:any }) => d.offerStatus !=0 && d.customerStatus==1);
+          }
    
   }
 
