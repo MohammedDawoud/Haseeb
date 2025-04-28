@@ -1082,6 +1082,10 @@ export class UsersComponent implements OnInit {
       IPAddress: new FormControl(''),
       Subscrip_Domain: new FormControl(false),
       Subscrip_Hosting: new FormControl(false),
+      ServerStorage: new FormControl(''),
+      Cost: new FormControl(''),
+      Tax: new FormControl(''),
+      TotalCost: new FormControl(''),
     });
   }
   isconnected: any = false;
@@ -1119,6 +1123,12 @@ export class UsersComponent implements OnInit {
       licence.subscrip_Hosting
     );
 
+
+    this.licenceForm.controls['ServerStorage'].setValue(licence.serverStorage);
+    this.licenceForm.controls['Cost'].setValue(licence.cost);
+    this.licenceForm.controls['Tax'].setValue(licence.tax);
+    this.licenceForm.controls['TotalCost'].setValue(licence.totalCost);
+
     if (licence.g_UID != null && licence.g_UID != '') {
       this.isconnected = true;
     } else {
@@ -1146,6 +1156,11 @@ export class UsersComponent implements OnInit {
       Type: this.licenceForm.controls['Type'].value,
       Subscrip_Domain: this.licenceForm.controls['Subscrip_Domain'].value,
       Subscrip_Hosting: this.licenceForm.controls['Subscrip_Hosting'].value,
+
+      ServerStorage: this.licenceForm.controls['ServerStorage'].value,
+      Cost: this.licenceForm.controls['Cost'].value,
+      Tax: this.licenceForm.controls['Tax'].value,
+      TotalCost: this.licenceForm.controls['TotalCost'].value,
     };
     this._sysServicesService.SaveLicence(prames).subscribe(
       (data) => {
@@ -1191,6 +1206,8 @@ export class UsersComponent implements OnInit {
       Type: this.licenceForm.controls['Type'].value,
       Subscrip_Domain: this.licenceForm.controls['Subscrip_Domain'].value,
       Subscrip_Hosting: this.licenceForm.controls['Subscrip_Hosting'].value,
+      TotalCost: this.licenceForm.controls['TotalCost'].value,
+      ServerStorage: this.licenceForm.controls['ServerStorage'].value,
     };
     this._sysServicesService.SaveLabaikLicences(prames).subscribe(
       (data) => {
