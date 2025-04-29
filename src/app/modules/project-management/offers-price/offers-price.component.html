@@ -46,6 +46,24 @@
           (keyup)="applyFilterGrid($event)"
         />
       </div>
+
+      <div class="max-w-xs flex-grow">
+        <label class="col-form-label"> {{ "حالة العرض" | translate }}</label>
+        <ng-select
+          #dawam
+          class="w-full p-0"
+          name="dawam"
+          [(ngModel)]="dataSearch.filter.Sstatus"
+          (ngModelChange)="RefreshData()"
+          placeholder="{{ 'Chose' | translate }}"
+            [ngModelOptions]="{ standalone: true }"
+                    [dropdownPosition]="'bottom'"
+        >
+          <ng-option [value]="1"> عروض لم تقدم للعميل</ng-option>
+          <ng-option [value]="2"> عروض تم تقديمها للعميل  </ng-option>
+          <ng-option [value]="3">  تم الموافقة علي عرض السعر </ng-option>
+        </ng-select>
+      </div>
     </div>
 
     <div class="btns">

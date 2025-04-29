@@ -200,7 +200,7 @@
               class="invoice-title uppercase text-center"
               [translate]="'name'"
               [translateParams]="{
-                ar: 'بداية اتفقاقية الدعم الفني',
+                ar: 'بداية اتفاقية الدعم الفني',
                 en: 'Suport Start Date'
               }"
             ></th>
@@ -216,7 +216,7 @@
               class="invoice-title uppercase text-center"
               [translate]="'name'"
               [translateParams]="{
-                ar: 'بريد المسئول	',
+                ar: ' الايميل المسجل لإرسال الفواتير	',
                 en: 'Email'
               }"
             ></th>
@@ -224,7 +224,7 @@
               class="invoice-title uppercase text-center"
               [translate]="'name'"
               [translateParams]="{
-                ar: 'جوال		',
+                ar: 'الجوال المسجل لإرسال الفواتير		',
                 en: 'Mobile'
               }"
             ></th>
@@ -3448,15 +3448,27 @@
             </div>
           </div>
 
-          <div class="form-group">
-            <label class="text-right col-form-label block"> IP SERVER</label>
-            <input
-              class="form-control"
-              type="text"
-              formControlName="IPAddress"
-              autocomplete="off"
-            />
-          </div>
+          <div class="grid md:grid-cols-2 gap-3">
+            <div class="form-group">
+              <label class="text-right col-form-label block"> IP SERVER</label>
+              <input
+                class="form-control"
+                type="text"
+                formControlName="IPAddress"
+                autocomplete="off"
+              />
+            </div>
+  
+            <div class="form-group">
+              <label class="text-right col-form-label block"> مساحة السيرفر الخاصة بالعميل </label>
+              <input
+                class="form-control"
+                type="text"
+                formControlName="ServerStorage"
+                autocomplete="off"
+              />
+            </div>
+  </div>
         </div>
 
         <div class="grid md:grid-cols-2 gap-3">
@@ -3483,6 +3495,47 @@
               [bsConfig]="{ adaptivePosition: true }"
             />
           </div>
+        </div>
+
+
+        <div class="grid md:grid-cols-2 gap-3">
+          <div class="grid md:grid-cols-2 gap-3">
+            <div class="form-group">
+              <label class="text-right col-form-label block">
+                التكلفة التشغيلية </label
+              >
+              <input
+                class="form-control"
+                type="text"
+                formControlName="Cost"
+                autocomplete="off"
+              />
+            </div>
+            <div class="form-group">
+              <label class="text-right col-form-label block">
+                الضريبة  </label
+              >
+              <input
+                class="form-control"
+                type="text"
+                formControlName="Tax"
+                autocomplete="off"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="text-right col-form-label block"> الإجمالــي </label>
+            <input
+              class="form-control"
+              type="text"
+              formControlName="TotalCost"
+              autocomplete="off"
+            />
+          </div>
+
+       
+
         </div>
 
         <div class="grid md:grid-cols-2 gap-3">
