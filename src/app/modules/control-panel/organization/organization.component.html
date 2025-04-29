@@ -1080,6 +1080,14 @@
                         >
                           <i class="fa-solid fa-list"></i>
                         </button>
+                        <button
+                        type="button"
+                        class="t-invoice-change btn btn-outline-danger btn-sm waves-effect"
+                        title="تغيير بادئة الفاتورة"
+                        data-original-title="تغيير بادئة الفاتورة"
+                        (click)="open(InvoiceStartCodeModal, element, 'InvoiceStartCodeModal')">
+                        <i class="fa-solid fa-arrow-rotate-right"></i>
+                      </button>
                       </div>
                     </td>
                   </ng-container>
@@ -6933,6 +6941,107 @@ this.ContactBranchesForm.controls['BranchCS'].value.length >= 10&& -->
         {{ "Yes" | translate }}
       </button>
       <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "No" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- InvoiceStartCodeModal -->
+<ng-template #InvoiceStartCodeModal let-modal>
+  <div class="modal-body text-center">
+    <p
+      [translate]="'name'"
+      [translateParams]="{
+        ar: 'هل تريد بالتأكيد تغيير بادئة الفاتورة ؟',
+        en: 'Do you want to confirm to change Invoice Code Prefix?'
+      }"
+    ></p>
+
+
+    <div  class="col-sm-4 col-xl-3 mb-3">
+      <div class="form-group">
+        <label
+          for="InvoiceStartCode"
+          class="text-right col-form-label block"
+        >
+          {{ "بادئة الفاتورة للفرع" | translate }}
+        </label>
+        <input style="direction: ltr;"
+          name="InvoiceStartCode"
+          placeholder="{{ 'بادئة الفاتورة للفرع' | translate }}"
+          ngModel
+          class="form-control"
+          #InvoiceStartCode="ngModel"
+          required
+          minlength="1"
+          [(ngModel)]="InvoicePrefix.InvoiceStartCode"
+          [ngModelOptions]="{ standalone: true }"
+          autocomplete="off"/>
+      </div>
+    </div>
+
+    <div class="loginChangeInvoice row">
+      <div class="col-md-4" style="padding-top: 1%;">
+        فضلا أدخل كلمة المرور الخاصة بك لتأكيد التغيير
+      </div>
+      <div class="col-md-8">
+        <img src="/assets/images/ic_lock_open_24px.png" alt="lock icon" />
+  
+        <input
+          name="passwordPro"
+          placeholder="{{ 'password' | translate }}"
+          ngModel
+          #passwordPro="ngModel"
+          required
+          minlength="1"
+          [(ngModel)]="passwordInvoice"
+          (ngModelChange)="onChangepassword($event,modal)"
+          autocomplete="off"
+
+          [disabled]="passwordInvoiceDisabled"
+        />
+        <!-- <i
+          class="fa fa-{{ textEye ? 'eye' : 'eye-slash' }}"
+          (click)="textEye = !textEye"
+        ></i> -->
+        <span
+          class="text-danger"
+          *ngIf="passwordPro.hasError('required') && passwordPro.touched"
+          >{{ "requiredError" | translate }}</span
+        >
+        <span
+          class="text-danger"
+          *ngIf="
+          passwordPro.hasError('minlength') &&
+            !passwordPro.hasError('required') &&
+            passwordPro.touched
+          "
+          >{{ "passwordError" | translate }}</span
+        >
+      </div>
+    </div>
+
+    <p>سيكون رقم الفاتورة بهذا المنظر للتأكيد قبل الحفظ</p>
+    <hr>
+    <p
+      style="direction: ltr;text-align: center;color: red;font-weight: bold;font-size: 23px;" class="p-1 bg-red-100">
+      <span>{{ InvoicePrefix.InvoiceStartCode }}{{'000001'}}</span>
+    </p>
+    <hr>
+    <p
+      style="text-align: center;color: red;font-weight: bold;" class="p-1 bg-red-100">
+      <span>{{ "ملاحظة: يجب عليك تغيير بادئة الفاتورة كل أول سنه مالية فقط" | translate }}</span>
+    </p>
+
+    <div class="flex gap-2 justify-center mt-3">
+      <button
+      [disabled]="passwordInvoiceDisabled"
         type="button"
         (click)="modal.dismiss()"
         mat-raised-button

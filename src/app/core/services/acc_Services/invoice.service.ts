@@ -154,7 +154,7 @@ export class InvoiceService {
     return this.http.get<any>(this.apiEndPoint+'Branches/GetBranchByBranchIdCheck');
   }
   GenerateVoucherNumber(Type:any) {
-    var url=`${environment.apiEndPoint}Voucher/GenerateVoucherNumber?&Type=${Type}`;
+    var url=`${environment.apiEndPoint}Voucher/GenerateVoucherNumberNew?&Type=${Type}`;
     return this.http.get<any>(url);
   }
   GetCustomersByCustomerId(CustomerId:any):Observable<any> {

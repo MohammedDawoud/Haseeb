@@ -852,6 +852,7 @@
 
                     <td>
                       <button *ngIf="item.isPaid==false"
+                      [disabled]="!TaxCodeCheck"
                         style="background-color: green !important"
                         class="btn text-white"
                         (click)="open(NewInvoiceModal, item, 'addInvoiceProject')">

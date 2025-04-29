@@ -2946,25 +2946,29 @@ export class AccountStatementComponent implements OnInit {
             Credit = parseFloat(element.credit);
             Depit = 0;
             TotalCredit = TotalCredit + Credit;
+            TotalCredit+=+element.amounttax;
           }
           if (element.credit < element.depit) {
             Credit = 0;
             Depit = parseFloat(element.depit);
             TotalDepit = TotalDepit + Depit;
+            TotalDepit+=+element.amounttax;
           }
-          var maxVal = 0;
-          if (this.EntryVoucherDetailsRows.length > 0) {
-            maxVal = Math.max(
-              ...this.EntryVoucherDetailsRows.map(
-                (o: { idRow: any }) => o.idRow
-              )
-            );
-          } else {
-            maxVal = 0;
-          }
+          // var maxVal = 0;
+          // if (this.EntryVoucherDetailsRows.length > 0) {
+          //   maxVal = Math.max(
+          //     ...this.EntryVoucherDetailsRows.map(
+          //       (o: { idRow: any }) => o.idRow
+          //     )
+          //   );
+          // } else {
+          //   maxVal = 0;
+          // }
           this.EntryVoucherDetailsRows?.push({
-            idRow: maxVal + 1,
+            //idRow: maxVal + 1,
+            idRow: element.lineNumber,
             Amounttxt: element.amount,
+            AmountTaxtxt: element.amounttax,
             AccJournalid: element.accountId,
             accountJournaltxt: element.accountName,
             CreditDepitStatus: Credit > Depit ? 'C' : 'D',
@@ -2974,6 +2978,7 @@ export class AccountStatementComponent implements OnInit {
             InvoiceReference: element.invoiceReference,
             AccCalcExpen: element.accCalcExpen,
             AccCalcIncome: element.accCalcIncome,
+            AccCalcAll: element.accCalcAll,
           });
         });
         this.modalEntryVoucher.TotalCredit = parseFloat(
@@ -3124,8 +3129,8 @@ export class AccountStatementComponent implements OnInit {
       {
         this.open(this.receiptVoucherwithoutCustomerModal, data, 'viewReceiptModal');
       }
-      else if(element.type==8)
-      {
+      else if(element.type==8 || element.type==17)
+        {
         this.open(this.entryVoucherModal, data, 'ViewEntryVoucherModal');
       }
 

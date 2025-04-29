@@ -124,7 +124,7 @@ export class ReceiptService {
   }
   GenerateVoucherNumber() {
     return this.http.get<any>(
-      this.apiEndPoint + 'Voucher/GenerateVoucherNumber?&Type=6'
+      this.apiEndPoint + 'Voucher/GenerateVoucherNumberNew?&Type=6'
     );
   }
   FillCustAccountsSelect2(param: any) {

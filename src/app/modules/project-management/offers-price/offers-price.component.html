@@ -2899,6 +2899,7 @@
               {{ "servicesProject" | translate }}</label
             >
             <ng-select
+            [disabled]="!TaxCodeCheck"
               class="w-full p-0"
               placeholder="{{ 'Chose' | translate }}"
               [(ngModel)]="modalDetailsProject.service"

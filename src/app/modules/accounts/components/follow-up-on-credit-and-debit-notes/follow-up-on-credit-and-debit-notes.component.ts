@@ -92,6 +92,7 @@ export class FollowUpOnCreditAndDebitNotesComponent implements OnInit{
 
 
   projectDisplayedColumns: string[] = [
+    'invoiceRetId',
     'date',
     'NoticeType',
     'invoiceNumber',
@@ -105,6 +106,7 @@ export class FollowUpOnCreditAndDebitNotesComponent implements OnInit{
     'operations'
   ];
   projectDisplayedColumns2: string[] = [
+    'invoiceRetId',
     'date',
     'NoticeType',
     'invoiceNumber',
@@ -329,6 +331,7 @@ export class FollowUpOnCreditAndDebitNotesComponent implements OnInit{
       const val = event.target.value.toLowerCase();
       const tempsource = this.projectsDataSourceTemp.filter(function (d: any) {
         return (d.date.toString()?.trim().toLowerCase().indexOf(val) !== -1 || !val)
+        || (d.invoiceRetId.toString()?.trim().toLowerCase().indexOf(val) !== -1 || !val)
         || (d.transactionTypeName.toString()?.trim().toLowerCase().indexOf(val) !== -1 || !val)
         || (d.invoiceNumber.toString()?.trim().toLowerCase().indexOf(val) !== -1 || !val)
         || (d.payTypeName.toString()?.trim().toLowerCase().indexOf(val) !== -1 || !val)
@@ -349,6 +352,7 @@ export class FollowUpOnCreditAndDebitNotesComponent implements OnInit{
       const val = event.target.value.toLowerCase();
       const tempsource = this.projectsDataSourceTemp2.filter(function (d: any) {
         return (d.date.toString()?.trim().toLowerCase().indexOf(val) !== -1 || !val)
+        || (d.invoiceRetId.toString()?.trim().toLowerCase().indexOf(val) !== -1 || !val)
         || (d.transactionTypeName.toString()?.trim().toLowerCase().indexOf(val) !== -1 || !val)
         || (d.invoiceNumber.toString()?.trim().toLowerCase().indexOf(val) !== -1 || !val)
         || (d.payTypeName.toString()?.trim().toLowerCase().indexOf(val) !== -1 || !val)
@@ -379,6 +383,7 @@ export class FollowUpOnCreditAndDebitNotesComponent implements OnInit{
 
     for (let index = 0; index < this.DataSource.length; index++) {
       x.push({
+        invoiceRetId: this.DataSource[index].invoiceRetId,
         date: this.DataSource[index].date,
         transactionTypeName: this.DataSource[index].transactionTypeName,
         invoiceNumber: this.DataSource[index].invoiceNumber,

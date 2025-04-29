@@ -126,7 +126,7 @@ export class FollowprojectService {
     });
   }
   GenerateVoucherNumber(_vouchertype: any) {
-    var url = `${environment.apiEndPoint}Voucher/GenerateVoucherNumber?&Type=${_vouchertype}`;
+    var url = `${environment.apiEndPoint}Voucher/GenerateVoucherNumberNew?&Type=${_vouchertype}`;
     return this.http.get<any>(url);
   }
   GetCostCenterByProId(_projectId: any) {

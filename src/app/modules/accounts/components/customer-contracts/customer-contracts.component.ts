@@ -256,6 +256,22 @@ export class CustomerContractsComponent implements OnInit {
     this.currentDate = new Date();
     // this.FillAllUsersSelectAll();
     this.LoadContractData();
+    this.GetBranchByBranchIdCheck();
+  }
+  TaxCodeCheck:boolean=false
+  GetBranchByBranchIdCheck(){
+    this._invoiceService.GetBranchByBranchIdCheck().subscribe(data=>{
+      //debugger
+      if(!(data.result.taxCode=="" || data.result.taxCode==null))
+      {
+        this.TaxCodeCheck=true;
+      }
+      else
+      {
+        this.TaxCodeCheck=false;
+        this.toast.error(this.translate.instant("من فضلك قم بحفظ اعدادات الفرع و تأكد من الرقم الضريبي للفرع"),this.translate.instant('Message'));
+      }
+    });
   }
 
   ngOnInit(): void {
@@ -1349,7 +1365,7 @@ GetInvoicePrint(obj:any,TempCheck:any){
     this.CustomData.PrintType=TempCheck;
     if(TempCheck==29)this.CustomData.PrintTypeName='اشعار دائن';
     else if(TempCheck==30)this.CustomData.PrintTypeName='اشعار مدين';
-    else this.CustomData.PrintType='';
+    else this.CustomData.PrintType=1;
 
 
     var TotalInvWithoutDisc=0;

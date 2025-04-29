@@ -2212,6 +2212,7 @@
 
     <div class="flex items-center gap-3 justify-center flex-wrap mt-4">
       <button
+      [disabled]="!TaxCodeCheck"
         type="button"
         class="btn bg-base text-white"
         (click)="open(NewInvoiceModal, null, 'addInvoicewithoutProject')"
@@ -4711,6 +4712,7 @@
               {{ "servicesProject" | translate }}</label
             >
             <ng-select
+            [disabled]="!TaxCodeCheck"
               class="w-full p-0"
               placeholder="{{ 'Chose' | translate }}"
               [(ngModel)]="modalDetailsProject.service"

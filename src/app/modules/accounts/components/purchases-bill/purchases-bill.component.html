@@ -15,6 +15,7 @@
         </button>
 
         <button
+        [disabled]="!TaxCodeCheck"
           type="button"
           class="btn bg-base text-white mb-3 col-md-2"
           (click)="open(NoticeCreditorModal, null, 'NoticeCreditorModal')"
@@ -22,6 +23,7 @@
           {{ "SloganDebt" | translate }}
         </button>
         <button
+        [disabled]="!TaxCodeCheck"
           type="button"
           class="btn bg-base text-white mb-3 col-md-2"
           (click)="open(NewSalesInvoiceModal, null, 'addInvoice')"
@@ -336,6 +338,7 @@
               </button>
               <!-- =" سند صرف للفاتورة" -->
               <button
+              [disabled]="!TaxCodeCheck"
                 *ngIf="
                   element.isPost == true &&
                   element.payType == 8 &&
@@ -343,7 +346,6 @@
                   element.rad != true
                 "
                 type="button"
-                id="68"
                 class="EditProjectPhasesTasks btn btn-outline-warning btn-sm waves-effect mx-1"
                 data-toggle="tooltip"
                 data-placement="top"
@@ -5382,6 +5384,12 @@
                 >
                   <span>{{ CustomData?.PrintTypeName }}</span>
                 </p>
+                <p style="color: red" *ngIf="CustomData?.PrintType != 1">
+                  <span>{{ "رقم الإشعار : "  }}</span>
+                  </p>
+                  <p style="color: red" *ngIf="CustomData?.PrintType != 1">
+                    <span>{{ InvPrintData?.invoicesVM_VD?.invoiceRetId }}</span>
+                    </p>
               </div>
             </div>
           </div>

@@ -224,6 +224,11 @@ export class OrganizationService {
       { headers: headers }
     );
   }
+  SaveBranchesInvoiceCode(modal: any): Observable<any> {
+    const headers = { 'content-type': 'application/json' };
+    const body = JSON.stringify(modal);
+    return this.http.post(this.apiEndPoint + 'Branches/SaveBranchesInvoiceCode',body,{ headers: headers });
+  }
   GetAccountTree() {
     return this.http.get<any>(this.apiEndPoint + 'Account/GetAccountTree');
   }

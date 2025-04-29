@@ -314,7 +314,7 @@
           <td mat-cell *matCellDef="let element">
             {{ element.typeName }}
 
-             <button *ngIf="element.type==2  || element.type==6  || element.type==8 " (click)="ShowVoucher(element)"
+            <button *ngIf="element.type==2  || element.type==6  || element.type==8 || element.type==17 " (click)="ShowVoucher(element)"
             title="عرض السند"
             data-original-title="عرض السند"
             class="min-w-max p-2 bg-orange-100 hover:bg-orange-500 rounded-lg duration-300 hover:text-white aspect-square w-10">
@@ -2491,8 +2491,10 @@
                   </th>
                   <th>{{ "Statement" | translate }}</th>
                   <th>{{ "referenceNumber" | translate }}</th>
-                  <th>{{ "CountsAsExpense" | translate }}</th>
-                  <th>{{ "RevenueAsCalculated" | translate }}</th>
+                  <!-- <th>{{ "CountsAsExpense" | translate }}</th>
+                  <th>{{ "RevenueAsCalculated" | translate }}</th> -->
+                  <th style="width: 11% !important">{{ "الضرائب" | translate }}</th>
+                  <th>{{ "قيمة الضريبة" | translate }}</th>
                   <th>{{ "delete" | translate }}</th>
                 </tr>
               </thead>
@@ -2557,7 +2559,7 @@
                       name="os-referenceNotxt{{ item.idRow }}"
                     />
                   </td>
-                  <td>
+                  <!-- <td>
                     <input
                       [disabled]="WhichTypeAddEditView == 3"
                       style="transform: scale(2)"
@@ -2573,6 +2575,30 @@
                       type="checkbox"
                       name="os-accCalcIncomecheck{{ item.idRow }}"
                       [(ngModel)]="item.AccCalcIncome"
+                    />
+                  </td> -->
+                  <td class="form-switch position-relative p-0">
+                    <select
+                    [disabled]="WhichTypeAddEditView == 3"
+                    class="form-select"
+                    name="os-balancejournalselect{{ item.idRow }}"
+                    aria-label="Default select example"
+                    [(ngModel)]="item.AccCalcAll"
+                  >
+                    <option value="0">{{ "بدون" | translate }}</option>
+                    <option value="I">{{ "مدخلات" | translate }}</option>
+                    <option value="O">{{ "مخرجات" | translate }}</option>
+                  </select>
+
+
+
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      [(ngModel)]="item.AmountTaxtxt"
+                      name="os-AmountTaxtxt{{ item.idRow }}"
+                      disabled
                     />
                   </td>
                   <td>
@@ -2768,7 +2794,9 @@
       />
       <p>
         {{ "Data Entry" | translate }} {{ modalEntryVoucher?.addUser }}
-        {{ "In" | translate }} {{ modalEntryVoucher?.addDate }}
+        {{ "In" | translate }} 
+        {{modalEntryVoucher?.addDate | date : " hh:mm yyyy-MM-dd"}}
+
       </p>
     </div>
     <div class="d-flex justify-content-end">

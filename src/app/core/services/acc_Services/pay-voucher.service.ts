@@ -33,7 +33,7 @@ export class PayVoucherService {
 
   GenerateVoucherNumber(Type:any){
 
-    return this.http.get<any>(this.apiEndPoint + 'Voucher/GenerateVoucherNumber?Type='+Type+'');
+    return this.http.get<any>(this.apiEndPoint + 'Voucher/GenerateVoucherNumberNew?Type='+Type+'');
   }
   GetAllClauses(SearchText:any){
     return this.http.get<any>(this.apiEndPoint + 'Clauses/GetAllClauses?SearchText='+SearchText+'');

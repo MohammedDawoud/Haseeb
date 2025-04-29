@@ -402,25 +402,30 @@ export class UnderDailyComponent implements OnInit {
             Credit = parseFloat(element.credit);
             Depit = 0;
             TotalCredit = TotalCredit + Credit;
+            TotalCredit+=+element.amounttax;
+
           }
           if (element.credit < element.depit) {
             Credit = 0;
             Depit = parseFloat(element.depit);
             TotalDepit = TotalDepit + Depit;
+            TotalDepit+=+element.amounttax;
           }
-          var maxVal = 0;
-          if (this.EntryVoucherDetailsRows.length > 0) {
-            maxVal = Math.max(
-              ...this.EntryVoucherDetailsRows.map(
-                (o: { idRow: any }) => o.idRow
-              )
-            );
-          } else {
-            maxVal = 0;
-          }
+          // var maxVal = 0;
+          // if (this.EntryVoucherDetailsRows.length > 0) {
+          //   maxVal = Math.max(
+          //     ...this.EntryVoucherDetailsRows.map(
+          //       (o: { idRow: any }) => o.idRow
+          //     )
+          //   );
+          // } else {
+          //   maxVal = 0;
+          // }
           this.EntryVoucherDetailsRows?.push({
-            idRow: maxVal + 1,
+            //idRow: maxVal + 1,
+            idRow: element.lineNumber,
             Amounttxt: element.amount,
+            AmountTaxtxt: element.amounttax,
             AccJournalid: element.accountId,
             accountJournaltxt: element.accountName,
             CreditDepitStatus: Credit > Depit ? 'C' : 'D',
@@ -430,6 +435,7 @@ export class UnderDailyComponent implements OnInit {
             InvoiceReference: element.invoiceReference,
             AccCalcExpen: element.accCalcExpen,
             AccCalcIncome: element.accCalcIncome,
+            AccCalcAll: element.accCalcAll,
           });
         });
         this.modalEntryVoucher.TotalCredit = parseFloat(
@@ -730,6 +736,7 @@ export class UnderDailyComponent implements OnInit {
     this.EntryVoucherDetailsRows?.push({
       idRow: maxVal + 1,
       Amounttxt: null,
+      AmountTaxtxt: null,
       AccJournalid: null,
       accountJournaltxt: null,
       CreditDepitStatus: 'D',
@@ -739,6 +746,7 @@ export class UnderDailyComponent implements OnInit {
       InvoiceReference: null,
       AccCalcExpen: false,
       AccCalcIncome: false,
+      AccCalcAll:"0",
     });
     this.GetCostCenterRow(maxVal + 1);
   }
@@ -798,22 +806,51 @@ export class UnderDailyComponent implements OnInit {
     this.journalDebitNmRows = 0;
     this.journalCreditNmRows = 0;
     this.EntryVoucherDetailsRows.forEach((element: any, index: any) => {
-      var Value = 0,
-        Rate = 1;
+      var Value = 0, Rate = 1;
       Value = element.Amounttxt;
+      var vAT_TaxVal = parseFloat(this.userG.orgVAT ?? 0);
+      var TaxV8erS = parseFloat((+parseFloat((+Value * vAT_TaxVal).toString()).toFixed(2) / 100).toString()).toFixed(2);
+      if(element.AccCalcAll == "O" || element.AccCalcAll == "I")
+        {
+          this.EntryVoucherDetailsRows.filter((a: { idRow: any }) => a.idRow == element.idRow)[0].AmountTaxtxt 
+          = parseFloat(TaxV8erS.toString()).toFixed(2);
+        }
+        else
+        {
+          this.EntryVoucherDetailsRows.filter((a: { idRow: any }) => a.idRow == element.idRow)[0].AmountTaxtxt 
+          = null;
+        }
+
+
       if (element.CreditDepitStatus == 'D') {
         this.journalDebitNmRows += 1;
         totalDebit += Value * Rate;
+        totalDebit+=+element.AmountTaxtxt;
+
+        // if(element.AccCalcAll == "I")
+        // {
+        //   totalDebit+=+TaxV8erS;
+        // }
+
         totalBalance = +parseFloat(
           (totalDebit - totalCredit).toString()
         ).toFixed(2);
       } else {
         this.journalCreditNmRows += 1;
         totalCredit += Value * Rate;
+        totalCredit+=+element.AmountTaxtxt;
+        // if(element.AccCalcAll == "O")
+        // {
+        //   totalCredit+=+TaxV8erS;
+        // }
         totalBalance = +parseFloat(
           (totalDebit - totalCredit).toString()
         ).toFixed(2);
       }
+      debugger
+
+
+
     });
     this.modalEntryVoucher.TotalCredit = parseFloat(
       totalCredit.toString()
@@ -891,8 +928,25 @@ export class UnderDailyComponent implements OnInit {
       VoucherDetailsObj.AccountId = element.AccJournalid;
       VoucherDetailsObj.Amount = element.Amounttxt;
       VoucherDetailsObj.CostCenterId = element.CostCenterId;
-      VoucherDetailsObj.AccCalcExpen = element.AccCalcExpen;
-      VoucherDetailsObj.AccCalcIncome = element.AccCalcIncome;
+      debugger
+      if(element.AccCalcAll == "O" )
+      {
+        VoucherDetailsObj.AmountTax = element.AmountTaxtxt;
+        VoucherDetailsObj.AccCalcIncome=true;
+        VoucherDetailsObj.AccCalcExpen=false;
+      }
+      else if( element.AccCalcAll == "I")
+      {
+        VoucherDetailsObj.AmountTax = element.AmountTaxtxt;
+        VoucherDetailsObj.AccCalcIncome=false;
+        VoucherDetailsObj.AccCalcExpen=true;
+      }
+      else
+      {
+        VoucherDetailsObj.AmountTax = null;
+        VoucherDetailsObj.AccCalcIncome=false;
+        VoucherDetailsObj.AccCalcExpen=false;
+      }
       VoucherDetailsObj.Notes = VoucherDetailsObj.Details = element.Notes;
       VoucherDetailsObj.InvoiceReference = element.InvoiceReference;
       VoucherDetailsObj.Type = this.modalEntryVoucher.Type;
@@ -902,10 +956,14 @@ export class UnderDailyComponent implements OnInit {
         VoucherDetailsObj.Depit = parseFloat(element.Amounttxt ?? 0);
         VoucherDetailsObj.Credit = 0.0;
         totalDepit = totalDepit + VoucherDetailsObj.Depit;
+        totalDepit +=  +VoucherDetailsObj.AmountTax;
+
       } else {
         VoucherDetailsObj.Credit = parseFloat(element.Amounttxt ?? 0);
         VoucherDetailsObj.Depit = 0.0;
         totalCredit = totalCredit + VoucherDetailsObj.Credit;
+        totalCredit +=  +VoucherDetailsObj.AmountTax;
+
       }
 
       VoucherDetailsList.push(VoucherDetailsObj);

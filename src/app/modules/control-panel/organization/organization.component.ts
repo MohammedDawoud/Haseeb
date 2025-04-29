@@ -373,7 +373,7 @@ export class OrganizationComponent implements OnInit {
       response.result.accountBank2 == 'null'
         ? (response.result.accountBank2 = null)
         : (response.result.accountBank2 = response.result.accountBank2);
-      if (response.result.logoUrl != ('' || null)) {
+      if (response.result.logoUrl != null) {
         this.imageFileOutputreq = false;
       }
       response.result.bankId2 == 0
@@ -601,6 +601,8 @@ export class OrganizationComponent implements OnInit {
   }
   branchname: any;
   editeBransh: boolean = false;
+  branchRow:any=null;
+
   open(content: any, data?: any, type?: any, info?: any) {
     this.confirmepassword = null;
     this.confirmepasswordSetting = null;
@@ -632,6 +634,12 @@ export class OrganizationComponent implements OnInit {
     }
     if (data && type == 'deleteBranch') {
       this.Branchiddelete = data.branchId;
+    }
+    if (data && type == 'InvoiceStartCodeModal') {
+      this.branchRow = data;
+      this.InvoicePrefix.InvoiceStartCode=this.branchRow.invoiceStartCode;
+      this.passwordInvoice=null;
+      this.passwordInvoiceDisabled=false;
     }
     if (type == 'addBranchModal') {
       this.editeBransh = false;
@@ -2471,6 +2479,36 @@ export class OrganizationComponent implements OnInit {
       PurchaseApprovalAccId: [null, []],
       RevenuesAccountId: [null, []],
     });
+  }
+  passwordInvoice:any=null;
+  InvoicePrefix:any={
+    InvoiceStartCode:null,
+  }
+  passwordInvoiceDisabled:any=false;
+  textEye = false;
+  onChangepassword(event:any,modal:any){
+    if(event==this.userG.password){
+      this.passwordInvoiceDisabled=true;
+      modal.dismiss();
+      this.confirmSaveBranchesInvoiceCode();
+    }
+    
+  }
+  confirmSaveBranchesInvoiceCode(){
+    var Obj = {
+      BranchId: this.branchRow.branchId,
+      InvoiceStartCode: this.InvoicePrefix.InvoiceStartCode,
+    };
+    this.organizationService.SaveBranchesInvoiceCode(Obj).subscribe(
+      (result: any) => {
+        if (result.statusCode == 200) {
+          this.toast.success(this.translate.instant(result.reasonPhrase),this.translate.instant('Message'));
+          this.GetAllBranches();
+        } else {
+          this.toast.error(this.translate.instant(result.reasonPhrase),this.translate.instant('Message'));
+        }
+      }
+    );
   }
   savebranchesAccForm(modal: any) {
     this.organizationService

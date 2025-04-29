@@ -2709,7 +2709,7 @@ export class SalesBillComponent implements OnInit {
         this.CustomData.PrintType = TempCheck;
         if (TempCheck == 29) this.CustomData.PrintTypeName = 'اشعار دائن';
         else if (TempCheck == 30) this.CustomData.PrintTypeName = 'اشعار مدين';
-        else this.CustomData.PrintType = '';
+        else this.CustomData.PrintType=1;
 
         var TotalInvWithoutDisc = 0;
         var netVal = 0;

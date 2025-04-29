@@ -3605,6 +3605,12 @@
                   >
                     <span>{{ CustomData?.PrintTypeName }}</span>
                   </p>
+                  <p style="color: red" *ngIf="CustomData?.PrintType != 1">
+                    <span>{{ "رقم الإشعار : "  }}</span>
+                    </p>
+                    <p style="color: red" *ngIf="CustomData?.PrintType != 1">
+                      <span>{{ InvPrintData?.invoicesVM_VD?.invoiceRetId }}</span>
+                      </p>
                 </div>
               </div>
             </div>

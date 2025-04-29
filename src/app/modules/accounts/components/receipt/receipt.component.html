@@ -18,6 +18,7 @@
           </button>
 
           <button
+          [disabled]="!TaxCodeCheck"
             *ngIf="userG?.userPrivileges.includes(13100301)"
             type="button"
             class="btn bg-base text-white mb-3 col-md-2"

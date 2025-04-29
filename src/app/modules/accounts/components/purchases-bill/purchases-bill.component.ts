@@ -2444,7 +2444,7 @@ export class PurchasesBillComponent implements OnInit {
         this.CustomData.PrintType = TempCheck;
         if (TempCheck == 32) this.CustomData.PrintTypeName = 'اشعار دائن';
         else if (TempCheck == 33) this.CustomData.PrintTypeName = 'اشعار مدين';
-        else this.CustomData.PrintType = '';
+        else this.CustomData.PrintType=1;
 
         var TotalInvWithoutDisc = 0;
         var netVal = 0;
@@ -2551,7 +2551,7 @@ export class PurchasesBillComponent implements OnInit {
         this.CustomData.PrintType = TempCheck;
         if (TempCheck == 32) this.CustomData.PrintTypeName = 'اشعار دائن';
         else if (TempCheck == 33) this.CustomData.PrintTypeName = 'اشعار مدين';
-        else this.CustomData.PrintType = '';
+        else this.CustomData.PrintType=1;
 
         var TotalInvWithoutDisc = 0;
         var netVal = 0;

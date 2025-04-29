@@ -238,6 +238,23 @@ export class AddSearchComponent implements OnInit {
       (values: Array<File>) => this.getImage(values[0])
     );
     this._CustomerVM = new CustomerVM();
+    this.GetBranchByBranchIdCheck();
+  }
+
+  TaxCodeCheck:boolean=false
+  GetBranchByBranchIdCheck(){
+    this._invoiceService.GetBranchByBranchIdCheck().subscribe(data=>{
+      //debugger
+      if(!(data.result.taxCode=="" || data.result.taxCode==null))
+      {
+        this.TaxCodeCheck=true;
+      }
+      else
+      {
+        this.TaxCodeCheck=false;
+        this.toast.error(this.translate.instant("من فضلك قم بحفظ اعدادات الفرع و تأكد من الرقم الضريبي للفرع"),this.translate.instant('Message'));
+      }
+    });
   }
 
   //   ngAfterContentChecked() {
