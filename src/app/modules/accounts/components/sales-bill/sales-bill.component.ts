@@ -2491,11 +2491,13 @@ export class SalesBillComponent implements OnInit {
   }
   NotiData: any = {
     invoiceid: null,
+    PrevInvoices:false,
   };
   LoadInvoiceNumbers: any = [];
   FillAllNotiVoucher() {
     var _voucherFilterVM = new VoucherFilterVM();
     _voucherFilterVM.type = this.dataInvoice.filter.Type;
+    _voucherFilterVM.prevInvoices = this.NotiData.PrevInvoices;
     var obj = _voucherFilterVM;
     this._invoiceService.FillAllNotiVoucher(obj).subscribe((data) => {
       this.LoadInvoiceNumbers = data;
@@ -2505,6 +2507,7 @@ export class SalesBillComponent implements OnInit {
   resetNotiPopup() {
     this.NotiData = {
       invoiceid: null,
+      PrevInvoices:false,
     };
     this.FillAllNotiVoucher();
   }

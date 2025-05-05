@@ -824,6 +824,24 @@
         </ng-select>
       </div>
 
+      <div class="form-check form-switch me-3" style="margin-top: 4%;">
+        <label
+          class="form-check-label"
+          for="flexSwitchCheckDefault"
+          style="width: max-content"
+        >
+          {{ "فواتير السنة السابقة" | translate }}
+        </label>
+        <input
+          class="form-check-input"
+          type="checkbox"
+          role="switch"
+          id="flexSwitchCheckDefault"
+          [(ngModel)]="NotiData.PrevInvoices"
+          (change)="FillAllNotiVoucher()"
+        />
+      </div>
+
       <button
         (click)="ReturnNotiCreditBack(modal)"
         class="btn btn-success btnSuccess me-5"
