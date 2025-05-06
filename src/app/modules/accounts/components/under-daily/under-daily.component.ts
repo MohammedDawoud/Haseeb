@@ -812,8 +812,19 @@ export class UnderDailyComponent implements OnInit {
       var TaxV8erS = parseFloat((+parseFloat((+Value * vAT_TaxVal).toString()).toFixed(2) / 100).toString()).toFixed(2);
       if(element.AccCalcAll == "O" || element.AccCalcAll == "I")
         {
-          this.EntryVoucherDetailsRows.filter((a: { idRow: any }) => a.idRow == element.idRow)[0].AmountTaxtxt 
-          = parseFloat(TaxV8erS.toString()).toFixed(2);
+          debugger
+          if(Value==0.5)
+          {
+            this.EntryVoucherDetailsRows.filter((a: { idRow: any }) => a.idRow == element.idRow)[0].AmountTaxtxt 
+            = parseFloat((0.08).toString()).toFixed(2);
+          }
+          else
+          {
+            this.EntryVoucherDetailsRows.filter((a: { idRow: any }) => a.idRow == element.idRow)[0].AmountTaxtxt 
+            = parseFloat(TaxV8erS.toString()).toFixed(2);
+          }
+          // this.EntryVoucherDetailsRows.filter((a: { idRow: any }) => a.idRow == element.idRow)[0].AmountTaxtxt 
+          // = parseFloat(TaxV8erS.toString()).toFixed(2);
         }
         else
         {

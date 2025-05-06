@@ -15,4 +15,6 @@ export class VoucherFilterVM {
     qRCode: string | null;
     invoiceNote: string | null;
     pageInsert: number | null;
+    prevInvoices: boolean | null; 
+
 }
