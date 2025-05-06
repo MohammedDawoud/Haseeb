@@ -2499,7 +2499,7 @@ export class SalesBillComponent implements OnInit {
     _voucherFilterVM.type = this.dataInvoice.filter.Type;
     _voucherFilterVM.prevInvoices = this.NotiData.PrevInvoices;
     var obj = _voucherFilterVM;
-    this._invoiceService.FillAllNotiVoucher(obj).subscribe((data) => {
+    this._invoiceService.FillAllNotiVoucher(obj).subscribe((data) => { 
       this.LoadInvoiceNumbers = data;
     });
   }

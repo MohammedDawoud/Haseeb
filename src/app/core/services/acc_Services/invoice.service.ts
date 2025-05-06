@@ -91,7 +91,7 @@ export class InvoiceService {
   FillAllNotiVoucher(_voucherFilterVM:VoucherFilterVM): Observable<any> {
     const headers = { 'content-type': 'application/json'}
     const body=JSON.stringify(_voucherFilterVM);
-    return this.http.post(this.apiEndPoint + 'Voucher/FillAllNotiVoucher', body,{'headers':headers});
+    return this.http.post(this.apiEndPoint + 'Voucher/FillAllNotiVoucher', body,{'headers':headers}); 
   }
   ReturnNotiCreditBack(_invoices:Invoices): Observable<any> {
     const headers = { 'content-type': 'application/json'}
