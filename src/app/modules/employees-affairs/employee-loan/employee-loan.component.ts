@@ -201,7 +201,7 @@ export class EmployeeLoanComponent implements OnInit {
   }
 
   getloandata(issearched: any) {
-    debugger;
+    //debugger;
     this._loanVM = new LoanVM();
     this._loanVM.startDate = this.data.filter.StartDate;
     this._loanVM.endDate = this.data.filter.EndDate;
@@ -213,34 +213,34 @@ export class EmployeeLoanComponent implements OnInit {
     this._loanservice.GetAllImprestSearch(this._loanVM).subscribe({
       next: (data: any) => {
         // assign data to table
-        debugger;
-        console.log('loandata', data.result);
+        //debugger;
+        //console.log('loandata', data.result);
         this.imprests = new MatTableDataSource(data.result);
         this.dataSource = new MatTableDataSource(this.imprests.filteredData);
         this.dataSource.paginator = this.paginator;
       },
       error: (error) => {
-        console.log(error);
+        //console.log(error);
       },
     });
   }
 
   fillfillEmployeesearch() {
     this._loanservice.FillEmployeeSearch().subscribe((data) => {
-      console.log(data);
+      //console.log(data);
       this.Employeesearch = data;
     });
   }
   fillfillEmployeeWorker() {
     this._loanservice.FillEmployeeworker().subscribe((data) => {
-      console.log(data);
+      //console.log(data);
       this.EmployeeWorker = data;
     });
   }
 
   fillEmployeeWorkerE() {
     this._loanservice.FillEmployeeSearch().subscribe((data) => {
-      console.log('employee edit' + data);
+      //console.log('employee edit' + data);
       this.EmployeeWorkerE = data;
     });
   }
@@ -252,10 +252,10 @@ export class EmployeeLoanComponent implements OnInit {
   }
 
   getallloansw() {
-    debugger;
+    //debugger;
     this._loanservice.GetAllLoansW(null).subscribe((data) => {
-      debugger;
-      console.log(data);
+      //debugger;
+      //console.log(data);
       this.waitingImprests = data.result;
       this.dataSourceWaitingImprest = new MatTableDataSource(
         this.waitingImprests
@@ -264,11 +264,11 @@ export class EmployeeLoanComponent implements OnInit {
   }
 
   getloandetails(loanid: any, monthno: any) {
-    console.log(loanid);
+    //console.log(loanid);
     this.monthnumberdetails = monthno;
     this._loanservice.GetAllLoanDetails(loanid).subscribe((data) => {
-      debugger;
-      console.log(data);
+      //debugger;
+      //console.log(data);
       this.acceptingImprests = data;
       this.dataSourceAcceptingImprest = new MatTableDataSource(
         this.acceptingImprests
@@ -278,10 +278,10 @@ export class EmployeeLoanComponent implements OnInit {
   payed: any;
   remaning: any;
   GetAmountPayedAndNotPayed(loanid: any) {
-    console.log(loanid);
+    //console.log(loanid);
     this._loanservice.GetAmountPayedAndNotPayed(loanid).subscribe((data) => {
-      debugger;
-      console.log(data);
+      //debugger;
+      //console.log(data);
       this.payed = data.result.amountPayed;
       this.remaning = data.result.amountNotPayed;
      
@@ -343,8 +343,16 @@ export class EmployeeLoanComponent implements OnInit {
   userloanedit: any;
   employeetopay: any = null;
   loanidvoucher: any = 0;
-  open(content: any, data?: any, type?: any, info?: any) {
-    debugger;
+  ReceiptSVoucherModelPublic: any;
+  ReceiptSSaveType: any=1;
+  formsave:any;
+  modalsave:any;
+  open(content: any, data?: any, type?: any, info?: any, model?: any) {
+    //debugger;
+    if (type == 'SaveReceiptSVoucherConfirmModal') {
+      this.ReceiptSVoucherModelPublic = model;
+      this.ReceiptSSaveType=1;
+    }
     this.edit = 0;
     if (data && type == 'edit') {
       this.edit = 1;
@@ -361,6 +369,14 @@ export class EmployeeLoanComponent implements OnInit {
       this.noteview = data;
       // this.modalDetails['id'] = '2';
     }
+    if(data && type=='saveloanmodal')
+    {
+      this.formsave=data;
+      this.modalsave=info;
+
+
+    }
+    
 
     if (data && type == 'Converttoadmin') {
       this.Impresttoconvert = data.loanId;
@@ -435,7 +451,7 @@ export class EmployeeLoanComponent implements OnInit {
       this.FieldsEnable(true);
       this.TaxCheckEnable();
       this.gethigridate();
-      if (this.userG?.userPrivileges.includes(13100307)) {
+      if (this.userG?.userPrivileges.includes(13100307) || this.userG?.userPrivileges.includes(142006)) {
         this.saveandpost = 1;
       }
       this.GenerateVoucherNumber();
@@ -500,11 +516,11 @@ export class EmployeeLoanComponent implements OnInit {
   confirm() {}
 
   Delete() {
-    debugger;
+    //debugger;
     this._loanservice.DeleteLoan(this.Loandeleted).subscribe((result: any) => {
-      console.log(result);
-      console.log('result');
-      debugger;
+      //console.log(result);
+      //console.log('result');
+      //debugger;
       if (result.statusCode == 200) {
         this.getloandata(0);
         this.toast.success(this.translate.instant(result.reasonPhrase),this.translate.instant('Message'));
@@ -515,13 +531,13 @@ export class EmployeeLoanComponent implements OnInit {
   }
 
   ConvertToAdmin() {
-    debugger;
+    //debugger;
     this._loanservice
       .ConvertToAdmin(this.Impresttoconvert, 1)
       .subscribe((result: any) => {
-        console.log(result);
-        console.log('result');
-        debugger;
+        //console.log(result);
+        //console.log('result');
+        //debugger;
         if (result.statusCode == 200) {
           this.getloandata(0);
           this.toast.success(this.translate.instant(result.reasonPhrase),this.translate.instant('Message'));
@@ -531,9 +547,11 @@ export class EmployeeLoanComponent implements OnInit {
       });
   }
 
-  EditImprestRequest(loanobj: any) {
-    debugger;
-    console.log(loanobj);
+  EditImprestRequest(modal: any) {
+    //debugger;
+    var loanobj=this.formsave;
+
+    //console.log(loanobj);
     if (
       this.userloanedit == null ||
       loanobj.date == null ||
@@ -544,7 +562,7 @@ export class EmployeeLoanComponent implements OnInit {
       this.toast.error('من فضلك اكمل البيانات', 'رسالة');
       return;
     }
-    debugger;
+    //debugger;
     this._LoanEdit.employeeId = this.userloanedit;
     this._LoanEdit.date = loanobj.date;
     this._LoanEdit.amount = loanobj.amount;
@@ -554,13 +572,15 @@ export class EmployeeLoanComponent implements OnInit {
     this._LoanEdit.loanId = this.LoanIdEdit;
     this._LoanEdit.status = 1;
 
-    console.log(loanobj);
+    //console.log(loanobj);
 
     var loan = this._LoanEdit;
     this._loanservice.SaveLoanWorker(loan).subscribe((result: any) => {
-      console.log(result);
-      console.log('result');
+      //console.log(result);
+      //console.log('result');
       if (result.statusCode == 200) {
+        modal.dismiss();
+        this.modalsave.dismiss();
         this.toast.success(this.translate.instant(result.reasonPhrase),this.translate.instant('Message'));
         this.getloandata(0);
       } else {
@@ -568,9 +588,9 @@ export class EmployeeLoanComponent implements OnInit {
       }
     });
   }
-  AddImprestRequest(loanobj: any) {
-    debugger;
-
+  AddImprestRequest(modal: any) {
+    //debugger;
+    var loanobj=this.formsave;
     if (
       loanobj.employeeIdw == null ||
       loanobj.date == null ||
@@ -588,13 +608,15 @@ export class EmployeeLoanComponent implements OnInit {
     this._loan.startMonth = loanobj.startMonths;
     this._loan.note = loanobj.note;
     this._loan.status = 1;
-    console.log(loanobj);
+    //console.log(loanobj);
 
     var loan = this._loan;
     this._loanservice.SaveLoanWorker(loan).subscribe((result: any) => {
-      console.log(result);
-      console.log('result');
+      //console.log(result);
+      //console.log('result');
       if (result.statusCode == 200) {
+        modal.dismiss();
+        this.modalsave.dismiss();
         this.toast.success(result.reasonPhrase, 'رسالة');
         this.getloandata(0);
       } else {
@@ -769,7 +791,7 @@ export class EmployeeLoanComponent implements OnInit {
   }
 
   FillCustAc(add: any) {
-    debugger;
+    //debugger;
     var PayType = this.vouchermodel.payType;
     this.checkdetailsList = [];
 
@@ -849,7 +871,7 @@ export class EmployeeLoanComponent implements OnInit {
   }
   checkdetailsList: any = [];
   checkdetailsTabel(modal?: any) {
-    debugger;
+    //debugger;
     this.BankSelectList.forEach((element: any) => {
       if (element.id == this.CheckDetailsForm.controls['BankId'].value)
         this.CheckDetailsForm.controls['bankName'].setValue(element.name);
@@ -892,7 +914,7 @@ export class EmployeeLoanComponent implements OnInit {
       .GetHijriDate(this.vouchermodel.date, 'Contract/GetHijriDate2')
       .subscribe({
         next: (data: any) => {
-          debugger;
+          //debugger;
           //  this.vouchermodel.hijriDate = data;
           //  this.hijriDate=data;
         },
@@ -902,7 +924,7 @@ export class EmployeeLoanComponent implements OnInit {
   GetBranch_Costcenter() {
     this._payvoucherservice.GetBranch_Costcenter().subscribe({
       next: (data: any) => {
-        debugger;
+        //debugger;
         this.vouchermodel.CostCenterId = data.result.costCenterId;
       },
       error: (error) => {},
@@ -913,14 +935,14 @@ export class EmployeeLoanComponent implements OnInit {
     this._payvoucherservice
       .GenerateVoucherNumber(this.VoucherType)
       .subscribe((data) => {
-        debugger;
+        //debugger;
         this.vouchermodel.invoiceNumber = data.reasonPhrase;
       });
   }
 
   FillCustAccountsSelect(type: any) {
     this._payvoucherservice.FillCustAccountsSelect2(type).subscribe((data) => {
-      console.log(data);
+      //console.log(data);
       this.Toaccount = data;
     });
   }
@@ -929,8 +951,8 @@ export class EmployeeLoanComponent implements OnInit {
   addInvoiceImg: any;
   editvouccher(data: any) {
     this.resetvouchermodel();
-    debugger;
-    console.log(data);
+    //debugger;
+    //console.log(data);
     this.vouchermodel.invoiceNumber = data.invoiceNumber;
     var date = data.date;
     this.vouchermodel.date = new Date(date);
@@ -977,7 +999,7 @@ export class EmployeeLoanComponent implements OnInit {
     }
 
     var DunCalcV = data.dunCalc;
-    debugger;
+    //debugger;
     if (DunCalcV == true) {
       this.vouchermodel.dunCalc = true;
     } else {
@@ -1031,7 +1053,7 @@ export class EmployeeLoanComponent implements OnInit {
     this._payvoucherservice
       .GetAllDetailsByVoucherId(voucherId)
       .subscribe((data2) => {
-        debugger;
+        //debugger;
 
         this.vouchermodel.toAccountId = data2.result[0].toAccountId;
         this.vouchermodel.CostCenterId = data2.result[0].costCenterId;
@@ -1108,14 +1130,14 @@ export class EmployeeLoanComponent implements OnInit {
 
   GetTaxNoBySuppId(suppid: any) {
     this._payvoucherservice.GetTaxNoBySuppId(suppid).subscribe((data) => {
-      console.log(data);
+      //console.log(data);
       this.vouchermodel.supplierTaxID = data ?? '';
     });
   }
 
-  saveandpostvoucher(type: any, modal: any) {
-    debugger;
-    console.log('voucher', this.vouchermodel);
+  saveandpostvoucher() {
+    //debugger;
+    //console.log('voucher', this.vouchermodel);
 
     if (
       this.vouchermodel.date == null ||
@@ -1209,19 +1231,19 @@ export class EmployeeLoanComponent implements OnInit {
     VoucherDetailsList.push(VoucherDetailsObj);
 
     VoucherObj.voucherDetails = VoucherDetailsList;
-    console.log(VoucherObj);
-    if (type == 1) {
+    //console.log(VoucherObj);
+    if (this.ReceiptSSaveType == 2) {
       this._payvoucherservice.SaveandPostVoucherP(VoucherObj).subscribe(
         (data) => {
           if (this.uploadedFiles.length > 0) {
             this.savefile(data.returnedParm);
-            modal.dismiss();
+            this.ReceiptSVoucherModelPublic.dismiss();
             this.toast.success(
               this.translate.instant(data.reasonPhrase),
               this.translate.instant('Message')
             );
           } else {
-            modal.dismiss();
+            this.ReceiptSVoucherModelPublic.dismiss();
 
             this.toast.success(
               this.translate.instant(data.reasonPhrase),
@@ -1241,14 +1263,14 @@ export class EmployeeLoanComponent implements OnInit {
         (data) => {
           if (this.uploadedFiles.length > 0) {
             this.savefile(data.returnedParm);
-            modal.dismiss();
+            this.ReceiptSVoucherModelPublic.dismiss();
 
             this.toast.success(
               this.translate.instant(data.reasonPhrase),
               this.translate.instant('Message')
             );
           } else {
-            modal.dismiss();
+            this.ReceiptSVoucherModelPublic.dismiss();
 
             this.toast.success(
               this.translate.instant(data.reasonPhrase),
@@ -1269,8 +1291,8 @@ export class EmployeeLoanComponent implements OnInit {
   }
 
   saveandpostvoucher2(modal: any) {
-    debugger;
-    console.log('voucher', this.vouchermodel);
+    //debugger;
+    //console.log('voucher', this.vouchermodel);
 
     if (
       this.vouchermodel.date == null ||
@@ -1363,7 +1385,7 @@ export class EmployeeLoanComponent implements OnInit {
 
     VoucherDetailsList.push(VoucherDetailsObj);
     VoucherObj.voucherDetails = VoucherDetailsList;
-    console.log(VoucherObj);
+    //console.log(VoucherObj);
     this.receiptService.SaveVoucher(VoucherObj).subscribe(
       (data) => {
         if (data.statusCode == 200) {
@@ -1443,11 +1465,11 @@ export class EmployeeLoanComponent implements OnInit {
   }
   // totalInvoices:any=0;
   taxtypeChange() {
-    debugger;
+    //debugger;
     if (this.vouchermodel.taxtype == 2) {
       this._payvoucherservice.GetALLOrgData().subscribe((data) => {
         var vAT_TaxVal = data.result.vat;
-        debugger;
+        //debugger;
         let totalInvoices = parseFloat(this.vouchermodel.invoiceValue).toFixed(
           this.DigitalNumGlobal
         );
@@ -1470,7 +1492,7 @@ export class EmployeeLoanComponent implements OnInit {
       });
     } else if (this.vouchermodel.taxtype == 3) {
       this._payvoucherservice.GetALLOrgData().subscribe((data) => {
-        debugger;
+        //debugger;
         var vAT_TaxVal = data.result.vat;
 
         let totalInvoices = parseFloat(this.vouchermodel.invoiceValue); //.toFixed(this.DigitalNumGlobal);
@@ -1497,11 +1519,11 @@ export class EmployeeLoanComponent implements OnInit {
   }
 
   invoiceValuechange() {
-    debugger;
+    //debugger;
     if (this.vouchermodel.taxtype == 2) {
       this._payvoucherservice.GetALLOrgData().subscribe((data) => {
         var vAT_TaxVal = data.result.vat;
-        debugger;
+        //debugger;
         let totalInvoices = parseFloat(this.vouchermodel.invoiceValue).toFixed(
           this.DigitalNumGlobal
         );
@@ -1525,7 +1547,7 @@ export class EmployeeLoanComponent implements OnInit {
     } else if (this.vouchermodel.taxtype == 3) {
       this._payvoucherservice.GetALLOrgData().subscribe((data) => {
         var vAT_TaxVal = data.result.vat;
-        debugger;
+        //debugger;
         let totalInvoices = parseFloat(this.vouchermodel.invoiceValue); //.toFixed(this.DigitalNumGlobal);
         // var totalWithtaxInvoices = parseFloat($("#TotalVoucherValueLbl").val()).toFixed($('#DigitalNumGlobal').val());
 
@@ -1550,13 +1572,13 @@ export class EmployeeLoanComponent implements OnInit {
     this._payvoucherservice
       .ConvertNumToString(this.vouchermodel.invoiceValue)
       .subscribe((data) => {
-        debugger;
+        //debugger;
         this.vouchermodel.reVoucherNValueText = data.reasonPhrase;
       });
   }
 
   Taxckeck1Change() {
-    debugger;
+    //debugger;
     if (this.vouchermodel.taxcheck1 == false) {
       this.vouchermodel.taxtype = 3;
       this.Taxchechdisabl = true;
@@ -1570,7 +1592,7 @@ export class EmployeeLoanComponent implements OnInit {
       this.Taxchechdisabl = false;
       this._payvoucherservice.GetALLOrgData().subscribe((data) => {
         var vAT_TaxVal = data.result.vat;
-        debugger;
+        //debugger;
         let totalInvoices = parseFloat(this.vouchermodel.invoiceValue); //.toFixed(this.DigitalNumGlobal);
 
         var tax = parseFloat(
@@ -1592,7 +1614,7 @@ export class EmployeeLoanComponent implements OnInit {
   }
 
   getaccountcode(accountid: any, type: any) {
-    debugger;
+    //debugger;
     if (accountid == null || accountid == '') {
       if (type == 1) {
         this.vouchermodel.toAccountIdCode = null;
@@ -1642,9 +1664,9 @@ export class EmployeeLoanComponent implements OnInit {
   //#endregion
   DigitalNumGlobal: any;
   GetLayoutReadyVm() {
-    debugger;
+    //debugger;
     this._payvoucherservice.GetLayoutReadyVm().subscribe((data) => {
-      debugger;
+      //debugger;
       if (data.decimalPoints == null || data.decimalPoints == '') {
         this.DigitalNumGlobal = 0;
       } else {
@@ -1733,7 +1755,7 @@ export class EmployeeLoanComponent implements OnInit {
     this._payvoucherservice
       .GetAllJournalsByPayVoucherID(invid)
       .subscribe((data) => {
-        debugger;
+        //debugger;
         this.AllJournalEntries = data.result;
       });
   }
@@ -1774,13 +1796,13 @@ export class EmployeeLoanComponent implements OnInit {
     this._payvoucherservice.GetAllClauses(this.searchClause ?? '').subscribe(
       (data) => {
         this.claselist = data.result;
-        console.log(this.claselist);
+        //console.log(this.claselist);
       },
       (error) => {}
     );
   }
   editclause(item: any) {
-    console.log(item);
+    //console.log(item);
     this.Clausemodel.id = item.id;
     this.Clausemodel.nameAr = item.nameAr;
     this.Clausemodel.nameEn = item.nameEn;
@@ -1844,7 +1866,7 @@ export class EmployeeLoanComponent implements OnInit {
     this._payvoucherservice.FillClausesSelect().subscribe(
       (data) => {
         this.clauseseleted = data;
-        console.log(this.clauseseleted);
+        //console.log(this.clauseseleted);
       },
       (error) => {}
     );
@@ -1882,13 +1904,13 @@ export class EmployeeLoanComponent implements OnInit {
       .subscribe(
         (data) => {
           this.supplierlist = data;
-          console.log(this.supplierlist);
+          //console.log(this.supplierlist);
         },
         (error) => {}
       );
   }
   editsupplier(item: any) {
-    console.log(item);
+    //console.log(item);
     this.suppliermodel.id = item.supplierId;
     this.suppliermodel.nameAr = item.nameAr;
     this.suppliermodel.nameEn = item.nameEn;
@@ -1991,7 +2013,7 @@ export class EmployeeLoanComponent implements OnInit {
     this._payvoucherservice.FillSuppliersSelect2().subscribe(
       (data) => {
         this.supplierseleted = data;
-        console.log(this.supplierseleted);
+        //console.log(this.supplierseleted);
       },
       (error) => {}
     );
@@ -2001,7 +2023,7 @@ export class EmployeeLoanComponent implements OnInit {
     this._payvoucherservice.FillCitySelect().subscribe(
       (data) => {
         this.citylect = data;
-        console.log(this.citylect);
+        //console.log(this.citylect);
       },
       (error) => {}
     );
@@ -2067,8 +2089,8 @@ export class EmployeeLoanComponent implements OnInit {
   setdataprint(data: any) {
     this.refreshprintdata();
 
-    console.log(data);
-    debugger;
+    //console.log(data);
+    //debugger;
     this.printmodel.employeeName = data.employeeName;
     this.printmodel.employeeJob = data.employeeJob;
     this.printmodel.employeeNo = data.employeeNo;

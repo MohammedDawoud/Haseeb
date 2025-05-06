@@ -610,7 +610,9 @@ export class HomeComponent implements OnInit {
       this.EmployeeWorker = data;
     });
   }
-  AddImprestRequest(loanobj: any) {
+  AddImprestRequest(modal: any) {
+    debugger
+    var loanobj=this.saveloan;
     this._loan = new Loan();
     if (
       loanobj.date == null ||
@@ -635,7 +637,9 @@ export class HomeComponent implements OnInit {
           this.translate.instant(result.reasonPhrase),
           this.translate.instant('Message')
         );
+        modal.dismiss();
         this.GetAllLoans2();
+
       } else {
         this.toast.error(
           this.translate.instant(result.reasonPhrase),
@@ -947,7 +951,7 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  SaveVacationWorkers() {
+  SaveVacationWorkers(modal:any) {
     if (
       this.modalvacationDetails.vacationType == null ||
       this.modalvacationDetails.from == null ||
@@ -996,6 +1000,8 @@ export class HomeComponent implements OnInit {
           this.getwaitingvacation();
           this.GetAllVacations2();
           this.GetAllVacationsw();
+          this.savemodal.dismiss();
+          modal.dismiss();
 
           if (this.control?.value[0] != null) {
             const formData = new FormData();
@@ -2446,6 +2452,9 @@ console.log(data.absenceData);
   role: any;
   projectDetails: any;
   IsadminTask: any;
+  savemodal:any;
+  saveloan:any;
+
   open(content: any, size?: any, data?: any, positions?: any, role?: any) {
     if (role) {
       this.role = role;
@@ -2463,6 +2472,13 @@ console.log(data.absenceData);
       this.getwaitingImprests();
 
       this.fillfillEmployeeWorker();
+    }
+    if(data && role=='savevac'){
+      this.savemodal=data;
+    }
+    if(role=='saveloan'){
+      debugger
+      this.saveloan=data;
     }
     if (role == 'vacationclient') {
       this.GetAllVacations2();

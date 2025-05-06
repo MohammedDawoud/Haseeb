@@ -8430,8 +8430,7 @@
           type="button"
           class="btn bg-base text-white"
           [disabled]="form.invalid"
-          (click)="SaveVacationWorkers()"
-        >
+          (click)="open(saveModal,null,modal,null,'savevac')">
           {{ "add" | translate }}
         </button>
 
@@ -8441,6 +8440,68 @@
       </div>
     </div>
   </ng-template>
+
+  
+<ng-template #saveModal let-modal>
+  <div class="modal-body text-center">
+    <p
+      [translate]="'name'"
+      [translateParams]="{
+        ar: 'هل تريد الحفظ',
+        en: 'Are you sure to save ?'
+      }"
+    ></p>
+    <div class="flex gap-2 justify-center">
+      <button
+        type="button"
+        mat-raised-button
+        class="btn bg-base text-white"
+        (click)="SaveVacationWorkers(modal);"
+      >
+        {{ "Yes" | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "No" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- deleteModal -->
+<!-- <ng-template #deleteModal let-modal>
+  <div class="modal-body text-center">
+    <p
+      [translate]="'name'"
+      [translateParams]="{
+        ar: 'هل تريد بالتأكيد حذف هذا الصف',
+        en: 'Are you sure to delete this row ?'
+      }"
+    ></p>
+    <div class="flex gap-2 justify-center">
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="delete(); modal.dismiss()"
+      >
+        {{ "Yes" | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "No" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template> -->
 
   <!-- followLoanModal -->
   <ng-template #followLoanModal let-modal>
@@ -9471,9 +9532,7 @@
           type="button"
           class="btn bg-base text-white"
           [disabled]="form.invalid"
-          (click)="
-            AddImprestRequest(form.value); modal.close('Save click', 'end')
-          "
+          (click)=" open(saveModalloan,null,form.value,null,'saveloan')"
         >
           {{ modalDetails?.id ? ("edit" | translate) : ("add" | translate) }}
         </button>
@@ -9484,6 +9543,37 @@
       </div>
     </div>
   </ng-template>
+
+  
+<ng-template #saveModalloan let-modal>
+  <div class="modal-body text-center">
+    <p
+      [translate]="'name'"
+      [translateParams]="{
+        ar: 'هل تريد الحفظ',
+        en: 'Are you sure to save ?'
+      }"
+    ></p>
+    <div class="flex gap-2 justify-center">
+      <button
+        type="button"
+        mat-raised-button
+        class="btn bg-base text-white"
+        (click)="AddImprestRequest(modal);"
+      >
+        {{ "Yes" | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "No" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
 
   <!-- taskDetailsModal -->
   <ng-template #taskDetailsModal let-modal>

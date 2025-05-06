@@ -981,7 +981,7 @@
         type="button"
         class="btn bg-base text-white"
         [disabled]="form.invalid"
-        (click)="AddImprestRequest(form.value)"
+        (click)="open(SaveloanConfirmModal,form.value,'saveloanmodal',modal)"
       >
         {{ "add" | translate }}
       </button>
@@ -1146,7 +1146,7 @@
         class="btn bg-base text-white"
         [disabled]="form.invalid"
         (click)="
-          EditImprestRequest(form.value); modal.close('Save click', 'end')
+          open(editloanConfirmModal,form.value,'saveloanmodal',modal);
         "
       >
         {{ "edit" | translate }}
@@ -2318,7 +2318,8 @@
         <button
           class="btn text-white"
           style="background-color: var(--base-color)"
-          (click)="saveandpostvoucher(2, modal)"
+          (click)="open(SaveReceiptSVoucherConfirmModal,null,'SaveReceiptSVoucherConfirmModal',null, modal)"
+          
         >
           {{ "save" | translate }}
         </button>
@@ -3588,5 +3589,107 @@
     >
       {{ "save" | translate }}
     </button>
+  </div>
+</ng-template>
+<!-- SaveReceiptSVoucherConfirmModal -->
+<ng-template #SaveReceiptSVoucherConfirmModal let-modal>
+  <div
+    class="modal-body text-center"
+    style="background-color: #cdcdcd !important"
+  >
+    <p
+      [translate]="'name'"
+      [translateParams]="{
+        ar: 'هل تريد الحفظ ',
+        en: 'Are you sure to save ?'
+      }"
+    ></p>
+    <div class="flex gap-2 justify-center mt-3">
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="saveandpostvoucher(); modal.dismiss()"
+      >
+        {{ "Yes" | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "No" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+
+<ng-template #SaveloanConfirmModal let-modal>
+  <div
+    class="modal-body text-center"
+    style="background-color: #cdcdcd !important"
+  >
+    <p
+      [translate]="'name'"
+      [translateParams]="{
+        ar: 'هل تريد الحفظ ',
+        en: 'Are you sure to save ?'
+      }"
+    ></p>
+    <div class="flex gap-2 justify-center mt-3">
+      <button
+        type="button"
+        mat-raised-button
+        color="primary"
+        (click)="AddImprestRequest(modal);"
+      >
+        {{ "Yes" | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "No" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+
+
+<ng-template #editloanConfirmModal let-modal>
+  <div
+    class="modal-body text-center"
+    style="background-color: #cdcdcd !important"
+  >
+    <p
+      [translate]="'name'"
+      [translateParams]="{
+        ar: 'هل تريد الحفظ ',
+        en: 'Are you sure to save ?'
+      }"
+    ></p>
+    <div class="flex gap-2 justify-center mt-3">
+      <button
+        type="button"
+        mat-raised-button
+        color="primary"
+        (click)="EditImprestRequest(modal);"
+      >
+        {{ "Yes" | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "No" | translate }}
+      </button>
+    </div>
   </div>
 </ng-template>
