@@ -64,6 +64,10 @@
             <input (keyup)="applyFilter($event)"
             type="text" class="form-control" id="search" />
         </div>
+
+        <button type="button" class="flex gap-1 btn btn-outline-secondary"(click)="exportData()">
+          {{ "exportExcel" | translate }}
+        </button>
       </div>
     </div>
   </div>

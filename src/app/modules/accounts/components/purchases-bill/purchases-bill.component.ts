@@ -5164,5 +5164,19 @@ export class PurchasesBillComponent implements OnInit {
   }
   //#endregion
   //--------------------------End--ServicePrice----------------------------
-
+  exportData() {
+    let x = [];
+    for (let index = 0; index < this.InvoicessDataSourceTemp.length; index++) {
+      x.push({
+        'تاريخ الترحيل': this.InvoicessDataSourceTemp[index].postDate,
+        'حالة الفاتورة': this.InvoicessDataSourceTemp[index].statusNameNew,
+        'نوع الدفع': this.InvoicessDataSourceTemp[index].payTypeName,
+        ' مجموع الفاتورة ': this.InvoicessDataSourceTemp[index].totalValue,
+        'تاريخ الفاتورة': this.InvoicessDataSourceTemp[index].date,
+        'رقم الفاتورة': this.InvoicessDataSourceTemp[index].invoiceNumber,
+      })
+    }
+    this.lang == "ar" ? this._accountsreportsService.customExportExcel(x, "فواتير المشتريات") :
+      this._accountsreportsService.customExportExcel(x, "Purchase invoices");
+  }
 }

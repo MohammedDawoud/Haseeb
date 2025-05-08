@@ -447,4 +447,26 @@ export class SalesReturnComponent implements OnInit{
   }
 
 //------------------------------------------------------------------------------
+
+exportData() {
+  let x = [];
+  for (let index = 0; index < this.projectsDataSourceTemp.length; index++) {
+    x.push({
+      'الحالة': this.projectsDataSourceTemp[index].radName,
+      'المبلغ بعد الضريبة': this.projectsDataSourceTemp[index].totalValue,
+      'الضريبة': this.projectsDataSourceTemp[index].taxAmount,
+      'المبلغ بدون ضريبة': this.projectsDataSourceTemp[index].invoiceValue,
+      'أسم العميل': this.projectsDataSourceTemp[index].customerName,
+      'البيان': this.projectsDataSourceTemp[index].notes,
+      'رقم القيد': this.projectsDataSourceTemp[index].journalNumber,
+      'نوع الدفع': this.projectsDataSourceTemp[index].payTypeName,
+      'رقم الفاتورة': this.projectsDataSourceTemp[index].invoiceNumber,
+      'تاريخه': this.projectsDataSourceTemp[index].date,
+      'رقم المردود': this.projectsDataSourceTemp[index].invoiceRetId,
+
+    })
+  }
+  this.lang == "ar" ? this._accountsreportsService.customExportExcel(x, "مردودات المبيعات") :
+    this._accountsreportsService.customExportExcel(x, "Sales returns");
+}
 }

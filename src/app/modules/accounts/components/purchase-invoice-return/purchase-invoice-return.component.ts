@@ -788,5 +788,26 @@ export class PurchaseInvoiceReturnComponent implements OnInit{
   }
 
 
+  exportData() {
+    let x = [];
+    for (let index = 0; index < this.projectsDataSourceTemp.length; index++) {
+      x.push({
+        'الحالة': this.projectsDataSourceTemp[index].radName,
+        'المبلغ بعد الضريبة': this.projectsDataSourceTemp[index].totalValue,
+        'الضريبة': this.projectsDataSourceTemp[index].taxAmount,
+        'المبلغ بدون ضريبة': this.projectsDataSourceTemp[index].invoiceValue,
+        'البيان': this.projectsDataSourceTemp[index].notes,
+        'رقم القيد': this.projectsDataSourceTemp[index].journalNumber,
+        'نوع الدفع': this.projectsDataSourceTemp[index].payTypeName,
+        'رقم الفاتورة': this.projectsDataSourceTemp[index].invoiceNumber,
+        'تاريخه': this.projectsDataSourceTemp[index].date,
+        'رقم المردود': this.projectsDataSourceTemp[index].invoiceRetId,
+  
+      })
+    }
+    this.lang == "ar" ? this._accountsreportsService.customExportExcel(x, "مردودات المشتريات") :
+      this._accountsreportsService.customExportExcel(x, "Purchase returns");
+  }
+
 
 }
