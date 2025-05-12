@@ -58,6 +58,12 @@
           </label>
         <input type="text" class="form-control" autocomplete="off"id="search" (keyup)="applyFilter($event)"/>
         </div>
+
+        <div class="mb-0 mb-md-3">
+          <button type="button" class="flex gap-1 btn btn-outline-secondary"(click)="exportData()">
+            {{ "exportExcel" | translate }}
+          </button>
+        </div>
       </div>
       <!-- table -->
       <div class="overflow-auto mt-4">

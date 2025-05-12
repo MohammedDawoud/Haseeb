@@ -1128,7 +1128,7 @@
         type="button"
         class="btn bg-base text-white"
         [disabled]="form.invalid"
-        (click)="SaveVacationWorkers(modal)"
+        (click)="open(saveModal,modal,'savevac')"
       >
         {{ modalDetails?.id ? ("edit" | translate) : ("add" | translate) }}
       </button>
@@ -1139,6 +1139,41 @@
     </div>
   </div>
 </ng-template>
+
+
+
+
+
+<ng-template #saveModal let-modal>
+  <div class="modal-body text-center">
+    <p
+      [translate]="'name'"
+      [translateParams]="{
+        ar: 'هل تريد الحفظ',
+        en: 'Are you sure to save ?'
+      }"
+    ></p>
+    <div class="flex gap-2 justify-center">
+      <button
+        type="button"
+        mat-raised-button
+        class="btn bg-base text-white"
+        (click)="SaveVacationWorkers(modal);"
+      >
+        {{ "Yes" | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "No" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
 
 <!-- deleteModal -->
 <ng-template #deleteModal let-modal>

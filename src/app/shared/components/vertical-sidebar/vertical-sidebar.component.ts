@@ -510,6 +510,13 @@ export class VerticalSidebarComponent implements OnInit {
             show: this.userG?.userPrivileges.includes(141101),
           },
           {
+            name: { ar: 'اذونات الموظفين', en: 'Staff Holidays' },
+            link: '/employees/employee-permissions',
+            type: 'single',
+            icon: '/assets/sidebar-icons/permission.png',
+            show: (this.userG?.userPrivileges.includes(141101)|| this.userG?.userPrivileges.includes(142006)),
+          },
+          {
             name: { ar: 'سلف الموظف', en: 'Employee Loan' },
             link: '/employees/EmployeeLoan',
             type: 'single',

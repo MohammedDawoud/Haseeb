@@ -4492,5 +4492,22 @@ export class SalesBillComponent implements OnInit {
   }
   //#endregion
   //----------------------------------(End)-Storehouse---------------------------------------------
-
+  exportData() {
+    let x = [];
+    for (let index = 0; index < this.InvoicessDataSourceTemp .length; index++) {
+      x.push({
+        'تاريخ الترحيل': this.InvoicessDataSourceTemp [index].postDate,
+        'حالة الفاتورة': this.InvoicessDataSourceTemp [index].statusNameNew,
+        'أسم العميل': this.InvoicessDataSourceTemp [index].customerName,
+        'نوع الدفع': this.InvoicessDataSourceTemp [index].payTypeName,
+        'المبلغ بعد الضريبة': this.InvoicessDataSourceTemp [index].totalValue,
+        'الضريبة': this.InvoicessDataSourceTemp [index].taxAmount,
+        'المبلغ بدون ضريبة': this.InvoicessDataSourceTemp [index].invoiceValue,
+        'تاريخ الفاتورة': this.InvoicessDataSourceTemp [index].date,
+        'رقم الفاتورة': this.InvoicessDataSourceTemp [index].invoiceNumber,
+      })
+    }
+    this.lang == "ar" ? this._accountsreportsService.customExportExcel(x, "فواتير المبيعات") :
+      this._accountsreportsService.customExportExcel(x, "Sales invoices");
+  }
 }

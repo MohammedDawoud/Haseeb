@@ -332,9 +332,21 @@ export class CarMovementComponent implements OnInit {
     this.GetAllItemTypes();
     this.GetOrganizationData();
   }
+  savetype:any;
+  savemodal:any;
 
   open(content: any, data?: any, type?: any, info?: any) {
     debugger;
+    if(type=='addcar'){
+      this.savetype=1;
+      this.savemodal=data;
+    }
+    if(type=='editcar')
+    {
+      this.savetype=2;
+      this.savemodal=data;
+
+    }
     if (data && type == 'edit') {
       this.modalDetails = data;
       data.date = new Date(data.date);
@@ -457,10 +469,22 @@ export class CarMovementComponent implements OnInit {
       });
   }
 
-  EditCarMovement() {
+  savecarmov(modal:any){
+    if(this.savetype==1){
+      this.AddCarMovement(modal);
+    }
+    else
+    {
+      this.EditCarMovement(modal);
+
+    }
+
+  }
+
+  EditCarMovement(modal:any) {
     console.log(this.modalDetails);
   }
-  AddCarMovement() {
+  AddCarMovement(model:any) {
     debugger;
     console.log(this.modalDetails);
     if (
@@ -500,6 +524,8 @@ export class CarMovementComponent implements OnInit {
         debugger;
         if (result.statusCode == 200) {
           this.GetCarmovementsearch(0);
+          model.dismiss();
+          this.savemodal.dismiss();
           this.toast.success(
             this.translate.instant(result.reasonPhrase),
             this.translate.instant('Message')

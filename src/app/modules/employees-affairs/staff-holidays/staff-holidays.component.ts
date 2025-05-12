@@ -293,7 +293,7 @@ export class StaffHolidaysComponent implements OnInit {
   }
 
   SaveVacationWorkers(modal: any) {
-    debugger;
+    //debugger;
     if (
       this.modalDetails.vacationType == null ||
       this.modalDetails.from == null ||
@@ -330,16 +330,15 @@ export class StaffHolidaysComponent implements OnInit {
     if (this.modalDetails.discound == true) {
       this._vacation.discountAmount = this.modalDetails.discountamount;
     }
-    debugger;
+    //debugger;
     this._staffholidayservice
       .SaveVacationWorkers(this._vacation)
       .subscribe((result: any) => {
-        console.log(result);
-        console.log('result');
-        debugger;
+        //debugger;
         if (result.statusCode == 200) {
           modal.dismiss();
-          debugger;
+          this.savemodal.dismiss();
+          //debugger;
           if (this.control?.value[0] != null) {
             const formData = new FormData();
 
@@ -519,6 +518,7 @@ export class StaffHolidaysComponent implements OnInit {
   }
 
   withReason = false;
+  savemodal:any;
   open(content: any, data?: any, type?: any, info?: any) {
     if (data && type == 'edit') {
       this.modalDetails = data;
@@ -534,7 +534,9 @@ export class StaffHolidaysComponent implements OnInit {
     if (data && type == 'delete') {
       this.vacationtodalete = data.vacationId;
     }
-
+    if(data && type=='savevac'){
+      this.savemodal=data;
+    }
     if (type == 'withreason') {
       this.withReason = true;
     } else {

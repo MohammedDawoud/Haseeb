@@ -73,6 +73,7 @@ import { AttendanceListComponent } from './attendanceList/attendanceList.compone
 import { AttendenceLocationListComponent } from './attendence-location-list/attendence-location-list.component';
 import { EditattendencelocationComponent } from './editattendencelocation/editattendencelocation.component';
 import { AttendencelocationnewComponent } from './attendencelocationnew/attendencelocationnew.component';
+import { EmployeePermissionsComponent } from './employee-permissions/employee-permissions.component';
 @NgModule({
   declarations: [
     AbsenteeStaffComponent,
@@ -102,6 +103,8 @@ import { AttendencelocationnewComponent } from './attendencelocationnew/attenden
     AttendanceListComponent,
     AttendaceCardComponent,
     EmployeesDataComponent,
+    EmployeePermissionsComponent,
+
   ],
   imports: [
     CommonModule,

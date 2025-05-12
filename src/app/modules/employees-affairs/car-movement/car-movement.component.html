@@ -1238,15 +1238,15 @@
     </div>
     <div class="d-flex items-center justify-end gap-3 mt-4">
       <button
-        type="button"
-        class="btn bg-base text-white"
-        (click)="
-          modalDetails?.id ? EditCarMovement() : AddCarMovement();
-          modal.close('Save click', 'end')
-        "
-      >
-        {{ modalDetails?.id ? ("edit" | translate) : ("add" | translate) }}
-      </button>
+      type="button"
+      class="btn bg-base text-white"
+      (click)="
+        modalDetails?.id ? open(savecarmovment,modal,'editcar'): open(savecarmovment,modal,'addcar');
+        
+      "
+    >
+      {{ modalDetails?.id ? ("edit" | translate) : ("add" | translate) }}
+    </button>
 
       <button (click)="modal?.dismiss()" class="btn btn-outline-secondary">
         {{ "close" | translate }}
@@ -1255,6 +1255,38 @@
   </div>
 </ng-template>
 
+
+
+
+<ng-template #savecarmovment let-modal>
+  <div class="modal-body text-center">
+    <p
+      [translate]="'name'"
+      [translateParams]="{
+        ar: 'هل تريد الحفظ ',
+        en: 'Are you sure to save ?'
+      }"
+    ></p>
+    <div class="flex gap-2 justify-center">
+      <button
+        type="button"
+        mat-raised-button
+        color="basic"
+        (click)="savecarmov(modal);"
+      >
+        {{ "Yes" | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "No" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
 <!-- deleteModal -->
 <ng-template #deleteModal let-modal>
   <div class="modal-body text-center">
