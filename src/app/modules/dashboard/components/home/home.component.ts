@@ -75,6 +75,8 @@ import { NgxPrintElementService } from 'ngx-print-element';
 import printJS from 'print-js';
 import { PrintreportsService } from 'src/app/core/services/acc_Services/printreports.service';
 import { HttpEventType } from '@angular/common/http';
+import { EmployeePermissionsService } from 'src/app/core/services/Employees-Services/employee-permissions.service';
+import { Permissions } from 'src/app/core/Classes/DomainObjects/Permissions';
 
 const DEFAULT_DURATION = 300;
 
@@ -118,6 +120,7 @@ export class HomeComponent implements OnInit {
   @ViewChild('confirmModal') confirmModal: any;
   @ViewChild('confirmloanModal') confirmloanModal: any;
   @ViewChild('notifications') notifications: any;
+  @ViewChild('confirmpermissionModal') confirmpermissionModal: any;
 
   @ViewChild('delayModal') delayModal: any;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -425,6 +428,14 @@ export class HomeComponent implements OnInit {
     'discoundType',
     'duration',
     'endDate',
+  ];
+
+  displayedColumnsWaitingPermissions: string[] = [
+    'date',
+    'employeeName',
+    'vacationType',
+
+    'dicesion',
   ];
   columns: any = {
     tasks: [
@@ -1757,6 +1768,8 @@ console.log(data.absenceData);
   ///////////////////////////////////////////////////////////////////////////////////////////////
   _projectvm = new ProjectVM();
   _AttendenceVM = new AttendenceVM();
+  _perm =new Permissions();
+
   constructor(
     private api: RestApiService,
     private modalService: NgbModal,
@@ -1779,7 +1792,9 @@ console.log(data.absenceData);
     private datePipe: DatePipe,
     private _report: EmployeeReportService,
 
-    private translate: TranslateService
+    private translate: TranslateService,
+    private _permissionservice :EmployeePermissionsService
+
   ) {
     this.userG = this.authenticationService.userGlobalObj;
 
@@ -1863,6 +1878,7 @@ console.log(data.absenceData);
     this.FillBranchSearch();
     this.getwaitingvacation();
     this.getwaitingImprests();
+    this.GetAllPermissionswaiting(2,'');
 
     this.api.GetOrganizationDataLogin().subscribe((data: any) => {
       this.OrganizationData = data.result;
@@ -1870,6 +1886,8 @@ console.log(data.absenceData);
       this.environmentPho =
         environment.PhotoURL + this.OrganizationData.logoUrl;
     });
+    this._perm=new Permissions();
+
   }
 
   isclicked = 0;
@@ -2387,11 +2405,15 @@ console.log(data.absenceData);
   }
   UseName: any;
   JobName: any;
+  CurrentEmpId:any
+
   GetCurrentUserById() {
     this._homesernice.GetCurrentUserById().subscribe((data) => {
       // console\.log(data.result);
       this.UseName = data.result.fullName;
       this.JobName = data.result.jobName;
+      this.CurrentEmpId=data.result.empId;
+
     });
   }
 
@@ -2454,6 +2476,7 @@ console.log(data.absenceData);
   IsadminTask: any;
   savemodal:any;
   saveloan:any;
+  savemodal2:any
 
   open(content: any, size?: any, data?: any, positions?: any, role?: any) {
     if (role) {
@@ -2475,6 +2498,9 @@ console.log(data.absenceData);
     }
     if(data && role=='savevac'){
       this.savemodal=data;
+    } 
+     if(role=='saveperm'){
+      this.savemodal2=data;
     }
     if(role=='saveloan'){
       debugger
@@ -2491,6 +2517,14 @@ console.log(data.absenceData);
       this.GetAllVacationsw();
       // this.Getemployeebyid();
       this.fillvacationtype();
+    }
+    if(role=='permissionclient'){
+      this.fillpermissiontype();
+      this.GetAllPermissions(2,1);
+
+    }
+    if(role=='permissionadmin'){
+     this.GetAllPermissions(2,'');
     }
     if (role == 'openreport') {
       this.GetDoneTasksDGV();
@@ -2668,7 +2702,8 @@ debugger
   vacationidupdated: any;
   loanupdate: any;
   loanselectedtype: any;
-
+  permissionupdate: any;
+  permissiontype: any;
   openModal(event: any, data: any, type: any) {
     // type = اجازة / سلف
     if (type == 'vacation') {
@@ -2679,6 +2714,14 @@ debugger
       this.loanupdate = data;
       this.loanselectedtype = event?.target?.value;
       this.modalService.open(this.confirmloanModal, {
+        size: 'md',
+        centered: true,
+      });
+    }
+    if (type == 'permission') {
+      this.permissionupdate = data;
+      this.permissiontype = event?.target?.value;
+      this.modalService.open(this.confirmpermissionModal, {
         size: 'md',
         centered: true,
       });
@@ -6754,7 +6797,138 @@ debugger
        }
      });
    }
+/////////////////////////////////////////////////////////////////////
+  //#region  permission
 
+  
+  searchtext:any;
+  employeeid:any;
+  type:any;
+  status:any;
+  fromdate:any=null;
+  todate:any=null;
+
+  PermissionData:any;
+  permissionwatingcount:any=0;
+  GetAllPermissions(status:any,type:any) {
+debugger
+if(type==1){
+  this.employeeid= this.CurrentEmpId;
+}
+
+      this._permissionservice.GetAllPermissions(this.employeeid??'',this.type??'',
+      status??'',this.fromdate??'',this.todate??'', this.searchtext??'')
+        .subscribe({
+          next: (data: any) => {
+            this.PermissionData=data;
+
+          
+          },
+          error: (error) => {
+          },
+        });
+    }
+
+    GetAllPermissionswaiting(status:any,type:any) {
+      debugger
+      if(type==1){
+        this.employeeid= this.CurrentEmpId;
+      }
+      
+            this._permissionservice.GetAllPermissions(this.employeeid??'',this.type??'',
+            status??'',this.fromdate??'',this.todate??'', this.searchtext??'')
+              .subscribe({
+                next: (data: any) => {
+                  this.PermissionData=data;
+      
+                  this.permissionwatingcount=data.length;
+                },
+                error: (error) => {
+                },
+              });
+          }
+
+          permissionreason:any;
+    UpdatePermissionStatus(modal:any){
+      
+      
+
+      this._permissionservice
+              .Updatepermission(this.permissionupdate.permissionId,this.permissiontype,this.permissionreason)
+              .subscribe((result: any) => {
+                if (result.statusCode == 200) {
+                  modal.dismiss();
+                  this.toast.success(
+                    this.translate.instant(result.reasonPhrase),
+                    this.translate.instant('Message')
+                  );
+                }
+                this.GetAllPermissions(2,'');
+                 
+              });
+          }
+
+    
+    modalDetails2: any = {
+      id: null,
+      employeeId: null,
+      permissionType: null,
+      date: null,
+      from: null,
+      to: null,
+      reason: null,
+      file: null,
+      vacationbalance: null,
+      discountamount: null,
+    };
+
+    SavePermission(modal: any) {
+            //debugger;
+            if (
+              this.CurrentEmpId == null ||
+              this.modalDetails2.permissionType == null ||
+              this.modalDetails2.date == null
+            ) {
+              this.toast.error('من فضلك اكمل البيانات', 'رسالة');
+              return;
+            }
+             this._perm = new Permissions();
+             this._perm.EmpId = this.CurrentEmpId;
+            this._perm.PermissionId = 0;
+            this._perm.TypeId = this.modalDetails2.permissionType;
+            this._perm.Date = this._sharedService.date_TO_String(
+              this.modalDetails2.date
+            );
+          
+            this._perm.Status = 2;
+            this._perm.Reason = this.modalDetails2.reason;
+        
+            this._permissionservice
+              .SavePermission(this._perm)
+              .subscribe((result: any) => {
+                if (result.statusCode == 200) {
+                  modal.dismiss();
+                  this.savemodal.dismiss();
+                  this.toast.success(
+                    this.translate.instant(result.reasonPhrase),
+                    this.translate.instant('Message')
+                  );
+                }
+                this.GetAllPermissions(2,1);
+                 
+              });
+          }
+
+          Permissiontypeselect:any;
+          fillpermissiontype() {
+            //debugger;
+            this._permissionservice.FillPermissionTypeSelect().subscribe((data) => {
+              //debugger;
+        
+              this.Permissiontypeselect = data;
+            });
+          }
+  //#endregion
 }
 
 

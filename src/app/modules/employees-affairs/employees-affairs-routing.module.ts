@@ -26,6 +26,7 @@ import { AttendenceLocationListComponent } from './attendence-location-list/atte
 import { AttendanceListComponent } from './attendanceList/attendanceList.component';
 import { AttendencelocationnewComponent } from './attendencelocationnew/attendencelocationnew.component';
 import { EditattendencelocationComponent } from './editattendencelocation/editattendencelocation.component';
+import { EmployeePermissionsComponent } from './employee-permissions/employee-permissions.component';
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'generalAlert' },
   { path: 'generalAlert', component: GeneralAlertComponent },
@@ -73,6 +74,10 @@ const routes: Routes = [
   {
     path: 'editattendencelocation',
     component: EditattendencelocationComponent,
+  },
+  {
+    path: 'employee-permissions',
+    component: EmployeePermissionsComponent,
   },
 ];
 
