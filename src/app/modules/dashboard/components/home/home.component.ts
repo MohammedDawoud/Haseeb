@@ -2409,7 +2409,7 @@ console.log(data.absenceData);
 
   GetCurrentUserById() {
     this._homesernice.GetCurrentUserById().subscribe((data) => {
-      // console\.log(data.result);
+      console.log('curent user' ,data.result);
       this.UseName = data.result.fullName;
       this.JobName = data.result.jobName;
       this.CurrentEmpId=data.result.empId;
@@ -2520,7 +2520,7 @@ console.log(data.absenceData);
     }
     if(role=='permissionclient'){
       this.fillpermissiontype();
-      this.GetAllPermissions(2,1);
+      this.GetAllPermissions('',1);
 
     }
     if(role=='permissionadmin'){
@@ -6882,8 +6882,8 @@ if(type==1){
       discountamount: null,
     };
 
-    SavePermission(modal: any) {
-            //debugger;
+    SavePermission2(modal: any) {
+            debugger;
             if (
               this.CurrentEmpId == null ||
               this.modalDetails2.permissionType == null ||
@@ -6914,7 +6914,7 @@ if(type==1){
                     this.translate.instant('Message')
                   );
                 }
-                this.GetAllPermissions(2,1);
+                this.GetAllPermissions('',1);
                  
               });
           }

@@ -16143,7 +16143,7 @@
         type="button"
         class="btn bg-base text-white"
         [disabled]="form.invalid"
-        (click)="open(saveModal,null,modal,null,'saveperm')"
+        (click)="open(saveModalpermission,null,modal,null,'saveperm')"
       >
         {{ modalDetails?.id ? ("edit" | translate) : ("add" | translate) }}
       </button>
@@ -16156,7 +16156,7 @@
 </ng-template>
 
 
-<ng-template #saveModal let-modal>
+<ng-template #saveModalpermission let-modal>
   <div class="modal-body text-center">
     <p
       [translate]="'name'"
@@ -16170,7 +16170,7 @@
         type="button"
         mat-raised-button
         class="btn bg-base text-white"
-        (click)="SavePermission(modal);"
+        (click)="SavePermission2(modal);"
       >
         {{ "Yes" | translate }}
       </button>
