@@ -18,7 +18,6 @@ export class EmployeePayrollmarchesserviceService {
   }
 
   GetAllEmployeeSearch(Search: EmployeesVM): Observable<any> {
-    debugger;
     const headers = { 'content-type': 'application/json' };
     const body = JSON.stringify(Search);
     return this.http.post(
@@ -37,7 +36,6 @@ export class EmployeePayrollmarchesserviceService {
   }
 
   GetEmpPayrollMarches(Search: EmployeesVM): Observable<any> {
-    debugger;
     const headers = { 'content-type': 'application/json' };
     const body = JSON.stringify(Search);
     return this.http.post(
@@ -48,7 +46,6 @@ export class EmployeePayrollmarchesserviceService {
   }
 
   PostEmpPayroll(payrollId: any): Observable<any> {
-    debugger;
     const headers = { 'content-type': 'application/json' };
     const body = JSON.stringify(payrollId);
     return this.http.post(this.apiEndPoint + 'Employee/PostEmpPayroll', body, {
@@ -57,7 +54,6 @@ export class EmployeePayrollmarchesserviceService {
   }
 
   PostEmpPayroll_Back(payrollId: any): Observable<any> {
-    debugger;
     const headers = { 'content-type': 'application/json' };
     const body = JSON.stringify(payrollId);
     return this.http.post(
@@ -103,7 +99,6 @@ export class EmployeePayrollmarchesserviceService {
   }
 
   PostEmployeeCheckBox(payrollid: any) {
-    debugger;
     const headers = { 'content-type': 'application/json' };
     const body = JSON.stringify(payrollid);
     return this.http.post(
@@ -114,7 +109,6 @@ export class EmployeePayrollmarchesserviceService {
   }
 
   PrintEmployeesSalaryReport2(EmployeesVM: EmployeesVM) {
-    debugger;
     const headers = { 'content-type': 'application/json' };
     const body = JSON.stringify(EmployeesVM);
     return this.http.post(

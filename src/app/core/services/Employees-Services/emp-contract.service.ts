@@ -62,7 +62,6 @@ export class EmpContractService {
   }
 
   SaveSalaryParts(data: EmpSalaryPartsVM): Observable<any> {
-    debugger;
     const headers = { 'content-type': 'application/json' };
     const body = JSON.stringify(data);
     return this.http.post(
@@ -142,7 +141,6 @@ export class EmpContractService {
   }
 
   GetEmpdatatoendwork(Search: EmpContract): Observable<any> {
-    debugger;
     const headers = { 'content-type': 'application/json' };
     const body = JSON.stringify(Search);
     return this.http.post(
@@ -157,7 +155,6 @@ export class EmpContractService {
     Duration: any,
     Reason: any
   ): Observable<any> {
-    debugger;
     const headers = { 'content-type': 'application/json' };
     const body = JSON.stringify(Search);
     return this.http.post(

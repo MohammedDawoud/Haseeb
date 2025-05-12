@@ -15,7 +15,6 @@ export class EmployeeLoanService {
   }
 
   GetAllImprestSearch(ImprestSearch: LoanVM): Observable<any> {
-    debugger;
     const headers = { 'content-type': 'application/json' };
     const body = JSON.stringify(ImprestSearch);
     return this.http.post(this.apiEndPoint + 'Loan/GetAllImprestSearch', body, {
@@ -32,7 +31,6 @@ export class EmployeeLoanService {
     return this.http.get<any>(this.apiEndPoint + 'Employee/FillEmployeeSelect');
   }
   SaveLoanWorker(loan: Loan): Observable<any> {
-    debugger;
     const headers = { 'content-type': 'application/json' };
     const body = JSON.stringify(loan);
     return this.http.post(this.apiEndPoint + 'Loan/SaveLoanWorkers', body, {
@@ -41,7 +39,6 @@ export class EmployeeLoanService {
   }
 
   SaveLoan_Management(loan: Loan): Observable<any> {
-    debugger;
     const headers = { 'content-type': 'application/json' };
     const body = JSON.stringify(loan);
     return this.http.post(this.apiEndPoint + 'Loan/SaveLoan_Management', body, {
