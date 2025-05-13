@@ -2,7 +2,7 @@
     <app-navigator [title]="title"></app-navigator>
     <div class="head flex flex-column gap-4 flex-wrap items-start justify-start">
       <div class="btns">
-        <button
+        <button  *ngIf="userG?.userPrivileges.includes(142102)"
           type="button"
           class="btn bg-base text-white"
           (click)="open(addNewPermission, null, 'add')"
@@ -199,7 +199,7 @@
                 >
                   <i class="fa-solid fa-trash-can"></i>
                 </button>
-                <!-- <span class="dtr-data">
+                <span class="dtr-data">
                   <button
                     type="button"
                     id="68"
@@ -212,7 +212,7 @@
                   >
                     <i class="fa-solid fa-print"></i>
                   </button>
-                </span> -->
+                </span>
               </div>
             </td>
           </ng-container> 
@@ -238,7 +238,472 @@
     </div>
 
 
-
+    <div style="display: none">
+      <div
+         id="reportpermission"
+         [ngStyle]="{ direction: lang == 'ar' ? 'rtl' : 'ltr' }"
+       >
+         <div
+           class="report-header"
+           style="
+             display: flex;
+             align-items: center;
+             gap: 100px;
+             padding: 3px 0px;
+             margin-bottom: 20px;
+           "
+         >
+           <div class="headerNe-right-side">
+             <img
+               *ngIf="logourl"
+               src="{{ logourl }}"
+               alt="logo"
+               style="
+                 height: 200px;
+                 width: 200px;
+                 max-width: 200px;
+                 object-fit: fill;
+               "
+             />
+           </div>
+   
+           <div class="headerNe-lefy-side" style="width: 100%">
+             <h1
+               style="
+                 letter-spacing: 0.25px;
+                 font-size: 23px;
+                 margin: 0;
+                 margin-bottom: 3px;
+               "
+             >
+               {{ userG?.companyName }}
+             </h1>
+             <div class="line" style="position: relative; padding: 5px 0px 10px">
+               <span
+                 style="
+                   position: absolute;
+                   right: 0;
+                   width: 100%;
+                   height: 2px;
+                   background-color: #e5e5e5;
+                   z-index: 1;
+                 "
+               ></span>
+               <span
+                 style="
+                   position: absolute;
+                   right: 0;
+                   width: 70%;
+                   height: 2px;
+                   background-color: #ec1c24;
+                   z-index: 2;
+                 "
+               ></span>
+             </div>
+   
+             <h1
+               style="
+                 margin-bottom: 0;
+                 font-size: 34px;
+                 color: #0c8191;
+                 margin-bottom: 0;
+                 margin-top: 30px;
+                 font-weight: 500;
+               "
+               [translate]="'name'"
+               [translateParams]="{
+                 ar: ' طلب إذن',
+                 en: 'Permission Request'
+               }"
+             ></h1>
+           </div>
+         </div>
+   
+         <div style="margin-bottom: 10px">
+           <p>
+             <span
+               [translate]="'name'"
+               [translateParams]="{
+                 ar: 'التاريخ: ',
+                 en: 'Date: '
+               }"
+             ></span>
+             <span> {{ datePrintJournals }}</span>
+           </p>
+         </div>
+   
+         <div class="services" style="width: 100%; margin-bottom: 10px">
+           <div class="content">
+             <span style="font-size: 18px; font-weight: bold">بيانات الموظف</span>
+             <table
+               style="text-align: center; vertical-align: middle; width: 100%"
+             >
+               <thead>
+                 <td
+                   style="
+                     font-size: 16px;
+                     background-color: #fff;
+                     padding: 14px 4px;
+                     text-align: center;
+                     color: #272727;
+                     word-wrap: break-word;
+                     border-inline-start: 1px dashed #0c8191;
+                     border: 1px dashed #272727;
+                     font-weight: 600;
+                   "
+                 >
+                   رقم الموظف
+                 </td>
+                 <td
+                   style="
+                     font-size: 16px;
+                     background-color: #fff;
+                     padding: 14px 4px;
+                     text-align: center;
+                     color: #272727;
+                     word-wrap: break-word;
+                     border-inline-start: 1px dashed #0c8191;
+                     border: 1px dashed #272727;
+                     font-weight: 600;
+                   "
+                 >
+                   اسم الموظف
+                 </td>
+                 <td
+                   style="
+                     font-size: 16px;
+                     background-color: #f7f7f7;
+                     padding: 14px 4px;
+                     text-align: center;
+                     color: #272727;
+                     word-wrap: break-word;
+                     border-inline-start: 1px dashed #0c8191;
+                     border: 1px dashed #272727;
+                     font-weight: 600;
+                   "
+                 >
+                   الوظيفه
+                 </td>
+                 <td
+                   style="
+                     font-size: 16px;
+                     background-color: #f7f7f7;
+                     padding: 14px 4px;
+                     text-align: center;
+                     color: #272727;
+                     word-wrap: break-word;
+                     border-inline-start: 1px dashed #0c8191;
+                     border: 1px dashed #272727;
+                     font-weight: 600;
+                   "
+                 >
+                   رقم الهويه
+                 </td>
+                 <td
+                   style="
+                     font-size: 16px;
+                     background-color: #fff;
+                     padding: 14px 4px;
+                     text-align: center;
+                     color: #272727;
+                     word-wrap: break-word;
+                     border-inline-start: 1px dashed #0c8191;
+                     border: 1px dashed #272727;
+                     font-weight: 600;
+                   "
+                 >
+                   الفرع
+                 </td>
+               </thead>
+               <tbody>
+                 <tr>
+                   <td
+                     style="
+                       background-color: #fff;
+                       font-size: 15px;
+                       font-weight: 500;
+                       padding: 10px 0px;
+                       color: #272727;
+                       border-inline-start: 1px dashed #272727;
+                       border-bottom: 1px dashed #272727;
+                     "
+                   >
+                     {{ printmodel.employeeNo }}
+                   </td>
+                   <td
+                     style="
+                       background-color: #fff;
+                       font-size: 15px;
+                       font-weight: 500;
+                       padding: 10px 0px;
+                       color: #272727;
+                       border-inline-start: 1px dashed #272727;
+                       border-bottom: 1px dashed #272727;
+                     "
+                   >
+                     {{ printmodel.employeeName }}
+                   </td>
+                   <td
+                     style="
+                       background-color: #fff;
+                       font-size: 15px;
+                       font-weight: 500;
+                       padding: 10px 0px;
+                       color: #272727;
+                       border-inline-start: 1px dashed #272727;
+                       border-bottom: 1px dashed #272727;
+                     "
+                   >
+                     {{ printmodel.employeeJob }}
+                   </td>
+                   <td
+                     style="
+                       background-color: #fff;
+                       font-size: 15px;
+                       font-weight: 500;
+                       padding: 10px 0px;
+                       color: #272727;
+                       border-inline-start: 1px dashed #272727;
+                       border-bottom: 1px dashed #272727;
+                     "
+                   >
+                     {{ printmodel.nationalitiId }}
+                   </td>
+                   <td
+                     style="
+                       background-color: #fff;
+                       font-size: 15px;
+                       font-weight: 500;
+                       padding: 10px 0px;
+                       color: #272727;
+                       border-inline-start: 1px dashed #272727;
+                       border-bottom: 1px dashed #272727;
+                       border-left: 1px dashed #272727;
+                     "
+                   >
+                     {{ printmodel.branchName }}
+                   </td>
+                 </tr>
+               </tbody>
+             </table>
+           </div>
+         </div>
+   
+         <div class="services" style="width: 100%; margin-bottom: 10px">
+           <div class="content">
+             <span style="font-size: 18px; font-weight: bold">بيانات الطلب</span>
+             <table
+               style="text-align: center; vertical-align: middle; width: 100%"
+             >
+               <thead>
+                 <tr>
+                   <td
+                     style="
+                       font-size: 16px;
+                       background-color: #fff;
+                       padding: 14px 4px;
+                       text-align: center;
+                       color: #272727;
+                       word-wrap: break-word;
+                       border-inline-start: 1px dashed #0c8191;
+                       border: 1px dashed #272727;
+                       font-weight: 600;
+                     "
+                   >
+                     نوع الاذن
+                   </td>
+   
+                   <td
+                     style="
+                       font-size: 16px;
+                       background-color: #fff;
+                       padding: 14px 4px;
+                       text-align: center;
+                       color: #272727;
+                       word-wrap: break-word;
+                       border-inline-start: 1px dashed #0c8191;
+                       border: 1px dashed #272727;
+                       font-weight: 600;
+                     "
+                   >
+                     {{ printmodel.type }}
+                   </td>
+                 </tr>
+                 <tr>
+                   <td
+                     style="
+                       font-size: 16px;
+                       background-color: #fff;
+                       padding: 14px 4px;
+                       text-align: center;
+                       color: #272727;
+                       word-wrap: break-word;
+                       border-inline-start: 1px dashed #0c8191;
+                       border: 1px dashed #272727;
+                       font-weight: 600;
+                     "
+                   >
+                      تاريخ الاذن
+                   </td>
+   
+                   <td
+                     style="
+                       font-size: 16px;
+                       background-color: #fff;
+                       padding: 14px 4px;
+                       text-align: center;
+                       color: #272727;
+                       word-wrap: break-word;
+                       border-inline-start: 1px dashed #0c8191;
+                       border: 1px dashed #272727;
+                       font-weight: 600;
+                     "
+                   >
+                     {{ printmodel.date }}
+                   </td>
+                 </tr>
+                 <tr>
+                   <td
+                     style="
+                       font-size: 16px;
+                       background-color: #fff;
+                       padding: 14px 4px;
+                       text-align: center;
+                       color: #272727;
+                       word-wrap: break-word;
+                       border-inline-start: 1px dashed #0c8191;
+                       border: 1px dashed #272727;
+                       font-weight: 600;
+                     "
+                   >
+                     حالة الاذن
+                   </td>
+   
+                   <td
+                     style="
+                       font-size: 16px;
+                       background-color: #fff;
+                       padding: 14px 4px;
+                       text-align: center;
+                       color: #272727;
+                       word-wrap: break-word;
+                       border-inline-start: 1px dashed #0c8191;
+                       border: 1px dashed #272727;
+                       font-weight: 600;
+                     "
+                   >
+                   {{ printmodel.status }}
+                   </td>
+                 </tr>
+               </thead>
+             </table>
+           </div>
+         </div>
+   
+         <div class="services" style="width: 100%; margin-bottom: 10px">
+           <div class="content">
+             <span style="font-size: 18px; font-weight: bold">قرار الادارة</span>
+             <table
+               style="text-align: center; vertical-align: middle; width: 100%"
+             >
+               <thead>
+                 <tr>
+                   <td
+                     style="
+                       font-size: 16px;
+                       background-color: #fff;
+                       padding: 14px 4px;
+                       text-align: center;
+                       color: #272727;
+                       word-wrap: break-word;
+                       border-inline-start: 1px dashed #0c8191;
+                       border: 1px dashed #272727;
+                       font-weight: 600;
+                     "
+                   >
+                     قرار الادارة
+                   </td>
+   
+                   <td
+                     style="
+                       font-size: 16px;
+                       background-color: #fff;
+                       padding: 14px 4px;
+                       text-align: center;
+                       color: #272727;
+                       word-wrap: break-word;
+                       border-inline-start: 1px dashed #0c8191;
+                       border: 1px dashed #272727;
+                       font-weight: 600;
+                     "
+                   >
+                     {{ printmodel.status }}
+                   </td>
+                 </tr>
+   
+                 <tr>
+                   <td
+                     style="
+                       font-size: 16px;
+                       background-color: #fff;
+                       padding: 14px 4px;
+                       text-align: center;
+                       color: #272727;
+                       word-wrap: break-word;
+                       border-inline-start: 1px dashed #0c8191;
+                       border: 1px dashed #272727;
+                       font-weight: 600;
+                     "
+                   >
+                     مبرر القرار
+                   </td>
+   
+                   <td
+                     style="
+                       font-size: 16px;
+                       background-color: #fff;
+                       padding: 14px 4px;
+                       text-align: center;
+                       color: #272727;
+                       word-wrap: break-word;
+                       border-inline-start: 1px dashed #0c8191;
+                       border: 1px dashed #272727;
+                       font-weight: 600;
+                     "
+                   >
+                   <span *ngIf="printmodel?.isDiscount == true"
+                   >  {{ printmodel.reason }}</span
+                 >
+                 <span *ngIf="printmodel?.isDiscount == false"
+                 >{{ printmodel.reason }}</span
+                 >
+                   </td>
+                 </tr>
+               </thead>
+             </table>
+   
+             <div
+               style="
+                 display: grid;
+                 grid-template-columns: auto auto auto auto;
+                 padding-top: 20px;
+               "
+               class="text-center"
+             >
+               <div class="grid-item">
+                 <p>
+                   اعتماد الادارة<br />{{ printmodel.acceptedUser
+                   }}<br />......................................
+                   <br />
+                   <br />
+                   <span>التاريخ :</span> {{ printmodel.acceptedDate }}
+                 </p>
+               </div>
+             </div>
+           </div>
+         </div>
+       </div>
+     </div>
 
   
   </div>
