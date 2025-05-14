@@ -6928,6 +6928,70 @@ if(type==1){
               this.Permissiontypeselect = data;
             });
           }
+
+          printmodel2: any = {
+            employeeName: null,
+            employeeJob: null,
+            employeeNo: null,
+            nationalitiId: null,
+            branchName: null,
+            type: null,
+            timestr: null,
+            status: null,
+            acceptedUser: null,
+            reason: null,
+            from: null,
+            to: null,
+            date: null,
+            isDiscount: null,
+            acceptedDate: null,
+          };
+          refreshprintdata2() {
+            this.printmodel2.employeeName = null;
+            this.printmodel2.employeeJob = null;
+            this.printmodel2.employeeNo = null;
+            this.printmodel2.nationalitiId = null;
+            this.printmodel2.branchName = null;
+        
+            this.printmodel2.reason = null;
+            this.printmodel2.type = null;
+            this.printmodel2.timestr = null;
+            this.printmodel2.status = null;
+            this.printmodel2.acceptedUser = null;
+        
+            this.printmodel2.from = null;
+            this.printmodel2.to = null;
+            this.printmodel2.date = null;
+            this.printmodel2.isDiscount = null;
+            this.printmodel2.acceptedDate = null;
+          }
+          setdatatoprint2(data: any) {
+            this.refreshprintdata2();
+            console.log(data);
+            debugger;
+            this.printmodel2.employeeName = data.employeName;
+            this.printmodel2.employeeJob = data.employeeJob;
+            this.printmodel2.employeeNo = data.employeeNo;
+            this.printmodel2.nationalitiId = data.identityNo;
+            this.printmodel2.branchName = data.branchName;
+        
+            this.printmodel2.reason = data.reason;
+            this.printmodel2.type = data.permissionTypeName;
+            this.printmodel2.status = data.statusName;
+            this.printmodel2.acceptedUser = data.acceptUser;
+        
+           
+            this.printmodel2.date = data.date;
+            this.printmodel2.acceptedDate = data.acceptedDate;
+          }
+          PrintPermission() {
+            const timeoutDuration = 5000;
+        
+            setTimeout(() => {
+              // Code to be executed after the timeout
+              this.printDiv('reportpermission');
+            }, timeoutDuration);
+          }
   //#endregion
 }
 

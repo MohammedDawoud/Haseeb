@@ -14,6 +14,7 @@ import { AdvanceToEmployeeService } from 'src/app/core/services/Employees-Servic
 import { EmployeePermissionsService } from 'src/app/core/services/Employees-Services/employee-permissions.service';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { RestApiService } from 'src/app/shared/services/api.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-employee-permissions',
@@ -154,6 +155,7 @@ export class EmployeePermissionsComponent {
     this.fillvacationtype();
     this.FillSelectEmployeeWorkers();
     this.getemployeeselect();
+    this.GetOrganizationData();
     this.permissionstatusselect = [
       { id: 1, name: ' تقديم طلب' },
       { id: 2, name: ' تم  تحويل الطلب الي الادارة' },
@@ -421,5 +423,78 @@ debugger
               );
             }
           });
+      }
+
+
+      printmodel: any = {
+        employeeName: null,
+        employeeJob: null,
+        employeeNo: null,
+        nationalitiId: null,
+        branchName: null,
+        type: null,
+        timestr: null,
+        status: null,
+        acceptedUser: null,
+        reason: null,
+        from: null,
+        to: null,
+        date: null,
+        isDiscount: null,
+        acceptedDate: null,
+      };
+      refreshprintdata() {
+        this.printmodel.employeeName = null;
+        this.printmodel.employeeJob = null;
+        this.printmodel.employeeNo = null;
+        this.printmodel.nationalitiId = null;
+        this.printmodel.branchName = null;
+    
+        this.printmodel.reason = null;
+        this.printmodel.type = null;
+        this.printmodel.timestr = null;
+        this.printmodel.status = null;
+        this.printmodel.acceptedUser = null;
+    
+        this.printmodel.from = null;
+        this.printmodel.to = null;
+        this.printmodel.date = null;
+        this.printmodel.isDiscount = null;
+        this.printmodel.acceptedDate = null;
+      }
+      setdatatoprint(data: any) {
+        this.refreshprintdata();
+        console.log(data);
+        debugger;
+        this.printmodel.employeeName = data.employeName;
+        this.printmodel.employeeJob = data.employeeJob;
+        this.printmodel.employeeNo = data.employeeNo;
+        this.printmodel.nationalitiId = data.identityNo;
+        this.printmodel.branchName = data.branchName;
+    
+        this.printmodel.reason = data.reason;
+        this.printmodel.type = data.permissionTypeName;
+        this.printmodel.status = data.statusName;
+        this.printmodel.acceptedUser = data.acceptUser;
+    
+       
+        this.printmodel.date = data.date;
+        this.printmodel.acceptedDate = data.acceptedDate;
+      }
+      PrintVacation() {
+        const timeoutDuration = 5000;
+    
+        setTimeout(() => {
+          // Code to be executed after the timeout
+          this.printDiv('reportpermission');
+        }, timeoutDuration);
+      }
+      printDiv(id: any) {
+        this.print.print(id, environment.printConfig);
+      }
+      GetOrganizationData() {
+        this._sharedService.GetOrganizationData().subscribe((data) => {
+          this.logourl = environment.PhotoURL + data.logoUrl;
+        });
       }
 }

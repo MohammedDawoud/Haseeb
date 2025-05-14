@@ -514,7 +514,7 @@ export class VerticalSidebarComponent implements OnInit {
             link: '/employees/employee-permissions',
             type: 'single',
             icon: '/assets/sidebar-icons/permission.png',
-            show: (this.userG?.userPrivileges.includes(141101)|| this.userG?.userPrivileges.includes(142006)),
+            show: (this.userG?.userPrivileges.includes(142101)|| this.userG?.userPrivileges.includes(142006)),
           },
           {
             name: { ar: 'سلف الموظف', en: 'Employee Loan' },
