@@ -72,6 +72,7 @@ import { MonthlyinvoiceswithdayesComponent } from './components/monthlyinvoicesw
 import { YearlyinvoiceswitMonthsComponent } from './components/yearlyinvoiceswit-months/yearlyinvoiceswit-months.component';
 import { PaymentdelegatesComponent } from './components/paymentdelegates/paymentdelegates.component';
 import { ItemMovementComponent } from './components/item-movement/item-movement.component';
+import { ZatcaReportComponent } from './components/zatca-report/zatca-report.component';
 
 
 @NgModule({
@@ -126,7 +127,9 @@ import { ItemMovementComponent } from './components/item-movement/item-movement.
     MonthlyinvoiceswithdayesComponent,
     MonthlyInvoicesComponent,
     PaymentdelegatesComponent,
-    ItemMovementComponent
+    ItemMovementComponent,
+    ZatcaReportComponent,
+
   ],
   imports: [
     CommonModule,

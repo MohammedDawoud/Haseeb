@@ -1615,27 +1615,45 @@
                 </button>
               </div>
 
-              <hr class="mb-4" />
+                            <hr  class="mb-4" />
               <div class="row p-0">
-                <div class="col-md-6 mb-4 mb-md-0">
+                <div  class="col-md-6 mb-4 mb-md-0">
                   <h4 class="text-base fw-bold mb-3">
-                    {{ "Added value settings" | translate }}
+                    {{ "الربط مع هيئة الزكاة , المرحلة الثانية" | translate }}
                   </h4>
                   <div class="form-group flex gap-2 items-center">
                     <label for="showInfoInReport" class="m-0">{{
-                      "tax rate" | translate
+                      "الرمز المتغير (6 ارقام)" | translate
                     }}</label>
 
                     <div class="flex">
                       <input
                         type="text"
                         class="form-control"
-                        formControlName="VatPercentVal"
+                        formControlName="OTPValue"
                         autocomplete="off"
-                        name="taxRate"
+                        name="OTPValue"
                       />
-                      <span class="persent">%</span>
                     </div>
+
+                    <!-- CheckCSR -->
+                    <div class="flex justify-end">
+                      <button
+                      [disabled]="disableButtonSave_CSID"
+                        type="button"
+                        class="btn submit-btn bg-base text-white py-2 px-3 mt-0"
+                        [disabled]=""
+                        (click)="GenerateCSID()"
+                      >
+                        {{ "Generate CSID انشاء المفتاح العام" | translate }}
+                      </button>
+                    </div>
+                    <i *ngIf="this.systemoptionsForm.controls['CheckCSR'].value==null
+                    ||this.systemoptionsForm.controls['CheckCSR'].value==''" 
+                    style="font-size: 40px;color: #de3939;" class="fa-solid fa-xmark"></i>
+                    <i *ngIf="!(this.systemoptionsForm.controls['CheckCSR'].value==null
+                    ||this.systemoptionsForm.controls['CheckCSR'].value=='')"
+                    style="font-size: 40px;color: #12ba12;" class="fa-solid fa-check"></i>
                   </div>
                 </div>
                 <div class="col-md-6 flex items-start">
@@ -1687,6 +1705,28 @@
               </div>
 
               <hr class="my-4" />
+
+              <div class="col-md-6 mb-4 mb-md-0">
+                <h4 class="text-base fw-bold mb-3">
+                  {{ "Added value settings" | translate }}
+                </h4>
+                <div class="form-group flex gap-2 items-center">
+                  <label for="showInfoInReport" class="m-0">{{
+                    "tax rate" | translate
+                  }}</label>
+
+                  <div class="flex">
+                    <input
+                      type="text"
+                      class="form-control"
+                      formControlName="VatPercentVal"
+                      autocomplete="off"
+                      name="taxRate"
+                    />
+                    <span class="persent">%</span>
+                  </div>
+                </div>
+              </div>
 
               <h2
                 class="flex items-center gap-1 fw-bold text-base"
@@ -4346,7 +4386,7 @@
           </div>
         </div>
 
-        <div class="col-md-6 mb-3">
+        <div class="col-md-4 mb-3">
           <div class="form-group">
             <label for="city" class="text-right col-form-label block mx-2">
               {{ "city" | translate }}
@@ -4689,6 +4729,46 @@
             </div>
           </div>
         </div>
+
+        <div  class="col-md-6 mb-3">
+          <h4 class="text-base fw-bold mb-3">
+            {{ "انشاء المفتاح العام" | translate }}
+          </h4>
+          <div class="form-group flex gap-2 items-center">
+            <label for="OTPValueBranch" class="m-0">{{
+              "الرمز المتغير (6 ارقام)" | translate
+            }}</label>
+
+            <div class="flex">
+              <input
+                type="text"
+                class="form-control"
+                formControlName="OTPValueBranch"
+                autocomplete="off"
+                name="OTPValueBranch"
+              />
+            </div>
+
+            <!-- CheckCSR -->
+            <div class="flex justify-end">
+              <button
+                type="button"
+                class="btn submit-btn bg-base text-white py-2 px-3 mt-0"
+                [disabled]=""
+                (click)="GenerateCSIDBranch()"
+              >
+                {{ "Generate CSID انشاء المفتاح العام" | translate }}
+              </button>
+            </div>
+            <i *ngIf="this.BranchInfoForm.controls['CheckCSR'].value==null
+            ||this.BranchInfoForm.controls['CheckCSR'].value==''" 
+            style="font-size: 40px;color: #de3939;" class="fa-solid fa-xmark"></i>
+            <i *ngIf="!(this.BranchInfoForm.controls['CheckCSR'].value==null
+            ||this.BranchInfoForm.controls['CheckCSR'].value=='')"
+            style="font-size: 40px;color: #12ba12;" class="fa-solid fa-check"></i>
+          </div>
+        </div>
+
 
         <div class="col-md-6 col-lg-3 mb-3">
           <div class="form-group">
@@ -6101,9 +6181,8 @@
     </div>
   </div>
 </ng-template>
-
 <!-- optToggleActivationModal -->
-<ng-template #optToggleActivationModal let-modal>
+<ng-template #optToggleActivationModal let-modal >
   <div class="modal-header bg-base text-white">
     <h4
       class="modal-title mb-0"
@@ -6119,7 +6198,7 @@
     </button>
   </div>
 
-  <div class="modal-body text-center">
+  <div class="modal-body text-center" >
     <h2
       class="text-base mb-4"
       [translate]="'name'"
@@ -6128,7 +6207,7 @@
         en: 'Enter the activation / deactivation code'
       }"
     ></h2>
-    <ng-otp-input [formCtrl]="otp" [config]="{ length: 4 }"></ng-otp-input>
+    <ng-otp-input style="direction: ltr;" [formCtrl]="otp" [config]="{ length: 4 }"></ng-otp-input>
 
     <div
       class="modal-footer justify-content-center mt-3"
@@ -6137,7 +6216,7 @@
       <button
         type="button"
         class="btn submit-btn bg-base text-white py-2 px-3 mt-0"
-        (click)="confiremOtp()"
+        (click)="confirmOtp();modal.dismiss('Cross click')"
       >
         {{ "confirem" | translate }}
       </button>

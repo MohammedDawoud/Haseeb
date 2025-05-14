@@ -82,6 +82,9 @@ export class InvoiceService {
   GetBranchOrganization() {
     return this.http.get<any>(this.apiEndPoint+'Organizations/GetBranchOrganization');
   }
+  GetBranchOrganizationZatca() {
+    return this.http.get<any>(this.apiEndPoint+'Organizations/GetBranchOrganizationZatca');
+  }
   GetAllCustomerForDrop() {
     return this.http.get<any>(this.apiEndPoint+'Customer/GetAllCustomerForDrop');
   }
@@ -248,16 +251,9 @@ export class InvoiceService {
     return this.http.get<any>(url);
   }
 
-  // SendWInvoice(Obj: any): Observable<any> {
-  //   const headers = { 'content-type': 'application/json' };
-  //   const body = JSON.stringify(Obj);
-  //   return this.http.post(
-  //     this.apiEndPoint + 'Voucher/SendWInvoice',
-  //     body,
-  //     { headers: headers }
-  //   );
-  // }
-
+  ZatcaInvoiceIntegrationFunc(model : any){
+    return this.http.post<any>(`${this.apiEndPoint}Voucher/ZatcaInvoiceIntegrationFunc`, model);
+  }
   SendWInvoice(model : any){
     return this.http.post<any>(`${this.apiEndPoint}Voucher/SendWInvoice`, model);
   }

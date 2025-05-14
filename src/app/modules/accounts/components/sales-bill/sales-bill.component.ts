@@ -165,11 +165,12 @@ export class SalesBillComponent implements OnInit {
     'invoiceNumber',
     'date',
     'totalValue',
-    'PaymentType',
+    'payTypeName',
     // 'projectNumber',
-    'ClientName',
+    'customerName',
     'InvoiceStatus',
-    'PostingDate',
+    'postDate',
+    'Zatcanotes',
     'operations',
   ];
 
@@ -238,6 +239,7 @@ export class SalesBillComponent implements OnInit {
     this.FillCustomerSelect();
     //this.FillProjectSelect();
     this.FillCustAccountsSelect2REC(1);
+    this.GetBranchOrganizationZatca();
 
     this._sharedService.GetWhatsAppSetting().subscribe((data: any) => {
       if(data?.result!=null){this.WhatsAppData=data?.result;}
@@ -468,6 +470,10 @@ export class SalesBillComponent implements OnInit {
     }
     if (type == 'serviceDetails_Invoice' && data) {
       this.GetServicesPriceByParentId_Invoice(data);
+    }
+    if(type=='zatcaListModal')
+    {
+      this.GetAllInvoiceRequestsByInvoiceId(data);
     }
     this.modalService
       .open(content, {
@@ -1023,6 +1029,26 @@ export class SalesBillComponent implements OnInit {
   GetBranchOrganization() {
     this._invoiceService.GetBranchOrganization().subscribe((data) => {
       this.modalInvoice.OrganizationsMobile = data.result.mobile;
+    });
+  }
+  ZatcaFatoraCheck=false;
+  GetBranchOrganizationZatca() {
+    this._invoiceService.GetBranchOrganizationZatca().subscribe((data) => {
+      if(data.privateKey==null || data.privateKey=="")
+      {
+        this.ZatcaFatoraCheck = false;
+      }
+      else{
+        if(data.modeType==3)
+        {
+          this.ZatcaFatoraCheck = true;
+        }
+        else
+        {
+          this.ZatcaFatoraCheck = false;
+        }
+      }
+      
     });
   }
   GenerateVoucherNumber() {
@@ -1705,7 +1731,11 @@ export class SalesBillComponent implements OnInit {
     this.InvoiceModelPublic?.dismiss();
   }
   disableButtonSave_Invoice = false;
+    voDetObj:any={
+    voucherDetObj :null
+  }
   saveInvoice() {
+    this.voDetObj.voucherDetObj=null;
     if (!(parseInt(this.modalInvoice.TotalVoucherValueLbl) > 0)) {
       this.toast.error('من فضلك أدخل قيمة صحيحة للفاتورة', 'رسالة');
       return;
@@ -1875,6 +1905,15 @@ export class SalesBillComponent implements OnInit {
               this.translate.instant(result.reasonPhrase),
               this.translate.instant('Message')
             );
+
+            //zatcaFunc
+            //debugger
+            this.voDetObj.voucherDetObj=result.voucherDetObj;
+            if(result.voucherDetObj.length>0)
+            {
+              this.ZatcaInvoiceIntegrationFunc(this.voDetObj);
+            }
+
             if (this.uploadedFiles.length > 0) {
               const formData = new FormData();
               formData.append('UploadedFile', this.uploadedFiles[0]);
@@ -1905,6 +1944,13 @@ export class SalesBillComponent implements OnInit {
               this.translate.instant(result.reasonPhrase),
               this.translate.instant('Message')
             );
+            //zatcaFunc
+            //debugger
+            this.voDetObj.voucherDetObj=result.voucherDetObj;
+            if(result.voucherDetObj.length>0)
+            {
+              this.ZatcaInvoiceIntegrationFunc(this.voDetObj);
+            }
             if (this.uploadedFiles.length > 0) {
               const formData = new FormData();
               formData.append('UploadedFile', this.uploadedFiles[0]);
@@ -1935,6 +1981,13 @@ export class SalesBillComponent implements OnInit {
               this.translate.instant(result.reasonPhrase),
               this.translate.instant('Message')
             );
+            //zatcaFunc
+            //debugger
+            this.voDetObj.voucherDetObj=result.voucherDetObj;
+            if(result.voucherDetObj.length>0)
+            {
+              this.ZatcaInvoiceIntegrationFunc(this.voDetObj);
+            }
             this.resetInvoiceData();
             this.ShowAllVoucher();
             this.InvoiceModelPublic?.dismiss();
@@ -4509,5 +4562,31 @@ export class SalesBillComponent implements OnInit {
     }
     this.lang == "ar" ? this._accountsreportsService.customExportExcel(x, "فواتير المبيعات") :
       this._accountsreportsService.customExportExcel(x, "Sales invoices");
+  }
+
+    ZatcaInvoiceIntegrationFunc(InvoiceObj:any) {
+    this._invoiceService.ZatcaInvoiceIntegrationFunc(InvoiceObj).subscribe((data) => {
+      //console.log(data);
+    });
+  }
+  zatcaListDataSource = new MatTableDataSource();
+  zatcaListdisplayedColumns: string[] = ['name'];
+  zatcaList: any;
+  zatcaListDataSourceTemp: any = [];
+  @ViewChild('paginatorZatca') paginatorZatca!: MatPaginator;
+
+   GetAllInvoiceRequestsByInvoiceId(obj: any) {
+      debugger
+      var data=obj.invoicesRequests;
+      this.zatcaListDataSource = new MatTableDataSource(data);
+      this.zatcaListDataSource.paginator = this.paginatorZatca;
+      this.zatcaList = data;
+      this.zatcaListDataSourceTemp = data;
+    // this._invoiceService.GetAllInvoiceRequestsByInvoiceId(data.invoiceId).subscribe((data) => {
+    //     this.zatcaListDataSource = new MatTableDataSource(data);
+    //     this.zatcaListDataSource.paginator = this.paginatorZatca;
+    //     this.zatcaList = data;
+    //     this.zatcaListDataSourceTemp = data;
+    // });
   }
 }

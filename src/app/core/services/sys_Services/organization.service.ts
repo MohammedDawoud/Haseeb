@@ -392,12 +392,21 @@ export class OrganizationService {
       { headers: headers }
     );
   }
-  ValidateZatcaRequest(modal: any) {
-    return this.http.post<any>(
-      this.apiEndPoint + 'SystemSettings/ValidateZatcaRequest',
-      modal
-    );
+  GenerateCSID(OrganizationId:any,OTP:any){
+    return this.http.post(this.apiEndPoint+'Organizations/GenerateCSID', {}, { params:{OrganizationId:OrganizationId,OTP:OTP}});
   }
+  GenerateCSID_Branch(BranchId:any,OTP:any){
+    return this.http.post(this.apiEndPoint+'Organizations/GenerateCSID_Branch', {}, { params:{BranchId:BranchId,OTP:OTP}});
+  }
+
+  ValidateZatcaRequest(Isuploadzatca:any){
+    return this.http.post(this.apiEndPoint+'SystemSettings/ValidateZatcaRequest', {}, { params:{Isuploadzatca:Isuploadzatca}});
+  }
+
+  ValidateZatcaCode(Isuploadzatca:any,SentCode:any){
+    return this.http.post(this.apiEndPoint+'SystemSettings/ValidateZatcaCode', {}, { params:{Isuploadzatca:Isuploadzatca,SentCode:SentCode}});
+  }
+
   GetAllContactBranches() {
     return this.http.get<any>(
       this.apiEndPoint + 'ContactUs/GetAllContactBranches'

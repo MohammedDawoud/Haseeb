@@ -1,5 +1,14 @@
 <div class="sales-bill">
   <app-navigator [title]="title"></app-navigator>
+  <div *ngIf="ZatcaFatoraCheck">
+    <img
+      src="/assets/images/fatora1.png" alt="logo"
+      style="height: 70px !important; width: 15% !important"/>
+    <span style="font-weight: bold;font-size: 23px;">
+      الفواتير الضريبية مرتبطة بيهئة الزكاة و الضريبة و الجمارك في المرحلة الثانية
+    </span>
+  </div>
+
   <div class="head flex gap-2 flex-wrap items-end justify-between">
     <!-- all buttons  -->
 
@@ -306,7 +315,7 @@
           {{ element.totalValue }}
         </td>
       </ng-container>
-      <ng-container matColumnDef="PaymentType">
+      <ng-container matColumnDef="payTypeName">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
           <span>{{ "Payment type" | translate }}</span>
         </th>
@@ -322,7 +331,7 @@
           {{ element.projectNo }}
         </td>
       </ng-container> -->
-      <ng-container matColumnDef="ClientName">
+      <ng-container matColumnDef="customerName">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
           <span>{{ "Client Name" | translate }}</span>
         </th>
@@ -343,12 +352,27 @@
           {{ element.statusNameNew }}
         </td>
       </ng-container>
-      <ng-container matColumnDef="PostingDate">
+      <ng-container matColumnDef="postDate">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
           <span>{{ "Posting date" | translate }}</span>
         </th>
         <td mat-cell *matCellDef="let element">
           {{ element.postDate }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="Zatcanotes">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span>{{ "ملاحظات" | translate }}</span>
+        </th>
+        <td mat-cell *matCellDef="let element">
+             <button
+             *ngIf="element.invoicesRequests && element.invoicesRequests != 'undefined' && element.invoicesRequests.length > 0"
+              type="button "
+              id="button-basic"
+              class="flex btn btn-danger"
+              (click)="open(zatcaListModal, element, 'zatcaListModal')"
+              > ملاحظات زاتكا             
+            </button>
         </td>
       </ng-container>
 
@@ -2702,6 +2726,85 @@
   </div>
 </ng-template>
 
+<!-- zatcaListModal -->
+<ng-template #zatcaListModal let-modal>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="m-0">
+      <span class="text-2xl">{{ "ملاحظات زاتكا" | translate }}</span>
+    </h4>
+    <button
+      type="button"
+      class="text-2xl text-white m-0"
+      (click)="modal.dismiss()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body" style="overflow-y: scroll; max-height: 600px">
+    <div class="table">
+      <table
+        mat-table
+        [dataSource]="zatcaListDataSource"
+        class="mat-elevation-z8 table table-responsive table-striped table-bordered text-center"
+        style="vertical-align: middle; font-size: 14px;min-width: fit-content;">
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ "الملاحظة" | translate }}
+          </th>
+          <td mat-cell *matCellDef="let element" style="padding: 13px;">
+            <span style="font-size: 16px;background-color: #dd5858;font-weight: bold;"
+             *ngIf="!element.isSent">لم يتم إرسال الفاتورة الي ذاتكا </span>
+            <span style="font-size: 16px;background-color: #30b130;font-weight: bold;"
+            *ngIf="element.isSent && element.statusCode==200">تم ارسال الفاتورة بنجاح إلي زاتكا</span>
+            <span style="font-size: 16px;background-color: #b7d14d;font-weight: bold;"
+            *ngIf="element.isSent && element.statusCode==202">تم قبول الفاتورة من قبل زاتكا (مع تحذيرات)</span>
+            <span style="font-size: 16px;background-color: #dd5858;font-weight: bold;"
+            *ngIf="element.isSent && (element.statusCode!=200 && element.statusCode!=202)">تم رفض الفاتورة من قبل زاتكا</span>
+
+            
+
+            <span *ngIf="!element.isSent"> {{ element.errormessage }} </span>
+            <span *ngIf="element.isSent && element.statusCode==202">{{ element.warningmessage }} </span>
+            <span *ngIf="element.isSent && (element.statusCode!=200 && element.statusCode!=202)">{{ element.errormessage }}</span>
+
+            
+          
+          
+          
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="zatcaListdisplayedColumns"></tr>
+        <tr
+          mat-row
+          *matRowDef="
+            let row;
+            let i = index;
+            columns: zatcaListdisplayedColumns"></tr>
+
+        <!-- Row shown when there is no matching data. -->
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="4">
+            {{ "noResult" | translate }}
+          </td>
+        </tr>
+      </table>
+      <!-- <mat-paginator #paginatorZatca [pageSizeOptions]="[10, 25]">
+      </mat-paginator> -->
+    </div>
+
+    <div class="text-end mt-2">
+      <button (click)="modal?.dismiss()" class="btn btn-secondary">
+        {{ "Back" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
 <!-- <button
   (click)="open(printDivModal)"
   class="min-w-max p-2 bg-sky-100 hover:bg-sky-500 rounded-lg duration-300 hover:text-white aspect-square w-10"
@@ -3074,9 +3177,7 @@
                     "
                   >
                     {{
-                      InvPrintData?.branch_VD?.isPrintInvoice == true
-                        ? InvPrintData?.branch_VD?.nameAr
-                        : InvPrintData?.org_VD?.nameAr
+                      InvPrintData?.org_VD?.nameAr
                     }}
                   </th>
                   <th

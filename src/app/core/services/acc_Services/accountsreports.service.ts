@@ -1337,4 +1337,12 @@ export class AccountsreportsService {
     var url = `${environment.apiEndPoint}Voucher/GetInvoiceById?&VoucherId=${VoucherId}`;
     return this.http.get<any>(url);
   }
+    //-----------------------------------------------------------------------------------------------
+  GetAllInvoiceRequests() {
+    return this.http.get<any>(this.apiEndPoint + 'Voucher/GetAllInvoiceRequests');
+  }
+  GetAllInvoiceRequestsByInvoiceId(InvoiceId: any) {
+    var url = `${environment.apiEndPoint}Voucher/GetAllInvoiceRequestsByInvoiceId?&InvoiceId=${InvoiceId}`;
+    return this.http.get<any>(url);
+  }
 }

@@ -3154,8 +3154,11 @@ GetInvoicePrint(obj:any,TempCheck:any){
     modal?.dismiss();
   }
   disableButtonSave_Invoice=false;
-
+  voDetObj:any={
+    voucherDetObj :null
+  }
   saveInvoice() {
+    this.voDetObj.voucherDetObj=null;
     if(!(parseInt(this.modalInvoice.TotalVoucherValueLbl)>0))
     {
       this.toast.error("من فضلك أدخل قيمة صحيحة للفاتورة", this.translate.instant("Message"));
@@ -3306,6 +3309,13 @@ GetInvoicePrint(obj:any,TempCheck:any){
       {
         if(result.statusCode==200){
           this.toast.success(this.translate.instant(result.reasonPhrase),this.translate.instant("Message"));
+          //zatcaFunc
+          //debugger
+          this.voDetObj.voucherDetObj=result.voucherDetObj;
+          if(result.voucherDetObj.length>0)
+          {
+            this.ZatcaInvoiceIntegrationFunc(this.voDetObj);
+          }
           if (this.uploadedFiles.length > 0) {
             const formData = new FormData();
             formData.append('UploadedFile', this.uploadedFiles[0]);
@@ -3330,6 +3340,13 @@ GetInvoicePrint(obj:any,TempCheck:any){
       {
         if(result.statusCode==200){
           this.toast.success(this.translate.instant(result.reasonPhrase),this.translate.instant("Message"));
+          //zatcaFunc
+          //debugger
+          this.voDetObj.voucherDetObj=result.voucherDetObj;
+          if(result.voucherDetObj.length>0)
+          {
+            this.ZatcaInvoiceIntegrationFunc(this.voDetObj);
+          }
           if (this.uploadedFiles.length > 0) {
             const formData = new FormData();
             formData.append('UploadedFile', this.uploadedFiles[0]);
@@ -3362,7 +3379,11 @@ GetInvoicePrint(obj:any,TempCheck:any){
 
   }
 
-
+  ZatcaInvoiceIntegrationFunc(InvoiceObj:any) {
+    this._invoiceService.ZatcaInvoiceIntegrationFunc(InvoiceObj).subscribe((data) => {
+      //console.log(data);
+    });
+  }
 
   ConvertNumToString(val:any){
     this._sharedService.ConvertNumToString(val).subscribe(data=>{

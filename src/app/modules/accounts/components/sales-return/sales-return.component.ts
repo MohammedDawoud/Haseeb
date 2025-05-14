@@ -24,6 +24,7 @@ import {
 import { VoucherFilterVM } from 'src/app/core/Classes/ViewModels/voucherFilterVM';
 import { PrintreportsService } from 'src/app/core/services/acc_Services/printreports.service';
 import { NgxPrintElementService } from 'ngx-print-element';
+import { InvoiceService } from 'src/app/core/services/acc_Services/invoice.service';
 @Component({
   selector: 'app-sales-return',
   templateUrl: './sales-return.component.html',
@@ -100,6 +101,7 @@ export class SalesReturnComponent implements OnInit{
     @Inject(DOCUMENT) private document: Document,
     private print: NgxPrintElementService,
     private _sharedService: SharedService,
+    private _invoiceService: InvoiceService,
     private api: RestApiService,
     private _printreportsService: PrintreportsService,
 
@@ -253,18 +255,36 @@ export class SalesReturnComponent implements OnInit{
   rowSelectedPublic:any=null;
   getInvoiceRow(row :any){
     this.rowSelectedPublic=row;
-   }
+  }
+  voDetObj:any={
+    voucherDetObj :null
+  }
   MakeJournal(){
+    this.voDetObj.voucherDetObjRet=null;
     var VoucherObj:any = {};
     VoucherObj.InvoiceId = this.rowSelectedPublic.invoiceId;
     this._accountsreportsService.SaveInvoiceForServicesRetNEW(VoucherObj).subscribe((result: any)=>{
       if(result.statusCode==200){
         this.toast.success(result.reasonPhrase,'رسالة');
+        //zatcaFunc
+        //debugger
+        this.voDetObj.voucherDetObjRet=result.objRetDet;
+        if(result.objRetDet.length>0)
+        {
+          this.ZatcaInvoiceIntegrationFunc(this.voDetObj);
+        }
         this.RefreshData();
       }
       else{this.toast.error(result.reasonPhrase, 'رسالة');}
     });
   }
+  ZatcaInvoiceIntegrationFunc(InvoiceObj:any) {
+    this._invoiceService.ZatcaInvoiceIntegrationFunc(InvoiceObj).subscribe((data) => {
+      //console.log(data);
+    });
+  }
+
+
   MakeJournal_Back(){
     var VoucherObj:any = {};
     VoucherObj.InvoiceId = this.rowSelectedPublic.invoiceId;

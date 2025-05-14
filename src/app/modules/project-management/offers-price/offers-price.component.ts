@@ -3182,9 +3182,12 @@ export class OffersPriceComponent implements OnInit {
     return this.ValidateObjMsgInvoice;
   }
   disableButtonSave_Invoice = false;
-
+  voDetObj:any={
+    voucherDetObj :null
+  }
   saveInvoice() {
     debugger;
+    this.voDetObj.voucherDetObj=null;
     var VoucherDetailsList: any = [];
     var VoucherObj: any = {};
     VoucherObj.InvoiceId = this.modalInvoice.InvoiceId;
@@ -3333,6 +3336,13 @@ export class OffersPriceComponent implements OnInit {
               this.translate.instant(result.reasonPhrase),
               this.translate.instant('Message')
             );
+            //zatcaFunc
+            //debugger
+            this.voDetObj.voucherDetObj=result.voucherDetObj;
+            if(result.voucherDetObj.length>0)
+            {
+              this.ZatcaInvoiceIntegrationFunc(this.voDetObj);
+            }
             this.resetInvoiceData();
             this.getData();
             this.InvoiceModelPublic?.dismiss();
@@ -3349,6 +3359,13 @@ export class OffersPriceComponent implements OnInit {
               this.translate.instant(result.reasonPhrase),
               this.translate.instant('Message')
             );
+            //zatcaFunc
+            //debugger
+            this.voDetObj.voucherDetObj=result.voucherDetObj;
+            if(result.voucherDetObj.length>0)
+            {
+              this.ZatcaInvoiceIntegrationFunc(this.voDetObj);
+            }
             this.resetInvoiceData();
             this.getData();
             this.InvoiceModelPublic?.dismiss();
@@ -3365,6 +3382,13 @@ export class OffersPriceComponent implements OnInit {
               this.translate.instant(result.reasonPhrase),
               this.translate.instant('Message')
             );
+            //zatcaFunc
+            //debugger
+            this.voDetObj.voucherDetObj=result.voucherDetObj;
+            if(result.voucherDetObj.length>0)
+            {
+              this.ZatcaInvoiceIntegrationFunc(this.voDetObj);
+            }
             this.resetInvoiceData();
             this.getData();
             this.InvoiceModelPublic?.dismiss();
@@ -3374,7 +3398,11 @@ export class OffersPriceComponent implements OnInit {
         });
     }
   }
-
+  ZatcaInvoiceIntegrationFunc(InvoiceObj:any) {
+    this._invoiceService.ZatcaInvoiceIntegrationFunc(InvoiceObj).subscribe((data) => {
+      //console.log(data);
+    });
+  }
   ConvertNumToString(val: any) {
     this._sharedService.ConvertNumToString(val).subscribe((data) => {
       console.log(data);
