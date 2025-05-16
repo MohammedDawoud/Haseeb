@@ -86,6 +86,8 @@ export class ZatcaReportComponent implements OnInit{
     'totalValue',
     'warningmessage',
     'errormessage',
+    'operations',
+
   ];
   lang: any = 'ar';
 
@@ -166,6 +168,7 @@ export class ZatcaReportComponent implements OnInit{
       this.projectsDataSource.sort = this.sort;
       this.FillSerachLists(data);
       console.log("data",data);
+      this.RefreshData();
     });
   }
   exportData() {
@@ -256,12 +259,13 @@ dataSearch: any = {
   }
 
   FillInvoiceListNumber(dataT:any){
-    const ListLoad = dataT.map((item: { invoiceReqId: any; invoiceNo: any; }) => {
-      const container:any = {}; container.id = item.invoiceReqId; container.name = item.invoiceNo; return container;
+    const ListLoad = dataT.map((item: {  invoiceNo: any; }) => {
+      const container:any = {}; container.id = item.invoiceNo; container.name = item.invoiceNo; return container;
     })
     const key = 'id';
     const arrayUniqueByKey = [...new Map(ListLoad.map((item: { [x: string]: any; }) => [item[key], item])).values()];
     this.dataSearch.filter.ListNumber=arrayUniqueByKey;
+    this.dataSearch.filter.ListNumber = this.dataSearch.filter.ListNumber.filter((d: { id: any }) => (d.id !=null && d.id!=0));
   }
 
   FillListInvoiceStatus(){
@@ -294,17 +298,16 @@ dataSearch: any = {
     {
       if(this.dataSearch.filter.InvoiceStatusId==1)
       {
-        this.projectsDataSource.data = this.projectsDataSource.data.filter((d: { isSent: any }) => d.isSent == 1);
         this.projectsDataSource.data = this.projectsDataSource.data.filter((d: { statusCode: any }) => d.statusCode == 202);
       }
       else if(this.dataSearch.filter.InvoiceStatusId==2)
       {
-        this.projectsDataSource.data = this.projectsDataSource.data.filter((d: { isSent: any }) => d.isSent == 1);
-        this.projectsDataSource.data = this.projectsDataSource.data.filter((d: { statusCode: any }) => d.statusCode !=200 && d.statusCode!=202);
+        this.projectsDataSource.data = this.projectsDataSource.data.filter((d: { statusCode: any }) => d.statusCode ==400);
       }
       else if(this.dataSearch.filter.InvoiceStatusId==3)
       {
-        this.projectsDataSource.data = this.projectsDataSource.data.filter((d: { isSent: any }) => d.isSent != 1);
+        this.projectsDataSource.data = this.projectsDataSource.data.filter((d: { statusCode: any }) => d.statusCode ==0 || d.statusCode==504
+      || d.statusCode==503 || d.statusCode==500 || d.statusCode==429);
       }
     } 
    
@@ -338,7 +341,54 @@ dataSearch: any = {
     }
   }
   //#endregion 
-//------------------------------Search--------------------------------------------------------
+//------------------------------Search-------------------------------------------------------------------------
 
+  getColorinvoiceNo(element: any) {
+    if (element?.statusCode == 200) {return '#30b550';}
+    else if (element?.statusCode == 202) {return '#d5be1a';} 
+    else if (element?.statusCode == 400) {return '#b90648';}
+    else if (element?.statusCode ==0 || element?.statusCode==504 || element?.statusCode==503 
+    || element?.statusCode==500 || element?.statusCode==429) {return '#979797';}
+    else {return '#ffffff';}
+  }
+//-------------------------------------------------------------------------------------------------------------
+  InvoiceRowSelected: any;
+  getInvoiceRowSelected(row: any) {
+    this.InvoiceRowSelected = row;
+    console.log(this.InvoiceRowSelected);
+  }
+  ReSendToZatcaAPI_Func() {
+    this._accountsreportsService.ReSendToZatcaAPI_Func(this.InvoiceRowSelected.invoiceReqId).subscribe((result: any) => {
+      if (result.statusCode == 200) {
+        this.toast.success(
+        this.translate.instant(result.reasonPhrase),this.translate.instant('Message'));
+        this.GetAllInvoiceRequests();
+      } else {
+        this.toast.error(result.reasonPhrase, 'رسالة');
+      }
+    });
+  }
+  ReSendZatcaInvoiceIntegrationFunc() {
+    this._accountsreportsService.ReSendZatcaInvoiceIntegrationFunc(this.InvoiceRowSelected.invoiceReqId).subscribe((result: any) => {
+      if (result.statusCode == 200) {
+        this.toast.success(
+        this.translate.instant(result.reasonPhrase),this.translate.instant('Message'));
+        this.GetAllInvoiceRequests();
+      } else {
+        this.toast.error(result.reasonPhrase, 'رسالة');
+      }
+    });
+  }
 
+  ReSendZatca(){
+    if(this.InvoiceRowSelected.statusCode==400)
+    {
+      this.ReSendZatcaInvoiceIntegrationFunc();
+    }
+    else
+    {
+      this.ReSendToZatcaAPI_Func();
+    }
+  }
+//-------------------------------------------------------------------------------------------------------------
 }

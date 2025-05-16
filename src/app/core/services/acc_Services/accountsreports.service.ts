@@ -1345,4 +1345,11 @@ export class AccountsreportsService {
     var url = `${environment.apiEndPoint}Voucher/GetAllInvoiceRequestsByInvoiceId?&InvoiceId=${InvoiceId}`;
     return this.http.get<any>(url);
   }
+  ReSendToZatcaAPI_Func(InvoiceReqId:any){
+    return this.http.post(this.apiEndPoint+'Voucher/ReSendToZatcaAPI_Func', {}, { params:{InvoiceReqId:InvoiceReqId}});
+  }
+  ReSendZatcaInvoiceIntegrationFunc(InvoiceReqId:any){
+    return this.http.post(this.apiEndPoint+'Voucher/ReSendZatcaInvoiceIntegrationFunc', {}, { params:{InvoiceReqId:InvoiceReqId}});
+  }
+  //-----------------------------------------------------------------------------------------------
 }
