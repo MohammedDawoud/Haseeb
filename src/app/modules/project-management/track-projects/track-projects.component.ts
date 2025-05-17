@@ -15,7 +15,7 @@ import {
 } from '@iplab/ngx-file-upload';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, take } from 'rxjs';
 import { DateType } from 'ngx-hijri-gregorian-datepicker';
 import { ProjectService } from 'src/app/core/services/pro_Services/project.service';
 import { SharedService } from 'src/app/core/services/shared.service';
@@ -5969,7 +5969,7 @@ export class TrackProjectsComponent implements OnInit {
 
     if (this.modalInvoice.WhichClick == 1) {
       this._invoiceService
-        .SaveInvoiceForServices(VoucherObj)
+        .SaveInvoiceForServices(VoucherObj).pipe(take(1))
         .subscribe((result: any) => {
           if (this.invoicepop != 2) {
             if (result.statusCode == 200) {
@@ -6003,7 +6003,7 @@ export class TrackProjectsComponent implements OnInit {
         });
     } else if (this.modalInvoice.WhichClick == 2) {
       this._invoiceService
-        .SaveandPostInvoiceForServices(VoucherObj)
+        .SaveandPostInvoiceForServices(VoucherObj).pipe(take(1))
         .subscribe((result: any) => {
           if (this.invoicepop != 2) {
             if (result.statusCode == 200) {
@@ -6036,7 +6036,7 @@ export class TrackProjectsComponent implements OnInit {
         });
     } else if (this.modalInvoice.WhichClick == 3) {
       this._invoiceService
-        .SaveInvoiceForServicesNoti(VoucherObj)
+        .SaveInvoiceForServicesNoti(VoucherObj).pipe(take(1))
         .subscribe((result: any) => {
           if (result.statusCode == 200) {
             this.toast.success(

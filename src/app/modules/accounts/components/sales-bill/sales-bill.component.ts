@@ -48,6 +48,7 @@ import 'hijri-date';
 import { RestApiService } from 'src/app/shared/services/api.service';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
 import { DebentureService } from 'src/app/core/services/acc_Services/debenture.service';
+import { take } from 'rxjs';
 const hijriSafe = require('hijri-date/lib/safe');
 const HijriDate = hijriSafe.default;
 const toHijri = hijriSafe.toHijri;
@@ -1898,7 +1899,7 @@ export class SalesBillComponent implements OnInit {
 
     if (this.modalInvoice.WhichClick == 1) {
       this._invoiceService
-        .SaveInvoiceForServices(VoucherObj)
+        .SaveInvoiceForServices(VoucherObj).pipe(take(1))
         .subscribe((result: any) => {
           if (result.statusCode == 200) {
             this.toast.success(
@@ -1937,7 +1938,7 @@ export class SalesBillComponent implements OnInit {
         });
     } else if (this.modalInvoice.WhichClick == 2) {
       this._invoiceService
-        .SaveandPostInvoiceForServices(VoucherObj)
+        .SaveandPostInvoiceForServices(VoucherObj).pipe(take(1))
         .subscribe((result: any) => {
           if (result.statusCode == 200) {
             this.toast.success(
@@ -1974,7 +1975,7 @@ export class SalesBillComponent implements OnInit {
         });
     } else if (this.modalInvoice.WhichClick == 3) {
       this._invoiceService
-        .SaveInvoiceForServicesNoti(VoucherObj)
+        .SaveInvoiceForServicesNoti(VoucherObj).pipe(take(1))
         .subscribe((result: any) => {
           if (result.statusCode == 200) {
             this.toast.success(

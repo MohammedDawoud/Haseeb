@@ -25,7 +25,7 @@ import {
   BsModalRef,
   ModalDirective,
 } from 'ngx-bootstrap/modal';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription, take } from 'rxjs';
 import { Customer } from 'src/app/core/Classes/DomainObjects/customer';
 import { CustomerFileAdd } from 'src/app/core/Classes/DomainObjects/CustomerFilesAdd';
 import { CustomerMail } from 'src/app/core/Classes/DomainObjects/customerMail';
@@ -2776,7 +2776,7 @@ export class AddSearchComponent implements OnInit {
 
     if (this.modalInvoice.WhichClick == 1) {
       this._invoiceService
-        .SaveInvoiceForServices(VoucherObj)
+        .SaveInvoiceForServices(VoucherObj).pipe(take(1))
         .subscribe((result: any) => {
           if (result.statusCode == 200) {
             this.toast.success(
@@ -2810,7 +2810,7 @@ export class AddSearchComponent implements OnInit {
         });
     } else if (this.modalInvoice.WhichClick == 2) {
       this._invoiceService
-        .SaveandPostInvoiceForServices(VoucherObj)
+        .SaveandPostInvoiceForServices(VoucherObj).pipe(take(1))
         .subscribe((result: any) => {
           if (result.statusCode == 200) {
             this.toast.success(
@@ -2844,7 +2844,7 @@ export class AddSearchComponent implements OnInit {
         });
     } else if (this.modalInvoice.WhichClick == 3) {
       this._invoiceService
-        .SaveInvoiceForServicesNoti(VoucherObj)
+        .SaveInvoiceForServicesNoti(VoucherObj).pipe(take(1))
         .subscribe((result: any) => {
           if (result.statusCode == 200) {
             this.toast.success(
