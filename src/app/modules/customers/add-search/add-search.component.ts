@@ -573,6 +573,8 @@ export class AddSearchComponent implements OnInit {
     this.resetCA();
     if (modalType == 'addClient') {
       this.GetSystemSettingsByUserId();
+      this.disableButtonSave_Customer=false;
+
     }
     console.log('this.modalDetails');
     console.log(this.modalDetails);
@@ -590,7 +592,7 @@ export class AddSearchComponent implements OnInit {
       if (modalType == 'editClient') {
         this.getBranchAccount(this.modalDetails.branchId);
         debugger;
-        debugger
+        this.disableButtonSave_Customer=false;
 this.modalDetails.commercialActivity = data.commercialActivity ? parseInt(data.commercialActivity, 10) : null;
 this.modalDetails.generalManager = data.generalManager ? parseInt(data.generalManager, 10) : null;
 
@@ -964,6 +966,8 @@ this.modalDetails.generalManager = data.generalManager ? parseInt(data.generalMa
       this.toast.error(val.msg, 'رسالة');
       return;
     }
+    this.disableButtonSave_Customer = true; // Disable the button before calling API
+
     var custObj: any = {};
     custObj.customerId = this.modalDetails.customerId;
     custObj.customerNameAr = this.modalDetails.customerNameAr;
@@ -1022,10 +1026,10 @@ this.modalDetails.generalManager = data.generalManager ? parseInt(data.generalMa
         formData.append('UploadedAgentImage', this.control?.value[0]);
       }
     }
-    this.disableButtonSave_Customer = true;
-    setTimeout(() => {
-      this.disableButtonSave_Customer = false;
-    }, 9000);
+    // this.disableButtonSave_Customer = true;
+    // setTimeout(() => {
+    //   this.disableButtonSave_Customer = false;
+    // }, 9000);
     this.service.SaveCustomer(formData).subscribe((result: any) => {
       if (result.statusCode == 200) {
         this.toast.success(
@@ -1051,6 +1055,8 @@ this.modalDetails.generalManager = data.generalManager ? parseInt(data.generalMa
       } else {
         this.toast.error(result.reasonPhrase, 'رسالة');
       }
+      this.disableButtonSave_Customer = false;
+
     });
   }
   ValidateObjMsg: any = { status: true, msg: null };

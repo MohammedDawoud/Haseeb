@@ -1378,7 +1378,6 @@
             <button
               class="btn bg-base text-white"
               (click)="open(savecustomermodal,modal,'savecust')"
-              [disabled]="disableButtonSave_Customer"
             >
               {{ "save" | translate }}
             </button>
@@ -8452,6 +8451,7 @@
         mat-raised-button
         color="basic"
         (click)="addCustomer(modal)"
+        [disabled]="disableButtonSave_Customer"
       >
         {{ "Yes" | translate }}
       </button>
