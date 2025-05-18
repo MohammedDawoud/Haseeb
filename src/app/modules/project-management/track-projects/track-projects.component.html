@@ -7284,6 +7284,7 @@
         type="button"
         mat-raised-button
         color="warn"
+        [disabled]="disableButtonSave_Invoice"
         (click)="checkPayTypeAndSave(); modal.dismiss()"
       >
         {{ "Yes" | translate }}

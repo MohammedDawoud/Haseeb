@@ -1943,6 +1943,8 @@ export class OrganizationComponent implements OnInit {
       engineering_LicenseDate: [null, [Validators.required]],
       cityId: [null, [Validators.required]],
       headerPrintInvoice: [false, []],
+      OTPValueBranch: [null, []],
+      CheckCSR: [false, []],
       headerPrintrevoucher: [false, []],
       headerprintdarvoucher: [false, []],
       headerPrintpayvoucher: [false, []],
@@ -2885,6 +2887,9 @@ export class OrganizationComponent implements OnInit {
             new Date(item?.engineering_LicenseDate)
           );
         }
+        this.BranchInfoForm.controls['CheckCSR'].setValue(
+          item?.csr
+        );
         this.BranchInfoForm.controls['headerPrintInvoice'].setValue(
           item?.headerPrintInvoice
         );
@@ -2993,6 +2998,9 @@ export class OrganizationComponent implements OnInit {
           new Date(item?.engineering_LicenseDate)
         );
       }
+      this.BranchInfoForm.controls['CheckCSR'].setValue(
+        item?.csr
+      );
       this.BranchInfoForm.controls['headerPrintInvoice'].setValue(
         item?.headerPrintInvoice
       );
@@ -3562,6 +3570,8 @@ export class OrganizationComponent implements OnInit {
       VAtACCStatusSelectId: [null, []],
       EditUserName: [null, []],
       EditUserDate: [null, []],
+      OTPValue: [null, []],
+      CheckCSR: [null, []],
     });
   }
   GetSystemSettingsByUserId() {
@@ -3760,6 +3770,9 @@ export class OrganizationComponent implements OnInit {
       this.systemoptionsForm.controls['VatPercentVal'].setValue(
         result?.result?.vat
       );
+      this.systemoptionsForm.controls['CheckCSR'].setValue(
+        result?.result?.csr
+      );
       this.systemoptionsForm.controls['VAtACCStatusSelectId'].setValue(
         result?.result?.vatSetting
       );
@@ -3806,27 +3819,77 @@ export class OrganizationComponent implements OnInit {
       );
     }
   }
-  ValidateZatcaRequest() {
-    if (this.systemoptionsForm.controls['UploadInvZatca'].value == false) {
-      this.organizationService
-        .ValidateZatcaRequest({
-          Isuploadzatca:
-            this.systemoptionsForm.controls['UploadInvZatca'].value,
-        })
-        .subscribe((result: any) => {
+
+  GenerateCSID() {
+    if (this.systemoptionsForm.controls['OTPValue'].value == null) {
+      this.toast.error(this.translate.instant("أدخل الرمز المتغير"),this.translate.instant('Message'));
+      return;
+    } else {
+      var OrgId=this.systemoptionsForm.controls['OrganizationId'].value;
+      var OTP=this.systemoptionsForm.controls['OTPValue'].value.toString();
+      this.organizationService.GenerateCSID(OrgId,OTP).subscribe(
+        (result: any) => {
           if (result.statusCode == 200) {
-            this.toast.success(
-              this.translate.instant(result.reasonPhrase),
-              this.translate.instant('Message')
-            );
+            this.toast.success(this.translate.instant(result.reasonPhrase),this.translate.instant('Message'));
+            this.GetSystemSettingsByUserId();
+            this.GetALLOrgData();
           } else {
-            this.toast.error(
-              this.translate.instant(result.reasonPhrase),
-              this.translate.instant('Message')
-            );
+            this.toast.error(this.translate.instant(result.reasonPhrase),this.translate.instant('Message'));
           }
-        });
+        }
+      );
     }
+  }
+  disableButtonSave_CSID = false;
+  GenerateCSIDBranch() {
+    this.disableButtonSave_CSID = true;
+    setTimeout(() => {
+      this.disableButtonSave_CSID = false;
+    }, 30000);
+    if (this.BranchInfoForm.controls['OTPValueBranch'].value == null) {
+      this.toast.error(this.translate.instant("أدخل الرمز المتغير"),this.translate.instant('Message'));
+      return;
+    } else {
+      var branchId=this.BranchInfoForm.controls['branchId'].value;
+      var OTP=this.BranchInfoForm.controls['OTPValueBranch'].value.toString();
+      this.organizationService.GenerateCSID_Branch(branchId,OTP).subscribe(
+        (result: any) => {
+          if (result.statusCode == 200) {
+            this.toast.success(this.translate.instant(result.reasonPhrase),this.translate.instant('Message'));
+            this.GetAllBranches();
+          } else {
+            this.toast.error(this.translate.instant(result.reasonPhrase),this.translate.instant('Message'));
+          }
+        }
+      );
+    }
+  }
+
+  ValidateZatcaRequest() {
+    //debugger
+    var value=this.systemoptionsForm.controls['UploadInvZatca'].value;
+    //return;
+    this.organizationService.ValidateZatcaRequest(value).subscribe((result: any) => {
+      if (result.statusCode == 200) {
+        //this.toast.success( this.translate.instant(result.reasonPhrase),this.translate.instant('Message') );
+          this.modalService.open(this.optToggleActivationModal); 
+      } else {
+        this.toast.error(
+          this.translate.instant(result.reasonPhrase),this.translate.instant('Message'));
+      }
+    });
+  }
+
+  confirmOtp() {
+    ////console.log(this.otp?.value);
+    this.organizationService.ValidateZatcaCode(this.systemoptionsForm.controls['UploadInvZatca'].value,this.otp?.value).subscribe((result: any) => {
+      if (result.statusCode == 200) {
+        this.toast.success( this.translate.instant(result.reasonPhrase),this.translate.instant('Message') );
+      } else {
+        this.toast.error(
+          this.translate.instant(result.reasonPhrase),this.translate.instant('Message'));
+      }
+    });
   }
 
   ContactBranchesList = [];

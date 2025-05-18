@@ -19,7 +19,7 @@ import {
   FileUploadControl,
   FileUploadValidators,
 } from '@iplab/ngx-file-upload';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, take } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
@@ -1800,7 +1800,7 @@ export class PurchasesBillComponent implements OnInit {
     }, 15000);
 
     if (this.modalInvoice.WhichClick == 1) {
-      this.purchasesBillService.SavePurchaseForServices(VoucherObj).subscribe(
+      this.purchasesBillService.SavePurchaseForServices(VoucherObj).pipe(take(1)).subscribe(
         (result: any) => {
           if (result.statusCode == 200) {
             this.toast.success(
@@ -1819,17 +1819,11 @@ export class PurchasesBillComponent implements OnInit {
               this.translate.instant('Message')
             );
           }
-        },
-        (error) => {
-          this.toast.error(
-            this.translate.instant(error.reasonPhrase),
-            this.translate.instant('Message')
-          );
         }
       );
     } else if (this.modalInvoice.WhichClick == 2) {
       this.purchasesBillService
-        .SaveandPostPurchaseForServices(VoucherObj)
+        .SaveandPostPurchaseForServices(VoucherObj).pipe(take(1))
         .subscribe(
           (result: any) => {
             if (result.statusCode == 200) {
@@ -1849,17 +1843,11 @@ export class PurchasesBillComponent implements OnInit {
                 this.translate.instant('Message')
               );
             }
-          },
-          (error) => {
-            this.toast.error(
-              this.translate.instant(error.reasonPhrase),
-              this.translate.instant('Message')
-            );
           }
         );
     } else if (this.modalInvoice.WhichClick == 3) {
       this.purchasesBillService
-        .SavePurchaseForServicesNotiDepit(VoucherObj)
+        .SavePurchaseForServicesNotiDepit(VoucherObj).pipe(take(1))
         .subscribe(
           (result: any) => {
             if (result.statusCode == 200) {
@@ -1879,12 +1867,6 @@ export class PurchasesBillComponent implements OnInit {
                 this.translate.instant('Message')
               );
             }
-          },
-          (error) => {
-            this.toast.error(
-              this.translate.instant(error.reasonPhrase),
-              this.translate.instant('Message')
-            );
           }
         );
     }

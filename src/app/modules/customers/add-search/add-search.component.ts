@@ -25,7 +25,7 @@ import {
   BsModalRef,
   ModalDirective,
 } from 'ngx-bootstrap/modal';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription, take } from 'rxjs';
 import { Customer } from 'src/app/core/Classes/DomainObjects/customer';
 import { CustomerFileAdd } from 'src/app/core/Classes/DomainObjects/CustomerFilesAdd';
 import { CustomerMail } from 'src/app/core/Classes/DomainObjects/customerMail';
@@ -2688,8 +2688,11 @@ if(this.currenttypefilter==0 || this.currenttypefilter==1){
     return this.ValidateObjMsgInvoice;
   }
   disableButtonSave_Invoice = false;
-
+  voDetObj:any={
+    voucherDetObj :null
+  }
   saveInvoice() {
+    this.voDetObj.voucherDetObj=null;
     if (!(parseInt(this.modalInvoice.TotalVoucherValueLbl) > 0)) {
       this.toast.error('من فضلك أدخل قيمة صحيحة للفاتورة', 'رسالة');
       return;
@@ -2838,13 +2841,20 @@ if(this.currenttypefilter==0 || this.currenttypefilter==1){
 
     if (this.modalInvoice.WhichClick == 1) {
       this._invoiceService
-        .SaveInvoiceForServices(VoucherObj)
+        .SaveInvoiceForServices(VoucherObj).pipe(take(1))
         .subscribe((result: any) => {
           if (result.statusCode == 200) {
             this.toast.success(
               this.translate.instant(result.reasonPhrase),
               this.translate.instant('Message')
             );
+            //zatcaFunc
+            //debugger
+            this.voDetObj.voucherDetObj=result.voucherDetObj;
+            if(result.voucherDetObj.length>0)
+            {
+              this.ZatcaInvoiceIntegrationFunc(this.voDetObj);
+            }
             if (this.uploadedFiles.length > 0) {
               const formData = new FormData();
               formData.append('UploadedFile', this.uploadedFiles[0]);
@@ -2865,13 +2875,20 @@ if(this.currenttypefilter==0 || this.currenttypefilter==1){
         });
     } else if (this.modalInvoice.WhichClick == 2) {
       this._invoiceService
-        .SaveandPostInvoiceForServices(VoucherObj)
+        .SaveandPostInvoiceForServices(VoucherObj).pipe(take(1))
         .subscribe((result: any) => {
           if (result.statusCode == 200) {
             this.toast.success(
               this.translate.instant(result.reasonPhrase),
               this.translate.instant('Message')
             );
+            //zatcaFunc
+            //debugger
+            this.voDetObj.voucherDetObj=result.voucherDetObj;
+            if(result.voucherDetObj.length>0)
+            {
+              this.ZatcaInvoiceIntegrationFunc(this.voDetObj);
+            }
             if (this.uploadedFiles.length > 0) {
               const formData = new FormData();
               formData.append('UploadedFile', this.uploadedFiles[0]);
@@ -2892,13 +2909,20 @@ if(this.currenttypefilter==0 || this.currenttypefilter==1){
         });
     } else if (this.modalInvoice.WhichClick == 3) {
       this._invoiceService
-        .SaveInvoiceForServicesNoti(VoucherObj)
+        .SaveInvoiceForServicesNoti(VoucherObj).pipe(take(1))
         .subscribe((result: any) => {
           if (result.statusCode == 200) {
             this.toast.success(
               this.translate.instant(result.reasonPhrase),
               this.translate.instant('Message')
             );
+            //zatcaFunc
+            //debugger
+            this.voDetObj.voucherDetObj=result.voucherDetObj;
+            if(result.voucherDetObj.length>0)
+            {
+              this.ZatcaInvoiceIntegrationFunc(this.voDetObj);
+            }
             this.resetInvoiceData();
             this.getData();
             this.InvoiceModelPublic?.dismiss();
@@ -2907,6 +2931,11 @@ if(this.currenttypefilter==0 || this.currenttypefilter==1){
           }
         });
     }
+  }
+  ZatcaInvoiceIntegrationFunc(InvoiceObj:any) {
+    this._invoiceService.ZatcaInvoiceIntegrationFunc(InvoiceObj).subscribe((data) => {
+      //console.log(data);
+    });
   }
 
   ConvertNumToString(val: any) {

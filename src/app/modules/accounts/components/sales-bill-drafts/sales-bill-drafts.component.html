@@ -2583,9 +2583,7 @@
                       "
                     >
                       {{
-                        InvPrintData?.branch_VD?.isPrintInvoice == true
-                          ? InvPrintData?.branch_VD?.nameAr
-                          : InvPrintData?.org_VD?.nameAr
+                        InvPrintData?.org_VD?.nameAr
                       }}
                     </th>
                     <th
@@ -5010,6 +5008,7 @@
           type="button"
           mat-raised-button
           color="warn"
+          [disabled]="disableButtonSave_Invoice"
           (click)="checkPayTypeAndSave(); modal.dismiss()"
         >
           {{ "Yes" | translate }}

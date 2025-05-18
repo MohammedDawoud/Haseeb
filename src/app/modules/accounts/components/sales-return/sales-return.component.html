@@ -240,7 +240,7 @@
                 </button>
 
                 <!-- "    فك القيد العكسي " "-->
-                <button *ngIf="(element.rad != false)"
+                <!-- <button *ngIf="(element.rad != false)"
                   type="button"
                   class="btn btn-outline-warning btn-sm waves-effect mx-1"
                   data-toggle="tooltip"
@@ -250,7 +250,7 @@
                   (click)="getInvoiceRow(element);open(UndoReverseConstraintModal)"
                 >
                   <i class="fa-solid fa-share fa-flip-horizontal"></i>
-                </button>
+                </button> -->
               </span>
             </div>
           </div>
@@ -715,8 +715,7 @@
                   </th>
                   <th
                     style="padding: 0px;font-size: 12px;letter-spacing: 0.0px;border: 1px solid #f0f7fe;">
-                    {{InvPrintData?.branch_VD?.isPrintInvoice==true?InvPrintData?.branch_VD?.nameAr
-                      :InvPrintData?.org_VD?.nameAr}}
+                    {{InvPrintData?.org_VD?.nameAr}}
                   </th>
                   <th
                     style="padding: 0px;font-size: 12px; letter-spacing: 0.0px;border: 1px solid #f0f7fe;" >
