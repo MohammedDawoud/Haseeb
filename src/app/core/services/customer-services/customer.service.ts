@@ -133,6 +133,18 @@ GetAllCustomers_Branch_Url=environment.apiEndPoint + 'customer/GetAllCustomers_B
 
   GetReportGrid_AccountCustomer =
     environment.apiEndPoint + 'Transactions/GetReportGrid_Customer';
+
+    FillTCommercialActivities =
+    environment.apiEndPoint + 'CommercialActivity/FillTCommercialActivitiesSelect';
+
+    _GetCommercialActivities =
+    environment.apiEndPoint + 'CommercialActivity/GetCommercialActivities';
+
+    _SaveCommercialActivity =
+    environment.apiEndPoint + 'CommercialActivity/SaveCommercialActivity';
+
+    _DeleteCommercialActivity =
+    environment.apiEndPoint + 'CommercialActivity/DeleteCommercialActivity';
   constructor(private http: HttpClient) {}
 
   getAllCustomers() {
@@ -434,5 +446,27 @@ GetAllCustomers_Branch_Url=environment.apiEndPoint + 'customer/GetAllCustomers_B
         headers: headers,
       }
     );
+  }
+
+    
+  FillTCommercialActivitiesSelect(Type:any) {
+    return this.http.get<any>(this.FillTCommercialActivities+'?Type='+Type+'');
+  }
+
+
+  DeleteCommercialActivity(val: any) {
+    return this.http.post<any>(
+      this._DeleteCommercialActivity,
+      {},
+      { params: { Id: val } }
+    );
+  }
+
+  GetCommercialActivities(SearchText:any,Type:any) {
+    return this.http.get<any>(this._GetCommercialActivities+'?SearchText='+SearchText+'&&Type='+Type+'');
+  }
+
+  SaveCommercialActivity(_comm: any): Observable<any> {
+    return this.http.post<any>(this._SaveCommercialActivity, _comm);
   }
 }

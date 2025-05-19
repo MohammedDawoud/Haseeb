@@ -504,14 +504,30 @@ export class AddSearchComponent implements OnInit {
       error: (error) => {},
     });
   }
+  currenttypefilter:any=0;
 
   setCustomersType(type: any) {
     // change table cells
+    this.currenttypefilter=type;
+
     if (type == '0' || type == '1') {
       this.displayedColumns = [
         'name',
         'nationalId',
         'customerType',
+        'email',
+        'phone',
+        'mobile',
+        'operations',
+      ];
+    }else if(type==2) {
+      this.displayedColumns = [
+        'name',
+        // 'nationalId',
+        'customerType',
+        'commercialactivity',
+        'branchactivity',
+        'totalrevenue',
         'email',
         'phone',
         'mobile',
@@ -549,9 +565,16 @@ export class AddSearchComponent implements OnInit {
     this.resetModal();
     this.getEmailOrganization();
     this.fillCustomerSelect2Mails();
-
+    this.FillCommercial();
+    this.FillgeneralManagerslect();
+    this.GetCommercialActivities();
+    this.GetBranchActivities();
+    this.resetBA();
+    this.resetCA();
     if (modalType == 'addClient') {
       this.GetSystemSettingsByUserId();
+      this.disableButtonSave_Customer=false;
+
     }
     console.log('this.modalDetails');
     console.log(this.modalDetails);
@@ -569,6 +592,10 @@ export class AddSearchComponent implements OnInit {
       if (modalType == 'editClient') {
         this.getBranchAccount(this.modalDetails.branchId);
         debugger;
+        this.disableButtonSave_Customer=false;
+this.modalDetails.commercialActivity = data.commercialActivity ? parseInt(data.commercialActivity, 10) : null;
+this.modalDetails.generalManager = data.generalManager ? parseInt(data.generalManager, 10) : null;
+
         if (data.agentAttachmentUrl != null) {
           this.modalDetails.attachmentUrl =
             environment.PhotoURL + data.agentAttachmentUrl;
@@ -760,6 +787,12 @@ export class AddSearchComponent implements OnInit {
       //this.FillProjectTypeSelectService();
       this.FillPackagesSelect();
     }
+    if(type=='commercedeleted'){
+      this.commercialseleted=data.commercialActivityId;
+    }
+    if(type=='branchactivity  deleted'){
+      this.branchactivityseleted=data.commercialActivityId;
+    }
 
     this.fillFileTypeSelect();
     this.getAllFileTypesSearch();
@@ -933,6 +966,8 @@ export class AddSearchComponent implements OnInit {
       this.toast.error(val.msg, 'رسالة');
       return;
     }
+    this.disableButtonSave_Customer = true; // Disable the button before calling API
+
     var custObj: any = {};
     custObj.customerId = this.modalDetails.customerId;
     custObj.customerNameAr = this.modalDetails.customerNameAr;
@@ -991,10 +1026,10 @@ export class AddSearchComponent implements OnInit {
         formData.append('UploadedAgentImage', this.control?.value[0]);
       }
     }
-    this.disableButtonSave_Customer = true;
-    setTimeout(() => {
-      this.disableButtonSave_Customer = false;
-    }, 9000);
+    // this.disableButtonSave_Customer = true;
+    // setTimeout(() => {
+    //   this.disableButtonSave_Customer = false;
+    // }, 9000);
     this.service.SaveCustomer(formData).subscribe((result: any) => {
       if (result.statusCode == 200) {
         this.toast.success(
@@ -1020,6 +1055,8 @@ export class AddSearchComponent implements OnInit {
       } else {
         this.toast.error(result.reasonPhrase, 'رسالة');
       }
+      this.disableButtonSave_Customer = false;
+
     });
   }
   ValidateObjMsg: any = { status: true, msg: null };
@@ -1158,30 +1195,64 @@ export class AddSearchComponent implements OnInit {
   }
 
   exportData() {
-    this.service.getAllCustomers().subscribe((data: any) => {
-      // console.log(data);
+    // this.service.getAllCustomers().subscribe((data: any) => {
+      // //console.log(data);
 
-      this.dataSource = new MatTableDataSource(data);
-      this.dataSourceTemp = data;
-      let dataExport = data as CustomerVM[];
+      // this.dataSource = new MatTableDataSource(data);
+      // this.dataSourceTemp = data;
+      // let dataExport = data as CustomerVM[];
       let x = [];
-
-      for (let index = 0; index < dataExport.length; index++) {
+      debugger
+if(this.currenttypefilter==0 || this.currenttypefilter==1){
+      for (let index = 0; index < this.dataSourceTemp.length; index++) {
         x.push({
-          customerName: dataExport[index].customerName,
-          customerNationalId: dataExport[index].customerNationalId,
-          customerTypeName: dataExport[index].customerTypeName,
-          customerEmail: dataExport[index].customerEmail,
-          customerPhone: dataExport[index].customerPhone,
-          customerMobile: dataExport[index].customerMobile,
+
+          'رقم الجوال': this.dataSourceTemp[index].customerMobile,
+          'رقم الهاتف': this.dataSourceTemp[index].customerPhone,
+          'البريد الالكتروني': this.dataSourceTemp[index].customerEmail,
+          'نوع العميل': this.dataSourceTemp[index].customerTypeName,
+          'رقم الهوية': this.dataSourceTemp[index].customerNationalId,
+          'اسم العميل': this.dataSourceTemp[index].customerName,
+
         });
       }
+    }
+      else if(this.currenttypefilter==2){
+        for (let index = 0; index < this.dataSourceTemp.length; index++) {
+          x.push({
+  
+            'رقم الجوال': this.dataSourceTemp[index].customerMobile,
+            'رقم الهاتف': this.dataSourceTemp[index].customerPhone,
+            'البريد الالكتروني': this.dataSourceTemp[index].customerEmail,
+            'إجمالي الايرادات ': this.dataSourceTemp[index].totalRevenue,
+            ' النشاط الفرعي': this.dataSourceTemp[index].branchActivityName,
+            ' النشاط التجاري': this.dataSourceTemp[index].commercialActivityName,
+            'نوع العميل': this.dataSourceTemp[index].customerTypeName,
+            'اسم العميل': this.dataSourceTemp[index].customerName,
+  
+          });
+        }
 
-      console.log(dataExport);
+      }
+      else{
+        for (let index = 0; index < this.dataSourceTemp.length; index++) {
+          x.push({
+  
+            'رقم الجوال': this.dataSourceTemp[index].customerMobile,
+            'رقم الهاتف': this.dataSourceTemp[index].customerPhone,
+            'البريد الالكتروني': this.dataSourceTemp[index].customerEmail,
+            'نوع العميل': this.dataSourceTemp[index].customerTypeName,
+            'اسم العميل': this.dataSourceTemp[index].customerName,
+  
+          });
+        }
+      }
+
+      //console.log(dataExport);
       // data as CustomerVM[]
       this.customExportExcel(x);
-      this.getData();
-    });
+      //this.getData();
+    // });
   }
 
   getData() {
@@ -6621,5 +6692,161 @@ export class AddSearchComponent implements OnInit {
   }
   //#endregion
   //--------------------------End--ServicePrice----------------------------
+///////////////////////////////////////////////
+commercialActivityslect:any;
+FillCommercial() {
+  this.service.FillTCommercialActivitiesSelect(1).subscribe((data) => {
+    this.commercialActivityslect = data;
 
+  });
+}
+generalManagerslect:any
+FillgeneralManagerslect() {
+  this.service.FillTCommercialActivitiesSelect(2).subscribe((data) => {
+    this.generalManagerslect = data;
+
+  });
+}
+
+  ///////////////////////////////commercialActivity crud operations/////////////////////////////
+  CommercialActivitieslist:any;
+  CAnamear:any;
+  CAnameen:any;
+  CAid:any=0;
+  commercialseleted:any;
+  commercialActivityobj:any={};
+  GetCommercialActivities() {
+    this.service.GetCommercialActivities('',1).subscribe((data) => {
+      this.CommercialActivitieslist = data.result;
+    });
+  }
+  editcommercialActivity(data: any) {
+    this.CAnamear = data.nameAr;
+    this.CAnameen = data.nameEn;
+    this.CAid = data.commercialActivityId;
+  }
+  SaveCommercialActivity() {
+    //debugger;
+    if (this.CAnamear == null || this.CAnameen == null) {
+      this.toast.error('من فضلك أكمل البيانات ', 'رسالة');
+      return;
+    }
+     
+    this.commercialActivityobj.commercialActivityId = this.CAid;
+    this.commercialActivityobj.nameAr = this.CAnamear;
+    this.commercialActivityobj.nameEn = this.CAnameen;
+    this.commercialActivityobj.type=1;
+    this.service
+      .SaveCommercialActivity(this.commercialActivityobj)
+      .subscribe((result: any) => {
+        //console.log(result);
+        //console.log('result');
+
+        if (result.statusCode == 200) {
+          this.GetCommercialActivities();
+          this.FillCommercial();
+          this.resetCA();
+          this.toast.success(
+            this.translate.instant(result.reasonPhrase),
+            this.translate.instant('Message')
+          );
+        } else {
+          this.toast.error(result.reasonPhrase, 'رسالة');
+        }
+      });
+  }
+  DeleteCommercialActivity() {
+
+    this.service
+      .DeleteCommercialActivity(this.commercialseleted)
+      .subscribe((result: any) => {
+
+        if (result.statusCode == 200) {
+          this.GetCommercialActivities();
+          this.FillCommercial();
+          this.resetCA();
+          this.toast.success(
+            this.translate.instant(result.reasonPhrase),
+            this.translate.instant('Message')
+          );
+        } else {
+          this.toast.error(result.reasonPhrase, 'رسالة');
+        }
+      });
+  }
+  resetCA(){
+    this.CAnamear = null;
+    this.CAnameen =null;
+    this.CAid = 0;
+  }
+
+    ///////////////////////////////Branch Activity crud operations/////////////////////////////
+    BranchActivitieslist:any;
+    BAnamear:any;
+    BAnameen:any;
+    BAid:any=0;
+    branchactivityseleted:any;
+    branchActivityobj:any={};
+    GetBranchActivities() {
+      this.service.GetCommercialActivities('',2).subscribe((data) => {
+        this.BranchActivitieslist = data.result;
+      });
+    }
+    editbranchActivity(data: any) {
+      this.BAnamear = data.nameAr;
+      this.BAnameen = data.nameEn;
+      this.BAid = data.commercialActivityId;
+    }
+    SaveBranchActivity() {
+      //debugger;
+      if (this.BAnamear == null || this.BAnameen == null) {
+        this.toast.error('من فضلك أكمل البيانات ', 'رسالة');
+        return;
+      }
+       
+      this.commercialActivityobj.commercialActivityId = this.BAid;
+      this.commercialActivityobj.nameAr = this.BAnamear;
+      this.commercialActivityobj.nameEn = this.BAnameen;
+      this.commercialActivityobj.type=2;
+      this.service
+        .SaveCommercialActivity(this.commercialActivityobj)
+        .subscribe((result: any) => {
+  
+          if (result.statusCode == 200) {
+            this.GetBranchActivities();
+            this.FillgeneralManagerslect();
+            this.resetBA();
+            this.toast.success(
+              this.translate.instant(result.reasonPhrase),
+              this.translate.instant('Message')
+            );
+          } else {
+            this.toast.error(result.reasonPhrase, 'رسالة');
+          }
+        });
+    }
+    DeletebranchActivity() {
+
+      this.service
+        .DeleteCommercialActivity(this.branchactivityseleted)
+        .subscribe((result: any) => {
+  
+          if (result.statusCode == 200) {
+            this.GetBranchActivities();
+            this.FillgeneralManagerslect();
+            this.resetBA();
+            this.toast.success(
+              this.translate.instant(result.reasonPhrase),
+              this.translate.instant('Message')
+            );
+          } else {
+            this.toast.error(result.reasonPhrase, 'رسالة');
+          }
+        });
+    }
+    resetBA(){
+      this.BAnamear = null;
+      this.BAnameen =null;
+      this.BAid = 0;
+    }
 }

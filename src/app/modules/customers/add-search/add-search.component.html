@@ -343,6 +343,53 @@
             {{ element.customerTypeName }}
           </td>
         </ng-container>
+
+                <!---------------------------company colums  ------------------->
+                <ng-container matColumnDef="commercialactivity">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <span
+                      [translate]="'name'"
+                      [translateParams]="{
+                        ar: ' النشاط التجاري',
+                        en: 'Commercial Activity'
+                      }"
+                    ></span>
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.commercialActivityName }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="branchactivity">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <span
+                      [translate]="'name'"
+                      [translateParams]="{
+                        ar: 'النشاط الفرعي',
+                        en: 'Branch Activity'
+                      }"
+                    ></span>
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.branchActivityName }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="totalrevenue">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <span
+                      [translate]="'name'"
+                      [translateParams]="{
+                        ar: 'إجمالي الايرادات',
+                        en: 'Total Revenue'
+                      }"
+                    ></span>
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.totalRevenue }}
+                  </td>
+                </ng-container>
+            
+        
+                <!---------------------------end  company colums  ------------------->
         <!-- email Column -->
         <ng-container matColumnDef="email">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>
@@ -677,52 +724,65 @@
             <!-- copmpany  only -->
 
             <ng-container *ngIf="modalDetails.customerTypeId == 2">
-              <div class="form-group">
-                <label for="GeneralManager" class="col-form-label">{{
-                  "General Manager" | translate
-                }}</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="generalManager"
-                  autocomplete="off"
-                  #generalManager="ngModel"
-                  required
-                  class="form-control {{
-                    generalManager.invalid && !generalManager.touched
-                      ? 'errorInput'
-                      : ''
-                  }}"
-                  name="generalManager"
-                  placeholder="{{ 'Write' | translate }} {{
-                    'General Manager' | translate
-                  }} "
-                  [(ngModel)]="modalDetails.generalManager"
-                />
-              </div>
-              <div class="form-group">
-                <label for="CommercialActivitytxt" class="col-form-label">
-                  {{ "Commercial Activity" | translate }}</label
+              <div class="flex gap-2 items-end">
+                <div class="flex-grow">
+                  <label for="NationalitySelectId" class="col-form-label">
+                    {{ "Commercial Activity" | translate }}
+                    <span class="text-danger">*</span></label
+                  >
+                  <ng-select
+                    class="w-full p-0"
+                    placeholder="{{ 'Chose' | translate }}"
+                    id="commercialActivity"
+                    name="commercialActivity"
+                    [(ngModel)]="modalDetails.commercialActivity"
+                    [ngModelOptions]="{ standalone: true }"
+                  >
+                    <ng-option
+                      *ngFor="let user of commercialActivityslect"
+                      [value]="user.id"
+                      >{{ user.name }}</ng-option
+                    >
+                  </ng-select>
+                </div>
+                <button
+                  (click)="open(commercialActivity)"
+                  class="btn bg-base text-white mt-3"
+                  type="type"
                 >
-
-                <input
-                  type="text"
-                  class="form-control"
-                  id="commercialActivity"
-                  autocomplete="off"
-                  #commercialActivity="ngModel"
-                  required
-                  class="form-control {{
-                    commercialActivity.invalid && !commercialActivity.touched
-                      ? 'errorInput'
-                      : ''
-                  }}"
-                  name="commercialActivity"
-                  placeholder="{{ 'Write' | translate }} {{
-                    'Commercial Activity' | translate
-                  }} "
-                  [(ngModel)]="modalDetails.commercialActivity"
-                />
+                  <i class="fa fa-plus"></i>
+                </button>
+              </div>
+  
+  
+              <div class="flex gap-2 items-end">
+                <div class="flex-grow">
+                  <label for="generalManagerSelectId" class="col-form-label">
+                    {{ "Branch Activity" | translate }}
+                    <span class="text-danger">*</span></label
+                  >
+                  <ng-select
+                    class="w-full p-0"
+                    placeholder="{{ 'Chose' | translate }}"
+                    id="generalManager"
+                    name="generalManager"
+                    [(ngModel)]="modalDetails.generalManager"
+                    [ngModelOptions]="{ standalone: true }"
+                  >
+                    <ng-option
+                      *ngFor="let user of generalManagerslect"
+                      [value]="user.id"
+                      >{{ user.name }}</ng-option
+                    >
+                  </ng-select>
+                </div>
+                <button
+                  (click)="open(branchactivity)"
+                  class="btn bg-base text-white mt-3"
+                  type="type"
+                >
+                  <i class="fa fa-plus"></i>
+                </button>
               </div>
               <div class="form-group">
                 <label for="CommercialRegistertxt" class="col-form-label">{{
@@ -1318,7 +1378,6 @@
             <button
               class="btn bg-base text-white"
               (click)="open(savecustomermodal,modal,'savecust')"
-              [disabled]="disableButtonSave_Customer"
             >
               {{ "save" | translate }}
             </button>
@@ -8392,6 +8451,320 @@
         mat-raised-button
         color="basic"
         (click)="addCustomer(modal)"
+        [disabled]="disableButtonSave_Customer"
+      >
+        {{ "Yes" | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "No" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+
+
+<ng-template #commercialActivity let-modal>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="m-0 text-2xl">
+      {{ "Commercial Activity" | translate }}
+    </h4>
+    <button
+      type="button"
+      class="text-2xl text-white"
+      (click)="modal.dismiss()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+
+  <div class="modal-body p-4 w-full">
+    <form class="w-full space-y-4" #form="ngForm">
+      <!-- Full width input grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+        <div class="form-group w-full">
+          <label class="block text-right col-form-label">
+            {{ "nameAr" | translate }} <span class="text-danger">*</span>
+          </label>
+          <input
+            class="form-control w-full"
+            type="text"
+            name="CAnamear"
+            [(ngModel)]="CAnamear"
+            [placeholder]="('Write' | translate) + ' ' + ('nameAr' | translate)"
+          />
+        </div>
+
+        <div class="form-group w-full">
+          <label class="block text-right col-form-label">
+            {{ "nameEn" | translate }} <span class="text-danger">*</span>
+          </label>
+          <input
+            class="form-control w-full"
+            type="text"
+            name="CAnameen"
+            [(ngModel)]="CAnameen"
+            [placeholder]="('Write' | translate) + ' ' + ('nameEn' | translate)"
+          />
+        </div>
+      </div>
+
+      <!-- Grid section full width -->
+      <div class="overflow-auto max-h-[400px] w-full">
+        <table class="custome-table w-full">
+          <thead>
+            <tr class="text-center">
+              <th>{{ "nameAr" | translate }}</th>
+              <th>{{ "nameEn" | translate }}</th>
+              <th
+                [translate]="'name'"
+                [translateParams]="{ ar: 'خيارات', en: 'Operations' }"
+              ></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of CommercialActivitieslist; let i = index">
+              <td>
+                {{item.nameAr}}
+                <!-- <input
+                  type="text"
+                  class="form-control w-full"
+                  name="ca-namear{{ i }}"
+                  [(ngModel)]="item.nameAr"
+                  disabled
+                /> -->
+              </td>
+              <td>
+                {{item.nameEn}}
+                <!-- <input
+                  type="text"
+                  class="form-control w-full"
+                  name="ca-nameen{{ i }}"
+                  [(ngModel)]="item.nameEn"
+                  disabled
+                /> -->
+              </td>
+              <td class="text-center">
+                <button
+                  (click)="editcommercialActivity(item)"
+                  class="p-2 bg-orange-100 hover:bg-orange-500 rounded-lg hover:text-white"
+                  title="Edit"
+                >
+                  <i class="fa-regular fa-pen-to-square"></i>
+                </button>
+
+                <button
+                  class="p-2 bg-red-100 hover:bg-red-500 rounded-lg hover:text-white ml-2"
+                  (click)="open(deleteModal2, item, 'commercedeleted')"
+                  title="Delete"
+                >
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Footer buttons -->
+      <div class="flex justify-end gap-2 pt-4 border-t border-neutral-300">
+        <button
+          class="btn bg-base text-white"
+          type="submit"
+          (click)="SaveCommercialActivity()"
+        >
+          {{ "Save" | translate }}
+        </button>
+        <button class="btn btn-secondary" (click)="modal.dismiss()">
+          {{ "Back" | translate }}
+        </button>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+
+
+
+<ng-template #deleteModal2 let-modal>
+  <div class="modal-body text-center">
+    <p
+      [translate]="'name'"
+      [translateParams]="{
+        ar: 'هل تريد بالتأكيد حذف هذا الصف',
+        en: 'Are you sure to delete this row ?'
+      }"
+    ></p>
+    <div class="flex gap-2 justify-center">
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="DeleteCommercialActivity(); modal.dismiss()"
+      >
+        {{ "Yes" | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="modal.dismiss()"
+        mat-raised-button
+        color="basic"
+      >
+        {{ "No" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+
+<ng-template #branchactivity let-modal>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="m-0 text-2xl">
+      {{ "Branch Activity" | translate }}
+    </h4>
+    <button
+      type="button"
+      class="text-2xl text-white"
+      (click)="modal.dismiss()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+
+  <!-- Full-width modal body -->
+  <div class="modal-body p-4 w-full">
+    <form class="w-full space-y-4" #form="ngForm">
+      <!-- Full width input grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+        <div class="form-group w-full">
+          <label class="block text-right col-form-label">
+            {{ "nameAr" | translate }} <span class="text-danger">*</span>
+          </label>
+          <input
+            class="form-control w-full"
+            type="text"
+            name="BAnamear"
+            [(ngModel)]="BAnamear"
+            [placeholder]="('Write' | translate) + ' ' + ('nameAr' | translate)"
+          />
+        </div>
+
+        <div class="form-group w-full">
+          <label class="block text-right col-form-label">
+            {{ "nameEn" | translate }} <span class="text-danger">*</span>
+          </label>
+          <input
+            class="form-control w-full"
+            type="text"
+            name="BAnameen"
+            [(ngModel)]="BAnameen"
+            [placeholder]="('Write' | translate) + ' ' + ('nameEn' | translate)"
+          />
+        </div>
+      </div>
+
+      <!-- Grid section full width -->
+      <div class="overflow-auto max-h-[400px] w-full">
+        <table class="custome-table w-full">
+          <thead>
+            <tr class="text-center">
+              <th>{{ "nameAr" | translate }}</th>
+              <th>{{ "nameEn" | translate }}</th>
+              <th
+                [translate]="'name'"
+                [translateParams]="{ ar: 'خيارات', en: 'Operations' }"
+              ></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of BranchActivitieslist; let i = index">
+              <td>
+                {{item.nameAr}}
+                <!-- <input
+                  type="text"
+                  class="form-control"
+                  name="os-namear{{ i }}"
+                  [(ngModel)]="item.nameAr"
+                  disabled
+                /> -->
+              </td>
+              <td>
+                {{item.nameEn}}
+                <!-- <input
+                  type="text"
+                  class="form-control"
+                  name="os-nameen{{ i }}"
+                  [(ngModel)]="item.nameEn"
+                  disabled
+                /> -->
+              </td>
+              <td class="text-center">
+                <button
+                  (click)="editbranchActivity(item)"
+                  class="p-2 bg-orange-100 hover:bg-orange-500 rounded-lg hover:text-white"
+                  title="Edit"
+                >
+                  <i class="fa-regular fa-pen-to-square"></i>
+                </button>
+
+                <button
+                  class="p-2 bg-red-100 hover:bg-red-500 rounded-lg hover:text-white ml-2"
+                  (click)="open(deleteModal3, item, 'branchactivitydeleted')"
+                  title="Delete"
+                >
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Footer buttons -->
+      <div class="flex justify-end gap-2 pt-4 border-t border-neutral-300">
+        <button
+          class="btn bg-base text-white"
+          type="submit"
+          (click)="SaveBranchActivity()"
+        >
+          {{ "Save" | translate }}
+        </button>
+        <button class="btn btn-secondary" (click)="modal.dismiss()">
+          {{ "Back" | translate }}
+        </button>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+
+
+<ng-template #deleteModal3 let-modal>
+  <div class="modal-body text-center">
+    <p
+      [translate]="'name'"
+      [translateParams]="{
+        ar: 'هل تريد بالتأكيد حذف هذا الصف',
+        en: 'Are you sure to delete this row ?'
+      }"
+    ></p>
+    <div class="flex gap-2 justify-center">
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="DeletebranchActivity(); modal.dismiss()"
       >
         {{ "Yes" | translate }}
       </button>
