@@ -1225,8 +1225,8 @@ if(this.currenttypefilter==0 || this.currenttypefilter==1){
             'رقم الهاتف': this.dataSourceTemp[index].customerPhone,
             'البريد الالكتروني': this.dataSourceTemp[index].customerEmail,
             'إجمالي الايرادات ': this.dataSourceTemp[index].totalRevenue,
-            ' النشاط الفرعي': this.dataSourceTemp[index].generalManager,
-            ' النشاط التجاري': this.dataSourceTemp[index].commercialActivity,
+            ' النشاط الفرعي': this.dataSourceTemp[index].branchActivityName,
+            ' النشاط التجاري': this.dataSourceTemp[index].commercialActivityName,
             'نوع العميل': this.dataSourceTemp[index].customerTypeName,
             'اسم العميل': this.dataSourceTemp[index].customerName,
   
