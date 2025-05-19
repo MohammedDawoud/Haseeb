@@ -3562,7 +3562,7 @@ export class PurchasesBillComponent implements OnInit {
 
     VoucherObj.voucherDetails = VoucherDetailsList;
     if (type == 1) {
-      this._payvoucherservice.SaveandPostVoucherP(VoucherObj).subscribe(
+      this._payvoucherservice.SaveandPostVoucherP(VoucherObj).pipe(take(1)).subscribe(
         (data) => {
           debugger;
 
@@ -3592,17 +3592,10 @@ export class PurchasesBillComponent implements OnInit {
             );
             this.submitted = false;
           }
-        },
-        (error) => {
-          this.toast.error(
-            this.translate.instant(error.reasonPhrase),
-            this.translate.instant('Message')
-          );
-          this.submitted = false;
         }
       );
     } else {
-      this._payvoucherservice.SaveVoucherP(VoucherObj).subscribe(
+      this._payvoucherservice.SaveVoucherP(VoucherObj).pipe(take(1)).subscribe(
         (data) => {
           this.submitted = false;
           debugger;
@@ -3632,13 +3625,6 @@ export class PurchasesBillComponent implements OnInit {
               this.translate.instant('Message')
             );
           }
-        },
-        (error) => {
-          this.toast.error(
-            this.translate.instant(error.reasonPhrase),
-            this.translate.instant('Message')
-          );
-          this.submitted = false;
         }
       );
     }

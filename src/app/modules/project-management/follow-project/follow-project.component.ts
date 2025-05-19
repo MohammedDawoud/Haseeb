@@ -1,4 +1,4 @@
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -1770,7 +1770,7 @@ export class FollowProjectComponent {
 
     VoucherObj.voucherDetails = VoucherDetailsList;
     if (type == 1) {
-      this._payvoucherservice.SaveandPostVoucherP(VoucherObj).subscribe(
+      this._payvoucherservice.SaveandPostVoucherP(VoucherObj).pipe(take(1)).subscribe(
         (data) => {
           if (data.statusCode == 200) {
             this.submitted = false;
@@ -1801,17 +1801,10 @@ export class FollowProjectComponent {
             );
             this.submitted = false;
           }
-        },
-        (error) => {
-          this.toast.error(
-            this.translate.instant(error.reasonPhrase),
-            this.translate.instant('Message')
-          );
-          this.submitted = false;
         }
       );
     } else {
-      this._payvoucherservice.SaveVoucherP(VoucherObj).subscribe(
+      this._payvoucherservice.SaveVoucherP(VoucherObj).pipe(take(1)).subscribe(
         (data) => {
           this.submitted = false;
           if (this.data.filter.isChecked == true) {
@@ -1842,13 +1835,6 @@ export class FollowProjectComponent {
               this.translate.instant('Message')
             );
           }
-        },
-        (error) => {
-          this.toast.error(
-            this.translate.instant(error.reasonPhrase),
-            this.translate.instant('Message')
-          );
-          this.submitted = false;
         }
       );
     }

@@ -31,6 +31,7 @@ import { ToastrService } from 'ngx-toastr';
 import { OpeningEntrtyService } from 'src/app/core/services/acc_Services/opening-entrty.service';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { DateType } from 'ngx-hijri-gregorian-datepicker';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-financial-covenant',
@@ -1059,7 +1060,7 @@ export class FinancialCovenantComponent implements OnInit {
     setTimeout(() => {
       this.disableButtonSave_EntryVoucher = false;
     }, 7000);
-    this.financialCovenantService.SaveandPostDailyVoucher(VoucherObj).subscribe(
+    this.financialCovenantService.SaveandPostDailyVoucher(VoucherObj).pipe(take(1)).subscribe(
       (result: any) => {
         if (result.statusCode == 200) {
           this.toast.success(
@@ -1076,12 +1077,6 @@ export class FinancialCovenantComponent implements OnInit {
             this.translate.instant('Message')
           );
         }
-      },
-      (error) => {
-        this.toast.error(
-          this.translate.instant(error.reasonPhrase),
-          this.translate.instant('Message')
-        );
       }
     );
   }

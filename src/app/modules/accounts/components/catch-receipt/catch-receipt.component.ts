@@ -31,6 +31,7 @@ import { VoucherFilterVM } from 'src/app/core/Classes/ViewModels/voucherFilterVM
 import printJS from 'print-js';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
 import { InvoiceService } from 'src/app/core/services/acc_Services/invoice.service';
+import { take } from 'rxjs';
 @Component({
   selector: 'app-catch-receipt',
   templateUrl: './catch-receipt.component.html',
@@ -1402,7 +1403,7 @@ export class CatchReceiptComponent implements OnInit {
     setTimeout(() => {
       this.disableButtonSave_Voucher = false;
     }, 15000);
-    this.receiptService.SaveVoucher(VoucherObj).subscribe(
+    this.receiptService.SaveVoucher(VoucherObj).pipe(take(1)).subscribe(
       (data) => {
         if (data.statusCode == 200) {
           if (this.uploadedFiles.length > 0) {
@@ -1437,12 +1438,6 @@ export class CatchReceiptComponent implements OnInit {
             );
           }
         }
-      },
-      (error) => {
-        this.toast.error(
-          this.translate.instant(error.reasonPhrase),
-          this.translate.instant('Message')
-        );
       }
     );
   }

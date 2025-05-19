@@ -4038,7 +4038,7 @@ export class SalesBillComponent implements OnInit {
     setTimeout(() => {
       this.disableButtonSave_Voucher = false;
     }, 15000);
-    this.receiptService.SaveVoucher(VoucherObj).subscribe(
+    this.receiptService.SaveVoucher(VoucherObj).pipe(take(1)).subscribe(
       (data) => {
         if (data.statusCode == 200) {
           debugger;
@@ -4065,12 +4065,6 @@ export class SalesBillComponent implements OnInit {
             );
           }
         }
-      },
-      (error) => {
-        this.toast.error(
-          this.translate.instant(error.reasonPhrase),
-          this.translate.instant('Message')
-        );
       }
     );
   }

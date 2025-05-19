@@ -15,7 +15,7 @@ import {
   FileUploadControl,
   FileUploadValidators,
 } from '@iplab/ngx-file-upload';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription, take } from 'rxjs';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { NgxPrintElementService } from 'ngx-print-element';
 import { RestApiService } from 'src/app/shared/services/api.service';
@@ -1759,7 +1759,7 @@ export class AdoptionOfThemanagerComponent implements OnInit {
 
     VoucherObj.voucherDetails = VoucherDetailsList;
     if (type == 1) {
-      this._payvoucherservice.SaveandPostVoucherP(VoucherObj).subscribe(
+      this._payvoucherservice.SaveandPostVoucherP(VoucherObj).pipe(take(1)).subscribe(
         (data) => {
           this.submitted = false;
           if (data.statusCode == 200) {
@@ -1792,17 +1792,10 @@ export class AdoptionOfThemanagerComponent implements OnInit {
             );
             this.submitted = false;
           }
-        },
-        (error) => {
-          this.toast.error(
-            this.translate.instant(error.reasonPhrase),
-            this.translate.instant('Message')
-          );
-          this.submitted = false;
         }
       );
     } else {
-      this._payvoucherservice.SaveVoucherP(VoucherObj).subscribe(
+      this._payvoucherservice.SaveVoucherP(VoucherObj).pipe(take(1)).subscribe(
         (data) => {
           this.submitted = false;
           this.RefreshData();
@@ -1834,13 +1827,6 @@ export class AdoptionOfThemanagerComponent implements OnInit {
               this.translate.instant('Message')
             );
           }
-        },
-        (error: any) => {
-          this.toast.error(
-            this.translate.instant(error.reasonPhrase),
-            this.translate.instant('Message')
-          );
-          this.submitted = false;
         }
       );
     }

@@ -48,6 +48,7 @@ import 'hijri-date';
 import { RestApiService } from 'src/app/shared/services/api.service';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
 import { DebentureService } from 'src/app/core/services/acc_Services/debenture.service';
+import { take } from 'rxjs';
 const hijriSafe = require('hijri-date/lib/safe');
 const HijriDate = hijriSafe.default;
 const toHijri = hijriSafe.toHijri;
@@ -4166,7 +4167,7 @@ export class SalesBillDraftsComponent implements OnInit {
     setTimeout(() => {
       this.disableButtonSave_Voucher = false;
     }, 15000);
-    this.receiptService.SaveVoucher(VoucherObj).subscribe(
+    this.receiptService.SaveVoucher(VoucherObj).pipe(take(1)).subscribe(
       (data) => {
         if (data.statusCode == 200) {
           debugger;
@@ -4193,12 +4194,6 @@ export class SalesBillDraftsComponent implements OnInit {
             );
           }
         }
-      },
-      (error) => {
-        this.toast.error(
-          this.translate.instant(error.reasonPhrase),
-          this.translate.instant('Message')
-        );
       }
     );
   }

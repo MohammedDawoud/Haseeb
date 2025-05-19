@@ -35,6 +35,7 @@ import { PrintreportsService } from 'src/app/core/services/acc_Services/printrep
 import { RestApiService } from 'src/app/shared/services/api.service';
 const hijriSafe = require('hijri-date/lib/safe');
 import {CdkDragDrop,moveItemInArray,transferArrayItem,} from '@angular/cdk/drag-drop';
+import { take } from 'rxjs';
 
 const HijriDate = hijriSafe.default;
 const toHijri = hijriSafe.toHijri;
@@ -1000,7 +1001,7 @@ export class UnderDailyComponent implements OnInit {
     }, 10000);
     if (this.modalEntryVoucher.WhichClick == 1) {
       this._entryvoucherService
-        .SaveDailyVoucher(VoucherObj)
+        .SaveDailyVoucher(VoucherObj).pipe(take(1))
         .subscribe((result: any) => {
           if (result.statusCode == 200) {
             this.toast.success(
@@ -1031,7 +1032,7 @@ export class UnderDailyComponent implements OnInit {
         });
     } else if (this.modalEntryVoucher.WhichClick == 2) {
       this._entryvoucherService
-        .SaveandPostDailyVoucher(VoucherObj)
+        .SaveandPostDailyVoucher(VoucherObj).pipe(take(1))
         .subscribe((result: any) => {
           if (result.statusCode == 200) {
             this.toast.success(
