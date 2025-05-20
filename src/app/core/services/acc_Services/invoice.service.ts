@@ -275,6 +275,16 @@ export class InvoiceService {
     return this.http.get<any>(this.apiEndPoint+'ServiceType/FillServiceTypesSelect');
   }
   //-------------------------------------------------------------------------------
+  GetAllInvoiceRequestsByInvoiceId(InvoiceId:any) {
+    var url=`${environment.apiEndPoint}Voucher/GetAllInvoiceRequestsByInvoiceId?&InvoiceId=${InvoiceId}`;
+    return this.http.get<any>(url);
+  }
 
+  PDFDownloadZatca(formData:any) {
+    return this.http.post<any>(this.apiEndPoint + 'Voucher/PDFDownloadZatca', formData);
+  }
+  ConvertEncodedXMLToPDFA3ByteArray(formData:any) {
+    return this.http.post<any>(this.apiEndPoint + 'Voucher/ConvertEncodedXMLToPDFA3ByteArray', formData);
+  }
 
 }

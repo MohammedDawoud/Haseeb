@@ -49,6 +49,8 @@ import { RestApiService } from 'src/app/shared/services/api.service';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
 import { DebentureService } from 'src/app/core/services/acc_Services/debenture.service';
 import { take } from 'rxjs';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 const hijriSafe = require('hijri-date/lib/safe');
 const HijriDate = hijriSafe.default;
 const toHijri = hijriSafe.toHijri;
@@ -2739,13 +2741,14 @@ export class SalesBillComponent implements OnInit {
       ContractNo: null,
     };
   }
-  GetInvoicePrint(obj: any, TempCheck: any) {
+  ZatcaPrintP=false;
+  GetInvoicePrint(obj: any, TempCheck: any,ZatcaPrint?:boolean) {
+    if(ZatcaPrint){this.ZatcaPrintP=true;}
+    else {this.ZatcaPrintP=false;}
     this.resetCustomData();
     this._printreportsService
-      .ChangeInvoice_PDF(obj.invoiceId, TempCheck)
-      .subscribe((data) => {
-        console.log('GetInvoicePrint');
-        console.log(data);
+      .ChangeInvoice_PDF(obj.invoiceId, TempCheck).subscribe((data) => {
+        console.log("GetInvoicePrint",data);
 
         this.InvPrintData = data;
         this.InvPrintData.voucherDetailsVM_VD.forEach((element: any) => {
@@ -2764,10 +2767,17 @@ export class SalesBillComponent implements OnInit {
             this.InvPrintData?.invoicesVM_VD?.contractNo;
         }
         this.CustomData.PrintType = TempCheck;
-        if (TempCheck == 29) this.CustomData.PrintTypeName = 'اشعار دائن';
-        else if (TempCheck == 30) this.CustomData.PrintTypeName = 'اشعار مدين';
-        else this.CustomData.PrintType=1;
+        debugger
+        if (TempCheck == 29){
+          this.CustomData.PrintTypeName = 'اشعار دائن';
+        } 
+        else if (TempCheck == 30)
+        {
+          this.CustomData.PrintTypeName = 'اشعار مدين';
 
+        } 
+        else this.CustomData.PrintType = 1;
+        console.log("aaaaa",this.CustomData?.PrintType);
         var TotalInvWithoutDisc = 0;
         var netVal = 0;
         var DiscountValue_Det_Total_withqty = 0;
@@ -2819,25 +2829,27 @@ export class SalesBillComponent implements OnInit {
           this.CustomData.Account2Img = null;
         }
         if (this.CustomData.Account1Img)
-          this.CustomData.Account1Img =
-            environment.PhotoURL + this.CustomData.Account1Img;
+        {
+            this.CustomData.Account1Img =this.CustomData.Account1Img;
+        }
+        
         else this.CustomData.Account1Img = null;
-
         if (this.CustomData.Account2Img)
-          this.CustomData.Account2Img =
-            environment.PhotoURL + this.CustomData.Account2Img;
+        {
+          this.CustomData.Account2Img =this.CustomData.Account2Img;
+        }         
         else this.CustomData.Account2Img = null;
         if (
           this.InvPrintData?.branch_VD.isPrintInvoice == true &&
           this.InvPrintData?.branch_VD.branchLogoUrl != '' &&
           this.InvPrintData?.branch_VD.branchLogoUrl != null
         ) {
-          this.CustomData.OrgImg =
-            environment.PhotoURL + this.InvPrintData?.branch_VD.branchLogoUrl;
+              this.CustomData.OrgImg =this.InvPrintData?.branch_VD.branchLogoUrl;
         } else {
           if (this.InvPrintData?.org_VD.logoUrl)
-            this.CustomData.OrgImg =
-              environment.PhotoURL + this.InvPrintData?.org_VD.logoUrl;
+          {
+              this.CustomData.OrgImg =this.InvPrintData?.org_VD.logoUrl;
+          }
           else this.CustomData.OrgImg = null;
         }
         if (
@@ -2845,8 +2857,8 @@ export class SalesBillComponent implements OnInit {
           this.InvPrintData?.branch_VD.headerLogoUrl != '' &&
           this.InvPrintData?.branch_VD.headerLogoUrl != null
         ) {
-          this.CustomData.headerurl =
-            environment.PhotoURL + this.InvPrintData?.branch_VD.headerLogoUrl;
+          this.CustomData.headerurl =this.InvPrintData?.branch_VD.headerLogoUrl;
+
         } else {
           this.CustomData.headerurl = null;
         }
@@ -2856,8 +2868,8 @@ export class SalesBillComponent implements OnInit {
           this.InvPrintData?.branch_VD.footerLogoUrl != '' &&
           this.InvPrintData?.branch_VD.footerLogoUrl != null
         ) {
-          this.CustomData.footerurl =
-            environment.PhotoURL + this.InvPrintData?.branch_VD.footerLogoUrl;
+          this.CustomData.footerurl =this.InvPrintData?.branch_VD.footerLogoUrl;
+
         } else {
           this.CustomData.footerurl = null;
         }
@@ -4583,5 +4595,40 @@ export class SalesBillComponent implements OnInit {
     //     this.zatcaList = data;
     //     this.zatcaListDataSourceTemp = data;
     // });
+  }
+    async downloadPDF(id:any) {
+    debugger
+    var content=(document.getElementById(id) as HTMLFormElement);
+    const canvas = await html2canvas(content);
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF();
+    const imgWidth = 190; // Adjust based on content width
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+    const pdfBlob = pdf.output('blob');
+    const reader = new FileReader();
+    reader.readAsArrayBuffer(pdfBlob);
+    reader.onloadend = () => {
+    const byteArray = new Uint8Array(reader.result as ArrayBuffer);
+    //console.log(byteArray);
+    this.PDFDownloadZatca(byteArray);
+    };
+  }
+  PDFDownloadZatca(byteArray:any) {
+    debugger
+    const formData = new FormData();
+    const blob = new Blob([byteArray], { type: 'application/octet-stream' });
+    formData.append('UploadedFile', blob);
+    formData.append('InvoiceId', this.InvPrintData?.invoicesVM_VD?.invoiceId);
+    this._invoiceService.ConvertEncodedXMLToPDFA3ByteArray(formData).subscribe((data) => {     
+      if (data.statusCode == 200) {
+        var PDFPath = environment.PhotoURL + data.reasonPhrase;
+        const printwindow=window.open(PDFPath,'_blank');
+        printwindow?.print();
+        //printJS({ printable: PDFPath, type: 'pdf', showModal: true });
+      } else {
+        this.toast.error(this.translate.instant(data.reasonPhrase), this.translate.instant('Message'));
+      }    
+    });
   }
 }
