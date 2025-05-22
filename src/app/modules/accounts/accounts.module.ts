@@ -73,6 +73,7 @@ import { YearlyinvoiceswitMonthsComponent } from './components/yearlyinvoiceswit
 import { PaymentdelegatesComponent } from './components/paymentdelegates/paymentdelegates.component';
 import { ItemMovementComponent } from './components/item-movement/item-movement.component';
 import { ZatcaReportComponent } from './components/zatca-report/zatca-report.component';
+import { PurchasesOrderComponent } from './components/purchases-order/purchases-order.component';
 
 
 @NgModule({
@@ -129,6 +130,7 @@ import { ZatcaReportComponent } from './components/zatca-report/zatca-report.com
     PaymentdelegatesComponent,
     ItemMovementComponent,
     ZatcaReportComponent,
+    PurchasesOrderComponent,
 
   ],
   imports: [

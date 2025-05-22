@@ -3725,5 +3725,9 @@
   "Total time duration according to the project tasks listed": "Total time duration according to the project tasks listed",
   "Age": "Age",
   "Movement status": "Movement status",
-  "Movement Details": "Movement Details"
+  "Movement Details": "Movement Details",
+  "AddPurchaseorder": "Add New Purchase Order",
+  "Order number" : "Order number",
+  "Order date":"Order date",
+  "total Order":"Total Order"
 }

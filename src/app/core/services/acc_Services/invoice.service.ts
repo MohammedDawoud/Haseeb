@@ -275,6 +275,9 @@ export class InvoiceService {
     return this.http.get<any>(this.apiEndPoint+'ServiceType/FillServiceTypesSelect');
   }
   //-------------------------------------------------------------------------------
-
+  GetAllJournalsByInvIDPurchaseOrder(invId:any) {
+    var url=`${environment.apiEndPoint}DailyJournal/GetAllJournalsByInvIDPurchaseOrder?&invId=${invId}`;
+    return this.http.get<any>(url);
+  }
 
 }

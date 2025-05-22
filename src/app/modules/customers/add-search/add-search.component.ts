@@ -1117,10 +1117,10 @@ this.modalDetails.generalManager = data.generalManager ? parseInt(data.generalMa
         return this.ValidateObjMsg;
       }
     } else if (this.modalDetails.customerTypeId == 2) {
-      if (!this.modalDetails.generalManager) {
-        this.ValidateObjMsg = { status: false, msg: 'ادخل اسم المدير العام' };
-        return this.ValidateObjMsg;
-      }
+      // if (!this.modalDetails.generalManager) {
+      //   this.ValidateObjMsg = { status: false, msg: 'ادخل اسم المدير العام' };
+      //   return this.ValidateObjMsg;
+      // }
       if (!this.modalDetails.commercialActivity) {
         this.ValidateObjMsg = { status: false, msg: 'ادخل النشاط التجاري' };
         return this.ValidateObjMsg;
