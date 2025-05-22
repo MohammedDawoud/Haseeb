@@ -34,6 +34,7 @@ import { NgxPrintElementService } from 'ngx-print-element';
 import { RestApiService } from 'src/app/shared/services/api.service';
 import printJS from 'print-js';
 import { InvoiceService } from 'src/app/core/services/acc_Services/invoice.service';
+import { take } from 'rxjs';
 const hijriSafe = require('hijri-date/lib/safe');
 const HijriDate = hijriSafe.default;
 const toHijri = hijriSafe.toHijri;
@@ -1087,7 +1088,7 @@ export class ReceiptComponent implements OnInit {
     VoucherObj.voucherDetails = VoucherDetailsList;
     console.log(VoucherObj);
     if (this.ReceiptSSaveType == 2) {
-      this._payvoucherservice.SaveandPostVoucherP(VoucherObj).subscribe(
+      this._payvoucherservice.SaveandPostVoucherP(VoucherObj).pipe(take(1)).subscribe(
         (data) => {
           if (this.uploadedFiles.length > 0) {
             this.savefile(data.returnedParm);
@@ -1112,16 +1113,10 @@ export class ReceiptComponent implements OnInit {
           ) {
             this.UpdateStoreid(this.vouchermodel.supplierInvoiceNo);
           }
-        },
-        (error) => {
-          this.toast.error(
-            this.translate.instant(error.reasonPhrase),
-            this.translate.instant('Message')
-          );
         }
       );
     } else {
-      this._payvoucherservice.SaveVoucherP(VoucherObj).subscribe(
+      this._payvoucherservice.SaveVoucherP(VoucherObj).pipe(take(1)).subscribe(
         (data) => {
           if (this.uploadedFiles.length > 0) {
             this.savefile(data.returnedParm);
@@ -1147,12 +1142,6 @@ export class ReceiptComponent implements OnInit {
           ) {
             this.UpdateStoreid(this.vouchermodel.supplierInvoiceNo);
           }
-        },
-        (error) => {
-          this.toast.error(
-            this.translate.instant(error.reasonPhrase),
-            this.translate.instant('Message')
-          );
         }
       );
     }
@@ -1280,7 +1269,7 @@ export class ReceiptComponent implements OnInit {
     VoucherDetailsList.push(VoucherDetailsObj);
     VoucherObj.voucherDetails = VoucherDetailsList;
     console.log(VoucherObj);
-    this.receiptService.SaveVoucher(VoucherObj).subscribe(
+    this.receiptService.SaveVoucher(VoucherObj).pipe(take(1)).subscribe(
       (data) => {
         if (data.statusCode == 200) {
           if (this.uploadedFiles.length > 0) {
@@ -1309,12 +1298,6 @@ export class ReceiptComponent implements OnInit {
         ) {
           this.UpdateStoreid(this.vouchermodel.supplierInvoiceNo);
         }
-      },
-      (error) => {
-        this.toast.error(
-          this.translate.instant(error.reasonPhrase),
-          this.translate.instant('Message')
-        );
       }
     );
   }

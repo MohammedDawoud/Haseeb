@@ -48,6 +48,7 @@ import 'hijri-date';
 import { RestApiService } from 'src/app/shared/services/api.service';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
 import { DebentureService } from 'src/app/core/services/acc_Services/debenture.service';
+import { take } from 'rxjs';
 const hijriSafe = require('hijri-date/lib/safe');
 const HijriDate = hijriSafe.default;
 const toHijri = hijriSafe.toHijri;
@@ -2870,13 +2871,14 @@ export class SalesBillDraftsComponent implements OnInit {
       ContractNo: null,
     };
   }
-  GetInvoicePrint(obj: any, TempCheck: any) {
+  ZatcaPrintP=false;
+  GetInvoicePrint(obj: any, TempCheck: any,ZatcaPrint?:boolean) {
+    if(ZatcaPrint){this.ZatcaPrintP=true;}
+    else {this.ZatcaPrintP=false;}
     this.resetCustomData();
     this._printreportsService
-      .ChangeInvoice_PDF(obj.invoiceId, TempCheck)
-      .subscribe((data) => {
-        console.log('GetInvoicePrint');
-        console.log(data);
+      .ChangeInvoice_PDF(obj.invoiceId, TempCheck).subscribe((data) => {
+        console.log("GetInvoicePrint",data);
 
         this.InvPrintData = data;
         this.InvPrintData.voucherDetailsVM_VD.forEach((element: any) => {
@@ -2895,10 +2897,17 @@ export class SalesBillDraftsComponent implements OnInit {
             this.InvPrintData?.invoicesVM_VD?.contractNo;
         }
         this.CustomData.PrintType = TempCheck;
-        if (TempCheck == 29) this.CustomData.PrintTypeName = 'اشعار دائن';
-        else if (TempCheck == 30) this.CustomData.PrintTypeName = 'اشعار مدين';
-        else this.CustomData.PrintType=1;
+        debugger
+        if (TempCheck == 29){
+          this.CustomData.PrintTypeName = 'اشعار دائن';
+        } 
+        else if (TempCheck == 30)
+        {
+          this.CustomData.PrintTypeName = 'اشعار مدين';
 
+        } 
+        else this.CustomData.PrintType = 1;
+        console.log("aaaaa",this.CustomData?.PrintType);
         var TotalInvWithoutDisc = 0;
         var netVal = 0;
         var DiscountValue_Det_Total_withqty = 0;
@@ -2950,25 +2959,27 @@ export class SalesBillDraftsComponent implements OnInit {
           this.CustomData.Account2Img = null;
         }
         if (this.CustomData.Account1Img)
-          this.CustomData.Account1Img =
-            environment.PhotoURL + this.CustomData.Account1Img;
+        {
+            this.CustomData.Account1Img =this.CustomData.Account1Img;
+        }
+        
         else this.CustomData.Account1Img = null;
-
         if (this.CustomData.Account2Img)
-          this.CustomData.Account2Img =
-            environment.PhotoURL + this.CustomData.Account2Img;
+        {
+          this.CustomData.Account2Img =this.CustomData.Account2Img;
+        }         
         else this.CustomData.Account2Img = null;
         if (
           this.InvPrintData?.branch_VD.isPrintInvoice == true &&
           this.InvPrintData?.branch_VD.branchLogoUrl != '' &&
           this.InvPrintData?.branch_VD.branchLogoUrl != null
         ) {
-          this.CustomData.OrgImg =
-            environment.PhotoURL + this.InvPrintData?.branch_VD.branchLogoUrl;
+              this.CustomData.OrgImg =this.InvPrintData?.branch_VD.branchLogoUrl;
         } else {
           if (this.InvPrintData?.org_VD.logoUrl)
-            this.CustomData.OrgImg =
-              environment.PhotoURL + this.InvPrintData?.org_VD.logoUrl;
+          {
+              this.CustomData.OrgImg =this.InvPrintData?.org_VD.logoUrl;
+          }
           else this.CustomData.OrgImg = null;
         }
         if (
@@ -2976,8 +2987,8 @@ export class SalesBillDraftsComponent implements OnInit {
           this.InvPrintData?.branch_VD.headerLogoUrl != '' &&
           this.InvPrintData?.branch_VD.headerLogoUrl != null
         ) {
-          this.CustomData.headerurl =
-            environment.PhotoURL + this.InvPrintData?.branch_VD.headerLogoUrl;
+          this.CustomData.headerurl =this.InvPrintData?.branch_VD.headerLogoUrl;
+
         } else {
           this.CustomData.headerurl = null;
         }
@@ -2987,14 +2998,13 @@ export class SalesBillDraftsComponent implements OnInit {
           this.InvPrintData?.branch_VD.footerLogoUrl != '' &&
           this.InvPrintData?.branch_VD.footerLogoUrl != null
         ) {
-          this.CustomData.footerurl =
-            environment.PhotoURL + this.InvPrintData?.branch_VD.footerLogoUrl;
+          this.CustomData.footerurl =this.InvPrintData?.branch_VD.footerLogoUrl;
+
         } else {
           this.CustomData.footerurl = null;
         }
       });
   }
-
   @ViewChild('conditionimg')
   set watch(img: ElementRef) {
     if (img) {
@@ -4166,7 +4176,7 @@ export class SalesBillDraftsComponent implements OnInit {
     setTimeout(() => {
       this.disableButtonSave_Voucher = false;
     }, 15000);
-    this.receiptService.SaveVoucher(VoucherObj).subscribe(
+    this.receiptService.SaveVoucher(VoucherObj).pipe(take(1)).subscribe(
       (data) => {
         if (data.statusCode == 200) {
           debugger;
@@ -4193,12 +4203,6 @@ export class SalesBillDraftsComponent implements OnInit {
             );
           }
         }
-      },
-      (error) => {
-        this.toast.error(
-          this.translate.instant(error.reasonPhrase),
-          this.translate.instant('Message')
-        );
       }
     );
   }

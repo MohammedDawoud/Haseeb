@@ -1,4 +1,4 @@
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription, take } from 'rxjs';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
@@ -1233,7 +1233,7 @@ export class EmployeeLoanComponent implements OnInit {
     VoucherObj.voucherDetails = VoucherDetailsList;
     //console.log(VoucherObj);
     if (this.ReceiptSSaveType == 2) {
-      this._payvoucherservice.SaveandPostVoucherP(VoucherObj).subscribe(
+      this._payvoucherservice.SaveandPostVoucherP(VoucherObj).pipe(take(1)).subscribe(
         (data) => {
           if (this.uploadedFiles.length > 0) {
             this.savefile(data.returnedParm);
@@ -1250,16 +1250,10 @@ export class EmployeeLoanComponent implements OnInit {
               this.translate.instant('Message')
             );
           }
-        },
-        (error) => {
-          this.toast.error(
-            this.translate.instant(error.reasonPhrase),
-            this.translate.instant('Message')
-          );
         }
       );
     } else {
-      this._payvoucherservice.SaveVoucherP(VoucherObj).subscribe(
+      this._payvoucherservice.SaveVoucherP(VoucherObj).pipe(take(1)).subscribe(
         (data) => {
           if (this.uploadedFiles.length > 0) {
             this.savefile(data.returnedParm);
@@ -1279,12 +1273,6 @@ export class EmployeeLoanComponent implements OnInit {
           }
 
           this.Updateconverttoaccounts();
-        },
-        (error) => {
-          this.toast.error(
-            this.translate.instant(error.reasonPhrase),
-            this.translate.instant('Message')
-          );
         }
       );
     }
@@ -1386,7 +1374,7 @@ export class EmployeeLoanComponent implements OnInit {
     VoucherDetailsList.push(VoucherDetailsObj);
     VoucherObj.voucherDetails = VoucherDetailsList;
     //console.log(VoucherObj);
-    this.receiptService.SaveVoucher(VoucherObj).subscribe(
+    this.receiptService.SaveVoucher(VoucherObj).pipe(take(1)).subscribe(
       (data) => {
         if (data.statusCode == 200) {
           if (this.uploadedFiles.length > 0) {
@@ -1408,12 +1396,6 @@ export class EmployeeLoanComponent implements OnInit {
             this.translate.instant('Message')
           );
         }
-      },
-      (error) => {
-        this.toast.error(
-          this.translate.instant(error.reasonPhrase),
-          this.translate.instant('Message')
-        );
       }
     );
   }

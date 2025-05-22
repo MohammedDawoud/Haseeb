@@ -1350,97 +1350,140 @@ resetCustomData(){
     ContractNo:null,
   }
 }
-GetInvoicePrint(obj:any,TempCheck:any){
-  this.resetCustomData();
-  this._printreportsService.ChangeInvoice_PDF(obj.invoiceId,TempCheck).subscribe(data=>{
-    this.InvPrintData=data;
-    if(this.InvPrintData?.invoicesVM_VD?.contractNo==null || this.InvPrintData?.invoicesVM_VD?.contractNo=="")
-    {
-      this.CustomData.ContractNo="بدون";
-    }
-    else
-    {
-      this.CustomData.ContractNo=this.InvPrintData?.invoicesVM_VD?.contractNo;
-    }
-    this.CustomData.PrintType=TempCheck;
-    if(TempCheck==29)this.CustomData.PrintTypeName='اشعار دائن';
-    else if(TempCheck==30)this.CustomData.PrintTypeName='اشعار مدين';
-    else this.CustomData.PrintType=1;
+  ZatcaPrintP=false;
+  GetInvoicePrint(obj: any, TempCheck: any,ZatcaPrint?:boolean) {
+    if(ZatcaPrint){this.ZatcaPrintP=true;}
+    else {this.ZatcaPrintP=false;}
+    this.resetCustomData();
+    this._printreportsService
+      .ChangeInvoice_PDF(obj.invoiceId, TempCheck).subscribe((data) => {
+        console.log("GetInvoicePrint",data);
 
+        this.InvPrintData = data;
+        this.InvPrintData.voucherDetailsVM_VD.forEach((element: any) => {
+          element.servicesPricesOffer.sort(
+            (a: { lineNumber: number }, b: { lineNumber: number }) =>
+              (a.lineNumber ?? 0) - (b.lineNumber ?? 0)
+          ); // b - a for reverse sort
+        });
+        if (
+          this.InvPrintData?.invoicesVM_VD?.contractNo == null ||
+          this.InvPrintData?.invoicesVM_VD?.contractNo == ''
+        ) {
+          this.CustomData.ContractNo = 'بدون';
+        } else {
+          this.CustomData.ContractNo =
+            this.InvPrintData?.invoicesVM_VD?.contractNo;
+        }
+        this.CustomData.PrintType = TempCheck;
+        debugger
+        if (TempCheck == 29){
+          this.CustomData.PrintTypeName = 'اشعار دائن';
+        } 
+        else if (TempCheck == 30)
+        {
+          this.CustomData.PrintTypeName = 'اشعار مدين';
 
-    var TotalInvWithoutDisc=0;
-    var netVal = 0;
-    var DiscountValue_Det_Total_withqty=0;
-    if(this.InvPrintData?.voucherDetailsVM_VD[0]?.taxType==3)
-    {
-      netVal = this.InvPrintData?.invoicesVM_VD?.totalValue;
-      TotalInvWithoutDisc = this.InvPrintData?.invoicesVM_VD?.totalValue;
-    }
-    else
-    {
-      netVal = this.InvPrintData?.invoicesVM_VD?.invoiceValue;
-      TotalInvWithoutDisc = this.InvPrintData?.invoicesVM_VD?.invoiceValue;
-    }
-    this.InvPrintData?.voucherDetailsVM_VD?.forEach((element: any) => {
-      DiscountValue_Det_Total_withqty = DiscountValue_Det_Total_withqty + (element.discountValue_Det?? 0) ;
-    });
+        } 
+        else this.CustomData.PrintType = 1;
+        console.log("aaaaa",this.CustomData?.PrintType);
+        var TotalInvWithoutDisc = 0;
+        var netVal = 0;
+        var DiscountValue_Det_Total_withqty = 0;
+        if (this.InvPrintData?.voucherDetailsVM_VD[0]?.taxType == 3) {
+          netVal = this.InvPrintData?.invoicesVM_VD?.totalValue;
+          TotalInvWithoutDisc = this.InvPrintData?.invoicesVM_VD?.totalValue;
+        } else {
+          netVal = this.InvPrintData?.invoicesVM_VD?.invoiceValue;
+          TotalInvWithoutDisc = this.InvPrintData?.invoicesVM_VD?.invoiceValue;
+        }
+        this.InvPrintData?.voucherDetailsVM_VD?.forEach((element: any) => {
+          DiscountValue_Det_Total_withqty =
+            DiscountValue_Det_Total_withqty + (element.discountValue_Det ?? 0);
+        });
 
-    this.CustomData.DiscPer=parseFloat(((DiscountValue_Det_Total_withqty * 100) / ((TotalInvWithoutDisc + DiscountValue_Det_Total_withqty))).toString()).toFixed(2);
-    this.CustomData.Disc=DiscountValue_Det_Total_withqty;
-    this.CustomData.Total=TotalInvWithoutDisc+DiscountValue_Det_Total_withqty;
-    this.CustomData.netVal=netVal;
-    this.CustomData.TotalAfterDisc=TotalInvWithoutDisc;
+        this.CustomData.DiscPer = parseFloat(
+          (
+            (DiscountValue_Det_Total_withqty * 100) /
+            (TotalInvWithoutDisc + DiscountValue_Det_Total_withqty)
+          ).toString()
+        ).toFixed(2);
+        this.CustomData.Disc = DiscountValue_Det_Total_withqty;
+        this.CustomData.Total =
+          TotalInvWithoutDisc + DiscountValue_Det_Total_withqty;
+        this.CustomData.netVal = netVal;
+        this.CustomData.TotalAfterDisc = TotalInvWithoutDisc;
 
-    if (this.InvPrintData?.invoicesVM_VD.printBankAccount != true)
-    {
-      this.CustomData.Account1Bank = this.InvPrintData?.orgIsRequired_VD == true ? this.InvPrintData?.org_VD.accountBank : this.InvPrintData?.branch_VD.accountBank;
-      this.CustomData.Account2Bank = this.InvPrintData?.orgIsRequired_VD == true ? this.InvPrintData?.org_VD.accountBank2 : this.InvPrintData?.branch_VD.accountBank2;
-      this.CustomData.Account1Img = this.InvPrintData?.orgIsRequired_VD == true ? this.InvPrintData?.org_VD.bankIdImgURL : this.InvPrintData?.branch_VD.bankIdImgURL;
-      this.CustomData.Account2Img = this.InvPrintData?.orgIsRequired_VD == true ? this.InvPrintData?.org_VD.bankId2ImgURL : this.InvPrintData?.branch_VD.bankId2ImgURL;
-    }
-    else
-    {
-      this.CustomData.Account1Bank=null;
-      this.CustomData.Account2Bank=null;
-      this.CustomData.Account1Img=null;
-      this.CustomData.Account2Img=null;
-    }
-    debugger
-    if(this.CustomData.Account1Img)
-    this.CustomData.Account1Img=environment.PhotoURL+this.CustomData.Account1Img;
-    else this.CustomData.Account1Img=null;
+        if (this.InvPrintData?.invoicesVM_VD.printBankAccount != true) {
+          this.CustomData.Account1Bank =
+            this.InvPrintData?.orgIsRequired_VD == true
+              ? this.InvPrintData?.org_VD.accountBank
+              : this.InvPrintData?.branch_VD.accountBank;
+          this.CustomData.Account2Bank =
+            this.InvPrintData?.orgIsRequired_VD == true
+              ? this.InvPrintData?.org_VD.accountBank2
+              : this.InvPrintData?.branch_VD.accountBank2;
+          this.CustomData.Account1Img =
+            this.InvPrintData?.orgIsRequired_VD == true
+              ? this.InvPrintData?.org_VD.bankIdImgURL
+              : this.InvPrintData?.branch_VD.bankIdImgURL;
+          this.CustomData.Account2Img =
+            this.InvPrintData?.orgIsRequired_VD == true
+              ? this.InvPrintData?.org_VD.bankId2ImgURL
+              : this.InvPrintData?.branch_VD.bankId2ImgURL;
+        } else {
+          this.CustomData.Account1Bank = null;
+          this.CustomData.Account2Bank = null;
+          this.CustomData.Account1Img = null;
+          this.CustomData.Account2Img = null;
+        }
+        if (this.CustomData.Account1Img)
+        {
+            this.CustomData.Account1Img =this.CustomData.Account1Img;
+        }
+        
+        else this.CustomData.Account1Img = null;
+        if (this.CustomData.Account2Img)
+        {
+          this.CustomData.Account2Img =this.CustomData.Account2Img;
+        }         
+        else this.CustomData.Account2Img = null;
+        if (
+          this.InvPrintData?.branch_VD.isPrintInvoice == true &&
+          this.InvPrintData?.branch_VD.branchLogoUrl != '' &&
+          this.InvPrintData?.branch_VD.branchLogoUrl != null
+        ) {
+              this.CustomData.OrgImg =this.InvPrintData?.branch_VD.branchLogoUrl;
+        } else {
+          if (this.InvPrintData?.org_VD.logoUrl)
+          {
+              this.CustomData.OrgImg =this.InvPrintData?.org_VD.logoUrl;
+          }
+          else this.CustomData.OrgImg = null;
+        }
+        if (
+          this.InvPrintData?.branch_VD.headerPrintInvoice == true &&
+          this.InvPrintData?.branch_VD.headerLogoUrl != '' &&
+          this.InvPrintData?.branch_VD.headerLogoUrl != null
+        ) {
+          this.CustomData.headerurl =this.InvPrintData?.branch_VD.headerLogoUrl;
 
-    if(this.CustomData.Account2Img)
-    this.CustomData.Account2Img=environment.PhotoURL+this.CustomData.Account2Img;
-    else this.CustomData.Account2Img=null;
+        } else {
+          this.CustomData.headerurl = null;
+        }
 
-    debugger
-    if (this.InvPrintData?.branch_VD.isPrintInvoice == true && this.InvPrintData?.branch_VD.branchLogoUrl!="" && this.InvPrintData?.branch_VD.branchLogoUrl!=null)
-    {
-      this.CustomData.OrgImg=environment.PhotoURL+this.InvPrintData?.branch_VD.branchLogoUrl;
-    }
-    else{
-      if(this.InvPrintData?.org_VD.logoUrl)
-      this.CustomData.OrgImg=environment.PhotoURL+this.InvPrintData?.org_VD.logoUrl;
-      else this.CustomData.OrgImg=null;
-    }
-    if (this.InvPrintData?.branch_VD.headerPrintInvoice == true && this.InvPrintData?.branch_VD.headerLogoUrl!="" && this.InvPrintData?.branch_VD.headerLogoUrl!=null)
-    {
-      this.CustomData.headerurl=environment.PhotoURL+this.InvPrintData?.branch_VD.headerLogoUrl;
-    }
-    else{
-      this.CustomData.headerurl=null;
-    }
+        if (
+          this.InvPrintData?.branch_VD.headerPrintInvoice == true &&
+          this.InvPrintData?.branch_VD.footerLogoUrl != '' &&
+          this.InvPrintData?.branch_VD.footerLogoUrl != null
+        ) {
+          this.CustomData.footerurl =this.InvPrintData?.branch_VD.footerLogoUrl;
 
-    if (this.InvPrintData?.branch_VD.headerPrintInvoice == true && this.InvPrintData?.branch_VD.footerLogoUrl!="" && this.InvPrintData?.branch_VD.footerLogoUrl!=null)
-    {
-      this.CustomData.footerurl=environment.PhotoURL+this.InvPrintData?.branch_VD.footerLogoUrl;
-    }
-    else{
-      this.CustomData.footerurl=null;
-    }
-  });
-}
+        } else {
+          this.CustomData.footerurl = null;
+        }
+      });
+  }
   GetAccualValue(item:any){
     var AccualValue = 0;
     if (item.taxType == 3)
