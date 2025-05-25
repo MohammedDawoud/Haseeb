@@ -1351,5 +1351,8 @@ export class AccountsreportsService {
   ReSendZatcaInvoiceIntegrationFunc(InvoiceReqId:any){
     return this.http.post(this.apiEndPoint+'Voucher/ReSendZatcaInvoiceIntegrationFunc', {}, { params:{InvoiceReqId:InvoiceReqId}});
   }
+  ReSendZatcaInvoiceIntegrationFuncByInvoiceId(InvoiceId:any){
+    return this.http.post(this.apiEndPoint+'Voucher/ReSendZatcaInvoiceIntegrationFuncByInvoiceId', {}, { params:{InvoiceId:InvoiceId}});
+  }
   //-----------------------------------------------------------------------------------------------
 }
