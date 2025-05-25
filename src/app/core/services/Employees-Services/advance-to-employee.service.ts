@@ -38,7 +38,6 @@ export class AdvanceToEmployeeService {
   }
 
   SearchCustody(CustodyVM:CustodyVM): Observable<any> {
-    debugger
     const headers = { 'content-type': 'application/json'}
     const body=JSON.stringify(CustodyVM);
     return this.http.post(this.apiEndPoint+'Custody/SearchCustody', body,{'headers':headers});
@@ -74,7 +73,6 @@ export class AdvanceToEmployeeService {
     return this.http.get<any>(this.apiEndPoint+'Item/GetAllItems');
   }
   SaveItem(item:Item): Observable<any> {
-    debugger
     const headers = { 'content-type': 'application/json'}
     const body=JSON.stringify(item);
     return this.http.post(this.apiEndPoint+'Item/SaveItem2', body,{'headers':headers});

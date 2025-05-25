@@ -91,7 +91,6 @@ export class HomeServiceService {
   GetInProgressProjectPhasesTasksHome_Search(
     projectph: ProjectPhasesTasksVM
   ): Observable<any> {
-    debugger;
     const headers = { 'content-type': 'application/json' };
     const body = JSON.stringify(projectph);
     return this.http.post(
@@ -507,7 +506,6 @@ export class HomeServiceService {
     );
   }
   SetNotificationStatus2(ObjIDs: any): Observable<any> {
-    debugger;
     const headers = { 'content-type': 'application/json' };
     const body = JSON.stringify(ObjIDs);
     return this.http.post(
@@ -553,7 +551,6 @@ export class HomeServiceService {
   }
 
   GetProjectsSearch(projectvm: any): Observable<any> {
-    debugger;
     const headers = { 'content-type': 'application/json' };
     const body = JSON.stringify(projectvm);
     return this.http.post(
@@ -564,7 +561,6 @@ export class HomeServiceService {
   }
 
   GetAllProjectsNew_DashBoard(projectvm: any): Observable<any> {
-    debugger;
     const headers = { 'content-type': 'application/json' };
     const body = JSON.stringify(projectvm);
     return this.http.post(
@@ -580,7 +576,6 @@ export class HomeServiceService {
     page: any,
     pageSize: any
   ): Observable<any> {
-    debugger;
     const headers = { 'content-type': 'application/json' };
     const body = JSON.stringify(projectvm);
     return this.http.post(

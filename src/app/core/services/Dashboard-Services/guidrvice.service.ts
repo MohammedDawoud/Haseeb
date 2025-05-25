@@ -71,7 +71,6 @@ export class GuidrviceService {
   SaveQuestionAnswers(
     GuideDepartments: Guide_QuestionsAnswers
   ): Observable<any> {
-    debugger;
     const headers = { 'content-type': 'application/json' };
     const body = JSON.stringify(GuideDepartments);
     return this.http.post(

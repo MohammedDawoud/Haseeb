@@ -729,7 +729,6 @@ export class AccountsreportsService {
     );
   }
   GetIncomeStatmentDGVLevelsdetails(modal: any) {
-    debugger;
     modal.AccointId =
       modal.AccointId == (null || undefined) ? '' : modal.AccointId;
     modal.Type = modal.Type == (null || undefined) ? '' : modal.Type;

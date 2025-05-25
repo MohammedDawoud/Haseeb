@@ -427,7 +427,6 @@ GetAllCustomers_Branch_Url=environment.apiEndPoint + 'customer/GetAllCustomers_B
   }
 
   GetReportGrid_Customers(reportParameter: any) {
-    debugger;
     const headers = { 'content-type': 'application/json' };
     const reportParameters = JSON.stringify(reportParameter);
     return this.http.post(this.GetReportGrid_Customer, reportParameters, {
@@ -436,7 +435,6 @@ GetAllCustomers_Branch_Url=environment.apiEndPoint + 'customer/GetAllCustomers_B
   }
 
   GetReportGrid_AcountCustomer(reportParameter: any) {
-    debugger;
     const headers = { 'content-type': 'application/json' };
     const reportParameters = JSON.stringify(reportParameter);
     return this.http.post(
