@@ -733,6 +733,13 @@ export class VerticalSidebarComponent implements OnInit {
             show: this.userG?.userPrivileges.includes(131004),
           },
           {
+            name: { ar: 'أمر شراء ', en: 'Purchases bill' },
+            link: '/accounts/purchases-order',
+            type: 'single',
+            icon: '/assets/sidebar-icons/process-on-vm-line.png',
+            show: this.userG?.userPrivileges.includes(131004001),
+          },
+          {
             name: { ar: 'مردود فاتورة مشتريات', en: 'Purchase invoice return' },
             link: '/accounts/Purchase_invoice_return',
             type: 'single',

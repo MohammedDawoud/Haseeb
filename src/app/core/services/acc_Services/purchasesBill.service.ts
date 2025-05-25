@@ -145,4 +145,15 @@ export class PurchasesBillService {
   UploadPayVoucherImage(VoucherImage:any) {
     return this.http.post<any>(this.apiEndPoint + 'Voucher/UploadPayVoucherImage', VoucherImage);
   }
+  SaveandPostPurchaseOrderForServices(obj:any): Observable<any> {
+    const headers = { 'content-type': 'application/json'}
+    const body=JSON.stringify(obj);
+    return this.http.post(this.apiEndPoint + 'Voucher/SaveandPostPurchaseOrderForServices', body,{'headers':headers});
+  }
+
+  ConverOrderToInvoice(voucherId:any): Observable<any> {
+    const headers = { 'content-type': 'application/json'}
+    
+    return this.http.post(this.apiEndPoint + 'Voucher/ConverOrderToInvoice?voucherId='+voucherId+'', null,{'headers':headers});
+  }
 }

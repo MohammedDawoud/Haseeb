@@ -4066,5 +4066,9 @@
   "Org Name": "اسم المنشأة",
   "supportAttention2": " التذاكر التي تتجاوز مدة 24 ساعة دون رد  على التذكرة من طرفكم تعتبر منتهيه ويتم اغلاقها بشكل الي من النظام",
   "Total time duration according to the project tasks listed": "إجمالي المدة الزمنية وفقا لمهام المشروع المدرجة",
-  "Age": "العمر"
+  "Age": "العمر",
+  "AddPurchaseorder" :"اضافة أمر شراء جديد",
+  "Order number":"رقم الامر",
+  "Order date":"تاريخ امر الشراء",
+  "total Order":"صافي الدخل"
 }

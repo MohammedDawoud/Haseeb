@@ -52,6 +52,7 @@ import { YearlyinvoiceswitMonthsComponent } from './components/yearlyinvoiceswit
 import { PaymentdelegatesComponent } from './components/paymentdelegates/paymentdelegates.component';
 import { ItemMovementComponent } from './components/item-movement/item-movement.component';
 import { ZatcaReportComponent } from './components/zatca-report/zatca-report.component';
+import { PurchasesOrderComponent } from './components/purchases-order/purchases-order.component';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'Sales_bill' },
@@ -110,6 +111,7 @@ const routes: Routes = [
         { path: 'ItemMovement', component: ItemMovementComponent },
           { path: 'ZatcaReport', component: ZatcaReportComponent },
 
+          { path: 'purchases-order', component: PurchasesOrderComponent },
 
 ];
 
