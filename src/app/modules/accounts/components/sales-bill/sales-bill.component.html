@@ -366,7 +366,7 @@
         </th>
         <td mat-cell *matCellDef="let element">
              <button
-             *ngIf="element.invoicesRequests && element.invoicesRequests != 'undefined' && element.invoicesRequests.length == 0"
+             *ngIf="element.invoicesRequests && element.invoicesRequests != 'undefined' && element.invoicesRequests.length == 0 && ZatcaFatoraCheck"
               type="button "
               id="button-basic"
               class="flex btn btn-primary"
