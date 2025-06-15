@@ -302,7 +302,7 @@ dataSearch: any = {
       }
       else if(this.dataSearch.filter.InvoiceStatusId==2)
       {
-        this.projectsDataSource.data = this.projectsDataSource.data.filter((d: { statusCode: any }) => d.statusCode ==400);
+        this.projectsDataSource.data = this.projectsDataSource.data.filter((d: { statusCode: any }) => d.statusCode ==400 || d.statusCode ==401);
       }
       else if(this.dataSearch.filter.InvoiceStatusId==3)
       {
@@ -347,6 +347,7 @@ dataSearch: any = {
     if (element?.statusCode == 200) {return '#30b550';}
     else if (element?.statusCode == 202) {return '#d5be1a';} 
     else if (element?.statusCode == 400) {return '#b90648';}
+    else if (element?.statusCode == 401) {return '#b90648';}
     else if (element?.statusCode ==0 || element?.statusCode==504 || element?.statusCode==503 
     || element?.statusCode==500 || element?.statusCode==429) {return '#979797';}
     else {return '#ffffff';}
@@ -381,7 +382,7 @@ dataSearch: any = {
   }
 
   ReSendZatca(){
-    if(this.InvoiceRowSelected.statusCode==400)
+    if(this.InvoiceRowSelected.statusCode==400 || this.InvoiceRowSelected.statusCode==401)
     {
       this.ReSendZatcaInvoiceIntegrationFunc();
     }

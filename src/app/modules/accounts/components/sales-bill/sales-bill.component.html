@@ -2782,7 +2782,7 @@
             <span style="font-size: 16px;background-color: #b7d14d;font-weight: bold;"
             *ngIf="element.statusCode==202">تم قبول الفاتورة من قبل زاتكا (مع تحذيرات)</span>
             <span style="font-size: 16px;background-color: #dd5858;font-weight: bold;"
-            *ngIf="(element.statusCode==400)">تم رفض الفاتورة من قبل زاتكا</span>
+            *ngIf="(element.statusCode==400 || element.statusCode==401)">تم رفض الفاتورة من قبل زاتكا</span>
             <span style="font-size: 16px;background-color: #979797;font-weight: bold;"
             *ngIf="element.statusCode ==0 || element.statusCode==504 || element.statusCode==503 
                   || element.statusCode==500 || element.statusCode==429">يجب عليك اعادة ارسال الفاتورة الي زاتكا</span>
@@ -2790,7 +2790,7 @@
             
 
             <span *ngIf="element.statusCode==202">{{ element.warningmessage }} </span>
-            <span *ngIf="(element.statusCode==400)">{{ element.errormessage }}</span>
+            <span *ngIf="(element.statusCode==400 || element.statusCode==401)">{{ element.errormessage }}</span>
 
             
       
