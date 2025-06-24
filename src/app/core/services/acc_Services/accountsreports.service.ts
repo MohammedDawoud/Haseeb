@@ -590,6 +590,38 @@ export class AccountsreportsService {
       formData
     );
   }
+ GetGeneralBudgetAMRDGVNew(data: any) {
+    const formData: FormData = new FormData();
+    data.dateTo = data.dateTo == (null) ? '' : data.dateTo;
+    data.dateFrom = data.dateFrom == (null) ? '' : data.dateFrom;
+    data.CostCenter =
+      data.CostCenter == (null) ? '0' : data.CostCenter;
+    data.filteringType =
+      data.filteringType == (null) ? '0' : data.filteringType;
+    data.search_accountId =
+      data.search_accountId == (null)
+        ? '0'
+        : data.search_accountId;
+    data.AccountCode =
+      data.AccountCode == (null) ? '0' : data.AccountCode;
+    data.lvl = data.lvl == (null) ? '0' : data.lvl;
+    if (data.FilteringTypeStr.length > 0) {
+      formData.append('FilteringTypeStr', data.FilteringTypeStr.toString());
+    } else {
+      formData.append('FilteringTypeStr', '0');
+    }
+    formData.append('ToDate', data.dateTo);
+    formData.append('FromDate', data.dateFrom);
+    formData.append('CostCenter', data.CostCenter);
+    formData.append('isCheckedYear', data.isCheckedYear);
+    formData.append('isCheckedBranch', data.isCheckedBranch);
+    formData.append('FilteringType', data.filteringType);
+    formData.append('AccountCode', data.AccountCode);
+    formData.append('LVL', data.lvl);
+    formData.append('ZeroCheck', data.zeroCheck);
+    formData.append('AccountIds', data.search_accountId);
+    return this.http.post(this.apiEndPoint + 'Account/GetGeneralBudgetAMRDGVNew',formData);
+  }
   //---------------------------------------End----------------------------------------------------------
 
   //--------------------------------قائمة الدخل-------------------------------------------------
