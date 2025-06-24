@@ -100,7 +100,7 @@
             <tr *ngFor="let entry of DataSource; let i = index" [ngClass]="{'bg-gray-100': i % 2 == 0, 'bg-white': i % 2 == 1}" [ngClass]="{'bg-white': entry.isfixed == '0', 'bg-red-100': entry.isfixed == '2', 'bg-green-100': entry.isfixed == '1'}">
                 <td class=" border px-4 text-center py-3"> {{ entry.accCode }}</td>
                 <td class=" border px-4 text-center py-3"> {{ entry.gbName }}</td>
-                <td class=" border px-4 text-center py-3"> {{ entry.gbBalance }}</td>
+                <td class=" border px-4 text-center py-3"> {{ entry.gbBalance }}<app-sar-icon></app-sar-icon></td>
             </tr>
 
           </tbody>
@@ -500,7 +500,7 @@
                     border-bottom: 1px dashed #272727;
                   "
                 >
-                {{item.gbBalance}}
+                {{item.gbBalance}}<app-sar-icon></app-sar-icon>
                 </td>
               </tr>
             </tbody>

@@ -76,7 +76,7 @@
             <span>{{ "BondTotal" | translate }}</span>
           </th>
           <td mat-cell *matCellDef="let element">
-            {{ element.totalValue }}
+            {{ element.totalValue }}<app-sar-icon></app-sar-icon>
           </td>
         </ng-container>
 
@@ -547,7 +547,7 @@
                   border-bottom: 1px dashed #272727;
                 "
               >
-              {{item.totalValue}}
+              {{item.totalValue}}<app-sar-icon></app-sar-icon>
               </td>
               <td
                 style="

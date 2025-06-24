@@ -48,7 +48,7 @@
 
         }}</span> -->
         <span *ngIf="div.title?.en == 'Tools'"
-          >{{ Custodies }}{{ lang == "ar" ? " ر.س" : " r.s" }}</span
+          >{{ Custodies }}<app-sar-icon></app-sar-icon></span
         >
       </div>
     </div>
@@ -223,7 +223,7 @@
           >
           </span>
           <div class="px-3 text-blue-600 text-lg font-semibold text-base">
-            {{ FilterLoadData?.RevCounterHome }} {{ "SARcurrency" | translate }}
+            {{ FilterLoadData?.RevCounterHome }} <app-sar-icon></app-sar-icon>
           </div>
         </div>
         <div
@@ -246,7 +246,7 @@
           >
           </span>
           <div class="px-3 text-blue-600 text-lg font-semibold text-base">
-            {{ FilterLoadData?.ExpCounterHome }} {{ "SARcurrency" | translate }}
+            {{ FilterLoadData?.ExpCounterHome }} <app-sar-icon></app-sar-icon>
           </div>
         </div>
         <div
@@ -265,7 +265,7 @@
           </span>
           <div class="px-3 text-blue-600 text-lg font-semibold text-base">
             {{ FilterLoadData?.BoxNetCounterHome }}
-            {{ "SARcurrency" | translate }}
+            <app-sar-icon></app-sar-icon>
           </div>
         </div>
         <div
@@ -284,7 +284,7 @@
           </span>
           <div class="px-3 text-blue-600 text-lg font-semibold text-base">
             {{ FilterLoadData?.BankNetCounterHome }}
-            {{ "SARcurrency" | translate }}
+            <app-sar-icon></app-sar-icon>
           </div>
         </div>
       </div>
@@ -397,7 +397,7 @@
                       <span>{{ "Invoice amount" | translate }} </span>
                     </th>
                     <td mat-cell *matCellDef="let element">
-                      {{ element.totalValue }}
+                      {{ element.totalValue }}<app-sar-icon></app-sar-icon>
                     </td>
                   </ng-container>
                   <ng-container matColumnDef="PaymentType">
@@ -644,7 +644,7 @@
                       <span>{{ "Invoice amount" | translate }} </span>
                     </th>
                     <td mat-cell *matCellDef="let element">
-                      {{ element.totalValue }}
+                      {{ element.totalValue }}<app-sar-icon></app-sar-icon>
                     </td>
                   </ng-container>
                   <ng-container matColumnDef="PaymentType">
@@ -861,7 +861,7 @@
                       <span>{{ "Invoice amount" | translate }} </span>
                     </th>
                     <td mat-cell *matCellDef="let element">
-                      {{ element.totalValue }}
+                      {{ element.totalValue }}<app-sar-icon></app-sar-icon>
                     </td>
                   </ng-container>
                   <ng-container matColumnDef="PaymentType">
@@ -1104,7 +1104,7 @@
                       <span>{{ "Invoice amount" | translate }} </span>
                     </th>
                     <td mat-cell *matCellDef="let element">
-                      {{ element.totalValue }}
+                      {{ element.totalValue }}<app-sar-icon></app-sar-icon>
                     </td>
                   </ng-container>
                   <ng-container matColumnDef="PaymentType">
@@ -1330,7 +1330,7 @@
                       <span>{{ "Invoice amount" | translate }} </span>
                     </th>
                     <td mat-cell *matCellDef="let element">
-                      {{ element.invoiceValue }}
+                      {{ element.invoiceValue }}<app-sar-icon></app-sar-icon>
                     </td>
                   </ng-container>
                   <ng-container matColumnDef="PaymentType">
@@ -1532,7 +1532,7 @@
                       <span>{{ "Bond amount" | translate }} </span>
                     </th>
                     <td mat-cell *matCellDef="let element">
-                      {{ element.totalValue }}
+                      {{ element.totalValue }}<app-sar-icon></app-sar-icon>
                     </td>
                   </ng-container>
                   <ng-container matColumnDef="PaymentType">
@@ -1730,7 +1730,7 @@
                       <span>{{ "Bond amount" | translate }} </span>
                     </th>
                     <td mat-cell *matCellDef="let element">
-                      {{ element.totalValue }}
+                      {{ element.totalValue }}<app-sar-icon></app-sar-icon>
                     </td>
                   </ng-container>
                   <ng-container matColumnDef="PaymentType">
@@ -2892,7 +2892,7 @@
                       <span>{{ "Salary" | translate }}</span>
                     </th>
                     <td mat-cell *matCellDef="let element">
-                      {{ element.salary }}
+                      {{ element.salary }}<app-sar-icon></app-sar-icon>
                     </td>
                   </ng-container>
                   <ng-container matColumnDef="ContractExpiryDate">
@@ -3073,7 +3073,7 @@
                       <span>{{ "Salary" | translate }}</span>
                     </th>
                     <td mat-cell *matCellDef="let element">
-                      {{ element.salary }}
+                      {{ element.salary }}<app-sar-icon></app-sar-icon>
                     </td>
                   </ng-container>
 
@@ -8654,7 +8654,7 @@
                     *matCellDef="let element"
                     (click)="GetAllLoanDetails(element.loanId, element.monthNo)"
                   >
-                    <span>{{ element.amount }}</span>
+                    <span>{{ element.amount }}</span><app-sar-icon></app-sar-icon>
                   </td>
                 </ng-container>
                 <!-- installmentNumber column -->
@@ -9115,7 +9115,7 @@
                             font-weight: 600;
                           "
                         >
-                          {{ printmodelloan.amount }}
+                          {{ printmodelloan.amount }}<app-sar-icon></app-sar-icon>
                         </td>
                       </tr>
                       <tr>
@@ -9314,11 +9314,11 @@
             </p>
             <p class="mb-0 text-green-500">
               <span>{{ "TotalPayments" | translate }}:</span>
-              <span>{{ statisticLoan.AmountPayed }}</span>
+              <span>{{ statisticLoan.AmountPayed }}</span><app-sar-icon></app-sar-icon>
             </p>
             <p class="mb-0 text-red-500">
               <span>{{ "Remaining Amount" | translate }}:</span>
-              <span>{{ statisticLoan.AmountNotPayed }}</span>
+              <span>{{ statisticLoan.AmountNotPayed }}</span><app-sar-icon></app-sar-icon>
             </p>
           </div>
           <div class="tables-data mt-3 overflow-hidden">
@@ -9376,7 +9376,7 @@
                     </span>
                   </th>
                   <td mat-cell *matCellDef="let element">
-                    <span>{{ element?.amount }}</span>
+                    <span>{{ element?.amount }}</span><app-sar-icon></app-sar-icon>
                   </td>
                 </ng-container>
 

@@ -227,10 +227,10 @@
           mat-cell
           *matCellDef="let element"
         >
-          {{ element.credit }}
+          {{ element.credit }}<app-sar-icon></app-sar-icon>
         </td>
         <td mat-footer-cell *matFooterCellDef class="bg-blue-100">
-          {{ totalexCredit }}
+          {{ totalexCredit }}<app-sar-icon></app-sar-icon>
         </td>
       </ng-container>
       <ng-container matColumnDef="Debit2">
@@ -257,15 +257,15 @@
           mat-cell
           *matCellDef="let element"
         >
-          {{ element.depit }}
+          {{ element.depit }}<app-sar-icon></app-sar-icon>
         </td>
         <td mat-footer-cell *matFooterCellDef class="bg-blue-100">
-          {{ totalexDepit }}
+          {{ totalexDepit }}<app-sar-icon></app-sar-icon>
         </td>
       </ng-container>
       <ng-container matColumnDef="Balance2">
         <th mat-header-cell *matHeaderCellDef>
-          <span></span>{{ BalanceBeforeObj.BalanceBefore }}
+          <span></span>{{ BalanceBeforeObj.BalanceBefore }}<app-sar-icon></app-sar-icon>
         </th>
       </ng-container>
       <ng-container matColumnDef="Balance">
@@ -279,7 +279,7 @@
           ></span>
         </th>
         <td mat-cell *matCellDef="let element; let i = index">
-          {{ CurrentBalanceNew(i) }}
+          {{ CurrentBalanceNew(i) }}<app-sar-icon></app-sar-icon>
         </td>
         <td mat-footer-cell *matFooterCellDef class="bg-blue-100">
           {{ totaltxt }}
@@ -621,7 +621,7 @@
                     border-bottom: 1px dashed #272727;
                   "
                 >
-                  {{ result.resultDep }}
+                  {{ result.resultDep }}<app-sar-icon></app-sar-icon>
                 </td>
 
                 <td
@@ -636,7 +636,7 @@
                     border-left: 1px dashed #272727;
                   "
                 >
-                  {{ result.resultCre }}
+                  {{ result.resultCre }}<app-sar-icon></app-sar-icon>
                 </td>
               </tr>
             </tbody>
@@ -793,7 +793,7 @@
                     border-bottom: 1px dashed #272727;
                   "
                 >
-                  {{ result.rasedBefore }}
+                  {{ result.rasedBefore }}<app-sar-icon></app-sar-icon>
                 </td>
                 <td
                   style="
@@ -846,7 +846,7 @@
                     border-bottom: 1px dashed #272727;
                   "
                 >
-                  {{ item.depit }}
+                  {{ item.depit }}<app-sar-icon></app-sar-icon>
                 </td>
                 <td
                   style="
@@ -859,7 +859,7 @@
                     border-bottom: 1px dashed #272727;
                   "
                 >
-                  {{ item.credit }}
+                  {{ item.credit }}<app-sar-icon></app-sar-icon>
                 </td>
                 <td
                   style="
@@ -872,7 +872,7 @@
                     border-bottom: 1px dashed #272727;
                   "
                 >
-                  {{ item.totalRes }}
+                  {{ item.totalRes }}<app-sar-icon></app-sar-icon>
                 </td>
                 <td
                   style="
@@ -929,7 +929,7 @@
                     border-bottom: 1px dashed #272727;
                   "
                 >
-                  {{ result.resultDep }}
+                  {{ result.resultDep }}<app-sar-icon></app-sar-icon>
                 </td>
                 <td
                   style="
@@ -942,7 +942,7 @@
                     border-bottom: 1px dashed #272727;
                   "
                 >
-                  {{ result.resultCre }}
+                  {{ result.resultCre }}<app-sar-icon></app-sar-icon>
                 </td>
                 <td
                   style="
@@ -955,7 +955,7 @@
                     border-bottom: 1px dashed #272727;
                   "
                 >
-                  {{ result.totalres }}
+                  {{ result.totalres }}<app-sar-icon></app-sar-icon>
                 </td>
                 <td
                   style="

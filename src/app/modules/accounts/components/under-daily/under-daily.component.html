@@ -198,7 +198,7 @@
           <span>{{ "BondTotal" | translate }}</span>
         </th>
         <td mat-cell *matCellDef="let element">
-          {{ element.totalValue }}
+          {{ element.totalValue }}<app-sar-icon></app-sar-icon>
         </td>
       </ng-container>
 
@@ -489,8 +489,8 @@
           <td class="w-1/9 border px-1 py-2">{{ entry.accountCode }}</td>
           <td class="w-1/9 border px-1 py-2">{{ entry.accountName }}</td>
           <td class="w-1/9 border px-1 py-2">{{ entry.notes }}</td>
-          <td class="w-1/9 border px-1 py-2">{{ entry.depit }}</td>
-          <td class="w-1/9 border px-1 py-2">{{ entry.credit }}</td>
+          <td class="w-1/9 border px-1 py-2">{{ entry.depit }}<app-sar-icon></app-sar-icon></td>
+          <td class="w-1/9 border px-1 py-2">{{ entry.credit }}<app-sar-icon></app-sar-icon></td>
         </tr>
         <tr>
           <td class="w-1/9 border px-1 py-2">{{ "total" | translate }}</td>
@@ -500,8 +500,8 @@
           <td class="w-1/9 border px-1 py-2"></td>
           <td class="w-1/9 border px-1 py-2"></td>
           <td class="w-1/9 border px-1 py-2"></td>
-          <td class="w-1/9 border px-1 py-2 bg-green-500">{{ totaldepit }}</td>
-          <td class="w-1/9 border px-1 py-2 bg-red-500">{{ totalcredit }}</td>
+          <td class="w-1/9 border px-1 py-2 bg-green-500">{{ totaldepit }}<app-sar-icon></app-sar-icon></td>
+          <td class="w-1/9 border px-1 py-2 bg-red-500">{{ totalcredit }}<app-sar-icon></app-sar-icon></td>
         </tr>
       </tbody>
     </table>
@@ -1204,8 +1204,8 @@
           <td class="w-1/9 border px-1 py-2">{{ entry.accountCode }}</td>
           <td class="w-1/9 border px-1 py-2">{{ entry.accountName }}</td>
           <td class="w-1/9 border px-1 py-2">{{ entry.notes }}</td>
-          <td class="w-1/9 border px-1 py-2">{{ entry.depit }}</td>
-          <td class="w-1/9 border px-1 py-2">{{ entry.credit }}</td>
+          <td class="w-1/9 border px-1 py-2">{{ entry.depit }}<app-sar-icon></app-sar-icon></td>
+          <td class="w-1/9 border px-1 py-2">{{ entry.credit }}<app-sar-icon></app-sar-icon></td>
         </tr>
         <tr>
           <td class="w-1/9 border px-1 py-2">{{ "total" | translate }}</td>
@@ -1215,8 +1215,8 @@
           <td class="w-1/9 border px-1 py-2"></td>
           <td class="w-1/9 border px-1 py-2"></td>
           <td class="w-1/9 border px-1 py-2"></td>
-          <td class="w-1/9 border px-1 py-2 bg-green-500">{{ totaldepit }}</td>
-          <td class="w-1/9 border px-1 py-2 bg-red-500">{{ totalcredit }}</td>
+          <td class="w-1/9 border px-1 py-2 bg-green-500">{{ totaldepit }}<app-sar-icon></app-sar-icon></td>
+          <td class="w-1/9 border px-1 py-2 bg-red-500">{{ totalcredit }}<app-sar-icon></app-sar-icon></td>
         </tr>
       </tbody>
     </table>
@@ -1801,7 +1801,7 @@
                     border-bottom: 1px dashed #272727;
                   "
                 >
-                  {{ item.depit }}
+                  {{ item.depit }}<app-sar-icon></app-sar-icon>
                 </td>
                 <td
                   style="
@@ -1814,7 +1814,7 @@
                     border-bottom: 1px dashed #272727;
                   "
                 >
-                  {{ item.credit }}
+                  {{ item.credit }}<app-sar-icon></app-sar-icon>
                 </td>
                 <td
                   style="
@@ -1857,7 +1857,7 @@
                   en: 'Total Depit: '
                 }"
               ></span>
-              <span> {{ CustomData?.TotalDepit }}</span>
+              <span> {{ CustomData?.TotalDepit }}</span><app-sar-icon></app-sar-icon>
             </p>
           </div>
           <div style="margin-bottom: 10px">
@@ -1872,7 +1872,7 @@
               ></span>
               <span style="padding-right: 6px">
                 {{ CustomData?.TotalCredit }}</span
-              >
+              ><app-sar-icon></app-sar-icon>
             </p>
           </div>
           <div

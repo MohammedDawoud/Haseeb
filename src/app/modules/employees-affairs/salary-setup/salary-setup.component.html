@@ -148,11 +148,11 @@
             <span>{{ "salary" | translate }}</span>
           </th>
           <td mat-cell *matCellDef="let element">
-            <span>{{ element.salaryOfThisMonth }}</span>
+            <span>{{ element.salaryOfThisMonth }}</span><app-sar-icon></app-sar-icon>
           </td>
 
           <td mat-footer-cell *matFooterCellDef class="bg-light">
-            {{ TSalary }}
+            {{ TSalary }}<app-sar-icon></app-sar-icon>
           </td>
         </ng-container>
 
@@ -161,11 +161,11 @@
             <span>بدل السكن</span>
           </th>
           <td mat-cell *matCellDef="let element">
-            <span>{{ element.housingAllowance }}</span>
+            <span>{{ element.housingAllowance }}</span><app-sar-icon></app-sar-icon>
           </td>
 
           <td mat-footer-cell *matFooterCellDef class="bg-light">
-            {{ THousingAllowance }}
+            {{ THousingAllowance }}<app-sar-icon></app-sar-icon>
           </td>
         </ng-container>
 
@@ -175,10 +175,10 @@
             <span>{{ "Allowances" | translate }}</span>
           </th>
           <td mat-cell *matCellDef="let element">
-            <span>{{ element.monthlyAllowances }}</span>
+            <span>{{ element.monthlyAllowances }}</span><app-sar-icon></app-sar-icon>
           </td>
           <td mat-footer-cell *matFooterCellDef class="bg-light">
-            {{ TMonthlyAllowances }}
+            {{ TMonthlyAllowances }}<app-sar-icon></app-sar-icon>
           </td>
         </ng-container>
         <ng-container matColumnDef="bounes">
@@ -186,10 +186,10 @@
             <span>{{ "bonuses" | translate }}</span>
           </th>
           <td mat-cell *matCellDef="let element">
-            <span>{{ element.bonus }}</span>
+            <span>{{ element.bonus }}</span><app-sar-icon></app-sar-icon>
           </td>
           <td mat-footer-cell *matFooterCellDef class="bg-light">
-            {{ TBonus }}
+            {{ TBonus }}<app-sar-icon></app-sar-icon>
           </td>
         </ng-container>
         <ng-container matColumnDef="rewards">
@@ -197,10 +197,10 @@
             <span>{{ "rewards" | translate }}</span>
           </th>
           <td mat-cell *matCellDef="let element">
-            <span>{{ element.totalRewards }}</span>
+            <span>{{ element.totalRewards }}</span><app-sar-icon></app-sar-icon>
           </td>
           <td mat-footer-cell *matFooterCellDef class="bg-light">
-            {{ TTotalRewards }}
+            {{ TTotalRewards }}<app-sar-icon></app-sar-icon>
           </td>
         </ng-container>
         <ng-container matColumnDef="imprest">
@@ -208,10 +208,10 @@
             <span>{{ "Predecessor" | translate }}</span>
           </th>
           <td mat-cell *matCellDef="let element">
-            <span>{{ element.totalLoans }}</span>
+            <span>{{ element.totalLoans }}</span><app-sar-icon></app-sar-icon>
           </td>
           <td mat-footer-cell *matFooterCellDef class="bg-light">
-            {{ TTotalLoans }}
+            {{ TTotalLoans }}<app-sar-icon></app-sar-icon>
           </td>
         </ng-container>
         <ng-container matColumnDef="discounts">
@@ -219,10 +219,10 @@
             <span>{{ "Discounts" | translate }}</span>
           </th>
           <td mat-cell *matCellDef="let element">
-            <span>{{ element.totalDiscounts }}</span>
+            <span>{{ element.totalDiscounts }}</span><app-sar-icon></app-sar-icon>
           </td>
           <td mat-footer-cell *matFooterCellDef class="bg-light">
-            {{ TTotalDiscounts }}
+            {{ TTotalDiscounts }}<app-sar-icon></app-sar-icon>
           </td>
         </ng-container>
         <ng-container matColumnDef="Insurances">
@@ -230,10 +230,10 @@
             <span>{{ "Insurances" | translate }}</span>
           </th>
           <td mat-cell *matCellDef="let element">
-            <span>{{ element.taamen }}</span>
+            <span>{{ element.taamen }}</span><app-sar-icon></app-sar-icon>
           </td>
           <td mat-footer-cell *matFooterCellDef class="bg-light">
-            {{ TTotalTaamen }}
+            {{ TTotalTaamen }}<app-sar-icon></app-sar-icon>
           </td>
         </ng-container>
         <ng-container matColumnDef="absence">
@@ -252,10 +252,10 @@
             <span>{{ "Vacations deducted from the salary" | translate }}</span>
           </th>
           <td mat-cell *matCellDef="let element">
-            <span>{{ element.totalVacations }}</span>
+            <span>{{ element.totalVacations }}</span><app-sar-icon></app-sar-icon>
           </td>
           <td mat-footer-cell *matFooterCellDef class="bg-light">
-            {{ TTotalPaidVacations }}
+            {{ TTotalPaidVacations }}<app-sar-icon></app-sar-icon>
           </td>
         </ng-contadiner>
 
@@ -266,10 +266,10 @@
             <span>التاخير</span>
           </th>
           <td mat-cell *matCellDef="let element">
-            <span>{{ element.totalLateDiscount }}</span>
+            <span>{{ element.totalLateDiscount }}</span><app-sar-icon></app-sar-icon>
           </td>
           <td mat-footer-cell *matFooterCellDef class="bg-light">
-            {{ TTotalLate.toFixed(2) }}
+            {{ TTotalLate.toFixed(2) }}<app-sar-icon></app-sar-icon>
           </td>
         </ng-contadiner>
 
@@ -280,10 +280,10 @@
             <span>الغياب</span>
           </th>
           <td mat-cell *matCellDef="let element">
-            <span>{{ element.totalAbsenceDiscount }}</span>
+            <span>{{ element.totalAbsenceDiscount }}</span><app-sar-icon></app-sar-icon>
           </td>
           <td mat-footer-cell *matFooterCellDef class="bg-light">
-            {{ TTotalabsence.toFixed(2) }}
+            {{ TTotalabsence.toFixed(2) }}<app-sar-icon></app-sar-icon>
           </td>
         </ng-contadiner>
 
@@ -292,10 +292,10 @@
             <span>{{ "net" | translate }}</span>
           </th>
           <td mat-cell *matCellDef="let element">
-            <span>{{ element.totalSalaryOfThisMonth }}</span>
+            <span>{{ element.totalSalaryOfThisMonth }}</span><app-sar-icon></app-sar-icon>
           </td>
           <td mat-footer-cell *matFooterCellDef class="bg-light">
-            {{ TTotalySalaries.toFixed(2) }}
+            {{ TTotalySalaries.toFixed(2) }}<app-sar-icon></app-sar-icon>
           </td>
         </ng-container>
         <ng-container matColumnDef="operations">
@@ -508,76 +508,76 @@
             <td class="w-1/4 border px-1 py-2" style="font-size: 12px">
               {{ entry.employeeNameAr }}
             </td>
-            <td class="w-1/9 border px-1 py-2">{{ entry.salary }}</td>
+            <td class="w-1/9 border px-1 py-2">{{ entry.salary }}<app-sar-icon></app-sar-icon></td>
             <td class="w-1/9 border px-1 py-2">
-              {{ entry.communicationAllawance }}
+              {{ entry.communicationAllawance }}<app-sar-icon></app-sar-icon>
             </td>
             <td class="w-1/9 border px-1 py-2">
-              {{ entry.professionAllawance }}
+              {{ entry.professionAllawance }}<app-sar-icon></app-sar-icon>
             </td>
             <td class="w-1/9 border px-1 py-2">
-              {{ entry.transportationAllawance }}
+              {{ entry.transportationAllawance }}<app-sar-icon></app-sar-icon>
             </td>
-            <td class="w-1/9 border px-1 py-2">{{ entry.housingAllowance }}</td>
+            <td class="w-1/9 border px-1 py-2">{{ entry.housingAllowance }}<app-sar-icon></app-sar-icon></td>
             <td class="w-1/9 border px-1 py-2">
-              {{ entry.monthlyAllowances }}
+              {{ entry.monthlyAllowances }}<app-sar-icon></app-sar-icon>
             </td>
-            <td class="w-1/9 border px-1 py-2">{{ entry.addAllowances }}</td>
-            <td class="w-1/9 border px-1 py-2">{{ entry.bonus }}</td>
-            <td class="w-1/9 border px-1 py-2">{{ entry.totalRewards }}</td>
-            <td class="w-1/9 border px-1 py-2">{{ entry.totalLoans }}</td>
-            <td class="w-1/9 border px-1 py-2">{{ entry.totalDiscounts }}</td>
+            <td class="w-1/9 border px-1 py-2">{{ entry.addAllowances }}<app-sar-icon></app-sar-icon></td>
+            <td class="w-1/9 border px-1 py-2">{{ entry.bonus }}<app-sar-icon></app-sar-icon></td>
+            <td class="w-1/9 border px-1 py-2">{{ entry.totalRewards }}<app-sar-icon></app-sar-icon></td>
+            <td class="w-1/9 border px-1 py-2">{{ entry.totalLoans }}<app-sar-icon></app-sar-icon></td>
+            <td class="w-1/9 border px-1 py-2">{{ entry.totalDiscounts }}<app-sar-icon></app-sar-icon></td>
             <td class="w-1/9 border px-1 py-2">{{ entry.totalyDays }}</td>
-             <td class="w-1/9 border px-1 py-2">{{ entry.totalLateDiscount }}</td>
-              <td class="w-1/9 border px-1 py-2">{{ entry.totalAbsenceDiscount }}</td>
-            <td class="w-1/9 border px-1 py-2">{{ entry.totalySalaries }}</td>
+             <td class="w-1/9 border px-1 py-2">{{ entry.totalLateDiscount }}<app-sar-icon></app-sar-icon></td>
+              <td class="w-1/9 border px-1 py-2">{{ entry.totalAbsenceDiscount }}<app-sar-icon></app-sar-icon></td>
+            <td class="w-1/9 border px-1 py-2">{{ entry.totalySalaries }}<app-sar-icon></app-sar-icon></td>
           </tr>
 
           <tr>
             <td class="w-1/9 border px-1 py-2">الاجمالي</td>
-            <td class="w-1/9 border px-1 py-2">{{ Totallaries?.tSalary }}</td>
+            <td class="w-1/9 border px-1 py-2">{{ Totallaries?.tSalary }}<app-sar-icon></app-sar-icon></td>
             <td class="w-1/9 border px-1 py-2">
-              {{ Totallaries?.tCommunicationAllawance }}
+              {{ Totallaries?.tCommunicationAllawance }}<app-sar-icon></app-sar-icon>
             </td>
             <td class="w-1/9 border px-1 py-2">
-              {{ Totallaries?.tProfessionAllawance }}
+              {{ Totallaries?.tProfessionAllawance }}<app-sar-icon></app-sar-icon>
             </td>
             <td class="w-1/9 border px-1 py-2">
-              {{ Totallaries?.tTransportationAllawance }}
+              {{ Totallaries?.tTransportationAllawance }}<app-sar-icon></app-sar-icon>
             </td>
             <td class="w-1/9 border px-1 py-2">
-              {{ Totallaries?.tHousingAllowance }}
+              {{ Totallaries?.tHousingAllowance }}<app-sar-icon></app-sar-icon>
             </td>
             <td class="w-1/9 border px-1 py-2">
-              {{ Totallaries?.tMonthlyAllowances }}
+              {{ Totallaries?.tMonthlyAllowances }}<app-sar-icon></app-sar-icon>
             </td>
             <td class="w-1/9 border px-1 py-2">
-              {{ Totallaries?.tAddAllowances }}
+              {{ Totallaries?.tAddAllowances }}<app-sar-icon></app-sar-icon>
             </td>
-            <td class="w-1/9 border px-1 py-2">{{ Totallaries?.tBonus }}</td>
+            <td class="w-1/9 border px-1 py-2">{{ Totallaries?.tBonus }}<app-sar-icon></app-sar-icon></td>
             <td class="w-1/9 border px-1 py-2">
-              {{ Totallaries?.tTotalRewards }}
-            </td>
-            <td class="w-1/9 border px-1 py-2">
-              {{ Totallaries?.tTotalLoans }}
+              {{ Totallaries?.tTotalRewards }}<app-sar-icon></app-sar-icon>
             </td>
             <td class="w-1/9 border px-1 py-2">
-              {{ Totallaries?.tTotalDiscounts }}
+              {{ Totallaries?.tTotalLoans }}<app-sar-icon></app-sar-icon>
+            </td>
+            <td class="w-1/9 border px-1 py-2">
+              {{ Totallaries?.tTotalDiscounts }}<app-sar-icon></app-sar-icon>
             </td>
             <td class="w-1/9 border px-1 py-2">
               {{ Totallaries?.tTotalyDays }}
             </td>
 
                   <td class="w-1/9 border px-1 py-2">
-              {{ Totallaries?.tTotalLateDiscount }}
+              {{ Totallaries?.tTotalLateDiscount }}<app-sar-icon></app-sar-icon>
             </td>
 
                 <td class="w-1/9 border px-1 py-2">
-              {{ Totallaries?.tTotalAbsenceDiscount }}
+              {{ Totallaries?.tTotalAbsenceDiscount }}<app-sar-icon></app-sar-icon>
             </td>
 
             <td class="w-1/9 border px-1 py-2">
-              {{ Totallaries?.tTotalySalaries }}
+              {{ Totallaries?.tTotalySalaries }}<app-sar-icon></app-sar-icon>
             </td>
           </tr>
         </tbody>

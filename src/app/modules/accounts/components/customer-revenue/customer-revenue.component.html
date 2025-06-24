@@ -195,9 +195,9 @@
             <span>{{ "amount_Credit" | translate }}</span>
           </th>
           <td mat-cell *matCellDef="let element">
-            {{ element.totalValue }}
+            {{ element.totalValue }}<app-sar-icon></app-sar-icon>
           </td>
-          <td mat-footer-cell *matFooterCellDef class="bg-light">{{sumtotalValue  | number:'1.2-2' }}</td>
+          <td mat-footer-cell *matFooterCellDef class="bg-light">{{sumtotalValue  | number:'1.2-2' }}<app-sar-icon></app-sar-icon></td>
         </ng-container>
 
         <ng-container matColumnDef="totalValueDepit">
@@ -205,9 +205,9 @@
             <span>{{ "amount_Debit" | translate }}</span>
           </th>
           <td mat-cell *matCellDef="let element">
-            {{ element.totalValueDepit }}
+            {{ element.totalValueDepit }}<app-sar-icon></app-sar-icon>
           </td>
-          <td mat-footer-cell *matFooterCellDef class="bg-light">{{sumtotalValueDepit  | number:'1.2-2' }}</td>
+          <td mat-footer-cell *matFooterCellDef class="bg-light">{{sumtotalValueDepit  | number:'1.2-2' }}<app-sar-icon></app-sar-icon></td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="projectDisplayedColumns"></tr>
@@ -498,7 +498,7 @@
               padding: 10px 0px;
             "
           >
-          {{printsumtotalValue  | number:'1.2-2' }}
+          {{printsumtotalValue  | number:'1.2-2' }}<app-sar-icon></app-sar-icon>
           </td>
           <td
             style="
@@ -512,7 +512,7 @@
               padding: 10px 0px;
             "
           >
-          {{printsumtotalValueDepit  | number:'1.2-2' }}
+          {{printsumtotalValueDepit  | number:'1.2-2' }}<app-sar-icon></app-sar-icon>
           </td>
         </tr>
       </table>
@@ -725,7 +725,7 @@
                   border-bottom: 1px dashed #272727;
                 "
               >
-              {{item.totalValue}}
+              {{item.totalValue}}<app-sar-icon></app-sar-icon>
               </td>
               <td
                 style="
@@ -740,7 +740,7 @@
                   border-bottom: 1px dashed #272727;
                 "
               >
-              {{item.totalValueDepit}}
+              {{item.totalValueDepit}}<app-sar-icon></app-sar-icon>
               </td>
             </tr>
             <tr>
@@ -812,7 +812,7 @@
                   border-inline: 1px dashed #272727;
                   border-bottom: 1px dashed #272727;
                 "
-              >{{printsumtotalValue  | number:'1.2-2' }}</td>
+              >{{printsumtotalValue  | number:'1.2-2' }}<app-sar-icon></app-sar-icon></td>
               <td
                 style="
                   background-color: #fff;
@@ -824,7 +824,7 @@
                   border-inline: 1px dashed #272727;
                   border-bottom: 1px dashed #272727;
                 "
-              >{{printsumtotalValueDepit  | number:'1.2-2' }}</td>
+              >{{printsumtotalValueDepit  | number:'1.2-2' }}<app-sar-icon></app-sar-icon></td>
             </tr>
           </tbody>
         </table>

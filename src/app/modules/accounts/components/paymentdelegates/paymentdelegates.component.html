@@ -121,7 +121,7 @@
                       <span>مجموع الفاتورة</span>
                     </th>
                     <td mat-cell *matCellDef="let element">
-                      {{ element.invoiceValue }}
+                      {{ element.invoiceValue }}<app-sar-icon></app-sar-icon>
                     </td>
                   </ng-container>
 
@@ -130,7 +130,7 @@
                       <span>الخصم</span>
                     </th>
                     <td mat-cell *matCellDef="let element">
-                      {{ element.discountValue }}
+                      {{ element.discountValue }}<app-sar-icon></app-sar-icon>
                     </td>
                   </ng-container>
 
@@ -139,7 +139,7 @@
                       <span>الصافي</span>
                     </th>
                     <td mat-cell *matCellDef="let element">
-                      {{ element.totalValue }}
+                      {{ element.totalValue }}<app-sar-icon></app-sar-icon>
                     </td>
                   </ng-container>
 
@@ -148,7 +148,7 @@
                       <span>المدفوع</span>
                     </th>
                     <td mat-cell *matCellDef="let element">
-                      {{ element.paidValue }}
+                      {{ element.paidValue }}<app-sar-icon></app-sar-icon>
                     </td>
                   </ng-container>
 
@@ -157,7 +157,7 @@
                       <span>المتبقي</span>
                     </th>
                     <td mat-cell *matCellDef="let element">
-                      {{ element.remaining }}
+                      {{ element.remaining }}<app-sar-icon></app-sar-icon>
                     </td>
                   </ng-container>
 
@@ -278,7 +278,7 @@
                       <span>مجموع الفاتورة</span>
                     </th>
                     <td mat-cell *matCellDef="let element">
-                      {{ element.invoiceValue }}
+                      {{ element.invoiceValue }}<app-sar-icon></app-sar-icon>
                     </td>
                   </ng-container>
 
@@ -287,7 +287,7 @@
                       <span>الخصم</span>
                     </th>
                     <td mat-cell *matCellDef="let element">
-                      {{ element.discountValue }}
+                      {{ element.discountValue }}<app-sar-icon></app-sar-icon>
                     </td>
                   </ng-container>
 
@@ -296,7 +296,7 @@
                       <span>الصافي</span>
                     </th>
                     <td mat-cell *matCellDef="let element">
-                      {{ element.totalValue }}
+                      {{ element.totalValue }}<app-sar-icon></app-sar-icon>
                     </td>
                   </ng-container>
 
@@ -305,7 +305,7 @@
                       <span>المدفوع</span>
                     </th>
                     <td mat-cell *matCellDef="let element">
-                      {{ element.paidValue }}
+                      {{ element.paidValue }}<app-sar-icon></app-sar-icon>
                     </td>
                   </ng-container>
 
@@ -314,7 +314,7 @@
                       <span>المتبقي</span>
                     </th>
                     <td mat-cell *matCellDef="let element">
-                      {{ element.remaining }}
+                      {{ element.remaining }}<app-sar-icon></app-sar-icon>
                     </td>
                   </ng-container>
 
@@ -381,57 +381,57 @@
   <div class="sales-row">
     <div class="sales-item">
       <span>الاجمالي مبيعات:</span>
-      <span>{{totalsdata.totalPaid}}</span>
+      <span>{{totalsdata.totalPaid}}</span><app-sar-icon></app-sar-icon>
     </div>
     <div class="sales-item">
       <span>خصومات مبيعات:</span>
-      <span>{{totalsdata.discountPaid}}</span>
+      <span>{{totalsdata.discountPaid}}</span><app-sar-icon></app-sar-icon>
     </div>
     <div class="sales-item">
       <span>الصافي مبيعات:</span>
-      <span>{{totalsdata.totalPaidafterdiscount}}</span>
+      <span>{{totalsdata.totalPaidafterdiscount}}</span><app-sar-icon></app-sar-icon>
     </div>
     <div class="sales-item">
       <span>ربح مبيعات:</span>
-      <span>{{totalsdata.totalPaidEarnings}}</span>
+      <span>{{totalsdata.totalPaidEarnings}}</span><app-sar-icon></app-sar-icon>
     </div>
   </div>
 
   <div class="sales-row">
     <div class="sales-item">
       <span>الاجمالي مردود:</span>
-      <span>{{totalsdata.totalMardod}}</span>
+      <span>{{totalsdata.totalMardod}}</span><app-sar-icon></app-sar-icon>
     </div>
     <div class="sales-item">
       <span>خصومات مردود:</span>
-      <span>{{totalsdata.discountMardod}}</span>
+      <span>{{totalsdata.discountMardod}}</span><app-sar-icon></app-sar-icon>
     </div>
     <div class="sales-item">
       <span>الصافي مردود:</span>
-      <span>{{totalsdata.totalMardodafterdiscount}}</span>
+      <span>{{totalsdata.totalMardodafterdiscount}}</span><app-sar-icon></app-sar-icon>
     </div>
     <div class="sales-item">
       <span>ربح مردود:</span>
-      <span>{{totalsdata.totalMardodEarnings}}</span>
+      <span>{{totalsdata.totalMardodEarnings}}</span><app-sar-icon></app-sar-icon>
     </div>
   </div>
 
   <div class="sales-row">
     <div class="sales-item">
       <span>اجمالي:</span>
-      <span>{{totalsdata.sumTotal}}</span>
+      <span>{{totalsdata.sumTotal}}</span><app-sar-icon></app-sar-icon>
     </div>
     <div class="sales-item">
       <span>اجمالي خصومات:</span>
-      <span>{{totalsdata.sumDiscount}}</span>
+      <span>{{totalsdata.sumDiscount}}</span><app-sar-icon></app-sar-icon>
     </div>
     <div class="sales-item">
       <span>اجمالي الصافي:</span>
-      <span>{{totalsdata.sumTotalafterdiscount}}</span>
+      <span>{{totalsdata.sumTotalafterdiscount}}</span><app-sar-icon></app-sar-icon>
     </div>
     <div class="sales-item">
       <span>اجمالي ربح:</span>
-      <span>{{totalsdata.sumEarnings}}</span>
+      <span>{{totalsdata.sumEarnings}}</span><app-sar-icon></app-sar-icon>
     </div>
   </div>
 </div>
@@ -478,10 +478,10 @@
         <tr *ngFor="let entry of voucherdetails">
           <td class="w-1/9 border px-1 py-2">{{ entry.servicesPriceName }}</td>
           <td class="w-1/9 border px-1 py-2">{{ entry.qty }}</td>
-          <td class="w-1/9 border px-1 py-2">{{ entry.amount }}</td>
-          <td class="w-1/9 border px-1 py-2">{{ entry.qty * entry.amount }}</td>
-          <td class="w-1/9 border px-1 py-2">{{ entry.amount - entry.discountValue_Det }}</td>
-          <td class="w-1/9 border px-1 py-2">{{ entry.totalAmount}}</td>
+          <td class="w-1/9 border px-1 py-2">{{ entry.amount }}<app-sar-icon></app-sar-icon></td>
+          <td class="w-1/9 border px-1 py-2">{{ entry.qty * entry.amount }}<app-sar-icon></app-sar-icon></td>
+          <td class="w-1/9 border px-1 py-2">{{ entry.amount - entry.discountValue_Det }}<app-sar-icon></app-sar-icon></td>
+          <td class="w-1/9 border px-1 py-2">{{ entry.totalAmount}}<app-sar-icon></app-sar-icon></td>
         </tr>
        
       </tbody>

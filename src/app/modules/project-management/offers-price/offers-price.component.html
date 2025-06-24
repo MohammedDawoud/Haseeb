@@ -297,7 +297,7 @@
             ></span>
           </th>
           <td mat-cell *matCellDef="let element">
-            {{ element.offerValue }}
+            {{ element.offerValue }}<app-sar-icon></app-sar-icon>
           </td>
         </ng-container>
 
@@ -959,7 +959,7 @@
                       (keyup)="CalculateTotal_Offer()"
                     />
                     <span *ngIf="item.Amounttxt" style="align-self: center"
-                      >ر.س</span
+                      ><app-sar-icon></app-sar-icon></span
                     >
                   </div>
                 </td>
@@ -972,7 +972,7 @@
                     readonly
                   />
                   <span *ngIf="item.AmountBeforeTaxtxt" style="align-self: center"
-                  >ر.س</span
+                  ><app-sar-icon></app-sar-icon></span
                 >
                  </div>
                 </td>
@@ -986,7 +986,7 @@
                       readonly
                     />
                     <span *ngIf="item.taxAmounttxt" style="align-self: center"
-                      >ر.س</span
+                      ><app-sar-icon></app-sar-icon></span
                     >
                   </div>
                 </td>
@@ -999,7 +999,7 @@
                       readonly
                     />
                     <span *ngIf="item.TotalAmounttxt" style="align-self: center"
-                      >ر.س</span
+                      ><app-sar-icon></app-sar-icon></span
                     >
                   </div>
                 </td>
@@ -1056,6 +1056,7 @@
               [(ngModel)]="modalDetailsOffer.total_amount"
               readonly
             />
+            <app-sar-icon></app-sar-icon>
           </div>
 
           <div class="boxdiv">
@@ -1146,6 +1147,7 @@
                     [(ngModel)]="item.amount"
                     (keyup)="CalcOfferDet(2)"
                   />
+                  <app-sar-icon></app-sar-icon>
                 </td>
                 <td>
                   <button
@@ -2350,7 +2352,7 @@
                   "
                 >
                   {{ Getserviceamountval(item.serviceamountval) }}
-                  {{ lang == "ar" ? "ر.س" : "SAR" }}
+                  <app-sar-icon></app-sar-icon>
                 </td>
                 <td
                   style="
@@ -2363,7 +2365,7 @@
                   "
                 >
                   {{ GetTaxValue(item, OfferPrintData?.taxAmount) }}
-                  {{ lang == "ar" ? "ر.س" : "SAR" }}
+                  <app-sar-icon></app-sar-icon>
                 </td>
                 <td
                   style="
@@ -2377,7 +2379,7 @@
                   "
                 >
                   {{ GetTotalValue(item, OfferPrintData?.taxAmount) }}
-                  {{ lang == "ar" ? "ر.س" : "SAR" }}
+                  <app-sar-icon></app-sar-icon>
                 </td>
               </tr>
             </tbody>
@@ -2404,7 +2406,7 @@
           "
         >
           {{ GetofferValue(OfferPrintData?.offers?.offerValue) }}
-          {{ lang == "ar" ? "ر.س" : "SAR" }}</span
+          <app-sar-icon></app-sar-icon></span
         >
       </div>
 

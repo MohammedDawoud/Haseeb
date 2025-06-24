@@ -255,10 +255,10 @@
             mat-cell
             *matCellDef="let element"
           >
-            {{ element.depit }}
+            {{ element.depit }}<app-sar-icon></app-sar-icon>
           </td>
           <td mat-footer-cell *matFooterCellDef class="bg-light">
-            {{totalexDepit}}
+            {{totalexDepit}}<app-sar-icon></app-sar-icon>
           </td>
         </ng-container>
 
@@ -280,10 +280,10 @@
             mat-cell
             *matCellDef="let element"
           >
-          {{element.credit}}
+          {{element.credit}}<app-sar-icon></app-sar-icon>
           </td>
           <td mat-footer-cell *matFooterCellDef class="bg-light">
-            {{totalexCredit}}
+            {{totalexCredit}}<app-sar-icon></app-sar-icon>
           </td>
         </ng-container>
 
@@ -296,10 +296,10 @@
             <span>{{ "balance" | translate }}</span>
           </th>
           <td mat-cell *matCellDef="let element;let i = index">
-            {{ CurrentBalanceNew(i) }}
+            {{ CurrentBalanceNew(i) }}<app-sar-icon></app-sar-icon>
           </td>
           <td mat-footer-cell *matFooterCellDef class="bg-light">
-            {{totaltxt}}
+            {{totaltxt}}<app-sar-icon></app-sar-icon>
           </td>
         </ng-container>
 
@@ -397,7 +397,7 @@
           </div>
           <div class="col-md-6 valueDiv" id="voucherValue">
             <label for="" class="labelStyle d-md-inline d-none" id="balanceVal">
-              {{ AllBalance   | number:'1.2-2' }}
+              {{ AllBalance   | number:'1.2-2' }}<app-sar-icon></app-sar-icon>
             </label>
             <br />
             <img
@@ -431,7 +431,7 @@
               id="BbalanceVal"
             >
             <ng-container  *ngIf="BalanceBeforeObj.Show == true ">
-              {{BalanceBeforeObj.BalanceBefore   | number:'1.2-2' }}
+              {{BalanceBeforeObj.BalanceBefore   | number:'1.2-2' }}<app-sar-icon></app-sar-icon>
             </ng-container>
             </label>
             <br />
@@ -466,7 +466,7 @@
               id="IbalanceVal"
             >
             <ng-container  *ngIf="BalanceBeforeObj.Show == true ">
-            {{ CurrentBalance  | number:'1.2-2' }}
+            {{ CurrentBalance  | number:'1.2-2' }}<app-sar-icon></app-sar-icon>
           </ng-container>
 
             </label>
@@ -769,7 +769,7 @@
               padding: 10px 0px;
             "
           >
-          {{printsumcredit  | number:'1.2-2' }}
+          {{printsumcredit  | number:'1.2-2' }}<app-sar-icon></app-sar-icon>
           </td>
           <td
             style="
@@ -783,7 +783,7 @@
               padding: 10px 0px;
             "
           >
-          {{printsumdepit  | number:'1.2-2' }}
+          {{printsumdepit  | number:'1.2-2' }}<app-sar-icon></app-sar-icon>
           </td>
         </tr>
       </table>
@@ -992,7 +992,7 @@
                   border-inline: 1px dashed #272727;
                   border-bottom: 1px dashed #272727;
                 "
-              >{{BalanceBeforeObj.BalanceBefore}}</td>
+              >{{BalanceBeforeObj.BalanceBefore}}<app-sar-icon></app-sar-icon></td>
               <td
               style="
                 background-color: #fff;
@@ -1097,7 +1097,7 @@
                   border-bottom: 1px dashed #272727;
                 "
               >
-              {{item.depit | number:'1.2-2' }}
+              {{item.depit | number:'1.2-2' }}<app-sar-icon></app-sar-icon>
               </td>
               <td
                 style="
@@ -1111,7 +1111,7 @@
                   border-bottom: 1px dashed #272727;
                 "
               >
-              {{item.credit | number:'1.2-2' }}
+              {{item.credit | number:'1.2-2' }}<app-sar-icon></app-sar-icon>
               </td>
               <td
                 style="
@@ -1126,7 +1126,7 @@
                 "
               >
 
-              {{item.balance | number:'1.2-2' }}
+              {{item.balance | number:'1.2-2' }}<app-sar-icon></app-sar-icon>
               </td>
               <td
                 style="
@@ -1222,7 +1222,7 @@
                 "
               >
 
-            {{ printsumdepit | number:'1.2-2' }} </td>
+            {{ printsumdepit | number:'1.2-2' }} <app-sar-icon></app-sar-icon></td>
               <td
                 style="
                   background-color: #fff;
@@ -1234,7 +1234,7 @@
                   border-bottom: 1px dashed #272727;
                 "
               >
-              {{ printsumcredit | number:'1.2-2' }}</td>
+              {{ printsumcredit | number:'1.2-2' }}<app-sar-icon></app-sar-icon></td>
               <td
               style="
                 background-color: #fff;
@@ -1246,7 +1246,7 @@
                 border-bottom: 1px dashed #272727;
               "
             >
-            {{ GetDeff(printsumdepit,printsumcredit) }}</td>
+            {{ GetDeff(printsumdepit,printsumcredit) }}<app-sar-icon></app-sar-icon></td>
             <!-- <td
                 style="
                   background-color: #fff;

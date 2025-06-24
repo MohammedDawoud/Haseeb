@@ -208,9 +208,9 @@
             mat-cell
             *matCellDef="let element"
           >
-            {{ element.depit }}
+            {{ element.depit }}<app-sar-icon></app-sar-icon>
           </td>
-          <td mat-footer-cell *matFooterCellDef class="bg-light">{{sumdepit  | number:'1.2-2'}}</td>
+          <td mat-footer-cell *matFooterCellDef class="bg-light">{{sumdepit  | number:'1.2-2'}}<app-sar-icon></app-sar-icon></td>
         </ng-container>
 
         <ng-container matColumnDef="credit">
@@ -227,9 +227,9 @@
             mat-cell
             *matCellDef="let element"
           >
-            {{ element.credit }}
+            {{ element.credit }}<app-sar-icon></app-sar-icon>
           </td>
-          <td mat-footer-cell *matFooterCellDef class="bg-light">{{sumcredit  | number:'1.2-2'}}</td>
+          <td mat-footer-cell *matFooterCellDef class="bg-light">{{sumcredit  | number:'1.2-2'}}<app-sar-icon></app-sar-icon></td>
         </ng-container>
 
         <!-- <ng-container matColumnDef="referenceNumber">
@@ -266,7 +266,7 @@
           </div>
           <div class="col-md-6 valueDiv" id="voucherValue">
             <label for="" class="labelStyle d-md-inline d-none" id="totaldebit">
-              {{sumdepit  | number:'1.2-2'}}
+              {{sumdepit  | number:'1.2-2'}}<app-sar-icon></app-sar-icon>
             </label>
 
             <img
@@ -299,7 +299,7 @@
               class="labelStyle d-md-inline d-none"
               id="creditTotal"
             >
-              {{sumcredit  | number:'1.2-2'}}
+              {{sumcredit  | number:'1.2-2'}}<app-sar-icon></app-sar-icon>
             </label>
 
             <img
@@ -547,7 +547,7 @@
               padding: 10px 0px;
             "
           >
-          {{printsumcredit  | number:'1.2-2' }}
+          {{printsumcredit  | number:'1.2-2' }}<app-sar-icon></app-sar-icon>
           </td>
           <td
             style="
@@ -561,7 +561,7 @@
               padding: 10px 0px;
             "
           >
-          {{printsumdepit  | number:'1.2-2' }}
+          {{printsumdepit  | number:'1.2-2' }}<app-sar-icon></app-sar-icon>
           </td>
         </tr>
       </table>
@@ -814,7 +814,7 @@
                   border-bottom: 1px dashed #272727;
                 "
               >
-              {{item.depit}}
+              {{item.depit}}<app-sar-icon></app-sar-icon>
               </td>
               <td
                 style="
@@ -829,7 +829,7 @@
                   border-bottom: 1px dashed #272727;
                 "
               >
-              {{item.credit}}
+              {{item.credit}}<app-sar-icon></app-sar-icon>
               </td>
               <td
                 style="
@@ -927,7 +927,7 @@
                   border-inline: 1px dashed #272727;
                   border-bottom: 1px dashed #272727;
                 "
-              >{{printsumdepit  | number:'1.2-2' }}</td>
+              >{{printsumdepit  | number:'1.2-2' }}<app-sar-icon></app-sar-icon></td>
               <td
                 style="
                   background-color: #fff;
@@ -939,7 +939,7 @@
                   border-inline: 1px dashed #272727;
                   border-bottom: 1px dashed #272727;
                 "
-              >{{printsumcredit  | number:'1.2-2' }}</td>
+              >{{printsumcredit  | number:'1.2-2' }}<app-sar-icon></app-sar-icon></td>
               <!-- <td
               style="
                 background-color: #fff;
