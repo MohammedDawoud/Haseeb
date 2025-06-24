@@ -42,7 +42,6 @@ export class CarMovementService {
   }
 
   SaveCarMovement(carMovement: CarMovements): Observable<any> {
-    debugger;
     const headers = { 'content-type': 'application/json' };
     const body = JSON.stringify(carMovement);
     return this.http.post(

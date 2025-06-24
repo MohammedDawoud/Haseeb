@@ -4631,4 +4631,32 @@ export class SalesBillComponent implements OnInit {
       }    
     });
   }
+  disableButtonSave_Zatca = false;
+  ZatcaErrorMsg:any=null;
+  InvoiceRowSelected: any;
+  
+  getInvoiceRowSelected(row: any) {
+    this.InvoiceRowSelected = row;
+    console.log(this.InvoiceRowSelected);
+  }
+  ReSendZatcaInvoiceIntegrationFunc(modal:any) {
+    this.disableButtonSave_Zatca = true;
+    setTimeout(() => {this.disableButtonSave_Zatca = false;}, 9000);
+    this._accountsreportsService.ReSendZatcaInvoiceIntegrationFuncByInvoiceId(this.InvoiceRowSelected.invoiceId).subscribe((result: any) => {
+      if (result.statusCode == 200) {
+        this.toast.success(
+        this.translate.instant(result.reasonPhrase),this.translate.instant('Message'));
+        this.ShowAllVoucher();
+        modal.dismiss();
+        this.disableButtonSave_Zatca = false;
+      } else {
+        this.toast.error(this.translate.instant(result.reasonPhrase), this.translate.instant('Message'));
+        this.ZatcaErrorMsg=result.reasonPhrase;
+        this.ShowAllVoucher();
+        this.disableButtonSave_Zatca = false;
+      }
+    });
+  }
+
+
 }

@@ -166,7 +166,7 @@
         </th>
         <td mat-cell *matCellDef="let element">
              <button
-             *ngIf="(element?.statusCode ==400 || element?.statusCode ==0 || element?.statusCode==504 || element?.statusCode==503 
+             *ngIf="(element?.statusCode ==400  || element?.statusCode ==401 ||  element?.statusCode ==0 || element?.statusCode==504 || element?.statusCode==503 
                   || element?.statusCode==500 || element?.statusCode==429) && element?.type!=29"
               type="button "
               id="button-basic"

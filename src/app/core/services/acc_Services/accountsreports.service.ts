@@ -729,7 +729,6 @@ export class AccountsreportsService {
     );
   }
   GetIncomeStatmentDGVLevelsdetails(modal: any) {
-    debugger;
     modal.AccointId =
       modal.AccointId == (null || undefined) ? '' : modal.AccointId;
     modal.Type = modal.Type == (null || undefined) ? '' : modal.Type;
@@ -1350,6 +1349,9 @@ export class AccountsreportsService {
   }
   ReSendZatcaInvoiceIntegrationFunc(InvoiceReqId:any){
     return this.http.post(this.apiEndPoint+'Voucher/ReSendZatcaInvoiceIntegrationFunc', {}, { params:{InvoiceReqId:InvoiceReqId}});
+  }
+  ReSendZatcaInvoiceIntegrationFuncByInvoiceId(InvoiceId:any){
+    return this.http.post(this.apiEndPoint+'Voucher/ReSendZatcaInvoiceIntegrationFuncByInvoiceId', {}, { params:{InvoiceId:InvoiceId}});
   }
   //-----------------------------------------------------------------------------------------------
 }

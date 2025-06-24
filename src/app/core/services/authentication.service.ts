@@ -128,7 +128,6 @@ export class AuthenticationService {
           .toString();
         localStorage.setItem('user', user_enc);
         localStorage.removeItem('userRem');
-        debugger;
         if (!(localStorage.getItem('IsLoadedBefore') === null)) {
           localStorage.removeItem('IsLoadedBefore');
         }
@@ -149,7 +148,6 @@ export class AuthenticationService {
         return user;
       }),
       catchError((err, caught) => {
-        debugger;
         console.log('err' + err);
         console.log('caught' + caught);
         this.toast.error(err, 'رسالة');
