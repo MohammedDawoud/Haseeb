@@ -116,10 +116,10 @@
           mat-cell
           *matCellDef="let element"
         >
-          {{ element.totalValue }}
+          {{ element.totalValue }}<app-sar-icon></app-sar-icon>
         </td>
         <td mat-footer-cell *matFooterCellDef class="bg-blue-100">
-          {{ totalValue }}
+          {{ totalValue }}<app-sar-icon></app-sar-icon>
         </td>
       </ng-container>
 
@@ -144,10 +144,10 @@
           mat-cell
           *matCellDef="let element"
         >
-          {{ element.totalPaidPayment }}
+          {{ element.totalPaidPayment }}<app-sar-icon></app-sar-icon>
         </td>
         <td mat-footer-cell *matFooterCellDef class="bg-blue-100">
-          {{ totalPaidPayment }}
+          {{ totalPaidPayment }}<app-sar-icon></app-sar-icon>
         </td>
       </ng-container>
 
@@ -172,10 +172,10 @@
           mat-cell
           *matCellDef="let element"
         >
-          {{ element.totalRemainingPayment }}
+          {{ element.totalRemainingPayment }}<app-sar-icon></app-sar-icon>
         </td>
         <td mat-footer-cell *matFooterCellDef class="bg-blue-100">
-          {{ totalRemainingPayment }}
+          {{ totalRemainingPayment }}<app-sar-icon></app-sar-icon>
         </td>
       </ng-container>
 
@@ -418,7 +418,7 @@
                     border-bottom: 1px dashed #272727;
                   "
                 >
-                  {{ employee.totalValue }}
+                  {{ employee.totalValue }}<app-sar-icon></app-sar-icon>
                 </td>
                 <td
                   style="
@@ -431,7 +431,7 @@
                     border-bottom: 1px dashed #272727;
                   "
                 >
-                  {{ employee.totalPaidPayment }}
+                  {{ employee.totalPaidPayment }}<app-sar-icon></app-sar-icon>
                 </td>
 
                 <td
@@ -446,7 +446,7 @@
                     border-left: 1px dashed #272727;
                   "
                 >
-                  {{ employee.totalRemainingPayment }}
+                  {{ employee.totalRemainingPayment }}<app-sar-icon></app-sar-icon>
                 </td>
               </tr>
 
@@ -476,7 +476,7 @@
                 border-bottom: 1px dashed #272727;
               "
             >
-              {{ allValue }}
+              {{ allValue }}<app-sar-icon></app-sar-icon>
             </td>
             <td
               style="
@@ -489,7 +489,7 @@
                 border-bottom: 1px dashed #272727;
               "
             >
-              {{ paidvalue }}
+              {{ paidvalue }}<app-sar-icon></app-sar-icon>
             </td>
 
             <td
@@ -504,7 +504,7 @@
                 border-left: 1px dashed #272727;
               "
             >
-              {{ remainValue }}
+              {{ remainValue }}<app-sar-icon></app-sar-icon>
             </td>
             </tbody>
           </table>

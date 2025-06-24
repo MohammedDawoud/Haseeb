@@ -61,6 +61,7 @@ import { CustomerContractsAddMainComponent } from '../modules/accounts/component
 import { NgxEditorModule } from 'ngx-editor';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { WheelPreventDirective } from './directives/wheel-prevent.directive';
+import { SarIconComponent } from './components/sar-icon/sar-icon.component';
 
 @NgModule({
   declarations: [
@@ -81,6 +82,8 @@ import { WheelPreventDirective } from './directives/wheel-prevent.directive';
     SafePipe,
     Imageipe,
     WheelPreventDirective,
+        SarIconComponent,
+
   ],
   imports: [
     CommonModule,
@@ -170,6 +173,8 @@ import { WheelPreventDirective } from './directives/wheel-prevent.directive';
     SafePipe,
     Imageipe,
     WheelPreventDirective,
+        SarIconComponent,
+
   ],
 })
 export class SharedModule {}

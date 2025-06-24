@@ -89,7 +89,7 @@
           </th>
           <td class="bg-green-100 text-green-950 text-center" mat-cell *matCellDef="let element"
             [class.bg-yellow-100]="element.index === '1'">
-            {{ element.opDipet | number:'1.2-2'  }}
+            {{ element.opDipet | number:'1.2-2'  }}<app-sar-icon></app-sar-icon>
           </td>
         </ng-container>
 
@@ -98,7 +98,7 @@
             <span>{{ "CreditOpeningBalance" | translate }}</span>
           </th>
           <td class="bg-red-100 text-red-950 text-center" mat-cell *matCellDef="let element">
-            {{ element.opCredit  | number:'1.2-2' }}
+            {{ element.opCredit  | number:'1.2-2' }}<app-sar-icon></app-sar-icon>
           </td>
         </ng-container>
 
@@ -108,7 +108,7 @@
           </th>
           <td class="bg-green-100 text-green-950 text-center" mat-cell *matCellDef="let element"
             [class.bg-yellow-100]="element.index === '1'">
-            {{ element.netDebitTotal  | number:'1.2-2' }}
+            {{ element.netDebitTotal  | number:'1.2-2' }}<app-sar-icon></app-sar-icon>
           </td>
         </ng-container>
 
@@ -117,7 +117,7 @@
             <span>{{ "Creditor" | translate }}</span>
           </th>
           <td class="bg-red-100 text-red-950 text-center" mat-cell *matCellDef="let element">
-            {{ element.netCreditTotal | number:'1.2-2'  }}
+            {{ element.netCreditTotal | number:'1.2-2'  }}<app-sar-icon></app-sar-icon>
           </td>
         </ng-container>
 
@@ -127,7 +127,7 @@
           </th>
           <td class="bg-green-100 text-green-950 text-center" mat-cell *matCellDef="let element"
             [class.bg-yellow-100]="element.index === '1'">
-            {{ element.totalDebitEnd  | number:'1.2-2' }}
+            {{ element.totalDebitEnd  | number:'1.2-2' }}<app-sar-icon></app-sar-icon>
           </td>
         </ng-container>
 
@@ -136,7 +136,7 @@
             <span>{{ "CreditBalance" | translate }}</span>
           </th>
           <td class="bg-red-100 text-red-950 text-center" mat-cell *matCellDef="let element">
-            {{ element.totalCriditEnd  | number:'1.2-2' }}
+            {{ element.totalCriditEnd  | number:'1.2-2' }}<app-sar-icon></app-sar-icon>
           </td>
         </ng-container>
 
@@ -595,7 +595,7 @@
                   border-bottom: 1px dashed #272727;
                 "
               >
-              {{item.opDipet}}
+              {{item.opDipet}}<app-sar-icon></app-sar-icon>
               </td>
               <td
                 style="
@@ -608,7 +608,7 @@
                   border-bottom: 1px dashed #272727;
                 "
               >
-              {{item.opCredit}}
+              {{item.opCredit}}<app-sar-icon></app-sar-icon>
               </td>
               <td
                 style="
@@ -621,7 +621,7 @@
                   border-bottom: 1px dashed #272727;
                 "
               >
-              {{item.netDebitTotal}}
+              {{item.netDebitTotal}}<app-sar-icon></app-sar-icon>
               </td>
               <td
                 style="
@@ -634,21 +634,7 @@
                   border-bottom: 1px dashed #272727;
                 "
               >
-              {{item.netCreditTotal}}
-              </td>
-              <td
-                style="
-                  background-color: #fff;
-                  font-size: 15px;
-                  font-weight: 500;
-                  padding: 10px 0px;
-                  border: 1px dashed #272727;
-                  color: #272727;
-                  border-inline-start: 1px dashed #272727;
-                  border-bottom: 1px dashed #272727;
-                "
-              >
-              {{item.totalDebitEnd}}
+              {{item.netCreditTotal}}<app-sar-icon></app-sar-icon>
               </td>
               <td
                 style="
@@ -662,7 +648,21 @@
                   border-bottom: 1px dashed #272727;
                 "
               >
-              {{item.totalCriditEnd}}
+              {{item.totalDebitEnd}}<app-sar-icon></app-sar-icon>
+              </td>
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  padding: 10px 0px;
+                  border: 1px dashed #272727;
+                  color: #272727;
+                  border-inline-start: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+              >
+              {{item.totalCriditEnd}}<app-sar-icon></app-sar-icon>
               </td>
             </tr>
           </tbody>

@@ -157,9 +157,9 @@
             <span>{{ "principalAmount" | translate }}</span>
           </th>
           <td mat-cell *matCellDef="let element">
-            {{ element.price }}
+            {{ element.price }}<app-sar-icon></app-sar-icon>
           </td>
-          <td mat-footer-cell *matFooterCellDef class="bg-light">{{totalprice}}</td>
+          <td mat-footer-cell *matFooterCellDef class="bg-light">{{totalprice}}<app-sar-icon></app-sar-icon></td>
         </ng-container>
 
         <ng-container matColumnDef="Tax">
@@ -167,9 +167,9 @@
             <span>{{ "Tax" | translate }}</span>
           </th>
           <td mat-cell *matCellDef="let element">
-            {{ element.taxes }}
+            {{ element.taxes }}<app-sar-icon></app-sar-icon>
           </td>
-          <td mat-footer-cell *matFooterCellDef class="bg-light">{{totaltaxes}}</td>
+          <td mat-footer-cell *matFooterCellDef class="bg-light">{{totaltaxes}}<app-sar-icon></app-sar-icon></td>
         </ng-container>
 
         <ng-container matColumnDef="amount">
@@ -177,9 +177,9 @@
             <span>{{ "amount" | translate }}</span>
           </th>
           <td mat-cell *matCellDef="let element">
-            {{ element.total }}
+            {{ element.total }}<app-sar-icon></app-sar-icon>
           </td>
-          <td mat-footer-cell *matFooterCellDef class="bg-light">{{totaltotal}}</td>
+          <td mat-footer-cell *matFooterCellDef class="bg-light">{{totaltotal}}<app-sar-icon></app-sar-icon></td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="projectDisplayedColumns"></tr>
@@ -747,7 +747,7 @@
                   border-bottom: 1px dashed #272727;
                 "
               >
-              {{item.price}}
+              {{item.price}}<app-sar-icon></app-sar-icon>
               </td>
               <td
                 style="
@@ -761,7 +761,7 @@
                   border-bottom: 1px dashed #272727;
                 "
               >
-              {{item.taxes}}
+              {{item.taxes}}<app-sar-icon></app-sar-icon>
               </td>
               <td
                 style="
@@ -775,7 +775,7 @@
                   border-bottom: 1px dashed #272727;
                 "
               >
-              {{item.total}}
+              {{item.total}}<app-sar-icon></app-sar-icon>
               </td>
             </tr>
             <tr>
@@ -872,7 +872,7 @@
                   border-inline: 1px dashed #272727;
                   border-bottom: 1px dashed #272727;
                 "
-              >{{totalpricePrint }}</td>
+              >{{totalpricePrint }}<app-sar-icon></app-sar-icon></td>
               <td
                 style="
                   background-color: #fff;
@@ -883,7 +883,7 @@
                   border-inline: 1px dashed #272727;
                   border-bottom: 1px dashed #272727;
                 "
-              >{{totaltaxesPrint }}</td>
+              >{{totaltaxesPrint }}<app-sar-icon></app-sar-icon></td>
               <td
                 style="
                   background-color: #fff;
@@ -894,7 +894,7 @@
                   border-inline: 1px dashed #272727;
                   border-bottom: 1px dashed #272727;
                 "
-              >{{totaltotalPrint }}</td>
+              >{{totaltotalPrint }}<app-sar-icon></app-sar-icon></td>
             </tr>
           </tbody>
         </table>

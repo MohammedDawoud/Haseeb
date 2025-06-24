@@ -109,9 +109,9 @@
               <span>{{ "قيمة الفاتورة" | translate }}</span>
             </th>
             <td mat-cell *matCellDef="let element">
-              {{ element.invoiceValue  }}
+              {{ element.invoiceValue  }}<app-sar-icon></app-sar-icon>
             </td>
-            <td mat-footer-cell *matFooterCellDef class="bg-light">{{ TotalSum.invoiceValue  }}</td>
+            <td mat-footer-cell *matFooterCellDef class="bg-light">{{ TotalSum.invoiceValue  }}<app-sar-icon></app-sar-icon></td>
           </ng-container>
   
           <ng-container matColumnDef="valueCollect">
@@ -119,9 +119,9 @@
               <span>{{ "المبلغ المحصل" | translate }}</span>
             </th>
             <td mat-cell *matCellDef="let element">
-              {{ element.valueCollect }}
+              {{ element.valueCollect }}<app-sar-icon></app-sar-icon>
             </td>
-            <td mat-footer-cell *matFooterCellDef class="bg-light">{{ TotalSum.valueCollect  }}</td>
+            <td mat-footer-cell *matFooterCellDef class="bg-light">{{ TotalSum.valueCollect  }}<app-sar-icon></app-sar-icon></td>
           </ng-container>
   
           <ng-container matColumnDef="retinvoiceValue">
@@ -129,9 +129,9 @@
               <span>{{ "المردودات" | translate }}</span>
             </th>
             <td mat-cell *matCellDef="let element">
-              {{ element.retinvoiceValue }}
+              {{ element.retinvoiceValue }}<app-sar-icon></app-sar-icon>
             </td>
-            <td mat-footer-cell *matFooterCellDef class="bg-light">{{ TotalSum.retinvoiceValue  }}</td>
+            <td mat-footer-cell *matFooterCellDef class="bg-light">{{ TotalSum.retinvoiceValue  }}<app-sar-icon></app-sar-icon></td>
           </ng-container>
           <ng-container matColumnDef="accDate">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>
@@ -147,9 +147,9 @@
               <span>{{ "المبلغ المستحق" | translate }}</span>
             </th>
             <td mat-cell *matCellDef="let element">
-              {{ getvaluedue(element) }}
+              {{ getvaluedue(element) }}<app-sar-icon></app-sar-icon>
             </td>
-            <td mat-footer-cell *matFooterCellDef class="bg-light">{{ TotalSum.valuedue  }}</td>
+            <td mat-footer-cell *matFooterCellDef class="bg-light">{{ TotalSum.valuedue  }}<app-sar-icon></app-sar-icon></td>
           </ng-container>
           <ng-container matColumnDef="daysV">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>
@@ -165,54 +165,54 @@
               <span>{{ "لم يستحق بعد" | translate }}</span>
             </th>
             <td mat-cell *matCellDef="let element">
-              {{ getRangeValue(element,0) }}
+              {{ getRangeValue(element,0) }}<app-sar-icon></app-sar-icon>
             </td>
-            <td mat-footer-cell *matFooterCellDef class="bg-light">{{ TotalSum.undue  }}</td>
+            <td mat-footer-cell *matFooterCellDef class="bg-light">{{ TotalSum.undue  }}<app-sar-icon></app-sar-icon></td>
           </ng-container>
           <ng-container matColumnDef="onetothirty">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>
               <span>{{ "1-30" | translate }}</span>
             </th>
             <td mat-cell *matCellDef="let element">
-              {{ getRangeValue(element,1) }}
+              {{ getRangeValue(element,1) }}<app-sar-icon></app-sar-icon>
             </td>
-            <td mat-footer-cell *matFooterCellDef class="bg-light">{{ TotalSum.onetothirty  }}</td>
+            <td mat-footer-cell *matFooterCellDef class="bg-light">{{ TotalSum.onetothirty  }}<app-sar-icon></app-sar-icon></td>
           </ng-container>
           <ng-container matColumnDef="thirtyonetosixty">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>
               <span>{{ "31-60" | translate }}</span>
             </th>
             <td mat-cell *matCellDef="let element">
-              {{ getRangeValue(element,2) }}
+              {{ getRangeValue(element,2) }}<app-sar-icon></app-sar-icon>
             </td>
-            <td mat-footer-cell *matFooterCellDef class="bg-light">{{ TotalSum.thirtyonetosixty  }}</td>
+            <td mat-footer-cell *matFooterCellDef class="bg-light">{{ TotalSum.thirtyonetosixty  }}<app-sar-icon></app-sar-icon></td>
           </ng-container>
           <ng-container matColumnDef="sixtyonetoninety">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>
               <span>{{ "61-90" | translate }}</span>
             </th>
             <td mat-cell *matCellDef="let element">
-              {{ getRangeValue(element,3) }}
+              {{ getRangeValue(element,3) }}<app-sar-icon></app-sar-icon>
             </td>
-            <td mat-footer-cell *matFooterCellDef class="bg-light">{{ TotalSum.sixtyonetoninety  }}</td>
+            <td mat-footer-cell *matFooterCellDef class="bg-light">{{ TotalSum.sixtyonetoninety  }}<app-sar-icon></app-sar-icon></td>
           </ng-container>
           <ng-container matColumnDef="aboveninety">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>
               <span>{{ "فوق 90" | translate }}</span>
             </th>
             <td mat-cell *matCellDef="let element">
-              {{ getRangeValue(element,4) }}
+              {{ getRangeValue(element,4) }}<app-sar-icon></app-sar-icon>
             </td>
-            <td mat-footer-cell *matFooterCellDef class="bg-light">{{ TotalSum.aboveninety  }}</td>
+            <td mat-footer-cell *matFooterCellDef class="bg-light">{{ TotalSum.aboveninety  }}<app-sar-icon></app-sar-icon></td>
           </ng-container>
           <ng-container matColumnDef="total">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>
               <span>{{ "الإجمالي" | translate }}</span>
             </th>
             <td mat-cell *matCellDef="let element">
-              {{ getvaluedue(element) }}
+              {{ getvaluedue(element) }}<app-sar-icon></app-sar-icon>
             </td>
-            <td mat-footer-cell *matFooterCellDef class="bg-light">{{ TotalSum.total  }}</td>
+            <td mat-footer-cell *matFooterCellDef class="bg-light">{{ TotalSum.total  }}<app-sar-icon></app-sar-icon></td>
           </ng-container>
           <tr mat-header-row *matHeaderRowDef="projectDisplayedColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: projectDisplayedColumns"></tr>
@@ -634,7 +634,7 @@
                     border-bottom: 1px dashed #272727;
                   "
                 >
-                {{item.invoiceValue }}
+                {{item.invoiceValue }}<app-sar-icon></app-sar-icon>
                 </td>
                 <td
                 style="
@@ -648,7 +648,7 @@
                   border-bottom: 1px dashed #272727;
                 "
                 >
-                {{item.valueCollect}}
+                {{item.valueCollect}}<app-sar-icon></app-sar-icon>
                 </td>
                 <td
                 style="
@@ -662,7 +662,7 @@
                   border-bottom: 1px dashed #272727;
                 "
                 >
-                {{item.retinvoiceValue}}
+                {{item.retinvoiceValue}}<app-sar-icon></app-sar-icon>
                 </td>
                 <td
                   style="
@@ -690,7 +690,7 @@
                     border-bottom: 1px dashed #272727;
                   "
                 >
-                {{getvaluedue(item)}}
+                {{getvaluedue(item)}}<app-sar-icon></app-sar-icon>
                 </td>
                 <td
                 style="
@@ -720,7 +720,7 @@
                   border-bottom: 1px dashed #272727;
                 "
                 >
-                {{getRangeValue(item,0) }}
+                {{getRangeValue(item,0) }}<app-sar-icon></app-sar-icon>
                 </td>
                 <td
                 style="
@@ -734,7 +734,7 @@
                   border-bottom: 1px dashed #272727;
                 "
                 >
-                {{getRangeValue(item,1) }}
+                {{getRangeValue(item,1) }}<app-sar-icon></app-sar-icon>
                 </td>
                 <td
                 style="
@@ -748,7 +748,7 @@
                   border-bottom: 1px dashed #272727;
                 "
                 >
-                {{getRangeValue(item,2) }}
+                {{getRangeValue(item,2) }}<app-sar-icon></app-sar-icon>
                 </td>
                 <td
                 style="
@@ -762,7 +762,7 @@
                   border-bottom: 1px dashed #272727;
                 "
                 >
-                {{getRangeValue(item,3) }}
+                {{getRangeValue(item,3) }}<app-sar-icon></app-sar-icon>
                 </td>
                 <td
                 style="
@@ -776,7 +776,7 @@
                   border-bottom: 1px dashed #272727;
                 "
                 >
-                {{getRangeValue(item,4)}}
+                {{getRangeValue(item,4)}}<app-sar-icon></app-sar-icon>
                 </td>
                 <td
                 style="
@@ -790,7 +790,7 @@
                   border-bottom: 1px dashed #272727;
                 "
                 >
-                {{getvaluedue(item) }}
+                {{getvaluedue(item) }}<app-sar-icon></app-sar-icon>
                 </td>
               </tr>
             </tbody>

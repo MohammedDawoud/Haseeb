@@ -151,7 +151,7 @@
             <span>{{ "the amount" | translate }}</span>
           </th>
           <td mat-cell *matCellDef="let element">
-            {{ element.invoiceValue }}
+            {{ element.invoiceValue }}<app-sar-icon></app-sar-icon>
           </td>
         </ng-container>
 
@@ -160,7 +160,7 @@
             <span>{{ "Tax" | translate }}</span>
           </th>
           <td mat-cell *matCellDef="let element">
-            {{ element.taxAmount }}
+            {{ element.taxAmount }}<app-sar-icon></app-sar-icon>
           </td>
         </ng-container>
 
@@ -169,7 +169,7 @@
             <span>{{ "Total" | translate }}</span>
           </th>
           <td mat-cell *matCellDef="let element">
-            {{ element.totalValue }}
+            {{ element.totalValue }}<app-sar-icon></app-sar-icon>
           </td>
         </ng-container>
 
@@ -550,7 +550,7 @@
                   border-bottom: 1px dashed #272727;
                 "
               >
-              {{item.invoiceValue}}
+              {{item.invoiceValue}}<app-sar-icon></app-sar-icon>
               </td>
               <td
                 style="
@@ -565,7 +565,7 @@
                   border-bottom: 1px dashed #272727;
                 "
               >
-              {{item.taxAmount}}
+              {{item.taxAmount}}<app-sar-icon></app-sar-icon>
               </td>
               <td
                 style="
@@ -580,7 +580,7 @@
                   border-bottom: 1px dashed #272727;
                 "
               >
-              {{item.totalValue}}
+              {{item.totalValue}}<app-sar-icon></app-sar-icon>
               </td>
             </tr>
           </tbody>
@@ -1108,8 +1108,8 @@
           <td class="w-1/9 border px-4 py-2">{{ entry.accountCode }}</td>
           <td class="w-1/9 border px-4 py-2">{{ entry.accountName }}</td>
           <td class="w-1/9 border px-4 py-2">{{ entry.statement }}</td>
-          <td class="w-1/9 border px-4 py-2">{{ entry.debtor }}</td>
-          <td class="w-1/9 border px-4 py-2">{{ entry.creditor }}</td>
+          <td class="w-1/9 border px-4 py-2">{{ entry.debtor }}<app-sar-icon></app-sar-icon></td>
+          <td class="w-1/9 border px-4 py-2">{{ entry.creditor }}<app-sar-icon></app-sar-icon></td>
         </tr>
         <tr>
           <td class="w-1/9 border px-4 py-2">{{ "total" | translate }}</td>
@@ -1119,8 +1119,8 @@
           <td class="w-1/9 border px-4 py-2"></td>
           <td class="w-1/9 border px-4 py-2"></td>
           <td class="w-1/9 border px-4 py-2"></td>
-          <td class="w-1/9 border px-4 py-2">{{ totalDebtor }}</td>
-          <td class="w-1/9 border px-4 py-2">{{ totalCreditor }}</td>
+          <td class="w-1/9 border px-4 py-2">{{ totalDebtor }}<app-sar-icon></app-sar-icon></td>
+          <td class="w-1/9 border px-4 py-2">{{ totalCreditor }}<app-sar-icon></app-sar-icon></td>
         </tr>
       </tbody>
     </table>

@@ -74,9 +74,9 @@
             <span>{{ "expenses" | translate }}</span>
           </th>
           <td mat-cell *matCellDef="let element">
-            {{ element.exDepit }}
+            {{ element.exDepit }}<app-sar-icon></app-sar-icon>
           </td>
-          <td mat-footer-cell *matFooterCellDef class="bg-blue-100">{{totalexDepit}}</td>
+          <td mat-footer-cell *matFooterCellDef class="bg-blue-100">{{totalexDepit}}<app-sar-icon></app-sar-icon></td>
         </ng-container>
 
         <ng-container matColumnDef="Revenues">
@@ -85,9 +85,9 @@
           </th>
 
           <td mat-cell *matCellDef="let element">
-            {{ element.reCredit }}
+            {{ element.reCredit }}<app-sar-icon></app-sar-icon>
           </td>
-          <td mat-footer-cell *matFooterCellDef class="bg-blue-100">{{totalreCredit}}</td>
+          <td mat-footer-cell *matFooterCellDef class="bg-blue-100">{{totalreCredit}}<app-sar-icon></app-sar-icon></td>
         </ng-container>
 
         <ng-container matColumnDef="net">
@@ -95,9 +95,9 @@
             <span>{{ "net" | translate }}</span>
           </th>
           <td mat-cell *matCellDef="let element">
-            {{ element.eX_RE_Diff }}
+            {{ element.eX_RE_Diff }}<app-sar-icon></app-sar-icon>
           </td>
-          <td mat-footer-cell *matFooterCellDef class="bg-blue-100">{{totaleX_RE_Diff}}</td>
+          <td mat-footer-cell *matFooterCellDef class="bg-blue-100">{{totaleX_RE_Diff}}<app-sar-icon></app-sar-icon></td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="projectDisplayedColumns"></tr>
@@ -481,7 +481,7 @@
                   border-bottom: 1px dashed #272727;
                 "
               >
-              {{item?.exDepit}}
+              {{item?.exDepit}}<app-sar-icon></app-sar-icon>
               </td>
               <td
                 style="
@@ -495,7 +495,7 @@
                   border-bottom: 1px dashed #272727;
                 "
               >
-              {{item?.reCredit}}
+              {{item?.reCredit}}<app-sar-icon></app-sar-icon>
               </td>
               <td
                 style="
@@ -509,7 +509,7 @@
                   border-bottom: 1px dashed #272727;
                 "
               >
-              {{item?.eX_RE_Diff}}
+              {{item?.eX_RE_Diff}}<app-sar-icon></app-sar-icon>
               </td>
             </tr>
             <tr>
@@ -534,7 +534,7 @@
                   border-inline: 1px dashed #272727;
                   border-bottom: 1px dashed #272727;
                 "
-              >{{totalexDepitPrint }}</td>
+              >{{totalexDepitPrint }}<app-sar-icon></app-sar-icon></td>
               <td
                 style="
                   background-color: #fff;
@@ -545,7 +545,7 @@
                   border-inline: 1px dashed #272727;
                   border-bottom: 1px dashed #272727;
                 "
-              >{{totalreCreditPrint }}</td>
+              >{{totalreCreditPrint }}<app-sar-icon></app-sar-icon></td>
               <td
                 style="
                   background-color: #fff;
@@ -556,7 +556,7 @@
                   border-inline: 1px dashed #272727;
                   border-bottom: 1px dashed #272727;
                 "
-              >{{totaleX_RE_DiffPrint }}</td>
+              >{{totaleX_RE_DiffPrint }}<app-sar-icon></app-sar-icon></td>
             </tr>
           </tbody>
         </table>

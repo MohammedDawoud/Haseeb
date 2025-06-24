@@ -177,7 +177,7 @@
             <span>{{ "PriceRev" | translate }}</span>
           </th>
           <td mat-cell *matCellDef="let element">
-            {{ element.amount }}
+            {{ element.amount }}<app-sar-icon></app-sar-icon>
           </td>
         </ng-container>
   
@@ -186,7 +186,7 @@
             <span>{{ "PricePur" | translate }}</span>
           </th>
           <td mat-cell *matCellDef="let element">
-            {{ element.amountPur }}
+            {{ element.amountPur }}<app-sar-icon></app-sar-icon>
           </td>
         </ng-container>
   
@@ -195,7 +195,7 @@
             <span>{{ "Beginningbalance" | translate }}</span>
           </th>
           <td mat-cell *matCellDef="let element">
-            {{ element.begbalance }}
+            {{ element.begbalance }}<app-sar-icon></app-sar-icon>
           </td>
         </ng-container>
         <ng-container matColumnDef="qtyStorehouse">
@@ -611,7 +611,7 @@
                       border-bottom: 1px dashed #272727;
                     "
                   >
-                    {{ item.depit }}
+                    {{ item.depit }}<app-sar-icon></app-sar-icon>
                   </td>
                   <td
                     style="
@@ -624,7 +624,7 @@
                       border-bottom: 1px dashed #272727;
                     "
                   >
-                    {{ item.credit }}
+                    {{ item.credit }}<app-sar-icon></app-sar-icon>
                   </td>
                   <td
                     style="
@@ -667,7 +667,7 @@
                     en: 'Total Depit: '
                   }"
                 ></span>
-                <span> {{ CustomData?.TotalDepit }}</span>
+                <span> {{ CustomData?.TotalDepit }}<app-sar-icon></app-sar-icon></span>
               </p>
             </div>
             <div style="margin-bottom: 10px">
@@ -682,7 +682,7 @@
                 ></span>
                 <span style="padding-right: 6px">
                   {{ CustomData?.TotalCredit }}</span
-                >
+                ><app-sar-icon></app-sar-icon>
               </p>
             </div>
             <div

@@ -109,10 +109,10 @@
             mat-cell
             *matCellDef="let element"
           >
-            {{ element.depit }}
+            {{ element.depit }}<app-sar-icon></app-sar-icon>
           </td>
           <td mat-footer-cell *matFooterCellDef class="bg-light">
-            {{totalDepit | number:'1.2-2' }}
+            {{totalDepit | number:'1.2-2' }}<app-sar-icon></app-sar-icon>
           </td>
         </ng-container>
 
@@ -130,10 +130,10 @@
             mat-cell
             *matCellDef="let element"
           >
-            {{ element.credit | number:'1.2-2' }}
+            {{ element.credit | number:'1.2-2' }}<app-sar-icon></app-sar-icon>
           </td>
           <td mat-footer-cell *matFooterCellDef class="bg-light">
-            {{totalCredit| number:'1.2-2'}}
+            {{totalCredit| number:'1.2-2'}}<app-sar-icon></app-sar-icon>
           </td>
         </ng-container>
 
@@ -626,7 +626,7 @@
                   border-bottom: 1px dashed #272727;
                 "
               >
-              {{item.depit| number:'1.2-2'}}
+              {{item.depit| number:'1.2-2'}}<app-sar-icon></app-sar-icon>
               </td>
               <td
                 style="
@@ -640,7 +640,7 @@
                   border-bottom: 1px dashed #272727;
                 "
               >
-              {{item.credit| number:'1.2-2'}}
+              {{item.credit| number:'1.2-2'}}<app-sar-icon></app-sar-icon>
               </td>
               <td
                 style="
@@ -654,7 +654,7 @@
                   border-bottom: 1px dashed #272727;
                 "
               >
-              {{item.balance | number:'1.2-2' }}
+              {{item.balance | number:'1.2-2' }}<app-sar-icon></app-sar-icon>
               </td>
               <td
                 style="
@@ -710,7 +710,7 @@
                 "
               >
 
-            {{ totalDepitP | number:'1.2-2' }} </td>
+            {{ totalDepitP | number:'1.2-2' }} <app-sar-icon></app-sar-icon></td>
               <td
                 style="
                   background-color: #fff;
@@ -722,7 +722,7 @@
                   border-bottom: 1px dashed #272727;
                 "
               >
-              {{ totalCreditP | number:'1.2-2' }}</td>
+              {{ totalCreditP | number:'1.2-2' }}<app-sar-icon></app-sar-icon></td>
               <td
                 style="
                   background-color: #fff;

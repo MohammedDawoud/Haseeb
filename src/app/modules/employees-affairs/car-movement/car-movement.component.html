@@ -235,6 +235,7 @@
           </th>
           <td mat-cell *matCellDef="let element">
             <span>{{ element?.empAmount }}</span>
+            <span *ngIf="element?.empAmount"><app-sar-icon></app-sar-icon></span>
           </td>
         </ng-container>
         <!-- managerCost column -->
@@ -244,6 +245,8 @@
           </th>
           <td mat-cell *matCellDef="let element">
             <span>{{ element?.ownerAmount }}</span>
+                        <span *ngIf="element?.ownerAmount"><app-sar-icon></app-sar-icon></span>
+
           </td>
         </ng-container>
 
@@ -541,7 +544,7 @@
                     border-bottom: 1px dashed #272727;
                   "
                 >
-                  {{ employee.empAmount ?? 0 }}
+                  {{ employee.empAmount ?? 0 }}<app-sar-icon></app-sar-icon>
                 </td>
                 <td
                   style="
@@ -554,7 +557,7 @@
                     border-bottom: 1px dashed #272727;
                   "
                 >
-                  {{ employee.ownerAmount ?? 0 }}
+                  {{ employee.ownerAmount ?? 0 }}<app-sar-icon></app-sar-icon>
                 </td>
 
                 <td
@@ -620,7 +623,7 @@
                     border-bottom: 1px dashed #272727;
                   "
                 >
-                  {{ TotalEmpAmount }}
+                  {{ TotalEmpAmount }}<app-sar-icon></app-sar-icon>
                 </td>
                 <td
                   style="
@@ -633,7 +636,7 @@
                     border-bottom: 1px dashed #272727;
                   "
                 >
-                  {{ TotalownerAmount }}
+                  {{ TotalownerAmount }}<app-sar-icon></app-sar-icon>
                 </td>
 
                 <td
@@ -911,7 +914,7 @@
                     border-bottom: 1px dashed #272727;
                   "
                 >
-                  {{ employee.oil }}
+                  {{ employee.oil }}<app-sar-icon></app-sar-icon>
                 </td>
                 <td
                   style="
@@ -924,7 +927,7 @@
                     border-bottom: 1px dashed #272727;
                   "
                 >
-                  {{ employee.zait }}
+                  {{ employee.zait }}<app-sar-icon></app-sar-icon>
                 </td>
                 <td
                   style="
@@ -937,7 +940,7 @@
                     border-bottom: 1px dashed #272727;
                   "
                 >
-                  {{ employee.repairr ?? 0 }}
+                  {{ employee.repairr ?? 0 }}<app-sar-icon></app-sar-icon>
                 </td>
                 <td
                   style="
@@ -950,7 +953,7 @@
                     border-bottom: 1px dashed #272727;
                   "
                 >
-                  {{ employee.mokhalfa ?? 0 }}
+                  {{ employee.mokhalfa ?? 0 }}<app-sar-icon></app-sar-icon>
                 </td>
                 <td
                   style="
@@ -963,7 +966,7 @@
                     border-bottom: 1px dashed #272727;
                   "
                 >
-                  {{ employee.taamen ?? 0 }}
+                  {{ employee.taamen ?? 0 }}<app-sar-icon></app-sar-icon>
                 </td>
                 <td
                   style="
@@ -976,7 +979,7 @@
                     border-bottom: 1px dashed #272727;
                   "
                 >
-                  {{ employee.others ?? 0 }}
+                  {{ employee.others ?? 0 }}<app-sar-icon></app-sar-icon>
                 </td>
                 <td
                   style="
@@ -990,7 +993,7 @@
                     border-left: 1px dashed #272727;
                   "
                 >
-                  {{ employee.total }}
+                  {{ employee.total }}<app-sar-icon></app-sar-icon>
                 </td>
               </tr>
             </tbody>

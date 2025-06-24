@@ -156,7 +156,7 @@
             <span>{{ "totalAfterTax" | translate }}</span>
           </th>
           <td mat-cell *matCellDef="let element">
-            {{ element.totalValue }}
+            {{ element.totalValue }}<app-sar-icon></app-sar-icon>
           </td>
         </ng-container>
 
@@ -205,7 +205,7 @@
             mat-cell
             *matCellDef="let element"
           >
-            {{ element.totalPaidPayment }}
+            {{ element.totalPaidPayment }}<app-sar-icon></app-sar-icon>
           </td>
         </ng-container>
 
@@ -225,7 +225,7 @@
             mat-cell
             *matCellDef="let element"
           >
-            {{ element.totalRemainingPayment }}
+            {{ element.totalRemainingPayment }}<app-sar-icon></app-sar-icon>
           </td>
         </ng-container>
 
@@ -828,6 +828,7 @@
                         [ngModelOptions]="{standalone: true}"
                         readonly
                       />
+                      <app-sar-icon></app-sar-icon>
                     </td>
 
                     <td>
@@ -838,6 +839,7 @@
                         [ngModelOptions]="{standalone: true}"
                         readonly
                       />
+                      <app-sar-icon></app-sar-icon>
                     </td>
 
                     <td>
@@ -848,6 +850,7 @@
                         [ngModelOptions]="{standalone: true}"
                         readonly
                       />
+                      <app-sar-icon></app-sar-icon>
                     </td>
 
                     <td>
@@ -1392,7 +1395,7 @@
                       [(ngModel)]="item.Amounttxt"
                       (keyup)="CalculateTotal_ContractEdit()"
                     />
-                    <span *ngIf="item.Amounttxt" style="align-self: center;">ر.س</span>
+                    <span *ngIf="item.Amounttxt" style="align-self: center;"><app-sar-icon></app-sar-icon></span>
                     </div>
                   </td>
 
@@ -1404,7 +1407,7 @@
                       [(ngModel)]="item.taxAmounttxt"
                       readonly
                     />
-                    <span *ngIf="item.taxAmounttxt" style="align-self: center;">ر.س</span>
+                    <span *ngIf="item.taxAmounttxt" style="align-self: center;"><app-sar-icon></app-sar-icon></span>
                     </div>
                   </td>
                   <td>
@@ -1415,7 +1418,7 @@
                       [(ngModel)]="item.TotalAmounttxt"
                       readonly
                     />
-                    <span *ngIf="item.TotalAmounttxt" style="align-self: center;">ر.س</span>
+                    <span *ngIf="item.TotalAmounttxt" style="align-self: center;"><app-sar-icon></app-sar-icon></span>
                     </div>
                   </td>
                   <td class="flex">
@@ -4813,7 +4816,7 @@
       <p>
           <span>
               أقصى تعويض يدفعه استشاري الاشراف
-              للمالك لا يتجاوز مبلغ   {{Contract3PrintData?.contract.maxPay_Des}} ريال
+              للمالك لا يتجاوز مبلغ   {{Contract3PrintData?.contract.maxPay_Des}} <app-sar-icon></app-sar-icon>
           </span>
       </p>
 
@@ -5605,7 +5608,7 @@
       <p>
           <span>
               3-1
-              الاتعاب الاجمالية للاستشاري مبلغ وقدرة {{Contract3PrintData?.contract.cons_TotalFees_Des}} ريال
+              الاتعاب الاجمالية للاستشاري مبلغ وقدرة {{Contract3PrintData?.contract.cons_TotalFees_Des}} <app-sar-icon></app-sar-icon>
           </span>
       </p>
 
@@ -6329,7 +6332,7 @@
       <p>
           <span>
               أقصى تعويض يدفعه استشاري الاشراف
-              للمالك لا يتجاوز مبلغ 10000ريال
+              للمالك لا يتجاوز مبلغ 10000<app-sar-icon></app-sar-icon>
           </span>
       </p>
 
@@ -7324,7 +7327,7 @@
       <p>
           <span>
               3-1
-              الاتعاب الاجمالية للاستشاري مبلغ وقدرة {{Contract3PrintData?.contract.cons_TotalFees_Des}} ريال
+              الاتعاب الاجمالية للاستشاري مبلغ وقدرة {{Contract3PrintData?.contract.cons_TotalFees_Des}} <app-sar-icon></app-sar-icon>
           </span>
       </p>
 
@@ -8074,7 +8077,7 @@
     <p>
         <span>
             أقصى تعويض يدفعه استشاري الاشراف
-            للمالك لا يتجاوز مبلغ {{Contract3PrintData?.contract.maxPay_Des}} ريال
+            للمالك لا يتجاوز مبلغ {{Contract3PrintData?.contract.maxPay_Des}} <app-sar-icon></app-sar-icon>
         </span>
     </p>
 
@@ -8767,7 +8770,7 @@
       <p>
           <span>
               3-1
-              الاتعاب الاجمالية للاستشاري مبلغ وقدرة {{Contract3PrintData?.contract.cons_TotalFees_Des}} ريال
+              الاتعاب الاجمالية للاستشاري مبلغ وقدرة {{Contract3PrintData?.contract.cons_TotalFees_Des}} <app-sar-icon></app-sar-icon>
           </span>
       </p>
 
@@ -9079,7 +9082,7 @@
                     border-bottom: 2px dashed #0c8191;
                   "
                 >
-                {{item.Serviceamountval}} {{'ر.س'}}
+                {{item.Serviceamountval}} <app-sar-icon></app-sar-icon>
                 </td>
                 <td
                   style="
@@ -9091,7 +9094,7 @@
                     border-bottom: 2px dashed #0c8191;
                   "
                 >
-                {{item.taxValue}} {{'ر.س'}}
+                {{item.taxValue}} <app-sar-icon></app-sar-icon>
                 </td>
                 </tr>
               </tbody>
@@ -9141,12 +9144,12 @@
 
             <h4 style="background: rgba(0, 0, 0, 0.05) !important;border-bottom: 2px solid #000000;font-weight: 600;padding: 6px;margin-bottom:2px;">البند الثاني: </h4>
             <h4 style="background: rgba(0, 0, 0, 0.05) !important;border-bottom: 2px solid #000000;font-weight: 600;padding: 6px;">بيان الاعمال والتكاليف والدفعات: </h4>
-            <p>أ- ........ ريال اجراءات نقل الملكية.</p>
-            <p>ب- ............. ريال اجراءات استخراج الكروكي (بيانات الموقع).</p>
-            <p>ج- ....... ريال عمل استشارة الكهرباء</p>
-            <p>د- ......... ريال عمل منظور</p>
-            <p>هـ- ...... ريال عمل المخططات كاملة</p>
-            <p><span>الإجمالي: </span>عشرة الاف ريال سعودي فقط لاغير</p>
+            <p>أ- ........ <app-sar-icon></app-sar-icon> اجراءات نقل الملكية.</p>
+            <p>ب- ............. <app-sar-icon></app-sar-icon> اجراءات استخراج الكروكي (بيانات الموقع).</p>
+            <p>ج- ....... <app-sar-icon></app-sar-icon> عمل استشارة الكهرباء</p>
+            <p>د- ......... <app-sar-icon></app-sar-icon> عمل منظور</p>
+            <p>هـ- ...... <app-sar-icon></app-sar-icon> عمل المخططات كاملة</p>
+            <p><span>الإجمالي: </span>عشرة الاف <app-sar-icon></app-sar-icon> سعودي فقط لاغير</p>
             <p>دفعة أولى : 30 %تسدد عند التوقيع على هذا العقد .</p>
             <p>دفعة ثانية : 50 %تسدد بعد موافقة أمانة المدينة المنورة على المخططات الإبتدئية.</p>
             <p>دفعة أخيرة : 20 %تسدد عند استلام المخططات ورخصة الإنشاء مصدقة من الأمانة.</p>
@@ -9456,7 +9459,7 @@
                     border-bottom: 1px dashed #272727;
                   "
                 >
-                {{item.totalValue}}
+                {{item.totalValue}}<app-sar-icon></app-sar-icon>
                 </td>
                 <td
                   style="
@@ -9512,7 +9515,7 @@
                     border-bottom: 1px dashed #272727;
                   "
                 >
-                {{item.totalPaidPayment}}
+                {{item.totalPaidPayment}}<app-sar-icon></app-sar-icon>
                 </td>
                 <td
                   style="
@@ -9526,7 +9529,7 @@
                     border-bottom: 1px dashed #272727;
                   "
                 >
-                {{item.totalRemainingPayment}}
+                {{item.totalRemainingPayment}}<app-sar-icon></app-sar-icon>
                 </td>
               </tr>
               <tr>
@@ -9601,7 +9604,7 @@
                     border-inline: 1px dashed #272727;
                     border-bottom: 1px dashed #272727;
                   "
-                >{{CustomDataAllContract?.SumtotalPaidPayment}}</td>
+                >{{CustomDataAllContract?.SumtotalPaidPayment}}<app-sar-icon></app-sar-icon></td>
                 <td
                   style="
                     background-color: #fff;
@@ -9612,7 +9615,7 @@
                     border-inline: 1px dashed #272727;
                     border-bottom: 1px dashed #272727;
                   "
-                >{{CustomDataAllContract?.SumtotalRemainingPayment}}</td>
+                >{{CustomDataAllContract?.SumtotalRemainingPayment}}<app-sar-icon></app-sar-icon></td>
               </tr>
             </tbody>
           </table>

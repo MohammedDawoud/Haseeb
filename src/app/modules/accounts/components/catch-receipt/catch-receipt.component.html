@@ -269,7 +269,7 @@
             <span>{{ "BondTotal" | translate }}</span>
           </th>
           <td mat-cell *matCellDef="let element">
-            {{ element.totalValue }}
+            {{ element.totalValue }}<app-sar-icon></app-sar-icon>
           </td>
         </ng-container>
 
@@ -733,7 +733,7 @@
                   border-bottom: 1px dashed #272727;
                 "
               >
-                {{ item.totalValue }}
+                {{ item.totalValue }}<app-sar-icon></app-sar-icon>
               </td>
               <td
                 style="
@@ -926,8 +926,8 @@
           <td class="w-1/9 border px-1 py-2">{{ entry.accountCode }}</td>
           <td class="w-1/9 border px-1 py-2">{{ entry.accountName }}</td>
           <td class="w-1/9 border px-1 py-2">{{ entry.notes }}</td>
-          <td class="w-1/9 border px-1 py-2">{{ entry.depit }}</td>
-          <td class="w-1/9 border px-1 py-2">{{ entry.credit }}</td>
+          <td class="w-1/9 border px-1 py-2">{{ entry.depit }}<app-sar-icon></app-sar-icon></td>
+          <td class="w-1/9 border px-1 py-2">{{ entry.credit }}<app-sar-icon></app-sar-icon></td>
         </tr>
         <tr>
           <td class="w-1/9 border px-1 py-2">{{ "total" | translate }}</td>
@@ -937,8 +937,8 @@
           <td class="w-1/9 border px-1 py-2"></td>
           <td class="w-1/9 border px-1 py-2"></td>
           <td class="w-1/9 border px-1 py-2"></td>
-          <td class="w-1/9 border px-1 py-2 bg-green-500">{{ totaldepit }}</td>
-          <td class="w-1/9 border px-1 py-2 bg-red-500">{{ totalcredit }}</td>
+          <td class="w-1/9 border px-1 py-2 bg-green-500">{{ totaldepit }}<app-sar-icon></app-sar-icon></td>
+          <td class="w-1/9 border px-1 py-2 bg-red-500">{{ totalcredit }}<app-sar-icon></app-sar-icon></td>
         </tr>
       </tbody>
     </table>
@@ -3435,7 +3435,7 @@
                 padding: 10px 0px;
               "
             >
-              {{ EntryVoucherPrintData?.voucherVM[0].totalValue }}
+              {{ EntryVoucherPrintData?.voucherVM[0].totalValue }}<app-sar-icon></app-sar-icon>
             </td>
             <td
               style="
@@ -3806,8 +3806,8 @@
           <td class="w-1/9 border px-1 py-2">{{ entry.accountCode }}</td>
           <td class="w-1/9 border px-1 py-2">{{ entry.accountName }}</td>
           <td class="w-1/9 border px-1 py-2">{{ entry.notes }}</td>
-          <td class="w-1/9 border px-1 py-2">{{ entry.depit }}</td>
-          <td class="w-1/9 border px-1 py-2">{{ entry.credit }}</td>
+          <td class="w-1/9 border px-1 py-2">{{ entry.depit }}<app-sar-icon></app-sar-icon></td>
+          <td class="w-1/9 border px-1 py-2">{{ entry.credit }}<app-sar-icon></app-sar-icon></td>
         </tr>
         <tr>
           <td class="w-1/9 border px-1 py-2">{{ "total" | translate }}</td>
@@ -3817,8 +3817,8 @@
           <td class="w-1/9 border px-1 py-2"></td>
           <td class="w-1/9 border px-1 py-2"></td>
           <td class="w-1/9 border px-1 py-2"></td>
-          <td class="w-1/9 border px-1 py-2 bg-green-500">{{ totaldepit }}</td>
-          <td class="w-1/9 border px-1 py-2 bg-red-500">{{ totalcredit }}</td>
+          <td class="w-1/9 border px-1 py-2 bg-green-500">{{ totaldepit }}<app-sar-icon></app-sar-icon></td>
+          <td class="w-1/9 border px-1 py-2 bg-red-500">{{ totalcredit }}<app-sar-icon></app-sar-icon></td>
         </tr>
       </tbody>
     </table>

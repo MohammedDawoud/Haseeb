@@ -203,7 +203,7 @@
             <span>{{ "total Order" | translate }}</span>
           </th>
           <td mat-cell *matCellDef="let element">
-            {{ element.totalValue }}
+            {{ element.totalValue }}<app-sar-icon></app-sar-icon>
           </td>
         </ng-container>
         <ng-container matColumnDef="PaymentType">
@@ -438,8 +438,8 @@
             <td class="w-1/9 border px-1 py-2">{{ entry.accountCode }}</td>
             <td class="w-1/9 border px-1 py-2">{{ entry.accountName }}</td>
             <td class="w-1/9 border px-1 py-2">{{ entry.notes }}</td>
-            <td class="w-1/9 border px-1 py-2">{{ entry.depit }}</td>
-            <td class="w-1/9 border px-1 py-2">{{ entry.credit }}</td>
+            <td class="w-1/9 border px-1 py-2">{{ entry.depit }}<app-sar-icon></app-sar-icon></td>
+            <td class="w-1/9 border px-1 py-2">{{ entry.credit }}<app-sar-icon></app-sar-icon></td>
           </tr>
           <tr>
             <td class="w-1/9 border px-1 py-2">{{ "total" | translate }}</td>
@@ -449,8 +449,8 @@
             <td class="w-1/9 border px-1 py-2"></td>
             <td class="w-1/9 border px-1 py-2"></td>
             <td class="w-1/9 border px-1 py-2"></td>
-            <td class="w-1/9 border px-1 py-2 bg-green-500">{{ totaldepit }}</td>
-            <td class="w-1/9 border px-1 py-2 bg-red-500">{{ totalcredit }}</td>
+            <td class="w-1/9 border px-1 py-2 bg-green-500">{{ totaldepit }}<app-sar-icon></app-sar-icon></td>
+            <td class="w-1/9 border px-1 py-2 bg-red-500">{{ totalcredit }}<app-sar-icon></app-sar-icon></td>
           </tr>
         </tbody>
       </table>
@@ -568,8 +568,8 @@
             <td class="w-1/9 border px-1 py-2">{{ entry.accountCode }}</td>
             <td class="w-1/9 border px-1 py-2">{{ entry.accountName }}</td>
             <td class="w-1/9 border px-1 py-2">{{ entry.notes }}</td>
-            <td class="w-1/9 border px-1 py-2">{{ entry.depit }}</td>
-            <td class="w-1/9 border px-1 py-2">{{ entry.credit }}</td>
+            <td class="w-1/9 border px-1 py-2">{{ entry.depit }}<app-sar-icon></app-sar-icon></td>
+            <td class="w-1/9 border px-1 py-2">{{ entry.credit }}<app-sar-icon></app-sar-icon></td>
           </tr>
           <tr>
             <td class="w-1/9 border px-1 py-2">{{ "total" | translate }}</td>
@@ -579,8 +579,8 @@
             <td class="w-1/9 border px-1 py-2"></td>
             <td class="w-1/9 border px-1 py-2"></td>
             <td class="w-1/9 border px-1 py-2"></td>
-            <td class="w-1/9 border px-1 py-2 bg-green-500">{{ totaldepit }}</td>
-            <td class="w-1/9 border px-1 py-2 bg-red-500">{{ totalcredit }}</td>
+            <td class="w-1/9 border px-1 py-2 bg-green-500">{{ totaldepit }}<app-sar-icon></app-sar-icon></td>
+            <td class="w-1/9 border px-1 py-2 bg-red-500">{{ totalcredit }}<app-sar-icon></app-sar-icon></td>
           </tr>
         </tbody>
       </table>
@@ -5049,9 +5049,9 @@
                   >
                     <td>{{ i + 1 }}</td>
                     <td>{{ item.servicesPriceName }}</td>
-                    <td>{{ GetAccualValue(item) }}</td>
+                    <td>{{ GetAccualValue(item) }}<app-sar-icon></app-sar-icon></td>
                     <td>{{ item.qty }}</td>
-                    <td>{{ GetDiff(item) }}</td>
+                    <td>{{ GetDiff(item) }}<app-sar-icon></app-sar-icon></td>
                     
                   </tr>
                 </tbody>
@@ -5068,13 +5068,13 @@
                 <div class="invoiceNe-value-right-side">
                   <p style="margin-bottom: 2px">
                     <span> المجموع : </span>
-                    <span>{{ CustomData.Total }}</span>
+                    <span>{{ CustomData.Total }}</span><app-sar-icon></app-sar-icon>
                   </p>
              
              
                   <p style="margin-bottom: 2px">
                     <span> ضريبة القيمة المضافة (15%) : </span>
-                    <span>{{ InvPrintData?.invoicesVM_VD.taxAmount ?? 0 }}</span>
+                    <span>{{ InvPrintData?.invoicesVM_VD.taxAmount ?? 0 }}</span><app-sar-icon></app-sar-icon>
                   </p>
                   <p
                     style="
@@ -5087,7 +5087,7 @@
                   >
                     <span>الاجمالي </span>
                     <span
-                      >{{ InvPrintData?.invoicesVM_VD.totalValue ?? 0 }}</span>
+                      >{{ InvPrintData?.invoicesVM_VD.totalValue ?? 0 }}</span><app-sar-icon></app-sar-icon>
                       <span style="margin-right: 6%;">({{ InvPrintData?.valueNumString }})</span>
                   </p>
                   <p
