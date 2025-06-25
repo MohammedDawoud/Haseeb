@@ -917,7 +917,8 @@ export class VerticalSidebarComponent implements OnInit {
                   ar: 'قائمة المركز المالي',
                   en: 'Statement of financial position',
                 },
-                link: '/accounts/Statement_of_financial_position',
+                //link: '/accounts/Statement_of_financial_position',
+                link: '/accounts/Statement_of_financial',
                 type: 'single',
                 icon:
                   this.lang == 'ar'

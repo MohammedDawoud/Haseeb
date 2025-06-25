@@ -53,6 +53,7 @@ import { PaymentdelegatesComponent } from './components/paymentdelegates/payment
 import { ItemMovementComponent } from './components/item-movement/item-movement.component';
 import { ZatcaReportComponent } from './components/zatca-report/zatca-report.component';
 import { PurchasesOrderComponent } from './components/purchases-order/purchases-order.component';
+import { StatementOfFinancialComponent } from './components/statement-of-financial/statement-of-financial.component';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'Sales_bill' },
@@ -80,6 +81,7 @@ const routes: Routes = [
   { path: 'general_Journal', component: GeneralJournalComponent },
   { path: 'Trial_Balance', component: TrialBalanceComponent },
   { path: 'Incom_List', component: IncomeListComponent },
+  { path: 'Statement_of_financial', component: StatementOfFinancialComponent },
   { path: 'Statement_of_financial_position', component: StatementOfFinancialPositionComponent },
   { path: 'Tax_declaration', component: TaxdeclarationComponent },
   { path: 'Statement_of_customers_deferred_balances', component: StatementOfCustomersDeferredBalancesComponent },

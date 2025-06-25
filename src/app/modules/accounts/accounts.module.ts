@@ -74,6 +74,7 @@ import { PaymentdelegatesComponent } from './components/paymentdelegates/payment
 import { ItemMovementComponent } from './components/item-movement/item-movement.component';
 import { ZatcaReportComponent } from './components/zatca-report/zatca-report.component';
 import { PurchasesOrderComponent } from './components/purchases-order/purchases-order.component';
+import { StatementOfFinancialComponent } from './components/statement-of-financial/statement-of-financial.component';
 
 
 @NgModule({
@@ -131,7 +132,7 @@ import { PurchasesOrderComponent } from './components/purchases-order/purchases-
     ItemMovementComponent,
     ZatcaReportComponent,
     PurchasesOrderComponent,
-
+    StatementOfFinancialComponent,
   ],
   imports: [
     CommonModule,
