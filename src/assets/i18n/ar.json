@@ -4070,5 +4070,7 @@
   "AddPurchaseorder" :"اضافة أمر شراء جديد",
   "Order number":"رقم الامر",
   "Order date":"تاريخ امر الشراء",
-  "total Order":"صافي الدخل"
+  "total Order":"صافي الدخل",
+    "ImplementationDuration":"مدة التنفيذ بالايام",
+    "OfferValidity":"صلاحية العرض بالايام "
 }

@@ -362,6 +362,19 @@
           ></th>
           <td mat-cell *matCellDef="let element">
             <div class="flex gap-1 justify-center py-2">
+
+              
+               <button
+                *ngIf="element.isCertified !=true && userG?.userPrivileges.includes(1213104)"
+                type="button"
+                title="اعتماد عرض السعر"
+                class="p-2 bg-green-100 hover:bg-green-500 rounded-lg duration-300 hover:text-white w-30"
+                               (click)="CertifyOffer(element);open(optToggleActivationModal)"
+
+
+                >
+           <i class="bi bi-hand-thumbs-up-fill"></i>
+              </button>
               <button
               type="button"
               class="p-2 bg-green-200 hover:bg-green-500 rounded-lg duration-300 hover:text-white w-10 mx-1"
@@ -505,6 +518,24 @@
                 class="p-2 bg-sky-100 hover:bg-sky-500 rounded-lg duration-300 hover:text-white w-10"
                 (click)="
                   GetOfferPricePrint(element, 2); open(printOfferDivModal)
+                "
+              >
+                <i class="fa-solid fa-print"></i>
+              </button>
+
+                        <button
+                class="p-2 bg-sky-100 hover:bg-sky-500 rounded-lg duration-300 hover:text-white w-10"
+                (click)="
+                  GetOfferPricePrint(element, 1); open(printOfferDivModal1)
+                "
+              >
+                <i class="fa-solid fa-print"></i>
+              </button>
+                  <button
+                *ngIf="element.isEnglish == 1"
+                class="p-2 bg-sky-100 hover:bg-sky-500 rounded-lg duration-300 hover:text-white w-10"
+                (click)="
+                  GetOfferPricePrint(element, 2); open(printOfferDivModal1)
                 "
               >
                 <i class="fa-solid fa-print"></i>
@@ -784,6 +815,88 @@
               disabled
             />
           </div>
+        </div>
+
+
+               <div class="col-sm-6 col-md-6" >
+          <div class="form-group">
+            <label for="department" class="text-right col-form-label block">
+              {{ "Project Name" | translate }}
+            </label>
+            <input
+              required
+              #projectName="ngModel"
+              [(ngModel)]="modalDetailsOffer.projectName"
+              ngModel
+              class="form-control"
+              type="text"
+              id="projectName"
+              name="projectName"
+              autocomplete="off"
+              
+            />
+          </div>
+        </div>
+            <div class="col-sm-6 col-md-3" >
+      <div class="form-group">
+  <label for="implementationDuration" class="text-right col-form-label block">
+    {{ "ImplementationDuration" | translate }}
+  </label>
+
+  <div class="d-flex">
+    <input
+      required
+      #implementationDuration="ngModel"
+      [(ngModel)]="modalDetailsOffer.implementationDuration"
+      ngModel
+      class="form-control"
+      type="text"
+      id="implementationDuration"
+      name="implementationDuration"
+      autocomplete="off"
+    />
+    <input
+      type="text"
+      class="form-control"
+      value="يوم"
+      disabled
+      style="max-width: 150px; margin-right: 5px;"
+    />
+
+   
+  </div>
+</div>
+
+        </div>
+            <div class="col-sm-6 col-md-3" >
+        <div class="form-group">
+  <label for="offerValidity" class="text-right col-form-label block">
+    {{ "OfferValidity" | translate }}
+  </label>
+
+  <div class="d-flex">
+  <input
+      required
+      #offerValidity="ngModel"
+      [(ngModel)]="modalDetailsOffer.offerValidity"
+      ngModel
+      class="form-control"
+      type="text"
+      id="offerValidity"
+      name="offerValidity"
+      autocomplete="off"
+    />    <input
+      type="text"
+      class="form-control"
+      value="يوم"
+      disabled
+      style="max-width: 150px; margin-right: 5px;"
+    />
+
+  
+  </div>
+</div>
+
         </div>
 
         <div class="col-sm-6 col-md-3 col-lg-2">
@@ -2004,6 +2117,9 @@
   <div class="modal-body">
     <div id="report" [ngStyle]="{ direction: lang == 'ar' ? 'rtl' : 'ltr' }">
       <!--Header-->
+         <h2 *ngIf="OfferPrintData?.offers?.isCertified != true" style="color: red; font-weight: bold; text-align: center;">
+        {{ lang === 'ar' ? 'هذا العرض غير معتمد' : 'This offer is not certified' }}
+      </h2>
       <div
         class="report-header"
         style="display: flex; align-items: center; gap: 100px; padding: 3px 0px"
@@ -2406,8 +2522,8 @@
           "
         >
           {{ GetofferValue(OfferPrintData?.offers?.offerValue) }}
-          <app-sar-icon></app-sar-icon></span
-        >
+          </span
+        ><app-sar-icon></app-sar-icon>
       </div>
 
       <div class="txtval" style="text-align: end; color: black">
@@ -2565,6 +2681,585 @@
       color="basic"
     >
       {{ "No" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+
+
+<ng-template #printOfferDivModal1  let-modal>
+ <div id="report2" class="modal-body" style="padding: 0" [dir]="lang === 'ar' ? 'rtl' : 'ltr'">
+    <!-- Page 1 - Cover -->
+    <div 
+      class="page-cover"
+      [ngStyle]="{
+        'text-align': 'center',
+        'padding-top': '80px',
+        'color': '#000',
+        'font-family': 'Arial, sans-serif',
+        'height': '100vh',
+        'background': 'url(/assets/images/cover-bg.jpeg) no-repeat center center',
+        'background-size': 'cover'
+      }"
+    >
+      <h2 *ngIf="OfferPrintData?.offers?.isCertified != true" style="color: red; font-weight: bold; text-align: center;">
+        {{ lang === 'ar' ? 'هذا العرض غير معتمد' : 'This offer is not certified' }}
+      </h2>
+      <img
+        [src]="OfferCustomData.OrgImg"
+        alt="logo"
+        style="height: 90px; margin: 20px 0"
+      />
+      <h3 style="font-weight: bold; font-size: 22px">{{ lang === 'ar' ? 'اسم المشروع' : 'Project Name' }}</h3>
+      <p style="font-size: 20px">{{ OfferPrintData?.offers?.projectName }}</p>
+      <h3 style="font-weight: bold; font-size: 22px">{{ lang === 'ar' ? 'عنــــايـة' : 'Attention' }}</h3>
+      <p style="font-size: 20px">
+        {{ GetNikeNameOfferPrice(lang, OfferPrintData?.offers?.nickName) }}:
+        {{ GetCustomerName(lang, OfferPrintData?.customer) }}
+        {{ GetDescriptionOfferPrice(lang, OfferPrintData?.offers?.description) }}
+      </p>
+    </div>
+
+    <!-- Page 2 - Offer Table -->
+    <div
+      class="page-table"
+      style="
+        background-color: #fff;
+        padding: 30px;
+        font-family: 'Arial', sans-serif;
+      "
+       [dir]="lang === 'ar' ? 'rtl' : 'ltr'"
+    >
+    <h2 *ngIf="OfferPrintData?.offers?.isCertified != true" style="color: red; font-weight: bold; text-align: center;">
+        {{ lang === 'ar' ? 'هذا العرض غير معتمد' : 'This offer is not certified' }}
+      </h2>    <!-- Centered logo with side lines -->
+<div
+  style="
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0;
+    position: relative;
+  "
+>
+  <div
+    style="flex-grow: 1; height: 2px; background-color: #000; margin-left: 20px"
+  ></div>
+
+  <img
+    src="{{ OfferCustomData.OrgImg }}"
+    alt="logo"
+    style="height: 100px; margin: 0 20px"
+  />
+
+  <div
+    style="flex-grow: 1; height: 2px; background-color: #000; margin-right: 20px"
+  ></div>
+</div>
+
+<!-- Optional: heading below logo -->
+<div style=" margin-bottom: 20px;margin-left: 30px;margin-right: 30px;margin-top: -25px;"  [dir]="lang === 'ar' ? 'ltr' :  'rtl'">
+  <p style="color: midnightblue;">{{ lang == "ar" ? "عرض سعر" : "Offer Price" }}</p>
+  <p style="color: #0c8191;">{{ OfferPrintData?.offers?.offerNo }}</p>
+</div>
+
+
+      <p><strong>{{lang =="ar" ? "الموضوع" : "subject"}}:</strong> {{OfferPrintData?.offers?.projectName}}</p>
+           <p style="font-size: 15px">
+          <span
+            >{{
+              GetNikeNameOfferPrice(lang, OfferPrintData?.offers?.nickName)
+            }}
+            : {{ GetCustomerName(lang, this.OfferPrintData?.customer) }}
+            {{
+              GetDescriptionOfferPrice(
+                lang,
+                OfferPrintData?.offers?.description
+              )
+            }}</span
+          >
+        </p>
+        <p>
+          <span>{{ lang == "ar" ? "التاريخ" : "Date" }}</span>
+          <!-- <span> {{ OfferPrintData?.dateTimeNow }} </span> -->
+          <span> {{ OfferPrintData?.offers?.offerDate }} </span>
+          
+        </p>
+     <p>
+  {{
+    lang === 'ar'
+      ? 'يســر ' + OfferPrintData?.org_VD?.nameAr + ' التقدم لكم بهذا العرض المالي حسب طلبكم...'
+      : OfferPrintData?.org_VD?.nameEn + ' is pleased to present to you this financial offer as per your request...'
+  }}
+</p>
+
+  <div
+        class="info"
+        style="overflow: auto; margin-bottom: 15px"
+        *ngIf="OfferPrintData?.offers?.notDisCustPrint == false"
+      >
+        <table
+          class="table m-0"
+          style="
+            width: 100%;
+            color: white;
+            text-align: center;
+            vertical-align: middle;
+            line-height: 25px;
+            min-width: max-content;
+          "
+        >
+          <tr>
+            <td style="background-color: midnightblue; font-size: 14px">
+              {{ lang == "ar" ? "رقم العرض" : "offer number" }}
+            </td>
+            <td style="background-color: midnightblue; font-size: 14px">
+              {{ lang == "ar" ? "جوال العميل" : "Customer phone" }}
+            </td>
+            <td style="background-color: midnightblue; font-size: 14px">
+              {{ lang == "ar" ? "البريد الالكتروني" : "E-mail" }}
+            </td>
+            <td style="background-color: midnightblue; font-size: 14px">
+              {{ lang == "ar" ? "مهندس المبيعات" : "Sales engineer" }}
+            </td>
+          </tr>
+
+          <tr>
+            <td
+              style="background-color: #d1d1d1; color: black; font-size: 14px"
+            >
+              {{ OfferPrintData?.offers?.offerNo }}
+            </td>
+            <td
+              style="background-color: #d1d1d1; color: black; font-size: 14px"
+            >
+              {{ OfferCustomData.CustomerMobile }}
+            </td>
+            <td
+              style="background-color: #d1d1d1; color: black; font-size: 14px"
+            >
+              {{ OfferCustomData.CustomerEmail }}
+            </td>
+            <td
+              style="background-color: #d1d1d1; color: black; font-size: 14px"
+            >
+              {{ GetpresenterName(lang, OfferPrintData?.offers) }}
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div
+        class="services"
+        style="width: 100%; overflow: auto; margin-bottom: 10px"
+      >
+     <div class="content">
+  <table
+    style="
+      text-align: center;
+      vertical-align: middle;
+      width: 100%;
+      border-collapse: collapse;
+    "
+  >
+    <thead>
+      <tr>
+        <td
+          style="
+            font-size: 13px;
+            background-color: midnightblue;
+            padding: 2px;
+            text-align: center;
+            color: white;
+            border: 1px solid black;
+          "
+        >
+          {{ lang == "ar" ? "م" : "No." }}
+        </td>
+        <td
+          style="
+            font-size: 13px;
+            background-color: midnightblue;
+            padding: 2px;
+            text-align: center;
+            color: white;
+            border: 1px solid black;
+          "
+        >
+          {{ lang == "ar" ? "اسم الخدمة" : "Service Name" }}
+        </td>
+        <td
+          style="
+            font-size: 13px;
+            background-color: midnightblue;
+            padding: 2px;
+            text-align: center;
+            color: white;
+            border: 1px solid black;
+          "
+        >
+          {{ lang == "ar" ? "الكميه" : "Amount" }}
+        </td>
+        <td
+          style="
+            font-size: 13px;
+            background-color: midnightblue;
+            padding: 2px;
+            text-align: center;
+            color: white;
+            border: 1px solid black;
+          "
+        >
+          {{ lang == "ar" ? "سعر الوحدة" : "Unit Price" }}
+        </td>
+        <td
+          style="
+            font-size: 13px;
+            background-color: midnightblue;
+            padding: 2px;
+            text-align: center;
+            color: white;
+            border: 1px solid black;
+          "
+        >
+          {{ lang == "ar" ? "إ.ق.الضريبة" : "t.b Tax" }}
+        </td>
+        <td
+          style="
+            font-size: 13px;
+            background-color: midnightblue;
+            padding: 2px;
+            text-align: center;
+            color: white;
+            border: 1px solid black;
+          "
+        >
+          {{ lang == "ar" ? "الضريبة" : "Tax" }}
+        </td>
+        <td
+          style="
+            font-size: 13px;
+            background-color: midnightblue;
+            padding: 2px;
+            text-align: center;
+            color: white;
+            border: 1px solid black;
+          "
+        >
+          {{ lang == "ar" ? "الإجمالي" : "Total" }}
+        </td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of OfferPrintData?.offerservce; let i = index">
+        <td style="font-size: 13px; padding: 2px; border: 1px solid black;background-color:midnightblue;color: white;">
+          {{ i + 1 }}
+        </td>
+        <td style="font-size: 13px; padding: 2px; border: 1px solid black; width: 390px;">
+          <span style="font-weight: 700">{{ GetServiceName(lang, item) }}</span>
+          <ul
+            *ngFor="let det of item?.servicesPricesOffer"
+            style="list-style: none; padding: 0px; margin: 0; text-align: right; font-size: 13px;"
+          >
+            <li>
+              <span style="font-size: 16px; font-weight: 800">-</span>
+              {{ GetServiceDetName(lang, det) }}
+            </li>
+          </ul>
+        </td>
+        <td style="font-size: 13px; padding: 2px; border: 1px solid black;">
+          {{ item.serviceQty }}
+        </td>
+        <td style="font-size: 13px; padding: 2px; border: 1px solid black;">
+          {{ Getserviceamountval(item.serviceamountval) }}
+          <!-- {{ lang == "ar" ? "ر.س" : "SAR" }} --><app-sar-icon></app-sar-icon>
+        </td>
+        <td style="font-size: 13px; padding: 2px; border: 1px solid black;">
+          {{ GetValueBefore(item, OfferPrintData?.taxAmount) }}
+          <!-- {{ lang == "ar" ? "ر.س" : "SAR" }} --><app-sar-icon></app-sar-icon>
+        </td>
+        <td style="font-size: 13px; padding: 2px; border: 1px solid black;">
+          {{ GetTaxValue(item, OfferPrintData?.taxAmount) }}
+          <!-- {{ lang == "ar" ? "ر.س" : "SAR" }} --><app-sar-icon></app-sar-icon>
+        </td>
+        <td style="font-size: 13px; padding: 2px; border: 1px solid black;">
+          {{ GetTotalValue(item, OfferPrintData?.taxAmount) }}
+          <!-- {{ lang == "ar" ? "ر.س" : "SAR" }} --><app-sar-icon></app-sar-icon>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+      </div>
+
+      <div
+        class="totalPrice"
+        style="text-align: end; color: black; margin-bottom: 10px"
+      >
+        <span style="font-size: 17px">{{
+          lang == "ar" ? "المجموع" : "Total"
+        }}</span>
+        <span
+          style="
+            font-size: 17px;
+            background-color: midnightblue;
+            color: #fff;
+            display: inline-block;
+            padding: 16px;
+            border-radius: 2px;
+            margin-inline-start: 10px;
+          "
+        >
+          {{ GetofferValue(OfferPrintData?.offers?.offerValue) }}
+          <!-- {{ lang == "ar" ? "ر.س" : "SAR" }} --> 
+          </span
+        >
+        <app-sar-icon></app-sar-icon>
+      </div>
+    </div>
+
+
+<div style="page-break-before: always;"></div>
+
+
+        <!-- Page 3 - payment -->
+    <div
+      class="page-table"
+      style="
+        background-color: #fff;
+        padding: 30px;
+        font-family: 'Arial', sans-serif;
+      "
+       [dir]="lang === 'ar' ? 'rtl' : 'ltr'"
+    >
+    <h2 *ngIf="OfferPrintData?.offers?.isCertified != true" style="color: red; font-weight: bold; text-align: center;">
+        {{ lang === 'ar' ? 'هذا العرض غير معتمد' : 'This offer is not certified' }}
+      </h2>    <!-- Centered logo with side lines -->
+<div
+  style="
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0;
+    position: relative;
+  "
+>
+  <div
+    style="flex-grow: 1; height: 2px; background-color: #000; margin-left: 20px"
+  ></div>
+
+  <img
+    src="{{ OfferCustomData.OrgImg }}"
+    alt="logo"
+    style="height: 100px; margin: 0 20px"
+  />
+
+  <div
+    style="flex-grow: 1; height: 2px; background-color: #000; margin-right: 20px"
+  ></div>
+</div>
+
+ <div style="display: flex; justify-content: center; align-items: center; margin-top: 20px;">
+  <p
+    class="totalPrice"
+    style="
+      background-color: midnightblue;
+      color: white;
+      text-align: center;
+      padding: 10px 30px;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 18px;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+      min-width: 200px;
+    "
+  >
+  {{ lang === 'ar' ? 'نظام الدفع' : 'Payment System' }}
+</p>
+
+</div>
+
+      <div>
+       <p><span>{{ lang === 'ar' ? 'إجمالي قيمة العرض' : 'Total Offer Value' }}</span> : 
+   <span>{{ GetofferValue(OfferPrintData?.offers?.offerValue) }}</span>
+</p>
+  </div>
+      <div>
+<p>
+  <span>{{ lang === 'ar' ? 'تصرف علي دفعات كالتالي :-' : 'Payment will be made in installments as follows:' }}</span>
+</p>
+             <ul
+          *ngFor="let item of OfferPrintData?.payment; let i = index"
+          type="1"
+          style="padding: 0; margin-inline-start: 30px; line-height: 1.2em"
+        >
+          <li>
+            {{ i + 1 }} .
+            {{ lang == "ar" ? item.amountValueText : item.amountValueText_EN }}
+            - {{ item.amount }}
+          </li>
+          <hr style="max-width: 50%" />
+        </ul>
+      </div>
+ 
+
+ 
+
+   
+    </div>
+
+    <!--page 4 -->
+
+    <div       class="page-table"
+      style="
+        background-color: #fff;
+        padding: 30px;
+        font-family: 'Arial', sans-serif;
+      "
+       [dir]="lang === 'ar' ? 'rtl' : 'ltr'"
+      >
+            <div
+        style="margin-bottom: 10px"
+        class="terms1"
+        *ngIf="OfferPrintData?.offercondition?.length > 0"
+      >
+        <h2 style="font-weight: bold; margin-bottom: 2px">
+          {{ lang == "ar" ? "الشروط" : "Terms" }}
+        </h2>
+        <ul
+          *ngFor="let item of OfferPrintData?.offercondition; let i = index"
+          type="1"
+          style="padding: 0; margin-inline-start: 30px; line-height: 1.2em"
+        >
+          <li>
+            {{ i + 1 }} .
+            {{
+              lang == "ar" ? item.offerConditiontxt : item.offerConditiontxt_EN
+            }}
+          </li>
+          <hr style="max-width: 50%" />
+        </ul>
+
+        <br />
+             <div>
+        <p *ngIf="OfferPrintData?.offers?.implementationDuration > 0">
+  <span>{{ lang === 'ar' ? 'مدة التنفيذ :' : 'Implementation Duration:' }}</span> 
+  <span>{{ OfferPrintData?.offers?.implementationDuration }}</span>
+  <span>{{ lang === 'ar' ? 'يوم' : 'days' }}</span>
+</p>
+
+<p>
+  <span>{{ lang === 'ar' ? 'البدء بالأعمال :' : 'Start of Work:' }}</span> 
+  <span>{{ lang === 'ar' ? 'فور التعميد' : 'Upon Approval' }}</span>
+</p>
+
+<p *ngIf="OfferPrintData?.offers?.offerValidity">
+  <span>{{ lang === 'ar' ? 'صلاحية العرض :' : 'Offer Validity:' }}</span> 
+  <span>{{ OfferPrintData?.offers?.offerValidity }}</span>
+  <span>{{ lang === 'ar' ? 'يوم' : 'days' }}</span>
+</p>
+
+      </div>
+      </div>
+      <!-- </div> -->
+
+      <div
+        *ngIf="OfferPrintData?.offers?.isContainSign != true"
+        class="signture"
+        style="
+          display: flex;
+          justify-content: space-between;
+          font-size: 13px;
+          font-weight: 600;
+          padding-top: 15px;
+        "
+      >
+        <p style="text-align: center; line-height: 1em">
+          {{
+            lang == "ar"
+              ? "توقيع الاداره الهندسيه"
+              : "  engineering department Signature"
+          }}
+        </p>
+        <p style="text-align: center; line-height: 1em">
+          {{ lang == "ar" ? "توقيع العميل" : "Client signature" }}
+        </p>
+        <p style="text-align: center; line-height: 1em">
+          {{
+            lang == "ar"
+              ? "توقيع الاداره الماليه"
+              : " financial department Signature"
+          }}
+        </p>
+      </div>
+
+      <div class="accounts">
+        <div style="text-align: start !important">
+          <div
+            class="grid-container"
+            style="
+              margin-top: 50px;
+              display: flex;
+              align-items: center;
+              gap: 80px;
+            "
+          >
+            <div
+              class="grid-item"
+              style="align-self: center; text-align: right"
+            >
+              <img
+                *ngIf="OfferCustomData.Account1Img"
+                src="{{ OfferCustomData.Account1Img }}"
+                style="width: 110px; height: 65px"
+              />
+            </div>
+            <div
+              class="grid-item"
+              style="align-self: center; text-align: center"
+            >
+              <p>{{ OfferCustomData.Account1Bank }}</p>
+            </div>
+          </div>
+
+          <div
+            class="grid-container"
+            style="
+              padding-top: 12px;
+              display: flex;
+              align-items: center;
+              gap: 80px;
+            "
+          >
+            <div
+              class="grid-item"
+              style="align-self: center; text-align: right"
+            >
+              <img
+                *ngIf="OfferCustomData.Account2Img"
+                src="{{ OfferCustomData.Account2Img }}"
+                style="width: 110px; height: 65px"
+              />
+            </div>
+            <div
+              class="grid-item"
+              style="align-self: center; text-align: center"
+            >
+              <p>{{ OfferCustomData.Account2Bank }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+ <div class="modal-footer">
+    <button class="btn btn-success" style="background-color: midnightblue;" (click)="printDiv('report2')">
+      {{ lang === 'ar' ? 'طباعة' : 'Print' }}
+    </button>
+    <button class="btn btn-secondary" (click)="modal.dismiss()">
+      {{ lang === 'ar' ? 'إغلاق' : 'Close' }}
     </button>
   </div>
 </ng-template>
@@ -9365,3 +10060,42 @@
       </div>
     </div>
   </ng-template>
+
+  <!-- optToggleActivationModal -->
+<ng-template #optToggleActivationModal let-modal >
+  <div class="modal-header bg-base text-white">
+    <h4
+      class="modal-title mb-0"
+      id="modal-basic-title"
+      [translate]="'name'"
+      [translateParams]="{
+        ar: ' إعتماد عرض السعر   ',
+        en: 'Certify Offer'
+      }"
+    ></h4>
+    <button type="button" class="m-0" (click)="modal.dismiss('Cross click')">
+      <i class="fa fa-close"></i>
+    </button>
+  </div>
+
+  <div class="modal-body text-center" >
+    <h2
+      class="text-base mb-4"
+      
+    >{{sendmail}}</h2>
+    <ng-otp-input style="direction: ltr;" [formCtrl]="otp" [config]="{ length: 4 }"></ng-otp-input>
+
+    <div
+      class="modal-footer justify-content-center mt-3"
+      style="border-top: none"
+    >
+      <button
+        type="button"
+        class="btn submit-btn bg-base text-white py-2 px-3 mt-0"
+        (click)="ConfirmCertifyOffer(modal);"
+      >
+        {{ "confirem" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>

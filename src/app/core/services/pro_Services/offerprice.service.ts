@@ -162,4 +162,12 @@ export class OfferpriceService {
   SendWhatsAppTask(model : any){
     return this.http.post<any>(`${this.apiEndPoint}ProjectPhasesTasks/SendWhatsAppTask`, model);
   }
+  
+   CertifyOffer(_offersPricesId:any){
+    return this.http.post(this.apiEndPoint+'OffersPrice/CertifyOffer', {}, { params:{OffersPricesId:_offersPricesId}});
+  }
+
+    ConfirmCertifyOffer(_offersPricesId:any,Code:any){
+    return this.http.post(this.apiEndPoint+'OffersPrice/ConfirmCertifyOffer', {}, { params:{OffersPricesId:_offersPricesId,Code:Code}});
+  }
 }

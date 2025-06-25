@@ -3729,5 +3729,7 @@
   "AddPurchaseorder": "Add New Purchase Order",
   "Order number" : "Order number",
   "Order date":"Order date",
-  "total Order":"Total Order"
+  "total Order":"Total Order",
+    "ImplementationDuration":"Implementation Duration",
+    "OfferValidity":"Implementation Duration"
 }
