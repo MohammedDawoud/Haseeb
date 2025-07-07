@@ -393,7 +393,7 @@
             <label class="col-form-label">
               {{ "الموظف" | translate }}
             </label>
-            <ng-select
+            <!-- <ng-select
               name="tolocation"
               class="w-full p-0"
               placeholder="{{ 'Chose' | translate }}"
@@ -402,7 +402,12 @@
               <ng-option *ngFor="let loc of AllEmpList" [value]="loc.id">{{
                 loc.name
               }}</ng-option>
-            </ng-select>
+            </ng-select> -->
+            <ng-select style="min-width: 250px !important" [multiple]="true"
+            [items]="AllEmpList" bindLabel="name" bindValue="id" [clearable]="true"
+            class="w-full p-0" [(ngModel)]="EmpSelectList" 
+            [ngModelOptions]="{standalone: true}"  placeholder="{{ 'Chose' | translate }}" >
+          </ng-select>
           </div>
         </div>
       </div>
@@ -413,7 +418,7 @@
       <button
         class="btn bg-base text-white"
         type="submit"
-        (click)="SaveEmpLocation(modal)"
+        (click)="SaveEmplocationList(modal)"
       >
         {{ "save" | translate }}
       </button>

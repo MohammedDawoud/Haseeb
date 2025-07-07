@@ -235,8 +235,10 @@ export class AttendaceCardComponent implements OnInit {
 
 
   EmpSelect: any=null;
+  EmpSelectList:any=[];
   AllEmpList: any;
   FillAllEmps() {
+    this.EmpSelectList=[];
     this._attendencelocation.FillSelectEmployee().subscribe((data) => {
         this.AllEmpList = data;
       });
@@ -247,6 +249,29 @@ export class AttendaceCardComponent implements OnInit {
       return;
     }
     this._attendencelocation.SaveEmplocation(this.EmpSelect,this.locationid).subscribe((result: any) => {
+        if (result.statusCode == 200) {
+          this.toast.success(this.translate.instant(result.reasonPhrase),this.translate.instant('Message'));
+          modal?.dismiss();
+          this.GetAllEmployeesByLocationId();
+          this.FillAllEmps();
+          this.EmpSelect = null;
+        } else {
+          this.toast.error(this.translate.instant(result.reasonPhrase),this.translate.instant('Message'));
+        }
+      });
+  }
+
+  locationDataNew:any={};
+  SaveEmplocationList(modal: any) { 
+    debugger
+    if (this.EmpSelectList.length == 0) {
+      this.toast.error('من فضلك أختر موظف علي الأقل', 'رسالة');
+      return;
+    }
+    this.locationDataNew.LocationId=this.locationid;
+    this.locationDataNew.EmpList=this.EmpSelectList;
+    var obj=this.locationDataNew;
+    this._attendencelocation.SaveEmplocationList(obj).subscribe((result: any) => {
         if (result.statusCode == 200) {
           this.toast.success(this.translate.instant(result.reasonPhrase),this.translate.instant('Message'));
           modal?.dismiss();
