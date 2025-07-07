@@ -1,7 +1,7 @@
 export const environment = {
   production: false,
   apiEndPoint: 'http://127.0.0.1:5000/api/',
-  PhotoURL: 'http://127.0.0.1:5000',
+  PhotoURL: 'https://haseeb-api.tameercloud.com',
   // apiEndPoint: "https://api.tameercloud.com/api/",
   // PhotoURL:"https://localhost:44345/",
   // apiEndPoint: 'https://haseeb.tameercloud.com/api/',
@@ -43,4 +43,71 @@ export const environment = {
       '.grid-container {display: grid;grid-template-columns: auto auto;}  .grid-container2 {display: grid;grid-template-columns: auto auto auto;} .grid-container3 {display: grid;grid-template-columns: auto auto auto auto;} .square {height: 30px;width: 30px;border: 1px solid #000000;} .titleSup {background: rgba(0, 0, 0, 0.05) !important;font-weight: 600;} .text-center{text-align: center !important;}',
     ],
   },
+
+  printConfig2: {
+  printMode: 'template',
+  popupProperties: 'toolbar=no,scrollbars=no,resizable=yes,top=0,left=0,fullscreen=yes',
+  pageTitle: 'tameer cloud',
+  templateString: '{{printBody}}',
+  styles: [
+    `* {
+      font-family: Cairo, Arial, sans-serif;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      color-adjust: exact !important;
+    }`,
+
+    // General page/table
+    `
+    .page-table {
+      background-color: #ffffff !important;
+      padding: 30px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border-spacing: 0;
+    }
+
+    table th, table td {
+      padding: 8px;
+      border: 1px solid #000 !important;
+    }
+
+    thead {
+      background-color: midnightblue !important;
+      color: white !important;
+    }
+
+    th {
+      background-color: midnightblue !important;
+      color: white !important;
+      font-size: 13px;
+    }
+
+    .total-row, tr.total-row {
+      background-color: #eee !important;
+      font-weight: bold !important;
+    }
+    `,
+
+    // Optional cover styles
+    `
+    .page-cover {
+      background: url('/assets/images/cover-bg.jpeg') no-repeat center center !important;
+      background-size: cover !important;
+      height: 100vh;
+      text-align: center;
+      padding-top: 80px;
+      color: black;
+    }
+
+    .page-cover h2 {
+      color: red !important;
+      font-weight: bold !important;
+    }
+    `
+  ],
+}
 };

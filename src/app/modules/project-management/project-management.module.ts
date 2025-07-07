@@ -42,6 +42,7 @@ import { ProjectSettingRunningComponent } from './project-setting-running/projec
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import { ShowProjectSettingComponent } from './show-project-setting/show-project-setting.component';
 import { FileUploaderCenterNewComponent } from './file-uploader-center-new/file-uploader-center-new.component';
+import { NgOtpInputModule } from 'ng-otp-input';
 
 
 @NgModule({
@@ -90,7 +91,9 @@ import { FileUploaderCenterNewComponent } from './file-uploader-center-new/file-
     NgxHijriGregorianDatepickerModule,
     NgxGaugeModule,
     AgmCoreModule,
-    DragDropModule
+    DragDropModule,
+    NgOtpInputModule,
+    
 
   ],
 })

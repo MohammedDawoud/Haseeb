@@ -31,9 +31,13 @@ import {
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
 import { RestApiService } from 'src/app/shared/services/api.service';
-import { DebentureService } from 'src/app/core/services/acc_Services/debenture.service';
+import { ProjectsettingService } from 'src/app/core/services/pro_Services/projectsetting.service';
 import { take } from 'rxjs';
+import { DebentureService } from 'src/app/core/services/acc_Services/debenture.service';
+import { ReactiveFormsModule } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 
+import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-offers-price',
   templateUrl: './offers-price.component.html',
@@ -113,7 +117,9 @@ export class OffersPriceComponent implements OnInit {
     showNotification: null,
     showSignatures: null,
     showAccount: null,
-
+projectName:null,
+    implementationDuration:null,
+    offerValidity:null,
     taxtype: 2,
   };
 
@@ -811,6 +817,9 @@ export class OffersPriceComponent implements OnInit {
       showNotification: null,
       showSignatures: null,
       showAccount: null,
+      projectName:null,
+    implementationDuration:null,
+    offerValidity:null,
       taxtype: 2,
     };
 
@@ -976,6 +985,9 @@ export class OffersPriceComponent implements OnInit {
     offerpriceobj.CUstomerName_EN = this.modalDetailsOffer.customerEn;
     offerpriceobj.CustomerEmail = this.modalDetailsOffer.customerEmail;
     offerpriceobj.Customerphone = this.modalDetailsOffer.customerPhone;
+     offerpriceobj.ProjectName = this.modalDetailsOffer.projectName;
+    offerpriceobj.ImplementationDuration = this.modalDetailsOffer.implementationDuration;
+    offerpriceobj.OfferValidity = this.modalDetailsOffer.offerValidity;
     offerpriceobj.OfferNo = String(this.modalDetailsOffer.offer_no);
     offerpriceobj.OfferDate = this._sharedService.date_TO_String(
       this.modalDetailsOffer.date
@@ -1263,6 +1275,9 @@ export class OffersPriceComponent implements OnInit {
       showSignatures: data.isContainSign,
       showAccount: data.printBankAccount,
       taxtype: 2,
+         projectName:data.projectName,
+    implementationDuration:data.implementationDuration,
+    offerValidity:data.offerValidity,
       // total_amount:data.offerValue,
       // total_amount_text:data.offerValueTxt,
     };
@@ -2078,7 +2093,7 @@ export class OffersPriceComponent implements OnInit {
   }
 
   printDiv(id: any) {
-    this.print.print(id, environment.printConfig);
+    this.print.print(id, environment.printConfig2);
   }
 
   printData2(id: any) {
@@ -5914,6 +5929,63 @@ CopyOfferPricePopup(data: any) {
   this.modalDetailsOffer.id=0;
   this.Getnextoffernum();
 }
+
+  otp = this.formBuilder.control('');
+offerid:any;
+sendmail:any;
+  CertifyOffer(element: any) {
+    this.offerid=element.offersPricesId;
+    this._offerpriceService
+      .CertifyOffer(element.offersPricesId)
+      .subscribe((result: any) => {
+        if (result.statusCode == 200) {
+          this.toast.success(
+            "تم ارسال كود التحقق",
+            this.translate.instant('Message')
+          );
+          this.getData();
+          this.sendmail=result.reasonPhrase;
+        } else {
+          this.toast.error(this.translate.instant(result.reasonPhrase),this.translate.instant("Message"));
+        }
+      });
+  }
+
+    ConfirmCertifyOffer(modal: any) {
+    this._offerpriceService
+      .ConfirmCertifyOffer(this.offerid,this.otp?.value)
+      .subscribe((result: any) => {
+        if (result.statusCode == 200) {
+          this.toast.success(
+            this.translate.instant(result.reasonPhrase),
+            this.translate.instant('Message')
+          );
+          modal.dismiss();
+          this.getData();
+
+        } else {
+          this.toast.error(this.translate.instant(result.reasonPhrase),this.translate.instant("Message"));
+        }
+      });
+  }
+
+    GetValueBefore(item: any, TaxAmount: any) {
+    var Value = item.serviceamountval;
+    Value=+Value*item.serviceQty;
+    var FValIncludeT = Value;
+    var tax = parseFloat(TaxAmount);
+    var TaxVS = Value - Value / (tax / 100 + 1);
+
+    if (item.taxType == 2) {
+      // taxAmount = parseFloat(TaxV8erS.toString()).toFixed(2);
+      // totalwithtax = parseFloat((Value + TaxV8erS).toString()).toFixed(2);
+    } else {
+      // taxAmount = parseFloat(TaxVS.toString()).toFixed(2);
+      // totalwithtax = parseFloat(Value.toString()).toFixed(2);
+      FValIncludeT = parseFloat((+parseFloat(Value).toFixed(2) - +TaxVS).toString()).toFixed(2);
+    }
+    return FValIncludeT;
+  }
 
 // GenerateOfferPriceNumberForCopy() {
 //   this._invoiceService.GenerateVoucherNumber(this.modalDetailsOffer.Type).subscribe((data) => {
