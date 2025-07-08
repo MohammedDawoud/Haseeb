@@ -53,7 +53,7 @@ export class AttendaceCardComponent implements OnInit {
     }
     if(type=="AddEmpLocation")
     {
-      this.FillAllEmps();
+      //this.FillAllEmps();
     }
     var sizet="lg";
     sizet=type ? (type == 'delete' ? 'md' : 'xl') : 'lg';
@@ -129,7 +129,8 @@ export class AttendaceCardComponent implements OnInit {
         this.locEmployeesDataSourceTemp=data.result;
         this.locEmployeesDataSourceTemp.paginator = this.paginatorLocation;
         this.locEmployeesDataSourceTemp.sort = this.sort;
-        console.log(this.locEmployeesDataSourceTemp);
+        this.FillAllEmps(data.result);
+        //console.log(this.locEmployeesDataSourceTemp);
     });
   }
 
@@ -237,10 +238,13 @@ export class AttendaceCardComponent implements OnInit {
   EmpSelect: any=null;
   EmpSelectList:any=[];
   AllEmpList: any;
-  FillAllEmps() {
+  FillAllEmps(excludeList:any) {
+    debugger
     this.EmpSelectList=[];
     this._attendencelocation.FillSelectEmployee().subscribe((data) => {
-        this.AllEmpList = data;
+        const excludeIds = excludeList.map((item: { empId: any; }) => item.empId);
+        this.AllEmpList  = data.filter((item: { id: any; }) => !excludeIds.includes(item.id));
+        //this.AllEmpList = data;
       });
   }
   SaveEmpLocation(modal: any) { 
@@ -253,7 +257,7 @@ export class AttendaceCardComponent implements OnInit {
           this.toast.success(this.translate.instant(result.reasonPhrase),this.translate.instant('Message'));
           modal?.dismiss();
           this.GetAllEmployeesByLocationId();
-          this.FillAllEmps();
+          //this.FillAllEmps();
           this.EmpSelect = null;
         } else {
           this.toast.error(this.translate.instant(result.reasonPhrase),this.translate.instant('Message'));
@@ -276,7 +280,7 @@ export class AttendaceCardComponent implements OnInit {
           this.toast.success(this.translate.instant(result.reasonPhrase),this.translate.instant('Message'));
           modal?.dismiss();
           this.GetAllEmployeesByLocationId();
-          this.FillAllEmps();
+          //this.FillAllEmps();
           this.EmpSelect = null;
         } else {
           this.toast.error(this.translate.instant(result.reasonPhrase),this.translate.instant('Message'));
