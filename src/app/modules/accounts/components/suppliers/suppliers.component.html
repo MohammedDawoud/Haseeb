@@ -97,6 +97,14 @@
             {{ element.compAddress }}
           </td>
         </ng-container>
+        <ng-container matColumnDef="totalBalance">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span>{{ "الرصيد" | translate }}</span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.totalBalance }}
+          </td>
+        </ng-container>
 
         <ng-container matColumnDef="operations">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>
@@ -330,6 +338,19 @@
                 font-weight: 600;
               "
             >{{ "Address" | translate }}</td>
+             <td
+              style="
+                font-size: 16px;
+                background-color: #fff;
+                padding: 14px 4px;
+                text-align: center;
+                color: #272727;
+                word-wrap: break-word;
+                border-inline-start: 1px dashed #0c8191;
+                border: 1px dashed #272727;
+                font-weight: 600;
+              "
+            >{{ "الرصيد" | translate }}</td>
           </thead>
           <tbody>
             <tr *ngFor="let item of dataSource.data">
@@ -416,6 +437,20 @@
                 "
               >
               {{item.compAddress}}
+              </td>
+              <td
+                style="
+                  background-color: #fff;
+                  font-size: 15px;
+                  font-weight: 500;
+                  padding: 10px 0px;
+                  color: #272727;
+                  border-inline-start: 1px dashed #272727;
+                border: 1px dashed #272727;
+                  border-bottom: 1px dashed #272727;
+                "
+              >
+              {{item.totalBalance}}
               </td>
             </tr>
           </tbody>

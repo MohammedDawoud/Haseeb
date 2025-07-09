@@ -48,6 +48,7 @@ export class SuppliersComponent {
     'phoneNo',
     'cityName',
     'compAddress',
+    'totalBalance',
     'operations',
   ];
   lang: any = 'ar';
@@ -300,6 +301,7 @@ export class SuppliersComponent {
         phoneNo: this.DataSourceAfter[index].phoneNo,
         cityName: this.DataSourceAfter[index].cityName,
         compAddress: this.DataSourceAfter[index].compAddress,
+        totalBalance: this.DataSourceAfter[index].totalBalance,
       })
     }
     this.lang == "ar" ? this._payvoucherservice.customExportExcel(x, "الموردين") :
