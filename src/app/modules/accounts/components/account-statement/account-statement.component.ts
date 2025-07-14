@@ -28,6 +28,9 @@ import { EntryvoucherService } from 'src/app/core/services/acc_Services/entryvou
 import { ReceiptService } from 'src/app/core/services/acc_Services/receipt.service';
 import { DebentureService } from 'src/app/core/services/acc_Services/debenture.service';
 import { ToastrService } from 'ngx-toastr';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+import { PrintreportsService } from 'src/app/core/services/acc_Services/printreports.service';
 const hijriSafe = require('hijri-date/lib/safe');
 const HijriDate = hijriSafe.default;
 const toHijri = hijriSafe.toHijri;
@@ -238,6 +241,7 @@ export class AccountStatementComponent implements OnInit {
     private _entryvoucherService: EntryvoucherService,
     private translate: TranslateService,
     private authenticationService: AuthenticationService,
+    private _printreportsService: PrintreportsService,
     private _sharedService: SharedService,) {
       this.userG = this.authenticationService.userGlobalObj;
       this.ReceiptVoucherFormintial();
@@ -3114,9 +3118,14 @@ export class AccountStatementComponent implements OnInit {
   //#endregion
 
 
+  
+  //#region 
   @ViewChild('NewInvoiceModal') newInvoiceModal: any;
   @ViewChild('EntryVoucherModal') entryVoucherModal: any;
   @ViewChild('ReceiptVoucherwithoutCustomerModal') receiptVoucherwithoutCustomerModal: any;
+  @ViewChild('printDivModal') printDivModal: any;
+  @ViewChild('printDivModalReVoucher') printDivModalReVoucher: any;
+  @ViewChild('printDivModalDailyVoucher') printDivModalDailyVoucher: any;
 
   ShowVoucher(element:any){
     var InvoiceId=element.invoiceId;
@@ -3130,16 +3139,460 @@ export class AccountStatementComponent implements OnInit {
         this.open(this.receiptVoucherwithoutCustomerModal, data, 'viewReceiptModal');
       }
       else if(element.type==8 || element.type==17)
-        {
+      {
         this.open(this.entryVoucherModal, data, 'ViewEntryVoucherModal');
       }
 
     });
-
   }
+  PrintVoucher(element:any){
+    var InvoiceId=element.invoiceId;
+    this._invoiceService.GetInvoiceById_Tran(InvoiceId).subscribe(data => {
+      if(element.type==2)
+      {
+        this.GetInvoicePrint(element,1);
+        this.open(this.printDivModal);
+      }
+      else if(element.type==6)
+      {
+        this.GetReport(element);
+      }
+      else if(element.type==8 || element.type==17)
+      {
+        this.DailyVoucherReport(element);
+        this.open(this.printDivModalDailyVoucher);
+      }
+
+    });
+  }
+
+    printDiv(id: any) {
+    this.print.print(id, environment.printConfig);
+  }
+  InvPrintData: any = null;
+  CustomData: any = {
+    AccualValue: null,
+    Diff: null,
+    Total: null,
+    netVal: null,
+    DiscPer: '0',
+    TotalAfterDisc: null,
+    Account1Img: null,
+    Account2Img: null,
+    Account1Bank: null,
+    Account2Bank: null,
+    OrgImg: null,
+    PrintType: null,
+    PrintTypeName: null,
+    headerurl: null,
+    footerurl: null,
+    ContractNo: null,
+    TotalCredit: 0,
+    TotalDepit: 0,
+  };
+  resetCustomData() {
+    this.EntryVoucherPrintData = null;
+    this.InvPrintData = null;
+    this.CustomData = {
+      AccualValue: null,
+      Diff: null,
+      Total: null,
+      netVal: null,
+      Disc: null,
+      DiscPer: '0',
+      TotalAfterDisc: null,
+      Account1Img: null,
+      Account2Img: null,
+      Account1Bank: null,
+      Account2Bank: null,
+      OrgImg: null,
+      PrintType: null,
+      PrintTypeName: null,
+      headerurl: null,
+      footerurl: null,
+      ContractNo: null,
+      TotalCredit: 0,
+      TotalDepit: 0,
+    };
+  }
+  ZatcaPrintP=false;
+  GetInvoicePrint(obj: any, TempCheck: any,ZatcaPrint?:boolean) {
+    if(ZatcaPrint){this.ZatcaPrintP=true;}
+    else {this.ZatcaPrintP=false;}
+    this.resetCustomData();
+    this._printreportsService.ChangeInvoice_PDF(obj.invoiceId, TempCheck).subscribe((data) => {
+        console.log("GetInvoicePrint",data);
+
+        this.InvPrintData = data;
+        this.InvPrintData.voucherDetailsVM_VD.forEach((element: any) => {
+          element.servicesPricesOffer.sort(
+            (a: { lineNumber: number }, b: { lineNumber: number }) =>
+              (a.lineNumber ?? 0) - (b.lineNumber ?? 0)
+          ); // b - a for reverse sort
+        });
+        if (
+          this.InvPrintData?.invoicesVM_VD?.contractNo == null ||
+          this.InvPrintData?.invoicesVM_VD?.contractNo == ''
+        ) {
+          this.CustomData.ContractNo = 'بدون';
+        } else {
+          this.CustomData.ContractNo =
+            this.InvPrintData?.invoicesVM_VD?.contractNo;
+        }
+        this.CustomData.PrintType = TempCheck;
+        debugger
+        if (TempCheck == 29){
+          this.CustomData.PrintTypeName = 'اشعار دائن';
+        } 
+        else if (TempCheck == 30)
+        {
+          this.CustomData.PrintTypeName = 'اشعار مدين';
+
+        } 
+        else this.CustomData.PrintType = 1;
+        console.log("aaaaa",this.CustomData?.PrintType);
+        var TotalInvWithoutDisc = 0;
+        var netVal = 0;
+        var DiscountValue_Det_Total_withqty = 0;
+        if (this.InvPrintData?.voucherDetailsVM_VD[0]?.taxType == 3) {
+          netVal = this.InvPrintData?.invoicesVM_VD?.totalValue;
+          TotalInvWithoutDisc = this.InvPrintData?.invoicesVM_VD?.totalValue;
+        } else {
+          netVal = this.InvPrintData?.invoicesVM_VD?.invoiceValue;
+          TotalInvWithoutDisc = this.InvPrintData?.invoicesVM_VD?.invoiceValue;
+        }
+        this.InvPrintData?.voucherDetailsVM_VD?.forEach((element: any) => {
+          DiscountValue_Det_Total_withqty =
+            DiscountValue_Det_Total_withqty + (element.discountValue_Det ?? 0);
+        });
+
+        this.CustomData.DiscPer = parseFloat(
+          (
+            (DiscountValue_Det_Total_withqty * 100) /
+            (TotalInvWithoutDisc + DiscountValue_Det_Total_withqty)
+          ).toString()
+        ).toFixed(2);
+        this.CustomData.Disc = DiscountValue_Det_Total_withqty;
+        this.CustomData.Total =
+          TotalInvWithoutDisc + DiscountValue_Det_Total_withqty;
+        this.CustomData.netVal = netVal;
+        this.CustomData.TotalAfterDisc = TotalInvWithoutDisc;
+
+        if (this.InvPrintData?.invoicesVM_VD.printBankAccount != true) {
+          this.CustomData.Account1Bank =
+            this.InvPrintData?.orgIsRequired_VD == true
+              ? this.InvPrintData?.org_VD.accountBank
+              : this.InvPrintData?.branch_VD.accountBank;
+          this.CustomData.Account2Bank =
+            this.InvPrintData?.orgIsRequired_VD == true
+              ? this.InvPrintData?.org_VD.accountBank2
+              : this.InvPrintData?.branch_VD.accountBank2;
+          this.CustomData.Account1Img =
+            this.InvPrintData?.orgIsRequired_VD == true
+              ? this.InvPrintData?.org_VD.bankIdImgURL
+              : this.InvPrintData?.branch_VD.bankIdImgURL;
+          this.CustomData.Account2Img =
+            this.InvPrintData?.orgIsRequired_VD == true
+              ? this.InvPrintData?.org_VD.bankId2ImgURL
+              : this.InvPrintData?.branch_VD.bankId2ImgURL;
+        } else {
+          this.CustomData.Account1Bank = null;
+          this.CustomData.Account2Bank = null;
+          this.CustomData.Account1Img = null;
+          this.CustomData.Account2Img = null;
+        }
+        if (this.CustomData.Account1Img)
+        {
+            this.CustomData.Account1Img =this.CustomData.Account1Img;
+        }
+        
+        else this.CustomData.Account1Img = null;
+        if (this.CustomData.Account2Img)
+        {
+          this.CustomData.Account2Img =this.CustomData.Account2Img;
+        }         
+        else this.CustomData.Account2Img = null;
+        if (
+          this.InvPrintData?.branch_VD.isPrintInvoice == true &&
+          this.InvPrintData?.branch_VD.branchLogoUrl != '' &&
+          this.InvPrintData?.branch_VD.branchLogoUrl != null
+        ) {
+              this.CustomData.OrgImg =this.InvPrintData?.branch_VD.branchLogoUrl;
+        } else {
+          if (this.InvPrintData?.org_VD.logoUrl)
+          {
+              this.CustomData.OrgImg =this.InvPrintData?.org_VD.logoUrl;
+          }
+          else this.CustomData.OrgImg = null;
+        }
+        if (
+          this.InvPrintData?.branch_VD.headerPrintInvoice == true &&
+          this.InvPrintData?.branch_VD.headerLogoUrl != '' &&
+          this.InvPrintData?.branch_VD.headerLogoUrl != null
+        ) {
+          this.CustomData.headerurl =this.InvPrintData?.branch_VD.headerLogoUrl;
+
+        } else {
+          this.CustomData.headerurl = null;
+        }
+
+        if (
+          this.InvPrintData?.branch_VD.headerPrintInvoice == true &&
+          this.InvPrintData?.branch_VD.footerLogoUrl != '' &&
+          this.InvPrintData?.branch_VD.footerLogoUrl != null
+        ) {
+          this.CustomData.footerurl =this.InvPrintData?.branch_VD.footerLogoUrl;
+
+        } else {
+          this.CustomData.footerurl = null;
+        }
+      });
+  }
+  async downloadPDF(id:any) {
+    debugger
+    var content=(document.getElementById(id) as HTMLFormElement);
+    const canvas = await html2canvas(content);
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF();
+    const imgWidth = 190; // Adjust based on content width
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+    const pdfBlob = pdf.output('blob');
+    const reader = new FileReader();
+    reader.readAsArrayBuffer(pdfBlob);
+    reader.onloadend = () => {
+    const byteArray = new Uint8Array(reader.result as ArrayBuffer);
+    //console.log(byteArray);
+    this.PDFDownloadZatca(byteArray);
+    };
+  }
+  PDFDownloadZatca(byteArray:any) {
+    debugger
+    const formData = new FormData();
+    const blob = new Blob([byteArray], { type: 'application/octet-stream' });
+    formData.append('UploadedFile', blob);
+    formData.append('InvoiceId', this.InvPrintData?.invoicesVM_VD?.invoiceId);
+    this._invoiceService.ConvertEncodedXMLToPDFA3ByteArray(formData).subscribe((data) => {     
+      if (data.statusCode == 200) {
+        var PDFPath = environment.PhotoURL + data.reasonPhrase;
+        const printwindow=window.open(PDFPath,'_blank');
+        printwindow?.print();
+        //printJS({ printable: PDFPath, type: 'pdf', showModal: true });
+      } else {
+        this.toast.error(this.translate.instant(data.reasonPhrase), this.translate.instant('Message'));
+      }    
+    });
+  }
+  GetAccualValue(item: any) {
+    //debugger
+    var AccualValue = 0;
+    if (item.taxType == 3) {
+      AccualValue =
+        ((item.totalAmount ?? 0) + (item.discountValue_Det ?? 0)) /
+        (item.qty ?? 1);
+    } else {
+      AccualValue =
+        ((item.amount ?? 0) + (item.discountValue_Det ?? 0)) / (item.qty ?? 1);
+    }
+    return AccualValue;
+  }
+  GetDiff(item: any) {
+    var Diff = '0';
+    Diff = parseFloat((item?.totalAmount - item?.taxAmount).toString()).toFixed(
+      2
+    );
+    return Diff;
+  }
+
+  EntryVoucherPrintData: any = null;
+  CustomDataNoteInvoice: any;
+  CustomDatatoInvoice: any;
+  GetReport(obj: any) {
+    this.resetCustomData();
+    this.receiptService.GetReport(obj.invoiceId).subscribe((data) => {
+      this.EntryVoucherPrintData = data;
+      if (
+        this.EntryVoucherPrintData.voucherVM[0].toInvoiceId == '' ||
+        this.EntryVoucherPrintData.voucherVM[0].toInvoiceId == null
+      ) {
+        this.CustomDataNoteInvoice = 'لا يوجد رقم فاتورة لسند القبض';
+        this.CustomDatatoInvoice = 'بدون';
+      } else {
+        this.CustomDataNoteInvoice = null;
+        this.CustomDatatoInvoice =
+          this.EntryVoucherPrintData.voucherVM[0].toInvoiceId;
+      }
+      // if (this.EntryVoucherPrintData?.org_VD.logoUrl)
+      //   this.CustomData =
+      //     environment.PhotoURL + this.EntryVoucherPrintData?.org_VD.logoUrl;
+      // else this.CustomData = null;
+
+      if (
+        this.EntryVoucherPrintData?.branch.headerPrintrevoucher == true &&
+        this.EntryVoucherPrintData?.branch.branchLogoUrl != '' &&
+        this.EntryVoucherPrintData?.branch.branchLogoUrl != null
+      ) {
+        this.CustomData.OrgImg =
+          environment.PhotoURL + this.EntryVoucherPrintData?.branch.branchLogoUrl;
+      } else {
+        if (this.EntryVoucherPrintData?.org_VD.logoUrl)
+          this.CustomData.OrgImg =
+            environment.PhotoURL + this.EntryVoucherPrintData?.org_VD.logoUrl;
+        else this.CustomData.OrgImg = null;
+      }
+      if (
+        this.EntryVoucherPrintData?.branch.headerPrintrevoucher == true &&
+        this.EntryVoucherPrintData?.branch.headerLogoUrl != '' &&
+        this.EntryVoucherPrintData?.branch.headerLogoUrl != null
+      ) {
+        this.CustomData.headerurl =
+          environment.PhotoURL + this.EntryVoucherPrintData?.branch.headerLogoUrl;
+      } else {
+        this.CustomData.headerurl = null;
+      }
+
+      if (
+        this.EntryVoucherPrintData?.branch.headerPrintrevoucher == true &&
+        this.EntryVoucherPrintData?.branch.footerLogoUrl != '' &&
+        this.EntryVoucherPrintData?.branch.footerLogoUrl != null
+      ) {
+        this.CustomData.footerurl =
+          environment.PhotoURL + this.EntryVoucherPrintData?.branch.footerLogoUrl;
+      } else {
+        this.CustomData.footerurl = null;
+      }
+      this.open(this.printDivModalReVoucher);
+    });
+  }
+  getpayType(id: any) {
+    var PrintJournalsByPayTypeName = '';
+    this.PayTypeList.forEach((element: any) => {
+      if (element.id == id) {
+        PrintJournalsByPayTypeName = element.name;
+      }
+    });
+    return this.translate.instant(PrintJournalsByPayTypeName);
+  }
+
+  CustomData2: any = {
+    AccualValue: null,
+    Diff: null,
+    Total: null,
+    netVal: null,
+    DiscPer: '0',
+    TotalAfterDisc: null,
+    Account1Img: null,
+    Account2Img: null,
+    Account1Bank: null,
+    Account2Bank: null,
+    OrgImg: null,
+    PrintType: null,
+    PrintTypeName: null,
+    headerurl: null,
+    footerurl: null,
+    ContractNo: null,
+  };
+
+  resetCustomData2() {
+    this.CustomData2 = {
+      AccualValue: null,
+      Diff: null,
+      Total: null,
+      netVal: null,
+      Disc: null,
+      DiscPer: '0',
+      TotalAfterDisc: null,
+      Account1Img: null,
+      Account2Img: null,
+      Account1Bank: null,
+      Account2Bank: null,
+      OrgImg: null,
+      PrintType: null,
+      PrintTypeName: null,
+      headerurl: null,
+      footerurl: null,
+      ContractNo: null,
+    };
+  }
+
+  DailyVoucherReport(obj: any) {
+    this._entryvoucherService
+      .DailyVoucherReport(obj.invoiceId)
+      .subscribe((data) => {
+        //debugger;
+        this.EntryVoucherPrintData = data;
+        var TotalCredit = 0;
+        var TotalDepit = 0;
+        if (data.invoicesVM.length > 0) {
+          data.invoicesVM.forEach((element: any) => {
+            var Credit = 0;
+            var Depit = 0;
+            if (+element.depit < +element.credit) {
+              Credit = parseFloat(element.credit);
+              Depit = 0;
+              TotalCredit = TotalCredit + Credit;
+            }
+            if (+element.credit < +element.depit) {
+              Credit = 0;
+              Depit = parseFloat(element.depit);
+              TotalDepit = TotalDepit + Depit;
+            }
+          });
+          this.CustomData.TotalCredit = parseFloat(
+            TotalCredit.toString()
+          ).toFixed(2);
+          this.CustomData.TotalDepit = parseFloat(
+            TotalDepit.toString()
+          ).toFixed(2);
+        }
+
+        // if (this.EntryVoucherPrintData?.org_VD.logoUrl)
+        //   this.CustomData.OrgImg =
+        //     environment.PhotoURL + this.EntryVoucherPrintData?.org_VD.logoUrl;
+        // else this.CustomData.OrgImg = null;
+        
+      if (
+        this.EntryVoucherPrintData?.branch.headerprintdarvoucher == true &&
+        this.EntryVoucherPrintData?.branch.branchLogoUrl != '' &&
+        this.EntryVoucherPrintData?.branch.branchLogoUrl != null
+      ) {
+        this.CustomData2.OrgImg =
+          environment.PhotoURL + this.EntryVoucherPrintData?.branch.branchLogoUrl;
+      } else {
+        if (this.EntryVoucherPrintData?.org_VD.logoUrl)
+          this.CustomData2.OrgImg =
+            environment.PhotoURL + this.EntryVoucherPrintData?.org_VD.logoUrl;
+        else this.CustomData2.OrgImg = null;
+      }
+      if (
+        this.EntryVoucherPrintData?.branch.headerprintdarvoucher == true &&
+        this.EntryVoucherPrintData?.branch.headerLogoUrl != '' &&
+        this.EntryVoucherPrintData?.branch.headerLogoUrl != null
+      ) {
+        this.CustomData2.headerurl =
+          environment.PhotoURL + this.EntryVoucherPrintData?.branch.headerLogoUrl;
+      } else {
+        this.CustomData2.headerurl = null;
+      }
+
+      if (
+        this.EntryVoucherPrintData?.branch.headerprintdarvoucher == true &&
+        this.EntryVoucherPrintData?.branch.footerLogoUrl != '' &&
+        this.EntryVoucherPrintData?.branch.footerLogoUrl != null
+      ) {
+        this.CustomData2.footerurl =
+          environment.PhotoURL + this.EntryVoucherPrintData?.branch.footerLogoUrl;
+      } else {
+        this.CustomData2.footerurl = null;
+      }
+
+      });
+  }
+
 
   //#endregion
 
+  
     //-----------------------------------Storehouse------------------------------------------------
   //#region 
 
