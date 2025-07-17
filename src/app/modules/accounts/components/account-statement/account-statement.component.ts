@@ -3159,6 +3159,11 @@ export class AccountStatementComponent implements OnInit {
         this.GetInvoicePrint(element,1);
         this.open(this.printDivModal);
       }
+      if(element.type==29)
+      {
+        this.GetInvoicePrint(element,29,false,data);
+        this.open(this.printDivModal);
+      }
       else if(element.type==6)
       {
         this.GetReport(element);
@@ -3222,10 +3227,13 @@ export class AccountStatementComponent implements OnInit {
     };
   }
   ZatcaPrintP=false;
-  GetInvoicePrint(obj: any, TempCheck: any,ZatcaPrint?:boolean) {
+  GetInvoicePrint(obj: any, TempCheck: any,ZatcaPrint?:boolean,dataP?:any) {
     if(ZatcaPrint){this.ZatcaPrintP=true;}
     else {this.ZatcaPrintP=false;}
     this.resetCustomData();
+    var InvVal=0;
+    if(TempCheck==29)InvVal=dataP.creditNotiId;
+   else InvVal=obj.invoiceId;
     this._printreportsService.ChangeInvoice_PDF(obj.invoiceId, TempCheck).subscribe((data) => {
         console.log("GetInvoicePrint",data);
 
