@@ -314,13 +314,13 @@
           <td mat-cell *matCellDef="let element">
             {{ element.typeName }}
 
-            <button *ngIf="element.type==2  || element.type==6  || element.type==8 || element.type==17 " (click)="ShowVoucher(element)"
+            <button *ngIf="element.type==2  || element.type==5  || element.type==6  || element.type==8 || element.type==17 " (click)="ShowVoucher(element)"
             title="عرض السند"
             data-original-title="عرض السند"
             class="min-w-max p-2 bg-orange-100 hover:bg-orange-500 rounded-lg duration-300 hover:text-white aspect-square w-10">
             <i class="fa-solid fa-eye"></i>
           </button>
-           <button *ngIf="element.type==2  || element.type==6  || element.type==8 || element.type==17 " (click)="PrintVoucher(element)"
+           <button *ngIf="element.type==1  || element.type==2  || element.type==5  || element.type==6  || element.type==8 || element.type==17 || element.type==29 || element.type==33" (click)="PrintVoucher(element)"
             title="طباعة السند"
             data-original-title="طباعة السند"
             class="min-w-max p-2 bg-green-100 hover:bg-green-500 rounded-lg duration-300 hover:text-white aspect-square w-10">
@@ -6150,5 +6150,2636 @@
     >
       {{ "No" | translate }}
     </button>
+  </div>
+</ng-template>
+
+<ng-template #printDivModalReceipt let-modal>
+  <div class="modal-body">
+    <div
+      id="reportprintDivModalRec"
+      [ngStyle]="{ direction: lang == 'ar' ? 'rtl' : 'ltr' }"
+    >
+      <!--Header-->
+      <img
+      *ngIf="CustomData.headerurl"
+      src="{{ CustomData.headerurl }}"
+      alt="headerurl"
+      style="height: 60px; width: 100%; max-width: 100%; object-fit: fill"
+    />
+      <div
+        class="report-header"
+        style="
+          display: flex;
+          align-items: center;
+          gap: 100px;
+          padding: 3px 0px;
+          margin-bottom: 20px;
+        "
+      >
+      <div>
+    
+      </div>
+        <div class="headerNe-right-side">
+          <img
+          *ngIf="CustomData.OrgImg"
+          src="{{ CustomData.OrgImg }}"
+          alt="logo"
+          style="
+            height: 80px;
+            width: 140px;
+            max-width: 200px;
+            object-fit: fill;
+          "
+        />
+        </div>
+
+        <div class="headerNe-lefy-side" style="width: 100%">
+          <h1
+            style="
+              letter-spacing: 0.25px;
+              font-size: 23px;
+              margin: 0;
+              margin-bottom: 5px;
+            "
+          >
+            {{ EntryVoucherPrintData?.org_VD?.nameAr }}
+          </h1>
+          <h1
+            style="
+              letter-spacing: 0.25px;
+              font-size: 23px;
+              margin: 0;
+              margin-bottom: 5px;
+            "
+          >
+            {{ EntryVoucherPrintData?.org_VD?.nameEn }}
+          </h1>
+          <div class="line" style="position: relative; padding: 5px 0px 10px">
+            <span
+              style="
+                position: absolute;
+                right: 0;
+                width: 100%;
+                height: 2px;
+                background-color: #e5e5e5;
+                z-index: 1;
+              "
+            ></span>
+            <span
+              style="
+                position: absolute;
+                right: 0;
+                width: 70%;
+                height: 2px;
+                background-color: #ec1c24;
+                z-index: 2;
+              "
+            ></span>
+          </div>
+
+          <h1
+            style="
+              margin-bottom: 0;
+              font-size: 34px;
+              color: #0c8191;
+              margin-bottom: 0;
+              margin-top: 30px;
+              font-weight: 500;
+            "
+            [translate]="'name'"
+            [translateParams]="{
+              ar: ' سند صرف',
+              en: ' PayVoucher'
+            }"
+          ></h1>
+        </div>
+      </div>
+      <!--/Header-->
+
+      <div style="margin-bottom: 10px">
+        <p>
+          <span
+            [translate]="'name'"
+            [translateParams]="{
+              ar: 'التاريخ: ',
+              en: 'Date: '
+            }"
+          ></span>
+          <span> {{ EntryVoucherPrintData?.dateTimeNow }}</span>
+        </p>
+      </div>
+
+      <div class="info" style="overflow: auto; margin-bottom: 20px">
+        <table
+          class="table table-bordered m-0"
+          style="
+            width: 100%;
+            color: white;
+            text-align: center;
+            vertical-align: middle;
+            min-width: max-content;
+          "
+        >
+          <tr>
+            <td
+              style="
+                padding-inline: 0px !important;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+                border: 1px solid #dce0e4;
+              "
+            >
+              ريال .S.R
+            </td>
+            <td
+              style="
+                padding-inline: 0px !important;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+                border: 1px solid #dce0e4;
+              "
+            >
+              {{ "Bond number" | translate }}
+            </td>
+            <td
+              style="
+                line-height: 0 !important;
+                padding: 0px !important;
+                background-color: #f7f7f7;
+                border: 1px solid #dce0e4;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 600;
+                border: 1px solid #dce0e4;
+              "
+              colspan="2"
+            >
+              <span
+                style="
+                  border: none;
+                  display: inline-block;
+                  padding: 10px 0px;
+                  border: 1px solid #dce0e4;
+                  width: 100%;
+
+                  line-height: 24px;
+                "
+                [translate]="'name'"
+                [translateParams]="{ ar: 'تاريخ السند', en: 'Vouvher Date' }"
+              ></span>
+            </td>
+          </tr>
+          <tr>
+            <td
+              style="
+                width: 25%;
+                padding-inline: 0px !important;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 500;
+                border: 1px solid #dce0e4;
+                padding: 10px 0px;
+              "
+            >
+              {{ EntryVoucherPrintData?.voucherVM[0].totalValue }}<app-sar-icon></app-sar-icon>
+            </td>
+            <td
+              style="
+                width: 25%;
+                padding-inline: 0px !important;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 500;
+                border: 1px solid #dce0e4;
+                padding: 10px 0px;
+              "
+            >
+              {{ EntryVoucherPrintData?.voucherVM[0].invoiceNumber }}
+            </td>
+            <td
+              style="
+                width: 25%;
+                padding-inline: 0px !important;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 500;
+                border: 1px solid #dce0e4;
+                padding: 10px 0px;
+              "
+            >
+              {{ EntryVoucherPrintData?.voucherVM[0].date }}
+            </td>
+            <td
+              style="
+                width: 25%;
+                padding-inline: 0px !important;
+                background-color: #f7f7f7;
+                font-size: 18px;
+                color: #21403f;
+                font-weight: 500;
+                border: 1px solid #dce0e4;
+                padding: 10px 0px;
+              "
+            >
+              {{ EntryVoucherPrintData?.voucherVM[0].hijriDate }}
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="services" style="width: 100%; margin-bottom: 20px">
+        <div class="content">
+          <table
+            style="text-align: center; vertical-align: middle; width: 100%"
+          >
+            <!-- <thead>
+              <td
+                style="
+                  font-size: 16px;
+                  background-color: #fff;
+                  padding: 14px 4px;
+                  text-align: center;
+                  color: #272727;
+                  word-wrap: break-word;
+                  border-inline-start: 1px dashed #0c8191;
+                  border: 1px dashed #272727;
+                  font-weight: 600;
+                "
+              >{{"account code"|translate}}</td>
+              <td
+                style="
+                  font-size: 16px;
+                  background-color: #fff;
+                  padding: 14px 4px;
+                  text-align: center;
+                  color: #272727;
+                  word-wrap: break-word;
+                  border-inline-start: 1px dashed #0c8191;
+                  border: 1px dashed #272727;
+                  font-weight: 600;
+                "
+              >{{"account name"|translate}}</td>
+              <td
+                style="
+                  font-size: 16px;
+                  background-color: #f7f7f7;
+                  padding: 14px 4px;
+                  text-align: center;
+                  color: #272727;
+                  word-wrap: break-word;
+                  border-inline-start: 1px dashed #0c8191;
+                  border: 1px dashed #272727;
+                  font-weight: 600;
+                "
+               >{{"Debit"|translate}}</td>
+              <td
+                style="
+                  font-size: 16px;
+                  background-color: #f7f7f7;
+                  padding: 14px 4px;
+                  text-align: center;
+                  color: #272727;
+                  word-wrap: break-word;
+                  border-inline-start: 1px dashed #0c8191;
+                  border: 1px dashed #272727;
+                  font-weight: 600;
+                "
+               >{{"Credit"|translate}}</td>
+               <td
+                style="
+                  font-size: 16px;
+                  background-color: #fff;
+                  padding: 14px 4px;
+                  text-align: center;
+                  color: #272727;
+                  word-wrap: break-word;
+                  border-inline-start: 1px dashed #0c8191;
+                  border: 1px dashed #272727;
+                  font-weight: 600;
+                "
+               >{{"Statement"|translate}}</td>
+              <td
+                style="
+                  font-size: 16px;
+                  background-color: #fff;
+                  padding: 14px 4px;
+                  text-align: center;
+                  color: #272727;
+                  word-wrap: break-word;
+                  border-inline-start: 1px dashed #0c8191;
+                  border: 1px dashed #272727;
+                  font-weight: 600;
+                "
+               >{{"costCenter"|translate}}</td>
+            </thead> -->
+            <tbody>
+              <tr
+                *ngFor="let item of EntryVoucherPrintData?.voucherVM"
+                style="display: flex; flex-direction: column"
+              >
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 50px;
+                    color: #272727;
+                    display: flex;
+                    justify-content: space-between;
+                  "
+                >
+                  <span> اصرفوا الي السيد / السيدة</span>
+                  <span>{{ item.recevierTxt }} </span>
+                  <span>Received From Mr/Messrs</span>
+                </td>
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 50px;
+                    color: #272727;
+                    display: flex;
+                    justify-content: space-between;
+                  "
+                >
+                  <span> مبلغ و قدره</span>
+                  <span>{{ item.invoiceValueText }} </span>
+                  <span>The sum of S.R</span>
+                </td>
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 50px;
+                    color: #272727;
+                    display: flex;
+                    justify-content: space-between;
+                  "
+                >
+                  <span> نوع السند </span>
+                  <span>{{ getpayType(item.payType) }} </span>
+                  <span>Voucher</span>
+                </td>
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 50px;
+                    color: #272727;
+                    display: flex;
+                    justify-content: space-between;
+                  "
+                >
+                  <span> تاريخ</span>
+                  <span>{{ item.checkDate }} </span>
+                  <span> Date</span>
+                </td>
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 50px;
+                    color: #272727;
+                    display: flex;
+                    justify-content: space-between;
+                  "
+                >
+                  <span> المسحوب علي بنك</span>
+                  <span>{{ item.bankName }} </span>
+                  <span>Bank</span>
+                </td>
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 50px;
+                    color: #272727;
+                    display: flex;
+                    justify-content: space-between;
+                  "
+                >
+                  <span> وذلك مقابل</span>
+                  <span>{{ item.description }} </span>
+                  <span>And That For</span>
+                </td>
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 50px;
+                    color: #272727;
+                    display: flex;
+                    justify-content: space-between;
+                  "
+                >
+                  <span>مركز التكلفة </span>
+                  <span>{{ item.costCenterName }} </span>
+                  <span>Cost center</span>
+                </td>
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 10px 50px;
+                    color: #272727;
+                    display: flex;
+                    justify-content: space-between;
+                  "
+                >
+                  <span> ملاحظات</span>
+                  <span>{{ item.notes }} </span>
+                  <span>Notes</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div
+            style="
+              display: grid;
+              grid-template-columns: auto auto auto auto;
+              padding-top: 20px;
+            "
+            class="text-center"
+          >
+            <div class="grid-item">
+              <p>
+                المستلم<br />Receiver<br />......................................
+              </p>
+            </div>
+            <div class="grid-item">
+              <p>
+                المحاسب<br />Accountant<br />......................................
+              </p>
+            </div>
+            <div class="grid-item">
+              <p>الختم<br />Seal<br />......................................</p>
+            </div>
+            <div class="grid-item">
+              <p>
+                المدير المالي واالاداري<br />Manger<br />......................................
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <img
+          *ngIf="CustomData.footerurl"
+          src="{{ CustomData.footerurl }}"
+          alt="footerurl"
+          style="height: 60px; width: 100%; max-width: 100%; object-fit: fill"
+        />
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+
+    <button
+      (click)="printDiv('reportprintDivModalRec')"
+      class="min-w-max p-2 bg-sky-100 hover:bg-sky-500 rounded-lg duration-300 hover:text-white aspect-square w-10"
+    >
+      <i class="fa fa-print"></i>
+    </button>
+    <button
+      type="button"
+      (click)="modal.dismiss()"
+      mat-raised-button
+      color="basic"
+    >
+      {{ "No" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #printDivModalPurchase let-modal>
+  <div class="modal-body">
+    <div
+      id="divHtml_aPurchase"
+      class="divHtml"
+      style="width: 100% !important; margin: 0px auto !important"
+    >
+      <div>
+        <img
+          *ngIf="CustomData.headerurl"
+          src="{{ CustomData.headerurl }}"
+          alt="headerurl"
+          style="height: 60px; width: 100%; max-width: 100%; object-fit: fill"
+        />
+      </div>
+      <div class="invoiceNe-wrapper" style="direction: rtl !important">
+        <!--Header-->
+        <div class="invoiceNe-header">
+          <div class="headerNe-right-side">
+            <img
+              *ngIf="CustomData.OrgImg"
+              src="{{ CustomData.OrgImg }}"
+              alt="logo"
+              style="
+                height: 80px;
+                width: 140px;
+                max-width: 200px;
+                object-fit: fill;
+              "
+            />
+          </div>
+          <div class="headerNe-lefy-side" style="width: 100%">
+            <p>{{ InvPrintData?.org_VD?.nameAr }}</p>
+            <p>{{ InvPrintData?.org_VD?.nameEn }}</p>
+            <div class="line" style="position: relative; padding: 5px 0px 10px">
+              <span
+                style="
+                  position: absolute;
+                  right: 0;
+                  width: 100%;
+                  height: 2px;
+                  background-color: #e5e5e5;
+                  z-index: 1;
+                "
+              ></span>
+              <span
+                style="
+                  position: absolute;
+                  right: 0;
+                  width: 70%;
+                  height: 2px;
+                  background-color: #ec1c24;
+                  z-index: 2;
+                "
+              ></span>
+            </div>
+            <h1 style="margin-bottom: 0">فاتورة مشتريات</h1>
+          </div>
+        </div>
+        <!--/Header-->
+
+        <!--invoiceNe-content-->
+        <div class="invoiceNe-content">
+          <div class="firstNe-table-main-heading" style="display: flex">
+            <div class="firstNe-table" style="margin-left: 5px; width: 50%">
+              <table
+                class="tableI"
+                style="
+                  margin-bottom: 5px;
+                  vertical-align: middle;
+                  text-align: center;
+                "
+              >
+                <thead>
+                  <tr>
+                    <th
+                      style="
+                        background-color: #dceefd;
+                        padding: 2px;
+                        color: #53627e;
+                        font-size: 12px;
+                        letter-spacing: 0px;
+                        border: 1px solid #f0f7fe;
+                      "
+                    >
+                      رقم الفاتورة
+                    </th>
+                    <th
+                      style="
+                        background-color: #dceefd;
+                        padding: 2px;
+                        color: #53627e;
+                        font-size: 12px;
+                        letter-spacing: 0px;
+                        border: 1px solid #f0f7fe;
+                      "
+                    >
+                      {{ InvPrintData?.invoicesVM_VD?.invoiceNumber }}
+                    </th>
+                    <th
+                      style="
+                        background-color: #dceefd;
+                        padding: 2px;
+                        color: #53627e;
+                        font-size: 12px;
+                        letter-spacing: 0px;
+                        border: 1px solid #f0f7fe;
+                      "
+                    >
+                      Invoice No
+                    </th>
+                  </tr>
+                  <tr>
+                    <th
+                      style="
+                        background-color: #dceefd;
+                        padding: 2px;
+                        color: #53627e;
+                        font-size: 12px;
+                        letter-spacing: 0px;
+                        border: 1px solid #f0f7fe;
+                      "
+                    >
+                      تاريخ الفاتورة
+                    </th>
+                    <th
+                      style="
+                        background-color: #dceefd;
+                        padding: 2px;
+                        color: #53627e;
+                        font-size: 12px;
+                        letter-spacing: 0px;
+                        border: 1px solid #f0f7fe;
+                      "
+                    >
+                      {{ InvPrintData?.invoicesVM_VD?.date }}
+                    </th>
+                    <th
+                      style="
+                        background-color: #dceefd;
+                        padding: 2px;
+                        color: #53627e;
+                        font-size: 12px;
+                        letter-spacing: 0px;
+                        border: 1px solid #f0f7fe;
+                      "
+                    >
+                      Invoice Date
+                    </th>
+                  </tr>
+
+                  <tr>
+                    <th
+                      style="
+                        background-color: #dceefd;
+                        padding: 2px;
+                        color: #53627e;
+                        font-size: 12px;
+                        letter-spacing: 0px;
+                        border: 1px solid #f0f7fe;
+                      "
+                    >
+                      تاريخ التوريد
+                    </th>
+                    <th
+                      style="
+                        background-color: #dceefd;
+                        padding: 2px;
+                        color: #53627e;
+                        font-size: 12px;
+                        letter-spacing: 0px;
+                        border: 1px solid #f0f7fe;
+                      "
+                    >
+                      {{ InvPrintData?.invoicesVM_VD?.date }}
+                    </th>
+                    <th
+                      style="
+                        background-color: #dceefd;
+                        padding: 2px;
+                        color: #53627e;
+                        font-size: 12px;
+                        letter-spacing: 0px;
+                        border: 1px solid #f0f7fe;
+                      "
+                    >
+                      Date of supply
+                    </th>
+                  </tr>
+                </thead>
+              </table>
+            </div>
+            <div class="firstNe-table" style="margin-right: 5px; width: 50%">
+              <table
+                of
+                supplyable
+                class="tableI"
+                style="
+                  margin-bottom: 5px;
+                  vertical-align: middle;
+                  text-align: center;
+                "
+              >
+                <thead>
+                  <tr>
+                    <th
+                      style="
+                        background-color: #faebd7;
+                        padding: 2px;
+                        color: #53627e;
+                        font-size: 12px;
+                        letter-spacing: 0px;
+                        border: 1px solid #f0f7fe;
+                      "
+                    >
+                      فاتورة ضريبية
+                    </th>
+                    <th
+                      style="
+                        background-color: #faebd7;
+                        padding: 2px;
+                        color: #53627e;
+                        font-size: 12px;
+                        letter-spacing: 0px;
+                        border: 1px solid #f0f7fe;
+                      "
+                    >
+                      {{ InvPrintData?.invoicesVM_VD?.payTypeName }}
+                    </th>
+                    <th
+                      style="
+                        background-color: #faebd7;
+                        padding: 2px;
+                        color: #53627e;
+                        font-size: 12px;
+                        letter-spacing: 0px;
+                        border: 1px solid #f0f7fe;
+                      "
+                    >
+                      Tax Invoice
+                    </th>
+                  </tr>
+                  <tr>
+                    <th
+                      style="
+                        background-color: #dceefd;
+                        padding: 2px;
+                        color: #53627e;
+                        font-size: 12px;
+                        letter-spacing: 0px;
+                        border: 1px solid #f0f7fe;
+                      "
+                    >
+                      رقم المشروع
+                    </th>
+                    <th
+                      style="
+                        background-color: #dceefd;
+                        padding: 2px;
+                        color: #53627e;
+                        font-size: 12px;
+                        letter-spacing: 0px;
+                        border: 1px solid #f0f7fe;
+                      "
+                    >
+                      {{ InvPrintData?.invoicesVM_VD?.projectNo }}
+                    </th>
+                    <th
+                      style="
+                        background-color: #dceefd;
+                        padding: 2px;
+                        color: #53627e;
+                        font-size: 12px;
+                        letter-spacing: 0px;
+                        border: 1px solid #f0f7fe;
+                      "
+                    >
+                      Project No
+                    </th>
+                  </tr>
+
+                  <tr>
+                    <th
+                      style="
+                        background-color: #dceefd;
+                        padding: 2px;
+                        color: #53627e;
+                        font-size: 12px;
+                        letter-spacing: 0px;
+                        border: 1px solid #f0f7fe;
+                      "
+                    >
+                      رقم العقد
+                    </th>
+                    <th
+                      style="
+                        background-color: #dceefd;
+                        padding: 2px;
+                        color: #53627e;
+                        font-size: 12px;
+                        letter-spacing: 0px;
+                        border: 1px solid #f0f7fe;
+                      "
+                    >
+                      {{ InvPrintData?.invoicesVM_VD?.contractNo ?? "بدون" }}
+                    </th>
+                    <th
+                      style="
+                        background-color: #dceefd;
+                        padding: 2px;
+                        color: #53627e;
+                        font-size: 12px;
+                        letter-spacing: 0px;
+                        border: 1px solid #f0f7fe;
+                      "
+                    >
+                      Contract No
+                    </th>
+                  </tr>
+                </thead>
+              </table>
+            </div>
+          </div>
+
+          <!--Details-->
+          <div
+            class="invoiceNe-details"
+            style="margin-bottom: 0px; display: flex"
+          >
+            <!--second table-->
+            <div class="secondNe-table" style="margin-left: 5px; width: 50%">
+              <h4
+                class="tableNe-heading"
+                style="
+                  background-color: #dceefd !important;
+                  font-size: 15px;
+                  letter-spacing: 0px;
+                  font-weight: 700;
+                  padding: 1px 10px;
+                "
+              >
+                <span>بيانات المورد </span>
+                <span>Seller</span>
+              </h4>
+              <table style="vertical-align: middle; text-align: center">
+                <tr>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    الاسم
+                  </th>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    {{ InvPrintData?.suppliersVM_VD?.nameAr }}
+                  </th>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    Name
+                  </th>
+                </tr>
+                <tr>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    العنوان
+                  </th>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    {{ InvPrintData?.suppliersVM_VD?.compAddress }}
+                  </th>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    Address
+                  </th>
+                </tr>
+                <tr>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    ر.المبنى
+                  </th>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    {{ InvPrintData?.suppliersVM_VD?.buildingNumber }}
+                  </th>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    Build.No
+                  </th>
+                </tr>
+                <tr>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    الشارع
+                  </th>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    {{ InvPrintData?.suppliersVM_VD?.streetName }}
+                  </th>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    Street
+                  </th>
+                </tr>
+                <tr>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    الحي
+                  </th>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    {{ InvPrintData?.suppliersVM_VD?.neighborhood }}
+                  </th>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    Area
+                  </th>
+                </tr>
+                <tr>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    المدينة
+                  </th>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    {{ InvPrintData?.suppliersVM_VD?.cityName }}
+                  </th>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    City
+                  </th>
+                </tr>
+                <tr>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    الدولة
+                  </th>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    {{ InvPrintData?.suppliersVM_VD?.country }}
+                  </th>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    Country
+                  </th>
+                </tr>
+                <tr>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    ر.البريدى
+                  </th>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    {{ InvPrintData?.suppliersVM_VD?.postalCodeFinal }}
+                  </th>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    P.Code
+                  </th>
+                </tr>
+                <tr>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    ر.الاضافي
+                  </th>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    {{ InvPrintData?.suppliersVM_VD?.externalPhone }}
+                  </th>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    Addit.No
+                  </th>
+                </tr>
+                <tr>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    ر.الضريبي
+                  </th>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    {{ InvPrintData?.suppliersVM_VD?.taxNo }}
+                  </th>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    VAT
+                  </th>
+                </tr>
+                <tr>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    معرف اخر
+                  </th>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    {{ InvPrintData?.suppliersVM_VD?.commercialRegister }}
+                  </th>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    A.SellerID
+                  </th>
+                </tr>
+              </table>
+            </div>
+            <!--second table-->
+            <!--third table-->
+            <div class="thirdNe-table" style="margin-right: 5px; width: 50%">
+              <h4
+                class="tableNe-heading"
+                style="
+                  background-color: #faebd7 !important;
+                  font-size: 15px;
+                  letter-spacing: 0px;
+                  font-weight: 700;
+                  padding: 1px 10px;
+                "
+              >
+                <span>بيانات العميل </span>
+                <span>Customer</span>
+              </h4>
+              <table style="vertical-align: middle; text-align: center">
+                <tr>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    الاسم
+                  </th>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    {{
+                      InvPrintData?.org_VD?.nameAr
+                    }}
+                  </th>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    Name
+                  </th>
+                </tr>
+                <tr>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    العنوان
+                  </th>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    {{
+                      InvPrintData?.orgIsRequired_VD == true
+                        ? InvPrintData?.org_VD?.address
+                        : InvPrintData?.branch_VD?.address
+                    }}
+                  </th>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    Address
+                  </th>
+                </tr>
+                <tr>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    ر.المبنى
+                  </th>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    {{
+                      InvPrintData?.orgIsRequired_VD == true
+                        ? InvPrintData?.org_VD?.buildingNumber
+                        : InvPrintData?.branch_VD?.buildingNumber
+                    }}
+                  </th>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    Build.No
+                  </th>
+                </tr>
+                <tr>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    الشارع
+                  </th>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    {{
+                      InvPrintData?.orgIsRequired_VD == true
+                        ? InvPrintData?.org_VD?.streetName
+                        : InvPrintData?.branch_VD?.streetName
+                    }}
+                  </th>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    Street
+                  </th>
+                </tr>
+                <tr>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    الحي
+                  </th>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    {{
+                      InvPrintData?.orgIsRequired_VD == true
+                        ? InvPrintData?.org_VD?.neighborhood
+                        : InvPrintData?.branch_VD?.neighborhood
+                    }}
+                  </th>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    Area
+                  </th>
+                </tr>
+                <tr>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    المدينة
+                  </th>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    {{
+                      InvPrintData?.orgIsRequired_VD == true
+                        ? InvPrintData?.org_VD?.cityName
+                        : InvPrintData?.branch_VD?.cityName
+                    }}
+                  </th>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    City
+                  </th>
+                </tr>
+                <tr>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    الدولة
+                  </th>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    {{
+                      InvPrintData?.orgIsRequired_VD == true
+                        ? InvPrintData?.org_VD?.country
+                        : InvPrintData?.branch_VD?.country
+                    }}
+                  </th>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    Country
+                  </th>
+                </tr>
+                <tr>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    ر.البريدى
+                  </th>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    {{
+                      InvPrintData?.orgIsRequired_VD == true
+                        ? InvPrintData?.org_VD?.postalCodeFinal
+                        : InvPrintData?.branch_VD?.postalCodeFinal
+                    }}
+                  </th>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    P.Code
+                  </th>
+                </tr>
+
+                <tr>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    ر.الاضافي
+                  </th>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    {{
+                      InvPrintData?.orgIsRequired_VD == true
+                        ? InvPrintData?.org_VD?.externalPhone
+                        : InvPrintData?.branch_VD?.externalPhone
+                    }}
+                  </th>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    Addit.No
+                  </th>
+                </tr>
+                <tr>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    ر.الضريبي
+                  </th>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    {{
+                      InvPrintData?.orgIsRequired_VD == true
+                        ? InvPrintData?.org_VD?.taxCode
+                        : InvPrintData?.branch_VD?.taxCode
+                    }}
+                  </th>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    VAT
+                  </th>
+                </tr>
+                <tr></tr>
+                <tr>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    الفرع
+                  </th>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    {{
+                      InvPrintData?.branch_VD?.isPrintInvoice == true
+                        ? InvPrintData?.branch_VD?.nameAr
+                        : "--"
+                    }}
+                  </th>
+                  <th
+                    style="
+                      padding: 0px;
+                      font-size: 12px;
+                      letter-spacing: 0px;
+                      border: 1px solid #f0f7fe;
+                    "
+                  >
+                    Branch
+                  </th>
+                </tr>
+              </table>
+            </div>
+            <!--third table-->
+          </div>
+
+          <!--totalNe-invoice-->
+          <div class="totalNe-invoice" style="margin-bottom: 0px">
+            <table
+              style="
+                max-width: 100%;
+                vertical-align: middle;
+                text-align: center;
+              "
+            >
+              <thead>
+                <tr>
+                  <th
+                    style="
+                      font-size: 14px;
+                      color: #333;
+                      background-color: #dceefd;
+                      line-height: 1.2em;
+                      padding: 5px 0px;
+                    "
+                  >
+                    م <br />
+                    .No
+                  </th>
+                  <th
+                    style="
+                      font-size: 14px;
+                      color: #333;
+                      background-color: #dceefd;
+                      line-height: 1.2em;
+                      padding: 5px 0px;
+                    "
+                  >
+                    اسم الخدمة <br />
+                    Item Name
+                  </th>
+                  <th
+                    style="
+                      font-size: 14px;
+                      color: #333;
+                      background-color: #dceefd;
+                      line-height: 1.2em;
+                      padding: 5px 0px;
+                    "
+                  >
+                    الوحدة <br />
+                    Unit
+                  </th>
+                  <th
+                    style="
+                      font-size: 14px;
+                      color: #333;
+                      background-color: #dceefd;
+                      line-height: 1.2em;
+                      padding: 5px 0px;
+                    "
+                  >
+                    الكمية <br />
+                    .Qty
+                  </th>
+                  <th
+                    style="
+                      font-size: 14px;
+                      color: #333;
+                      background-color: #dceefd;
+                      line-height: 1.2em;
+                      padding: 5px 0px;
+                    "
+                  >
+                    السعر <br />
+                    Price
+                  </th>
+                  <th
+                    style="
+                      font-size: 14px;
+                      color: #333;
+                      background-color: #dceefd;
+                      line-height: 1.2em;
+                      padding: 5px 0px;
+                    "
+                  >
+                    الخصم <br />
+                    Discount
+                  </th>
+                  <th
+                    style="
+                      font-size: 14px;
+                      color: #333;
+                      background-color: #dceefd;
+                      line-height: 1.2em;
+                      padding: 5px 0px;
+                    "
+                  >
+                    نسبة الخصم <br />
+                    discount percent
+                  </th>
+                  <th
+                    style="
+                      font-size: 14px;
+                      color: #333;
+                      background-color: #dceefd;
+                      line-height: 1.2em;
+                      padding: 5px 0px;
+                    "
+                  >
+                    الصافي<br />
+                    Net
+                  </th>
+                  <th
+                    style="
+                      font-size: 14px;
+                      color: #333;
+                      background-color: #dceefd;
+                      line-height: 1.2em;
+                      padding: 5px 0px;
+                    "
+                  >
+                    ض.ق.المضافة <br />
+                    VAT
+                  </th>
+                  <th
+                    style="
+                      font-size: 14px;
+                      color: #333;
+                      background-color: #dceefd;
+                      line-height: 1.2em;
+                      padding: 5px 0px;
+                    "
+                  >
+                    الصافي + الضريبة <br />
+                    Net + VAT
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="
+                    let item of InvPrintData?.voucherDetailsVM_VD;
+                    let i = index
+                  "
+                >
+                  <td>{{ i + 1 }}</td>
+                  <td>{{ item.servicesPriceName }}</td>
+                  <td>{{ item.categoryTypeName }}</td>
+                  <td>{{ item.qty }}</td>
+                  <td>{{ GetAccualValue(item) }} <app-sar-icon></app-sar-icon></td>
+                  <td>{{ item.discountValue_Det }} <app-sar-icon></app-sar-icon></td>
+                  <td>{{ item.discountPercentage_Det }}</td>
+                  <td>{{ GetDiff(item) }}<app-sar-icon></app-sar-icon></td>
+                  <td>{{ item.taxAmount }}<app-sar-icon></app-sar-icon></td>
+                  <td>{{ item.totalAmount }}<app-sar-icon></app-sar-icon></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!--totalNe-invoice-->
+          <!--invoice value-->
+          <div
+            class="invoiceNe-value"
+            style="display: block !important; margin-bottom: 3px"
+          >
+            <div class="invoiceNe-divided">
+              <div class="invoiceNe-value-right-side">
+                <p style="margin-bottom: 2px">
+                  <span> الإجمالي : </span>
+                  <span>{{ CustomData.Total }}<app-sar-icon></app-sar-icon></span>
+                </p>
+                <p style="margin-bottom: 2px">
+                  <span> الخصم : </span>
+                  <span>{{ CustomData.DiscPer }} % {{ CustomData.Disc }}<app-sar-icon></app-sar-icon></span>
+                </p>
+                <p style="margin-bottom: 2px">
+                  <span> الإجمالي بعد الخصم : </span>
+                  <span>{{ CustomData.TotalAfterDisc }}</span><app-sar-icon></app-sar-icon>
+                </p>
+                <p style="margin-bottom: 2px">
+                  <span> الصافي : </span>
+                  <span>{{ CustomData.netVal }}</span><app-sar-icon></app-sar-icon>
+                </p>
+                <p style="margin-bottom: 2px">
+                  <span> ضريبة القيمة المضافة (15%) : </span>
+                  <span>{{ InvPrintData?.invoicesVM_VD.taxAmount ?? 0 }}</span><app-sar-icon></app-sar-icon>
+                </p>
+                <p
+                  style="
+                    margin-bottom: 7px;
+                    background-color: #dceefd;
+                    padding: 2px;
+                    min-width: 560px;
+                    max-width: 560px;
+                  "
+                >
+                  <span>إجمالي المبلغ المطلوب سداده: </span>
+                  <span
+                    >{{ InvPrintData?.invoicesVM_VD.totalValue ?? 0 }}</span><app-sar-icon></app-sar-icon>
+                    <span style="margin-right: 6%;">({{ InvPrintData?.valueNumString }})</span>
+                </p>
+                <p
+                  style="
+                    margin-bottom: 7px;
+                    background-color: #dceefd;
+                    padding: 2dvh;
+                    min-width: 560px;
+                    max-width: 560px;
+                  "
+                >
+                  <span>الملاحظات:</span>
+                  <span>{{ InvPrintData?.invoicesVM_VD.notes }}</span>
+                </p>
+                <p
+                  style="
+                    margin-bottom: 7px;
+                    background-color: #dceefd;
+                    padding: 2px;
+                    min-width: 560px;
+                    max-width: 560px;
+                    font-size: 15px !important;
+                  "
+                >
+                  <span>وسائل الدفع:</span>
+                  <span></span>
+                </p>
+              </div>
+              <div class="invoiceNe-value-right-side">
+                <p style="margin-bottom: 2px">
+                  <span>المدفوع :</span>
+                  <span>{{ InvPrintData?.invoicesVM_VD.paidValue ?? 0 }}</span><app-sar-icon></app-sar-icon>
+                </p>
+                <p style="margin-bottom: 2px">
+                  <span>المتبقي :</span>
+                  <span>{{
+                    (InvPrintData?.invoicesVM_VD.totalValue ?? 0) -
+                      (InvPrintData?.invoicesVM_VD.paidValue ?? 0)
+                  }}</span><app-sar-icon></app-sar-icon>
+                </p>
+                <p
+                  style="margin-top: 120%; color: red"
+                  *ngIf="CustomData?.PrintType != 1"
+                >
+                  <span>{{ CustomData?.PrintTypeName }}</span>
+                </p>
+                <p style="color: red" *ngIf="CustomData?.PrintType != 1">
+                  <span>{{ "رقم الإشعار : "  }}</span>
+                  </p>
+                  <p style="color: red" *ngIf="CustomData?.PrintType != 1">
+                    <span>{{ InvPrintData?.invoicesVM_VD?.invoiceRetId }}</span>
+                    </p>
+              </div>
+            </div>
+          </div>
+
+          <!--invoice -bank-account-->
+          <!--invoiceNe-footer-->
+          <div
+            class="invoiceNe-footer"
+            style="
+              display: flex !important;
+              justify-content: space-between;
+              align-items: start;
+            "
+          >
+            <div>
+              <img
+                *ngIf="CustomData.Account1Img"
+                src="{{ CustomData.Account1Img }}"
+                alt=""
+                style="
+                  display: block !important;
+                  width: 100px;
+                  height: 70px;
+                  object-fit: fill;
+                  margin-bottom: 5px;
+                "
+              />
+              <img
+                *ngIf="CustomData.Account2Img"
+                src="{{ CustomData.Account2Img }}"
+                alt=""
+                style="
+                  display: block !important;
+                  width: 100px;
+                  height: 70px;
+                  object-fit: fill;
+                "
+              />
+            </div>
+
+            <div>
+              <h4>{{ CustomData.Account1Bank }}</h4>
+              <h4>{{ CustomData.Account2Bank }}</h4>
+              <h4>{{ InvPrintData?.invoicesVM_VD.addUser }}</h4>
+            </div>
+
+            <div class="qrNe-code">
+              <img
+                #conditionimg
+                src="{{ InvPrintData?.qrCodeString_VD }}"
+                alt="QRCode"
+                style="height: 140px; width: 180px"
+              />
+            </div>
+          </div>
+
+          <!--invoiceNe-footer-->
+          <!--Details-->
+        </div>
+        <!--invoiceNe-content-->
+        <div>
+          <img
+            *ngIf="CustomData.footerurl"
+            src="{{ CustomData.footerurl }}"
+            alt="footerurl"
+            style="height: 60px; width: 100%; max-width: 100%; object-fit: fill"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button
+      (click)="printDiv('divHtml_aPurchase')"
+      class="min-w-max p-2 bg-sky-100 hover:bg-sky-500 rounded-lg duration-300 hover:text-white aspect-square w-10"
+    >
+      <i class="fa fa-print"></i>
+    </button>
+    <button
+      type="button"
+      (click)="modal.dismiss()"
+      mat-raised-button
+      color="basic"
+    >
+      {{ "No" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+<!-- سند صرف جديد -->
+<!-- NewVoucherModal  -->
+<ng-template #NewVoucherModal let-modal>
+  <div
+    style="background-color: var(--base-color)"
+    class="modal-header text-white flex justify-between items-center"
+  >
+    <h4 class="m-0">
+      <span class="text-2xl">{{ "NewVoucher" | translate }}</span>
+    </h4>
+    <button
+      *ngIf="popuptype == 1 && CopyData!=null"
+      type="button"
+      class="text-2xl text-white m-0"
+      (click)="PasteDataFromRow()">
+      <i class="fa-regular fa-paste"></i>
+    </button>
+    <button
+      type="button"
+      class="text-2xl text-white m-0"
+      (click)="modal?.dismiss()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+
+  <div class="modal-body customForm pt-0">
+    <ng-container>
+      <div class="row align-items-end mb-2 mx-3">
+        <!-- 1 line -->
+        <div class="col-sm-6 col-md-3 col-lg-4 mb-0">
+          <div class="form-group">
+            <label for="customerEn" class="text-right col-form-label block">
+              {{ "date" | translate }}
+            </label>
+            <input
+              placeholder="{{ 'Chose' | translate }}"
+              name="date"
+              type="text"
+              class="form-control"
+              bsDatepicker
+              #dpr="bsDatepicker"
+              [(ngModel)]="vouchermodel.date"
+              [ngModelOptions]="{ standalone: true }"
+              [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY' }"
+              (ngModelChange)="ChangeReceiptVoucherGre($event)"
+              autocomplete="off"
+              disabled
+            />
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-4 mb-0">
+          <div class="form-group">
+            <label for="customerEn" class="text-right col-form-label block">
+              {{ "Bond number" | translate }}
+            </label>
+            <input
+              required
+              class="form-control"
+              type="text"
+              disabled
+              name="invoiceNumber"
+              [(ngModel)]="vouchermodel.invoiceNumber"
+              [ngModelOptions]="{ standalone: true }"
+              autocomplete="off"
+            />
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-4 mb-0">
+          <div class="form-group">
+            <label for="customerEn" class="text-right col-form-label block">
+              {{ "m_Cost" | translate }}
+            </label>
+            <ng-select
+              class="w-full p-0"
+              placeholder="{{ 'mainCenter' | translate }}"
+              [(ngModel)]="vouchermodel.CostCenterId"
+              disabled
+              [ngModelOptions]="{ standalone: true }"
+              name="user"
+            >
+              <ng-option
+                *ngFor="let user of costCentersList"
+                [value]="user.id"
+                >{{ user.name }}</ng-option
+              >
+            </ng-select>
+          </div>
+        </div>
+
+        <!-- 2 line -->
+
+        <div class="col-sm-6 col-md-3 col-lg-4 mb-0">
+          <div class="form-group hijri-gregorianReciept">
+            <label for="customerEn" class="text-right col-form-label block">
+              {{ "Corresponding" | translate }}
+            </label>
+            <!-- <input placeholder="{{ 'Chose' | translate }}" name="date" type="text" class="form-control" bsDatepicker
+                formControlName="hijriDate"
+                  #dpr="bsDatepicker" /> -->
+            <hijri-gregorian-datepicker
+              [(selectedDate)]="vouchermodel.hijriDate"
+              [isRequired]="true"
+              [hijriLabel]="'Hijri'"
+              name="hijriDate"
+              [selectedDateType]="selectedDateType"
+              (selectedDateChange)="ChangeReceiptVoucherHijri($event)"
+              [dir]="'dir' | translate"
+            >
+            </hijri-gregorian-datepicker>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-4 mb-0">
+          <div class="form-group">
+            <label for="customerEn" class="text-right col-form-label block">
+              {{ "referenceNumber" | translate }}
+            </label>
+            <input
+              placeholder="{{ 'referenceNumber' | translate }}"
+              required
+              class="form-control"
+              type="text"
+              name="reftxt"
+              [(ngModel)]="vouchermodel.invoiceReference"
+              [ngModelOptions]="{ standalone: true }"
+              autocomplete="off"
+              disabled
+            />
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-4 mb-0">
+          <div class="form-group">
+            <label for="customerEn" class="text-right col-form-label block">
+              {{ "F_Purchase" | translate }}
+            </label>
+            <input
+              required
+              placeholder="{{ 'F_Purchase' | translate }}"
+              class="form-control"
+              type="text"
+              [(ngModel)]="vouchermodel.supplierInvoiceNo"
+              [ngModelOptions]="{ standalone: true }"
+              autocomplete="off"
+              name="supplierInvoiceNo"
+            />
+          </div>
+        </div>
+
+        <!-- 3 line -->
+        <div class="col-sm-6 col-md-3 col-lg-4 mb-0">
+          <div class="form-group">
+            <label for="customerEn" class="text-right col-form-label block">
+              {{ "Registration number" | translate }}
+            </label>
+            <input
+              required
+              placeholder="{{ 'Registration number' | translate }}"
+              class="form-control"
+              type="text"
+              disabled
+              [(ngModel)]="vouchermodel.journalNumber"
+              [ngModelOptions]="{ standalone: true }"
+              autocomplete="off"
+              name="journalNumber"
+              disabled
+            />
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-4 mb-0">
+          <div class="form-group">
+            <label for="customerEn" class="text-right col-form-label block">
+              {{ "Payment type" | translate }}
+              <span class="text-danger">*</span>
+            </label>
+            <ng-select
+              placeholder="{{ 'Chose' | translate }}"
+              class="w-full p-0"
+              [(ngModel)]="vouchermodel.payType"
+              [disabled]="modalType == 2"
+              (change)="FillCustAc(false)"
+              name="paymentType"
+              id="paymentType"
+            >
+              <ng-option *ngFor="let user of PayTypeList" [value]="user.id">{{
+                user.name | translate
+              }}</ng-option>
+            </ng-select>
+            <!-- <div *ngIf="voucher.payType==null && submitted==true" class="error-text">
+                This field is required.
+              </div> -->
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-4 mb-0">
+          <div class="upload col-span-1 md:col-span-2">
+            <label for="attach">{{ "attachments" | translate }}</label>
+            <file-upload
+              class="w-full"
+              style="min-height: 40px"
+              [(ngModel)]="uploadedFiles"
+              name="files"
+            ></file-upload>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mx-3">
+        <div class="col-md-12">
+          <div class="boxContainer w-100 py-2 px-3">
+            <div class="row me-3">
+              <div class="col-md-2">
+                <label for="tax type" class="text-orange" for="tax type">
+                  {{ "tax type" | translate }}
+                </label>
+              </div>
+              <div class="col-md-10">
+                <ng-select
+                  class="w-100"
+                  placeholder="{{ 'Chose' | translate }}"
+                  [(ngModel)]="vouchermodel.taxtype"
+                  [ngModelOptions]="{ standalone: true }"
+                  [disabled]="modalType == 2 || Taxchechdisabl == true"
+                  [clearable]="false"
+                  (change)="taxtypeChange()"
+                  name="taxtype"
+                >
+                  <ng-option [value]="2">{{
+                    "Excluding tax" | translate
+                  }}</ng-option>
+                  <ng-option [value]="3">{{
+                    "Taxes included" | translate
+                  }}</ng-option>
+                </ng-select>
+              </div>
+            </div>
+
+            <div class="row me-3">
+              <div class="col-md-2">
+                <label for="exchangeClause" class="text-babyblue">
+                  {{ "exchangeClause" | translate }}
+                </label>
+              </div>
+              <div class="col-md-10 flex">
+                <ng-select
+                  placeholder="{{ 'Chose' | translate }}"
+                  class="w-full p-0 h-100"
+                  [disabled]="modalType == 2"
+                  style="min-width: 200px !important"
+                  [(ngModel)]="vouchermodel.clauseId"
+                  name="clauseId"
+                >
+                  <ng-option
+                    *ngFor="let user of clauseseleted"
+                    [value]="user.id"
+                  >
+                    {{ user.name }}</ng-option
+                  >
+                </ng-select>
+
+                <button
+                  class="btn bg-white text-black"
+                >
+                  <i class="fa fa-plus"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="row me-3">
+              <div class="col-md-2">
+                <label for="payFor" class="text-babyblue">
+                  {{ "payFor" | translate }}
+                </label>
+              </div>
+              <div class="col-md-10 flex">
+                <ng-select
+                  placeholder="{{ 'Chose' | translate }}"
+                  class="w-full p-0 h-100"
+                  style="min-width: 200px !important"
+                  [(ngModel)]="vouchermodel.supplierId"
+                  name="supplierId"
+                  disabled
+                  (change)="GetTaxNoBySuppId(vouchermodel.supplierId)"
+                >
+                  <ng-option
+                    *ngFor="let user of supplierseleted"
+                    [value]="user.id"
+                  >
+                    {{ user.name }}</ng-option
+                  >
+                </ng-select>
+                <button
+                  class="btn bg-white text-black">
+                  <i class="fa fa-plus"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="row me-3">
+              <div class="col-md-2">
+                <label
+                  for="recipientName"
+                  class="text-babyblue"
+                  for="recipientName"
+                >
+                  {{ "recipientName" | translate }}
+                </label>
+              </div>
+              <div class="col-md-10">
+                <input
+                  id="recipientName"
+                  placeholder="{{ 'recipientName' | translate }}"
+                  required
+                  class="form-control"
+                  type="text"
+                  [(ngModel)]="vouchermodel.recevierTxt"
+                  name="recevierTxt"
+                  autocomplete="off"
+                  disabled
+                />
+              </div>
+            </div>
+
+            <div class="row me-3">
+              <div class="col-md-2">
+                <label for="AmountOf" class="text-red">
+                  {{ "AmountOf" | translate }}
+                </label>
+              </div>
+              <div class="col-md-2">
+                <input
+                  id="AmountOf"
+                  required
+                  class="form-control"
+                  type="text"
+                  [(ngModel)]="vouchermodel.invoiceValue"
+                  name="invoiceValue"
+                  autocomplete="off"
+                  disabled
+                />
+              </div>
+              <div class="col-md-8">
+                <input
+                  id="netAmount"
+                  required
+                  class="form-control"
+                  type="text"
+                  autocomplete="off"
+                  [(ngModel)]="vouchermodel.reVoucherNValueText"
+                  name="reVoucherNValueText"
+                  disabled
+                />
+              </div>
+            </div>
+
+            <div class="row me-3">
+              <div class="col-md-2">
+                <label for="amount" class="text-yellow">
+                  {{ "amount" | translate }} + VAT
+                </label>
+              </div>
+              <div class="col-md-2">
+                <input
+                  id="amount"
+                  required
+                  placeholder="0"
+                  class="form-control text-danger bg-yellow text-center red fw-bold"
+                  type="text"
+                  [(ngModel)]="vouchermodel.taxAmount"
+                  name="taxAmount"
+                  disabled
+                />
+              </div>
+              <div class="col-md-2">
+                <input
+                  id="amount"
+                  required
+                  placeholder="0"
+                  class="form-control text-danger bg-yellow text-center red fw-bold"
+                  type="text"
+                  [(ngModel)]="vouchermodel.valuebefore"
+                  name="valuebefore"
+                  disabled
+                />
+              </div>
+              <div class="col-md-2">
+                <input
+                  placeholder="0"
+                  id="amount"
+                  required
+                  value="بعد VAT"
+                  class="form-control text-white bg-danger text-center fw-bolde"
+                  type="text"
+                  disabled
+                />
+              </div>
+              <div class="col-md-2">
+                <input
+                  id="amount"
+                  required
+                  value="0"
+                  class="form-control text-white bg-danger text-center fw-bolde"
+                  [(ngModel)]="vouchermodel.valueafter"
+                  name="totalValue"
+                  disabled
+                />
+              </div>
+            </div>
+
+            <div class="row me-3">
+              <div class="col-md-2">
+                <label for="R_D_Supplier" class=" ">
+                  {{ "R_D_Supplier" | translate }}
+                </label>
+              </div>
+              <div class="col-md-5">
+                <input
+                  id="R_D_Supplier"
+                  placeholder="{{ 'R_D_Supplier' | translate }}"
+                  required
+                  class="form-control"
+                  type="text"
+                  [(ngModel)]="vouchermodel.supplierTaxID"
+                  name="supplierTaxID"
+                  autocomplete="off"
+                  disabled
+                />
+              </div>
+              <div class="col-md-5">
+                <input
+                  id="R_theInvoice"
+                  placeholder="{{ 'R_theInvoice' | translate }}"
+                  required
+                  class="form-control"
+                  type="text"
+                  [(ngModel)]="vouchermodel.supplierInvoiceNo"
+                  name="SupplierInvoiceNo"
+                  autocomplete="off"
+                  disabled
+                />
+              </div>
+            </div>
+
+            <div class="row me-3">
+              <div class="col-md-2">
+                <label for="fromAccount" class="text-orange">
+                  {{ "fromAccount" | translate }}
+                </label>
+              </div>
+              <div class="col-md-8">
+                <ng-select
+                  placeholder="{{ 'Chose' | translate }}"
+                  class="w-full p-0 h-100"
+                  [(ngModel)]="vouchermodel.accountId"
+                  disabled
+                  name="accountId"
+                  (change)="getaccountcode(vouchermodel.accountId, 2)"
+                >
+                  <ng-option
+                    *ngFor="let user of FillCustAccountsSelect2listTO"
+                    [value]="user.id"
+                  >
+                    {{ user.name }}</ng-option
+                  >
+                </ng-select>
+              </div>
+              <div class="col-md-2">
+                <input
+                  id="netAmount"
+                  required
+                  class="form-control"
+                  type="text"
+                  [(ngModel)]="vouchermodel.fromAccountId2Code"
+                  name="fromAccountId2Code"
+                  disabled
+                />
+              </div>
+            </div>
+
+            <div class="row me-3">
+              <div class="col-md-2">
+                <label for="toAccount" class="text-orange">
+                  {{ "toAccount" | translate }}
+                </label>
+              </div>
+              <div class="col-md-8">
+                <ng-select
+                  placeholder="{{ 'Chose' | translate }}"
+                  class="w-full p-0 h-100"
+                  [(ngModel)]="vouchermodel.toAccountId"
+                  disabled
+                  name="toAccountId"
+                  (change)="getaccountcode(vouchermodel.toAccountId, 1)"
+                >
+                  <ng-option *ngFor="let user of Toaccount" [value]="user.id">
+                    {{ user.name }}</ng-option
+                  >
+                </ng-select>
+              </div>
+              <div class="col-md-2">
+                <input
+                  id="netAmount"
+                  required
+                  class="form-control"
+                  type="text"
+                  [(ngModel)]="vouchermodel.toAccountIdCode"
+                  name="toAccountIdCode"
+                  disabled
+                />
+              </div>
+            </div>
+
+            <div class="row me-3">
+              <div class="col-md-2">
+                <label for="AndThatFor" class="text-yellow">
+                  {{ "AndThatFor" | translate }}
+                </label>
+              </div>
+              <div class="col-md-10">
+                <input
+                  id="AndThatFor"
+                  placeholder="{{ 'AddHere' | translate }}"
+                  required
+                  disabled
+                  class="form-control"
+                  type="text"
+                  [(ngModel)]="vouchermodel.notes"
+                  name="notes"
+                  autocomplete="off"
+                />
+              </div>
+            </div>
+
+            <div class="row me-3">
+              <div class="col-md-2">
+                <label for="Statement " class="text-babyblue">
+                  {{ "Statement" | translate }}
+                </label>
+              </div>
+              <div class="col-md-10">
+                <input
+                  id="Statement "
+                  disabled
+                  placeholder="{{ 'Statement' | translate }}"
+                  required
+                  class="form-control"
+                  type="text"
+                  [(ngModel)]="vouchermodel.invoiceNotes"
+                  name="invoiceNotes"
+                  autocomplete="off"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex">
+        <div class="d-flex me-3">
+          <input
+            type="checkbox"
+            name="NotActivatingAddedValue"
+            id="NotActivatingAddedValue"
+            [(ngModel)]="vouchermodel.taxcheck1"
+          />
+          <label for="NotActivatingAddedValue" class="mx-2">{{
+            "NotActivatingAddedValue" | translate
+          }}</label>
+        </div>
+
+        <div class="d-flex me-3">
+          <input
+            type="checkbox"
+            name="NotActivatingAddedValue2"
+            id="NotActivatingAddedValue2"
+            [(ngModel)]="vouchermodel.dunCalc"
+            name="dunCalc"
+            
+          />
+          <label for="NotActivatingAddedValue2" class="mx-2">{{
+            "NotCountingExpenses" | translate
+          }}</label>
+        </div>
+      </div>
+      <div
+        class="editable shadow mb-4 d-block"
+        style="overflow: auto"
+        *ngIf="checkdetailsList.length > 0"
+      >
+        <p class="text-center">
+          {{ "Check_transferDetails" | translate }}
+        </p>
+        <table
+          class="table table-responsive table-striped table-bordered text-center"
+          style="
+            vertical-align: middle;
+            font-size: 14px;
+            min-width: max-content;
+          "
+        >
+          <thead
+            class="bg-base text-white"
+            style="line-height: 30px; font-size: 13px"
+          >
+            <tr>
+              <th>{{ "serial" | translate }}</th>
+              <th>{{ "Payment type" | translate }}</th>
+              <th>{{ "Check_transferNumber" | translate }}</th>
+              <th>{{ "dateCheck_transfer" | translate }}</th>
+              <th>{{ "BankName" | translate }}</th>
+              <th>{{ "edit" | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let item of checkdetailsList; let i = index"
+              style="line-height: 5px"
+            >
+              <td>{{ item.checkdetail }}</td>
+              <td>{{ item.checkdetailpaytype }}</td>
+              <td>{{ item.checkdetailcheckNo }}</td>
+              <td>{{ item.checkdetailcheckDate }}</td>
+              <td>{{ item.checkdetailbankName }}</td>
+              <!-- <td *ngIf="modalType == 'Create'|| modalType == 'Edit'"> -->
+              <td>
+                <button
+                  class="p-2 bg-orange-100 hover:bg-orange-500 rounded-lg duration-300 hover:text-white w-10"
+                  [disabled]="popuptype == 3"
+                >
+                  <i class="fa-regular fa-pen-to-square"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- footer -->
+    </ng-container>
+    <div class="d-flex align-items-center gap-2" *ngIf="popuptype != 1">
+      <img
+        class="rounded-circle"
+        width="50"
+        height="50"
+        src="{{ addInvoiceImg | img }}"
+        alt=""
+      />
+      <p class="mb-0">
+        {{ "Data Entry" | translate }} :{{ addUser }} - {{ addDate | date }}
+      </p>
+    </div>
+
+    <div class="d-flex justify-content-end gap-2">
+      <div>
+        <button (click)="modal?.dismiss()" class="btn btn-secondary">
+          {{ "close" | translate }}
+        </button>
+      </div>
+    </div>
   </div>
 </ng-template>
