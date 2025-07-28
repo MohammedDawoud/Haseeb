@@ -2806,6 +2806,20 @@
       </p>
     </div>
     <div class="d-flex justify-content-end">
+      <div class="pt-3 m-3">
+        <button
+          (click)="selectRow();modal?.dismiss()"
+          class="btn btn-success"
+        >
+          {{ "التحويل للتعديل" | translate }}
+        </button>
+      </div>
+
+      <div class="pt-3 m-3">
+        <button (click)="modal?.dismiss()" class="btn btn-secondary">
+          {{ "close" | translate }}
+        </button>
+      </div>
     </div>
   </div>
 </ng-template>
@@ -3430,6 +3444,22 @@
       <p class="mb-0">
         {{ "Data Entry" | translate }} :{{ addUser }} - {{ addDate | date }}
       </p>
+    </div>
+    <div class="d-flex justify-content-end">
+      <div class="pt-3 m-3">
+        <button
+          (click)="selectRow();modal?.dismiss()"
+          class="btn btn-success"
+        >
+          {{ "التحويل للتعديل" | translate }}
+        </button>
+      </div>
+
+      <div class="pt-3 m-3">
+        <button (click)="modal?.dismiss()" class="btn btn-secondary">
+          {{ "close" | translate }}
+        </button>
+      </div>
     </div>
   </div>
 </ng-template>
@@ -8774,8 +8804,17 @@
       </p>
     </div>
 
-    <div class="d-flex justify-content-end gap-2">
-      <div>
+    <div class="d-flex justify-content-end">
+      <div class="pt-3 m-3">
+        <button
+          (click)="selectRow();modal?.dismiss()"
+          class="btn btn-success"
+        >
+          {{ "التحويل للتعديل" | translate }}
+        </button>
+      </div>
+
+      <div class="pt-3 m-3">
         <button (click)="modal?.dismiss()" class="btn btn-secondary">
           {{ "close" | translate }}
         </button>

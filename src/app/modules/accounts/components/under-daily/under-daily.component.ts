@@ -349,8 +349,12 @@ export class UnderDailyComponent implements OnInit {
   dateprint: any;
   datePrintJournals: any = new Date();
   lang: any = 'ar';
+  selectedId: number | null = null;
 
   ngOnInit(): void {
+     this._sharedService.selectedId$.subscribe(id => {
+        this.selectedId = id;
+    });
     this.EntryVouchertype = [
       { id: 1, name: { ar: 'تم الترحيل', en: 'Posted' } },
       { id: 2, name: { ar: 'غير مرحل', en: 'Not Posted' } },

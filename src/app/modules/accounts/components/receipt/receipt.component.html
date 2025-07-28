@@ -327,7 +327,6 @@
                 <!--تعديل  -->
                 <button
                   type="button"
-                  id="68"
                   class="p-2 bg-orange-100 hover:bg-orange-500 rounded-lg duration-300 hover:text-white w-10 mx-1"
                   data-toggle="tooltip"
                   data-placement="top"
@@ -353,7 +352,6 @@
 
                 <button
                   type="button"
-                  id="68"
                   class="p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white w-10 mx-1"
                   data-toggle="tooltip"
                   data-placement="top"
@@ -376,7 +374,6 @@
                 <!-- عرض القيد المحاسبي   -->
                 <button
                   type="button"
-                  id="68"
                   class="EditProjectPhasesTasks btn btn-outline-warning btn-sm waves-effect mx-1"
                   data-toggle="tooltip"
                   data-placement="top"
@@ -397,7 +394,6 @@
                 <!-- "    فك الترحيل " "-->
                 <button
                   type="button"
-                  id="68"
                   class="EditProjectPhasesTasks btn btn-outline-warning btn-sm waves-effect mx-1"
                   data-toggle="tooltip"
                   data-placement="top"
@@ -433,7 +429,6 @@
                 <!--طباعة  -->
                 <button
                   type="button"
-                  id="68"
                   class="AddNewTaskbtn btn btn-outline-success btn-sm waves-effect mx-1"
                   data-toggle="tooltip"
                   data-placement="top"
@@ -454,15 +449,15 @@
           mat-row
           *matRowDef="let row; columns: projectDisplayedColumns"
           (dblclick)="
-            editvouccher(row); open(NewVoucherModal, null, 'ViewVoucher')
-          "
+            editvouccher(row); open(NewVoucherModal, null, 'ViewVoucher')"
+          [ngClass]="{ 'highlightRow': row.invoiceId === selectedId }"
         ></tr>
       </table>
 
       <!-- <div *ngIf="!showTable" class="text-center">No Data Available in Table</div> -->
     </div>
 
-    <mat-paginator *ngIf="showTable" [pageSizeOptions]="[10, 25]">
+    <mat-paginator *ngIf="showTable" [pageSizeOptions]="[10, 25, projectsDataSource.data.length]">
     </mat-paginator>
   </div>
   <div style="display: none">

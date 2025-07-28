@@ -258,7 +258,6 @@
                   element.isPost == false
                 "
                 type="button"
-                id="68"
                 class="p-2 bg-orange-100 hover:bg-orange-500 rounded-lg duration-300 hover:text-white w-10 mx-1"
                 data-toggle="tooltip"
                 data-placement="top"
@@ -280,7 +279,6 @@
                   element.isPost == false
                 "
                 type="button"
-                id="68"
                 class="p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white w-10 mx-1"
                 data-toggle="tooltip"
                 data-placement="top"
@@ -296,7 +294,6 @@
             <button
               *ngIf="element.isPost == true"
               type="button"
-              id="68"
               class="EditProjectPhasesTasks btn btn-outline-warning btn-sm waves-effect mx-1"
               data-toggle="tooltip"
               data-placement="top"
@@ -314,7 +311,6 @@
                 element.isPost == true
               "
               type="button"
-              id="68"
               class="EditProjectPhasesTasks btn btn-outline-warning btn-sm waves-effect mx-1"
               data-toggle="tooltip"
               data-placement="top"
@@ -345,7 +341,6 @@
               <button
                 (click)="DailyVoucherReport(element); open(printDivModal)"
                 type="button"
-                id="68"
                 class="AddNewTaskbtn btn btn-outline-success btn-sm waves-effect mx-1"
                 data-toggle="tooltip"
                 data-placement="top"
@@ -365,6 +360,7 @@
         mat-row
         *matRowDef="let row; columns: projectDisplayedColumns"
         (dblclick)="open(EntryVoucherModal, row, 'ViewEntryVoucherModal')"
+        [ngClass]="{ 'highlightRow': row.invoiceId === selectedId }"
       ></tr>
     </table>
   </div>

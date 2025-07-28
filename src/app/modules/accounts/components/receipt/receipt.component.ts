@@ -356,12 +356,12 @@ export class ReceiptComponent implements OnInit {
       }
     });
   }
-
+  selectedId: number | null = null;
   ngOnInit(): void {
-    this.users = [
-      { id: 1, Name: 'محمود نافع' },
-      { id: 2, Name: 'محمود نافع' },
-    ];
+    this._sharedService.selectedId$.subscribe(id => {
+        this.selectedId = id;
+    });
+    this.users = [];
     this.GetAllVouchersLastMonth();
     this.FillBankSelect();
     this.FillCostCenterSelect();

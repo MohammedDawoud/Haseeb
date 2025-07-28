@@ -33,6 +33,7 @@ import jsPDF from 'jspdf';
 import { PrintreportsService } from 'src/app/core/services/acc_Services/printreports.service';
 import { PurchasesBillService } from 'src/app/core/services/acc_Services/purchasesBill.service';
 import { PayVoucherService } from 'src/app/core/services/acc_Services/pay-voucher.service';
+import { Router } from '@angular/router';
 const hijriSafe = require('hijri-date/lib/safe');
 const HijriDate = hijriSafe.default;
 const toHijri = hijriSafe.toHijri;
@@ -245,6 +246,7 @@ export class AccountStatementComponent implements OnInit {
     private translate: TranslateService,
     private authenticationService: AuthenticationService,
     private purchasesBillService: PurchasesBillService,
+    private router: Router,
     private _printreportsService: PrintreportsService,
     private _sharedService: SharedService,) {
       this.userG = this.authenticationService.userGlobalObj;
@@ -3145,8 +3147,28 @@ export class AccountStatementComponent implements OnInit {
   @ViewChild('printDivModalPurchase') printDivModalPurchase: any;
   @ViewChild('NewVoucherModal') NewVoucherModal: any;
 
+
+  InvoiceIdPElement:any;
+  selectRow() {
+    debugger
+    this._sharedService.setSelectedId(this.InvoiceIdPElement.invoiceId);
+      if(this.InvoiceIdPElement.type==5)
+      {
+        this.router.navigate(['/accounts/Receipt']);
+      }
+      else if(this.InvoiceIdPElement.type==6)
+      {
+        this.router.navigate(['/accounts/Catch_Receipt']);
+      }
+      else if(this.InvoiceIdPElement.type==8 || this.InvoiceIdPElement.type==17)
+      {
+        this.router.navigate(['/accounts/Under_daily']);
+      }  
+  }
   ShowVoucher(element:any){
     var InvoiceId=element.invoiceId;
+    this.InvoiceIdPElement=element;
+
     this._invoiceService.GetInvoiceById_Tran(InvoiceId).subscribe(data => {
       if(element.type==2)
       {
