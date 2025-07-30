@@ -358,9 +358,6 @@ export class CatchReceiptComponent implements OnInit {
   }
   selectedId: number | null = null;
   ngOnInit(): void {
-    this._sharedService.selectedId$.subscribe(id => {
-        this.selectedId = id;
-    });
 
     this.projectsDataSource = new MatTableDataSource();
 
@@ -746,8 +743,17 @@ export class CatchReceiptComponent implements OnInit {
       isChecked: this.datafilter.dateFrom == null ? false : true,
     };
     this.receiptService.GetAllVouchers(obj).subscribe((data) => {
-      this.GetAllVouchersList = data;
-      this.projectsDataSource = new MatTableDataSource(data);
+      var AccData=data;
+      this._sharedService.selectedId$.subscribe(id => {
+          this.selectedId = id;
+          if(!(this.selectedId==null || this.selectedId==0))
+          {
+            AccData = AccData.filter((d: { invoiceId: any }) => d.invoiceId == this.selectedId);
+          }
+      });
+      
+      this.GetAllVouchersList = AccData;
+      this.projectsDataSource = new MatTableDataSource(AccData);
       this.projectsDataSource.paginator = this.paginator;
       this.projectsDataSource.sort = this.sort;
     });

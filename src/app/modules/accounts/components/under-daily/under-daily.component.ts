@@ -260,8 +260,16 @@ export class UnderDailyComponent implements OnInit {
     _voucherFilterVM.isPost = this.dataEntryVoucher.filter.StatusPost;
     var obj = _voucherFilterVM;
     this._entryvoucherService.GetAllVouchersNew(obj).subscribe((data) => {
-      this.EntryVoucherDataSource = new MatTableDataSource(data);
-      this.EntryVoucherSourceTemp = data;
+      var AccData=data;
+      this._sharedService.selectedId$.subscribe(id => {
+          this.selectedId = id;
+          if(!(this.selectedId==null || this.selectedId==0))
+          {
+            AccData = AccData.filter((d: { invoiceId: any }) => d.invoiceId == this.selectedId);
+          }
+      });
+      this.EntryVoucherDataSource = new MatTableDataSource(AccData);
+      this.EntryVoucherSourceTemp = AccData;
       this.EntryVoucherDataSource.paginator = this.paginator;
       this.EntryVoucherDataSource.sort = this.sort;
     });
@@ -352,9 +360,6 @@ export class UnderDailyComponent implements OnInit {
   selectedId: number | null = null;
 
   ngOnInit(): void {
-     this._sharedService.selectedId$.subscribe(id => {
-        this.selectedId = id;
-    });
     this.EntryVouchertype = [
       { id: 1, name: { ar: 'تم الترحيل', en: 'Posted' } },
       { id: 2, name: { ar: 'غير مرحل', en: 'Not Posted' } },
