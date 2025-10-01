@@ -260,8 +260,16 @@ export class UnderDailyComponent implements OnInit {
     _voucherFilterVM.isPost = this.dataEntryVoucher.filter.StatusPost;
     var obj = _voucherFilterVM;
     this._entryvoucherService.GetAllVouchersNew(obj).subscribe((data) => {
-      this.EntryVoucherDataSource = new MatTableDataSource(data);
-      this.EntryVoucherSourceTemp = data;
+      var AccData=data;
+      this._sharedService.selectedId$.subscribe(id => {
+          this.selectedId = id;
+          if(!(this.selectedId==null || this.selectedId==0))
+          {
+            AccData = AccData.filter((d: { invoiceId: any }) => d.invoiceId == this.selectedId);
+          }
+      });
+      this.EntryVoucherDataSource = new MatTableDataSource(AccData);
+      this.EntryVoucherSourceTemp = AccData;
       this.EntryVoucherDataSource.paginator = this.paginator;
       this.EntryVoucherDataSource.sort = this.sort;
     });
@@ -349,6 +357,7 @@ export class UnderDailyComponent implements OnInit {
   dateprint: any;
   datePrintJournals: any = new Date();
   lang: any = 'ar';
+  selectedId: number | null = null;
 
   ngOnInit(): void {
     this.EntryVouchertype = [

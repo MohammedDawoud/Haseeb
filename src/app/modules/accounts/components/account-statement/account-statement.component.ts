@@ -28,6 +28,12 @@ import { EntryvoucherService } from 'src/app/core/services/acc_Services/entryvou
 import { ReceiptService } from 'src/app/core/services/acc_Services/receipt.service';
 import { DebentureService } from 'src/app/core/services/acc_Services/debenture.service';
 import { ToastrService } from 'ngx-toastr';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+import { PrintreportsService } from 'src/app/core/services/acc_Services/printreports.service';
+import { PurchasesBillService } from 'src/app/core/services/acc_Services/purchasesBill.service';
+import { PayVoucherService } from 'src/app/core/services/acc_Services/pay-voucher.service';
+import { Router } from '@angular/router';
 const hijriSafe = require('hijri-date/lib/safe');
 const HijriDate = hijriSafe.default;
 const toHijri = hijriSafe.toHijri;
@@ -228,6 +234,7 @@ export class AccountStatementComponent implements OnInit {
   endDate = new Date();
   constructor(private modalService: NgbModal,
     private _accountsreportsService: AccountsreportsService,
+    private _payvoucherservice: PayVoucherService,
     private api: RestApiService,
     private _invoiceService: InvoiceService,
     private _debentureService: DebentureService,
@@ -238,6 +245,9 @@ export class AccountStatementComponent implements OnInit {
     private _entryvoucherService: EntryvoucherService,
     private translate: TranslateService,
     private authenticationService: AuthenticationService,
+    private purchasesBillService: PurchasesBillService,
+    private router: Router,
+    private _printreportsService: PrintreportsService,
     private _sharedService: SharedService,) {
       this.userG = this.authenticationService.userGlobalObj;
       this.ReceiptVoucherFormintial();
@@ -253,6 +263,7 @@ export class AccountStatementComponent implements OnInit {
   ngOnInit(): void {
     this.FillCostCenterSelect_Sta()
     this.FillAccountsSelect()
+    this.GetLayoutReadyVm();
 
 
 
@@ -680,7 +691,7 @@ export class AccountStatementComponent implements OnInit {
       modal.dismiss();
     }
   }
-
+  popuptype = 0;
   open(content: any, data?: any, type?: any, status?: any) {
     if (data && type == 'edit') {
       this.modalDetails = data;
@@ -701,6 +712,10 @@ export class AccountStatementComponent implements OnInit {
       this.WhichTypeAddEditView = 3;
       this.EditEntryVoucherPopup(data);
     }
+     else if (type == 'ViewVoucher') {
+      this.popuptype = 3;
+      this.editvouccher(data);
+    } 
     if (type == 'viewReceiptModal') {
       this.ReceiptVoucherForm.controls['VoucherId'].setValue(data.invoiceId);
       this.hijriDate = null;
@@ -2547,7 +2562,8 @@ export class AccountStatementComponent implements OnInit {
           maxVal + 1,
           data.result,
           offerdata.serviceQty,
-          offerdata.serviceamountval
+          offerdata.serviceamountval,
+          offerdata
         );
       });
   }
@@ -2613,23 +2629,28 @@ export class AccountStatementComponent implements OnInit {
     this.addInvoiceRow();
   }
 
-  setServiceRowValueNew(indexRow: any, item: any, Qty: any, servamount: any) {
+  setServiceRowValueNew(indexRow: any, item: any, Qty: any, servamount: any,data:any) {
+      var AmountVal = 0;
+      if (data.taxType == 3) {
+        AmountVal =(+parseFloat(data.totalAmount).toFixed(2) + +parseFloat(data.discountValue_Det).toFixed(2)) /Qty;
+      } else {
+        AmountVal =(+parseFloat(data.amount).toFixed(2) + +parseFloat(data.discountValue_Det).toFixed(2)) / Qty;
+      }
+
     this.addInvoiceRow();
-    this.InvoiceDetailsRows.filter(
-      (a: { idRow: any }) => a.idRow == indexRow
-    )[0].AccJournalid = item.servicesId;
-    this.InvoiceDetailsRows.filter(
-      (a: { idRow: any }) => a.idRow == indexRow
-    )[0].UnitConst = item.serviceTypeName;
-    this.InvoiceDetailsRows.filter(
-      (a: { idRow: any }) => a.idRow == indexRow
-    )[0].QtyConst = Qty;
-    this.InvoiceDetailsRows.filter(
-      (a: { idRow: any }) => a.idRow == indexRow
-    )[0].accountJournaltxt = item.name;
-    this.InvoiceDetailsRows.filter(
-      (a: { idRow: any }) => a.idRow == indexRow
-    )[0].Amounttxt = servamount;
+    this.InvoiceDetailsRows.filter((a: { idRow: any }) => a.idRow == indexRow)[0].AccJournalid = item.servicesId;
+    this.InvoiceDetailsRows.filter((a: { idRow: any }) => a.idRow == indexRow)[0].UnitConst = item.serviceTypeName;
+    this.InvoiceDetailsRows.filter((a: { idRow: any }) => a.idRow == indexRow)[0].QtyConst = Qty;
+    this.InvoiceDetailsRows.filter((a: { idRow: any }) => a.idRow == indexRow)[0].accountJournaltxt = item.name;
+    this.InvoiceDetailsRows.filter((a: { idRow: any }) => a.idRow == indexRow)[0].Amounttxt = servamount;
+
+    this.InvoiceDetailsRows.filter((a: { idRow: any }) => a.idRow == indexRow)[0].DiscountValueConst = data.discountValue_Det;
+    this.InvoiceDetailsRows.filter((a: { idRow: any }) => a.idRow == indexRow)[0].DiscountPercentageConst = data.discountPercentage_Det;
+    this.InvoiceDetailsRows.filter((a: { idRow: any }) => a.idRow == indexRow)[0].AmountBeforeTaxtxt = AmountVal;
+    this.InvoiceDetailsRows.filter((a: { idRow: any }) => a.idRow == indexRow)[0].Amounttxt = AmountVal;
+    this.InvoiceDetailsRows.filter((a: { idRow: any }) => a.idRow == indexRow)[0].taxAmounttxt = data.taxAmount;
+    this.InvoiceDetailsRows.filter((a: { idRow: any }) => a.idRow == indexRow)[0].TotalAmounttxt = data.totalAmount;
+
     this.CalculateTotal(1);
   }
 
@@ -3114,32 +3135,1134 @@ export class AccountStatementComponent implements OnInit {
   //#endregion
 
 
+  
+  //#region 
   @ViewChild('NewInvoiceModal') newInvoiceModal: any;
   @ViewChild('EntryVoucherModal') entryVoucherModal: any;
   @ViewChild('ReceiptVoucherwithoutCustomerModal') receiptVoucherwithoutCustomerModal: any;
+  @ViewChild('printDivModal') printDivModal: any;
+  @ViewChild('printDivModalReVoucher') printDivModalReVoucher: any;
+  @ViewChild('printDivModalDailyVoucher') printDivModalDailyVoucher: any;
+  @ViewChild('printDivModalReceipt') printDivModalReceipt: any;
+  @ViewChild('printDivModalPurchase') printDivModalPurchase: any;
+  @ViewChild('NewVoucherModal') NewVoucherModal: any;
 
+
+  InvoiceIdPElement:any;
+  selectRow() {
+    debugger
+    this._sharedService.setSelectedId(this.InvoiceIdPElement.invoiceId);
+      if(this.InvoiceIdPElement.type==5)
+      {
+        this.router.navigate(['/accounts/Receipt']);
+      }
+      else if(this.InvoiceIdPElement.type==6)
+      {
+        this.router.navigate(['/accounts/Catch_Receipt']);
+      }
+      else if(this.InvoiceIdPElement.type==8 || this.InvoiceIdPElement.type==17)
+      {
+        this.router.navigate(['/accounts/Under_daily']);
+      }  
+  }
   ShowVoucher(element:any){
     var InvoiceId=element.invoiceId;
+    this.InvoiceIdPElement=element;
+
     this._invoiceService.GetInvoiceById_Tran(InvoiceId).subscribe(data => {
       if(element.type==2)
       {
         this.open(this.newInvoiceModal, data, 'InvoiceView');
+      }
+      else if(element.type==5)
+      {
+        this.open(this.NewVoucherModal, data, 'ViewVoucher');
       }
       else if(element.type==6)
       {
         this.open(this.receiptVoucherwithoutCustomerModal, data, 'viewReceiptModal');
       }
       else if(element.type==8 || element.type==17)
-        {
+      {
         this.open(this.entryVoucherModal, data, 'ViewEntryVoucherModal');
       }
 
     });
-
   }
+  PrintVoucher(element:any){
+    var InvoiceId=element.invoiceId;
+    this._invoiceService.GetInvoiceById_Tran(InvoiceId).subscribe(data => {
+      if(element.type==2)
+      {
+        this.GetInvoicePrint(element,1);
+        this.open(this.printDivModal);
+      }
+      if(element.type==29)
+      {
+        this.GetInvoicePrint(element,29,false,data);
+        this.open(this.printDivModal);
+      }
+      if(element.type==1)
+      {
+        this.GetInvoicePrint_Purchase(element,1);
+        this.open(this.printDivModalPurchase);
+      }
+      if(element.type==33)
+      {
+        this.GetInvoicePrintDepit(element,33,data);
+        this.open(this.printDivModalPurchase);
+      }
+      else if(element.type==5)
+      {
+        this.GetReport(element);
+        this.open(this.printDivModalReceipt);
+      }
+      else if(element.type==6)
+      {
+        this.GetReport(element);
+      }
+      else if(element.type==8 || element.type==17)
+      {
+        this.DailyVoucherReport(element);
+        this.open(this.printDivModalDailyVoucher);
+      }
+
+    });
+  }
+
+    printDiv(id: any) {
+    this.print.print(id, environment.printConfig);
+  }
+  InvPrintData: any = null;
+  CustomData: any = {
+    AccualValue: null,
+    Diff: null,
+    Total: null,
+    netVal: null,
+    DiscPer: '0',
+    TotalAfterDisc: null,
+    Account1Img: null,
+    Account2Img: null,
+    Account1Bank: null,
+    Account2Bank: null,
+    OrgImg: null,
+    PrintType: null,
+    PrintTypeName: null,
+    headerurl: null,
+    footerurl: null,
+    ContractNo: null,
+    TotalCredit: 0,
+    TotalDepit: 0,
+  };
+  resetCustomData() {
+    this.EntryVoucherPrintData = null;
+    this.InvPrintData = null;
+    this.CustomData = {
+      AccualValue: null,
+      Diff: null,
+      Total: null,
+      netVal: null,
+      Disc: null,
+      DiscPer: '0',
+      TotalAfterDisc: null,
+      Account1Img: null,
+      Account2Img: null,
+      Account1Bank: null,
+      Account2Bank: null,
+      OrgImg: null,
+      PrintType: null,
+      PrintTypeName: null,
+      headerurl: null,
+      footerurl: null,
+      ContractNo: null,
+      TotalCredit: 0,
+      TotalDepit: 0,
+    };
+  }
+  ZatcaPrintP=false;
+  GetInvoicePrint(obj: any, TempCheck: any,ZatcaPrint?:boolean,dataP?:any) {
+    if(ZatcaPrint){this.ZatcaPrintP=true;}
+    else {this.ZatcaPrintP=false;}
+    this.resetCustomData();
+    var InvVal=0;
+    if(TempCheck==29)InvVal=dataP.creditNotiId;
+   else InvVal=obj.invoiceId;
+    this._printreportsService.ChangeInvoice_PDF(obj.invoiceId, TempCheck).subscribe((data) => {
+        console.log("GetInvoicePrint",data);
+
+        this.InvPrintData = data;
+        this.InvPrintData.voucherDetailsVM_VD.forEach((element: any) => {
+          element.servicesPricesOffer.sort(
+            (a: { lineNumber: number }, b: { lineNumber: number }) =>
+              (a.lineNumber ?? 0) - (b.lineNumber ?? 0)
+          ); // b - a for reverse sort
+        });
+        if (
+          this.InvPrintData?.invoicesVM_VD?.contractNo == null ||
+          this.InvPrintData?.invoicesVM_VD?.contractNo == ''
+        ) {
+          this.CustomData.ContractNo = 'بدون';
+        } else {
+          this.CustomData.ContractNo =
+            this.InvPrintData?.invoicesVM_VD?.contractNo;
+        }
+        this.CustomData.PrintType = TempCheck;
+        debugger
+        if (TempCheck == 29){
+          this.CustomData.PrintTypeName = 'اشعار دائن';
+        } 
+        else if (TempCheck == 30)
+        {
+          this.CustomData.PrintTypeName = 'اشعار مدين';
+
+        } 
+        else this.CustomData.PrintType = 1;
+        console.log("aaaaa",this.CustomData?.PrintType);
+        var TotalInvWithoutDisc = 0;
+        var netVal = 0;
+        var DiscountValue_Det_Total_withqty = 0;
+        if (this.InvPrintData?.voucherDetailsVM_VD[0]?.taxType == 3) {
+          netVal = this.InvPrintData?.invoicesVM_VD?.totalValue;
+          TotalInvWithoutDisc = this.InvPrintData?.invoicesVM_VD?.totalValue;
+        } else {
+          netVal = this.InvPrintData?.invoicesVM_VD?.invoiceValue;
+          TotalInvWithoutDisc = this.InvPrintData?.invoicesVM_VD?.invoiceValue;
+        }
+        this.InvPrintData?.voucherDetailsVM_VD?.forEach((element: any) => {
+          DiscountValue_Det_Total_withqty =
+            DiscountValue_Det_Total_withqty + (element.discountValue_Det ?? 0);
+        });
+
+        this.CustomData.DiscPer = parseFloat(
+          (
+            (DiscountValue_Det_Total_withqty * 100) /
+            (TotalInvWithoutDisc + DiscountValue_Det_Total_withqty)
+          ).toString()
+        ).toFixed(2);
+        this.CustomData.Disc = DiscountValue_Det_Total_withqty;
+        this.CustomData.Total =
+          TotalInvWithoutDisc + DiscountValue_Det_Total_withqty;
+        this.CustomData.netVal = netVal;
+        this.CustomData.TotalAfterDisc = TotalInvWithoutDisc;
+
+        if (this.InvPrintData?.invoicesVM_VD.printBankAccount != true) {
+          this.CustomData.Account1Bank =
+            this.InvPrintData?.orgIsRequired_VD == true
+              ? this.InvPrintData?.org_VD.accountBank
+              : this.InvPrintData?.branch_VD.accountBank;
+          this.CustomData.Account2Bank =
+            this.InvPrintData?.orgIsRequired_VD == true
+              ? this.InvPrintData?.org_VD.accountBank2
+              : this.InvPrintData?.branch_VD.accountBank2;
+          this.CustomData.Account1Img =
+            this.InvPrintData?.orgIsRequired_VD == true
+              ? this.InvPrintData?.org_VD.bankIdImgURL
+              : this.InvPrintData?.branch_VD.bankIdImgURL;
+          this.CustomData.Account2Img =
+            this.InvPrintData?.orgIsRequired_VD == true
+              ? this.InvPrintData?.org_VD.bankId2ImgURL
+              : this.InvPrintData?.branch_VD.bankId2ImgURL;
+        } else {
+          this.CustomData.Account1Bank = null;
+          this.CustomData.Account2Bank = null;
+          this.CustomData.Account1Img = null;
+          this.CustomData.Account2Img = null;
+        }
+        if (this.CustomData.Account1Img)
+        {
+            this.CustomData.Account1Img =this.CustomData.Account1Img;
+        }
+        
+        else this.CustomData.Account1Img = null;
+        if (this.CustomData.Account2Img)
+        {
+          this.CustomData.Account2Img =this.CustomData.Account2Img;
+        }         
+        else this.CustomData.Account2Img = null;
+        if (
+          this.InvPrintData?.branch_VD.isPrintInvoice == true &&
+          this.InvPrintData?.branch_VD.branchLogoUrl != '' &&
+          this.InvPrintData?.branch_VD.branchLogoUrl != null
+        ) {
+              this.CustomData.OrgImg =this.InvPrintData?.branch_VD.branchLogoUrl;
+        } else {
+          if (this.InvPrintData?.org_VD.logoUrl)
+          {
+              this.CustomData.OrgImg =this.InvPrintData?.org_VD.logoUrl;
+          }
+          else this.CustomData.OrgImg = null;
+        }
+        if (
+          this.InvPrintData?.branch_VD.headerPrintInvoice == true &&
+          this.InvPrintData?.branch_VD.headerLogoUrl != '' &&
+          this.InvPrintData?.branch_VD.headerLogoUrl != null
+        ) {
+          this.CustomData.headerurl =this.InvPrintData?.branch_VD.headerLogoUrl;
+
+        } else {
+          this.CustomData.headerurl = null;
+        }
+
+        if (
+          this.InvPrintData?.branch_VD.headerPrintInvoice == true &&
+          this.InvPrintData?.branch_VD.footerLogoUrl != '' &&
+          this.InvPrintData?.branch_VD.footerLogoUrl != null
+        ) {
+          this.CustomData.footerurl =this.InvPrintData?.branch_VD.footerLogoUrl;
+
+        } else {
+          this.CustomData.footerurl = null;
+        }
+      });
+  }
+  async downloadPDF(id:any) {
+    debugger
+    var content=(document.getElementById(id) as HTMLFormElement);
+    const canvas = await html2canvas(content);
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF();
+    const imgWidth = 190; // Adjust based on content width
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+    const pdfBlob = pdf.output('blob');
+    const reader = new FileReader();
+    reader.readAsArrayBuffer(pdfBlob);
+    reader.onloadend = () => {
+    const byteArray = new Uint8Array(reader.result as ArrayBuffer);
+    //console.log(byteArray);
+    this.PDFDownloadZatca(byteArray);
+    };
+  }
+  PDFDownloadZatca(byteArray:any) {
+    debugger
+    const formData = new FormData();
+    const blob = new Blob([byteArray], { type: 'application/octet-stream' });
+    formData.append('UploadedFile', blob);
+    formData.append('InvoiceId', this.InvPrintData?.invoicesVM_VD?.invoiceId);
+    this._invoiceService.ConvertEncodedXMLToPDFA3ByteArray(formData).subscribe((data) => {     
+      if (data.statusCode == 200) {
+        var PDFPath = environment.PhotoURL + data.reasonPhrase;
+        const printwindow=window.open(PDFPath,'_blank');
+        printwindow?.print();
+        //printJS({ printable: PDFPath, type: 'pdf', showModal: true });
+      } else {
+        this.toast.error(this.translate.instant(data.reasonPhrase), this.translate.instant('Message'));
+      }    
+    });
+  }
+  GetAccualValue(item: any) {
+    //debugger
+    var AccualValue = 0;
+    if (item.taxType == 3) {
+      AccualValue =
+        ((item.totalAmount ?? 0) + (item.discountValue_Det ?? 0)) /
+        (item.qty ?? 1);
+    } else {
+      AccualValue =
+        ((item.amount ?? 0) + (item.discountValue_Det ?? 0)) / (item.qty ?? 1);
+    }
+    return AccualValue;
+  }
+  GetDiff(item: any) {
+    var Diff = '0';
+    Diff = parseFloat((item?.totalAmount - item?.taxAmount).toString()).toFixed(
+      2
+    );
+    return Diff;
+  }
+
+  EntryVoucherPrintData: any = null;
+  CustomDataNoteInvoice: any;
+  CustomDatatoInvoice: any;
+  GetReport(obj: any) {
+    this.resetCustomData();
+    this.receiptService.GetReport(obj.invoiceId).subscribe((data) => {
+      this.EntryVoucherPrintData = data;
+      if (
+        this.EntryVoucherPrintData.voucherVM[0].toInvoiceId == '' ||
+        this.EntryVoucherPrintData.voucherVM[0].toInvoiceId == null
+      ) {
+        this.CustomDataNoteInvoice = 'لا يوجد رقم فاتورة لسند القبض';
+        this.CustomDatatoInvoice = 'بدون';
+      } else {
+        this.CustomDataNoteInvoice = null;
+        this.CustomDatatoInvoice =
+          this.EntryVoucherPrintData.voucherVM[0].toInvoiceId;
+      }
+      // if (this.EntryVoucherPrintData?.org_VD.logoUrl)
+      //   this.CustomData =
+      //     environment.PhotoURL + this.EntryVoucherPrintData?.org_VD.logoUrl;
+      // else this.CustomData = null;
+
+      if (
+        this.EntryVoucherPrintData?.branch.headerPrintrevoucher == true &&
+        this.EntryVoucherPrintData?.branch.branchLogoUrl != '' &&
+        this.EntryVoucherPrintData?.branch.branchLogoUrl != null
+      ) {
+        this.CustomData.OrgImg =
+          environment.PhotoURL + this.EntryVoucherPrintData?.branch.branchLogoUrl;
+      } else {
+        if (this.EntryVoucherPrintData?.org_VD.logoUrl)
+          this.CustomData.OrgImg =
+            environment.PhotoURL + this.EntryVoucherPrintData?.org_VD.logoUrl;
+        else this.CustomData.OrgImg = null;
+      }
+      if (
+        this.EntryVoucherPrintData?.branch.headerPrintrevoucher == true &&
+        this.EntryVoucherPrintData?.branch.headerLogoUrl != '' &&
+        this.EntryVoucherPrintData?.branch.headerLogoUrl != null
+      ) {
+        this.CustomData.headerurl =
+          environment.PhotoURL + this.EntryVoucherPrintData?.branch.headerLogoUrl;
+      } else {
+        this.CustomData.headerurl = null;
+      }
+
+      if (
+        this.EntryVoucherPrintData?.branch.headerPrintrevoucher == true &&
+        this.EntryVoucherPrintData?.branch.footerLogoUrl != '' &&
+        this.EntryVoucherPrintData?.branch.footerLogoUrl != null
+      ) {
+        this.CustomData.footerurl =
+          environment.PhotoURL + this.EntryVoucherPrintData?.branch.footerLogoUrl;
+      } else {
+        this.CustomData.footerurl = null;
+      }
+    });
+  }
+  getpayType(id: any) {
+    var PrintJournalsByPayTypeName = '';
+    this.PayTypeList.forEach((element: any) => {
+      if (element.id == id) {
+        PrintJournalsByPayTypeName = element.name;
+      }
+    });
+    return this.translate.instant(PrintJournalsByPayTypeName);
+  }
+
+  CustomData2: any = {
+    AccualValue: null,
+    Diff: null,
+    Total: null,
+    netVal: null,
+    DiscPer: '0',
+    TotalAfterDisc: null,
+    Account1Img: null,
+    Account2Img: null,
+    Account1Bank: null,
+    Account2Bank: null,
+    OrgImg: null,
+    PrintType: null,
+    PrintTypeName: null,
+    headerurl: null,
+    footerurl: null,
+    ContractNo: null,
+  };
+
+  resetCustomData2() {
+    this.CustomData2 = {
+      AccualValue: null,
+      Diff: null,
+      Total: null,
+      netVal: null,
+      Disc: null,
+      DiscPer: '0',
+      TotalAfterDisc: null,
+      Account1Img: null,
+      Account2Img: null,
+      Account1Bank: null,
+      Account2Bank: null,
+      OrgImg: null,
+      PrintType: null,
+      PrintTypeName: null,
+      headerurl: null,
+      footerurl: null,
+      ContractNo: null,
+    };
+  }
+
+  DailyVoucherReport(obj: any) {
+    this._entryvoucherService
+      .DailyVoucherReport(obj.invoiceId)
+      .subscribe((data) => {
+        //debugger;
+        this.EntryVoucherPrintData = data;
+        var TotalCredit = 0;
+        var TotalDepit = 0;
+        if (data.invoicesVM.length > 0) {
+          data.invoicesVM.forEach((element: any) => {
+            var Credit = 0;
+            var Depit = 0;
+            if (+element.depit < +element.credit) {
+              Credit = parseFloat(element.credit);
+              Depit = 0;
+              TotalCredit = TotalCredit + Credit;
+            }
+            if (+element.credit < +element.depit) {
+              Credit = 0;
+              Depit = parseFloat(element.depit);
+              TotalDepit = TotalDepit + Depit;
+            }
+          });
+          this.CustomData.TotalCredit = parseFloat(
+            TotalCredit.toString()
+          ).toFixed(2);
+          this.CustomData.TotalDepit = parseFloat(
+            TotalDepit.toString()
+          ).toFixed(2);
+        }
+
+        // if (this.EntryVoucherPrintData?.org_VD.logoUrl)
+        //   this.CustomData.OrgImg =
+        //     environment.PhotoURL + this.EntryVoucherPrintData?.org_VD.logoUrl;
+        // else this.CustomData.OrgImg = null;
+        
+      if (
+        this.EntryVoucherPrintData?.branch.headerprintdarvoucher == true &&
+        this.EntryVoucherPrintData?.branch.branchLogoUrl != '' &&
+        this.EntryVoucherPrintData?.branch.branchLogoUrl != null
+      ) {
+        this.CustomData2.OrgImg =
+          environment.PhotoURL + this.EntryVoucherPrintData?.branch.branchLogoUrl;
+      } else {
+        if (this.EntryVoucherPrintData?.org_VD.logoUrl)
+          this.CustomData2.OrgImg =
+            environment.PhotoURL + this.EntryVoucherPrintData?.org_VD.logoUrl;
+        else this.CustomData2.OrgImg = null;
+      }
+      if (
+        this.EntryVoucherPrintData?.branch.headerprintdarvoucher == true &&
+        this.EntryVoucherPrintData?.branch.headerLogoUrl != '' &&
+        this.EntryVoucherPrintData?.branch.headerLogoUrl != null
+      ) {
+        this.CustomData2.headerurl =
+          environment.PhotoURL + this.EntryVoucherPrintData?.branch.headerLogoUrl;
+      } else {
+        this.CustomData2.headerurl = null;
+      }
+
+      if (
+        this.EntryVoucherPrintData?.branch.headerprintdarvoucher == true &&
+        this.EntryVoucherPrintData?.branch.footerLogoUrl != '' &&
+        this.EntryVoucherPrintData?.branch.footerLogoUrl != null
+      ) {
+        this.CustomData2.footerurl =
+          environment.PhotoURL + this.EntryVoucherPrintData?.branch.footerLogoUrl;
+      } else {
+        this.CustomData2.footerurl = null;
+      }
+
+      });
+  }
+
+  GetInvoicePrint_Purchase(obj: any, TempCheck: any) {
+    this.resetCustomData();
+    this.purchasesBillService.ChangePurchase_PDF(obj.invoiceId, TempCheck).subscribe((data) => {
+        this.InvPrintData = data;
+        this.CustomData.PrintType = TempCheck;
+        if (TempCheck == 32) this.CustomData.PrintTypeName = 'اشعار دائن';
+        else if (TempCheck == 33) this.CustomData.PrintTypeName = 'اشعار مدين';
+        else this.CustomData.PrintType = 1;
+
+        var TotalInvWithoutDisc = 0;
+        var netVal = 0;
+        var DiscountValue_Det_Total_withqty = 0;
+        debugger
+        if (this.InvPrintData?.voucherDetailsVM_VD[0]?.taxType == 3) {
+          netVal = this.InvPrintData?.invoicesVM_VD?.totalValue;
+          TotalInvWithoutDisc = this.InvPrintData?.invoicesVM_VD?.totalValue;
+        } else {
+          netVal = this.InvPrintData?.invoicesVM_VD?.invoiceValue;
+          TotalInvWithoutDisc = this.InvPrintData?.invoicesVM_VD?.invoiceValue;
+        }
+        this.InvPrintData?.voucherDetailsVM_VD?.forEach((element: any) => {
+          DiscountValue_Det_Total_withqty =
+            DiscountValue_Det_Total_withqty + (element.discountValue_Det ?? 0);
+        });
+
+        this.CustomData.DiscPer = parseFloat(
+          (
+            (DiscountValue_Det_Total_withqty * 100) /
+            (TotalInvWithoutDisc + DiscountValue_Det_Total_withqty)
+          ).toString()
+        ).toFixed(2);
+        this.CustomData.Disc = DiscountValue_Det_Total_withqty;
+        this.CustomData.Total =
+          TotalInvWithoutDisc + DiscountValue_Det_Total_withqty;
+        this.CustomData.netVal = netVal;
+        this.CustomData.TotalAfterDisc = TotalInvWithoutDisc;
+
+        if (this.InvPrintData?.invoicesVM_VD.printBankAccount != true) {
+          this.CustomData.Account1Bank =
+            this.InvPrintData?.orgIsRequired_VD == true
+              ? this.InvPrintData?.org_VD.accountBank
+              : this.InvPrintData?.branch_VD.accountBank;
+          this.CustomData.Account2Bank =
+            this.InvPrintData?.orgIsRequired_VD == true
+              ? this.InvPrintData?.org_VD.accountBank2
+              : this.InvPrintData?.branch_VD.accountBank2;
+          this.CustomData.Account1Img =
+            this.InvPrintData?.orgIsRequired_VD == true
+              ? this.InvPrintData?.org_VD.bankIdImgURL
+              : this.InvPrintData?.branch_VD.bankIdImgURL;
+          this.CustomData.Account2Img =
+            this.InvPrintData?.orgIsRequired_VD == true
+              ? this.InvPrintData?.org_VD.bankId2ImgURL
+              : this.InvPrintData?.branch_VD.bankId2ImgURL;
+        } else {
+          this.CustomData.Account1Bank = null;
+          this.CustomData.Account2Bank = null;
+          this.CustomData.Account1Img = null;
+          this.CustomData.Account2Img = null;
+        }
+        if (this.CustomData.Account1Img)
+          this.CustomData.Account1Img =
+            environment.PhotoURL + this.CustomData.Account1Img;
+        else this.CustomData.Account1Img = null;
+
+        if (this.CustomData.Account2Img)
+          this.CustomData.Account2Img =
+            environment.PhotoURL + this.CustomData.Account2Img;
+        else this.CustomData.Account2Img = null;
+        if (
+          this.InvPrintData?.branch_VD.isPrintInvoice == true &&
+          this.InvPrintData?.branch_VD.branchLogoUrl != '' &&
+          this.InvPrintData?.branch_VD.branchLogoUrl != null
+        ) {
+          this.CustomData.OrgImg =
+            environment.PhotoURL + this.InvPrintData?.branch_VD.branchLogoUrl;
+        } else {
+          if (this.InvPrintData?.org_VD.logoUrl)
+            this.CustomData.OrgImg =
+              environment.PhotoURL + this.InvPrintData?.org_VD.logoUrl;
+          else this.CustomData.OrgImg = null;
+        }
+        if (
+          this.InvPrintData?.branch_VD.headerPrintInvoice == true &&
+          this.InvPrintData?.branch_VD.headerLogoUrl != '' &&
+          this.InvPrintData?.branch_VD.headerLogoUrl != null
+        ) {
+          this.CustomData.headerurl =
+            environment.PhotoURL + this.InvPrintData?.branch_VD.headerLogoUrl;
+        } else {
+          this.CustomData.headerurl = null;
+        }
+
+        if (
+          this.InvPrintData?.branch_VD.headerPrintInvoice == true &&
+          this.InvPrintData?.branch_VD.footerLogoUrl != '' &&
+          this.InvPrintData?.branch_VD.footerLogoUrl != null
+        ) {
+          this.CustomData.footerurl =
+            environment.PhotoURL + this.InvPrintData?.branch_VD.footerLogoUrl;
+        } else {
+          this.CustomData.footerurl = null;
+        }
+      });
+  }
+
+  GetInvoicePrintDepit(obj: any, TempCheck: any,dataP:any) {
+    this.resetCustomData();
+    var InvVal=0;
+    if(TempCheck==33)InvVal=dataP.depitNotiId;
+   else InvVal=obj.invoiceId;
+    this.purchasesBillService.ChangeInvoice_PDFCreditPurchase(InvVal, TempCheck).subscribe((data) => {
+        this.InvPrintData = data;
+        this.CustomData.PrintType = TempCheck;
+        if (TempCheck == 32) this.CustomData.PrintTypeName = 'اشعار دائن';
+        else if (TempCheck == 33) this.CustomData.PrintTypeName = 'اشعار مدين';
+        else this.CustomData.PrintType = 1;
+
+        var TotalInvWithoutDisc = 0;
+        var netVal = 0;
+        var DiscountValue_Det_Total_withqty = 0;
+        if (this.InvPrintData?.voucherDetailsVM_VD[0]?.taxType == 3) {
+          netVal = this.InvPrintData?.invoicesVM_VD?.totalValue;
+          TotalInvWithoutDisc = this.InvPrintData?.invoicesVM_VD?.totalValue;
+        } else {
+          netVal = this.InvPrintData?.invoicesVM_VD?.invoiceValue;
+          TotalInvWithoutDisc = this.InvPrintData?.invoicesVM_VD?.invoiceValue;
+        }
+        this.InvPrintData?.voucherDetailsVM_VD?.forEach((element: any) => {
+          DiscountValue_Det_Total_withqty =
+            DiscountValue_Det_Total_withqty + (element.discountValue_Det ?? 0);
+        });
+
+        this.CustomData.DiscPer = parseFloat(
+          (
+            (DiscountValue_Det_Total_withqty * 100) /
+            (TotalInvWithoutDisc + DiscountValue_Det_Total_withqty)
+          ).toString()
+        ).toFixed(2);
+        this.CustomData.Disc = DiscountValue_Det_Total_withqty;
+        this.CustomData.Total =
+          TotalInvWithoutDisc + DiscountValue_Det_Total_withqty;
+        this.CustomData.netVal = netVal;
+        this.CustomData.TotalAfterDisc = TotalInvWithoutDisc;
+
+        if (this.InvPrintData?.invoicesVM_VD.printBankAccount != true) {
+          this.CustomData.Account1Bank =
+            this.InvPrintData?.orgIsRequired_VD == true
+              ? this.InvPrintData?.org_VD.accountBank
+              : this.InvPrintData?.branch_VD.accountBank;
+          this.CustomData.Account2Bank =
+            this.InvPrintData?.orgIsRequired_VD == true
+              ? this.InvPrintData?.org_VD.accountBank2
+              : this.InvPrintData?.branch_VD.accountBank2;
+          this.CustomData.Account1Img =
+            this.InvPrintData?.orgIsRequired_VD == true
+              ? this.InvPrintData?.org_VD.bankIdImgURL
+              : this.InvPrintData?.branch_VD.bankIdImgURL;
+          this.CustomData.Account2Img =
+            this.InvPrintData?.orgIsRequired_VD == true
+              ? this.InvPrintData?.org_VD.bankId2ImgURL
+              : this.InvPrintData?.branch_VD.bankId2ImgURL;
+        } else {
+          this.CustomData.Account1Bank = null;
+          this.CustomData.Account2Bank = null;
+          this.CustomData.Account1Img = null;
+          this.CustomData.Account2Img = null;
+        }
+        if (this.CustomData.Account1Img)
+          this.CustomData.Account1Img =
+            environment.PhotoURL + this.CustomData.Account1Img;
+        else this.CustomData.Account1Img = null;
+
+        if (this.CustomData.Account2Img)
+          this.CustomData.Account2Img =
+            environment.PhotoURL + this.CustomData.Account2Img;
+        else this.CustomData.Account2Img = null;
+        if (
+          this.InvPrintData?.branch_VD.isPrintInvoice == true &&
+          this.InvPrintData?.branch_VD.branchLogoUrl != '' &&
+          this.InvPrintData?.branch_VD.branchLogoUrl != null
+        ) {
+          this.CustomData.OrgImg =
+            environment.PhotoURL + this.InvPrintData?.branch_VD.branchLogoUrl;
+        } else {
+          if (this.InvPrintData?.org_VD.logoUrl)
+            this.CustomData.OrgImg =
+              environment.PhotoURL + this.InvPrintData?.org_VD.logoUrl;
+          else this.CustomData.OrgImg = null;
+        }
+        if (
+          this.InvPrintData?.branch_VD.headerPrintInvoice == true &&
+          this.InvPrintData?.branch_VD.headerLogoUrl != '' &&
+          this.InvPrintData?.branch_VD.headerLogoUrl != null
+        ) {
+          this.CustomData.headerurl =
+            environment.PhotoURL + this.InvPrintData?.branch_VD.headerLogoUrl;
+        } else {
+          this.CustomData.headerurl = null;
+        }
+
+        if (
+          this.InvPrintData?.branch_VD.headerPrintInvoice == true &&
+          this.InvPrintData?.branch_VD.footerLogoUrl != '' &&
+          this.InvPrintData?.branch_VD.footerLogoUrl != null
+        ) {
+          this.CustomData.footerurl =
+            environment.PhotoURL + this.InvPrintData?.branch_VD.footerLogoUrl;
+        } else {
+          this.CustomData.footerurl = null;
+        }
+      });
+  }
+
+  DigitalNumGlobal: any;
+  Taxchechdisabl = false;
+  CopyData:any=null;
+  clauseseleted: any;
+  supplierseleted: any;
+  FillSuppliersSelect2() {
+    this._payvoucherservice.FillSuppliersSelect2().subscribe((data) => {
+        this.supplierseleted = data;
+      }
+    );
+  }
+  FillClausesSelect() {
+    this._payvoucherservice.FillClausesSelect().subscribe((data) => {
+        this.clauseseleted = data;
+      }
+    );
+  }
+  PasteDataFromRow(){
+  }
+  ChangeReceiptVoucherGre(event: any) {
+    if (event != null) {
+      const DateHijri = toHijri(this.vouchermodel.date);
+      var DateGre = new HijriDate(
+        DateHijri._year,
+        DateHijri._month,
+        DateHijri._date
+      );
+      DateGre._day = DateGre._date;
+      this.vouchermodel.hijriDate = DateGre;
+    } else {
+      this.vouchermodel.hijriDate = null;
+    }
+  }
+  ChangeReceiptVoucherHijri(event: any) {
+    if (event != null) {
+      const DateGre = new HijriDate(event.year, event.month, event.day);
+      const dayGreg = DateGre.toGregorian();
+      this.vouchermodel.date = dayGreg;
+    } else {
+      this.vouchermodel.date = null;
+    }
+  }
+  GetLayoutReadyVm() {
+    //debugger;
+    this._payvoucherservice.GetLayoutReadyVm().subscribe((data) => {
+      //debugger;
+      if (data.decimalPoints == null || data.decimalPoints == '') {
+        this.DigitalNumGlobal = 0;
+      } else {
+        this.DigitalNumGlobal = parseInt(data.decimalPoints);
+      }
+    });
+  }
+  GetTaxNoBySuppId(suppid: any) {
+    this._payvoucherservice.GetTaxNoBySuppId(suppid).subscribe((data) => {
+      this.vouchermodel.supplierTaxID = data ?? '';
+    });
+  }
+  Toaccount: any;
+  FillCustAccountsSelect2_Receipt(PayTypeId: any) {
+    this.receiptService.FillCustAccountsSelect2(PayTypeId).subscribe((data) => {
+      this.Toaccount = data;
+    });
+  }
+  FillCustAccountsSelect(type: any) {
+    this._payvoucherservice.FillCustAccountsSelect2(type).subscribe((data) => {
+     
+      this.Toaccount = data;
+    });
+  }
+  getaccountcode(accountid: any, type: any) {
+    //debugger;
+    if (accountid == null || accountid == '') {
+      if (type == 1) {
+        this.vouchermodel.toAccountIdCode = null;
+      } else {
+        this.vouchermodel.fromAccountId2Code = null;
+      }
+    } else {
+      this._payvoucherservice.GetAccCodeFormID(accountid).subscribe((data) => {
+        if (type == 1) {
+          this.vouchermodel.toAccountIdCode = data;
+        } else {
+          this.vouchermodel.fromAccountId2Code = data;
+        }
+      });
+    }
+  }
+  CheckDetailsIntial() {
+    this.CheckDetailsForm = this.formBuilder.group({
+      dateCheck_transfer: [new Date(), []],
+      paymenttypeName: [null, []],
+      Check_transferNumber: [null, []],
+      BankId: [null, []],
+      bankName: [null, []],
+    });
+  }
+    vouchermodel: any = {
+      invoiceNumber: null,
+      journalNumber: null,
+      date: null,
+      hijriDate: null,
+      notes: null,
+      type: null,
+      invoiceValue: null,
+      taxAmount: null,
+      totalValue: null,
+      toAccountId: null,
+      invoiceReference: null,
+      supplierInvoiceNo: null,
+      recevierTxt: null,
+      clauseId: null,
+      supplierId: null,
+      dunCalc: null,
+      payType: 1,
+      taxtype: 2,
+      costCenterId: null,
+      reftxt: null,
+      reVoucherNValueText: null,
+      valuebefore: null,
+      valueafter: null,
+      supplierTaxID: null,
+      fromAccountId2Code: null,
+      toAccountIdCode: null,
+      invoiceNotes: null,
+      taxcheck1: false,
+      CostCenterId: null,
+    };
+    voucherDetails: any = {
+      invoiceNumber: null,
+      journalNumber: null,
+      date: new Date(),
+      hijriDate: null,
+      notes: null,
+      type: null,
+      invoiceValue: null,
+      checkNo: null,
+      checkDate: null,
+      bankId: null,
+      moneyOrderNo: null,
+      moneyOrderDate: null,
+    };
+    resetvouchermodel() {
+    const DateHijri = toHijri(new Date());
+    var DateGre = new HijriDate(
+      DateHijri._year,
+      DateHijri._month,
+      DateHijri._date
+    );
+    DateGre._day = DateGre._date;
+  
+      this.vouchermodel.invoiceId = 0;
+      this.vouchermodel.invoiceNumber = null;
+      this.vouchermodel.journalNumber = null;
+      this.vouchermodel.date = new Date();
+      this.vouchermodel.hijriDate = DateGre;
+      this.vouchermodel.notes = null;
+      this.vouchermodel.type = null;
+      this.vouchermodel.invoiceValue = null;
+      this.vouchermodel.taxAmount = null;
+      this.vouchermodel.totalValue = null;
+      this.vouchermodel.toAccountId = null;
+      this.vouchermodel.invoiceReference = null;
+      this.vouchermodel.supplierInvoiceNo = null;
+      this.vouchermodel.recevierTxt = null;
+      this.vouchermodel.clauseId = null;
+      this.vouchermodel.supplierId = null;
+      this.vouchermodel.dunCalc = null;
+      (this.vouchermodel.payType = 1),
+        (this.vouchermodel.taxtype = 2),
+        (this.vouchermodel.costCenterId = null);
+      this.vouchermodel.reftxt = null;
+      this.vouchermodel.reVoucherNValueText = null;
+      this.vouchermodel.valuebefore = null;
+      this.vouchermodel.valueafter = null;
+      this.vouchermodel.supplierTaxID = null;
+      this.vouchermodel.fromAccountId2Code = null;
+      this.vouchermodel.toAccountIdCode = null;
+      this.vouchermodel.accountId = null;
+      this.vouchermodel.invoiceNotes = null;
+      (this.vouchermodel.taxcheck1 = false),
+        (this.vouchermodel.CostCenterId = null);
+  
+      this.voucherDetails.invoiceNumber = null;
+      this.voucherDetails.journalNumber = null;
+  
+      this.voucherDetails.notes = null;
+      this.voucherDetails.type = null;
+      this.voucherDetails.invoiceValue = null;
+      this.voucherDetails.checkNo = null;
+      this.voucherDetails.checkDate = null;
+      this.voucherDetails.bankId = null;
+      this.voucherDetails.moneyOrderNo = null;
+      this.voucherDetails.moneyOrderDate = null;
+      this.checkdetailsList = [];
+    }
+  editvouccher(data: any) {
+      this.resetvouchermodel();
+      this.FillClausesSelect();
+      this.FillSuppliersSelect2();
+      this.FillCostCenterSelect_Catch();
+      this.modalType=2;
+    const DateHijri = toHijri(this._sharedService.String_TO_date(data.date));
+    var DateGre = new HijriDate(
+      DateHijri._year,
+      DateHijri._month,
+      DateHijri._date
+    );
+    DateGre._day = DateGre._date;
+      this.vouchermodel.invoiceNumber = data.invoiceNumber;
+      this.vouchermodel.date = this._sharedService.String_TO_date(data.date);
+      this.vouchermodel.hijriDate = DateGre;
+      this.vouchermodel.notes = data.notes;
+      this.vouchermodel.invoiceNotes = data.invoiceNotes;
+      var VoucherValue = data.invoiceValue;
+      var TaxValue = 0;
+      //var VoucherTotalValue = $('#receiptVoucherGrid').DataTable().row($(this).closest('tr')).data().TotalValue;
+      this.vouchermodel.journalNumber = data.journalNumber;
+      var voucherId = parseInt(data.invoiceId);
+      this.vouchermodel.invoiceId = voucherId;
+  
+      // this.vouchermodel.supplierInvoiceNo=data.supplierInvoiceNo;
+      this.vouchermodel.supplierInvoiceNo = data.supplierInvoiceNo;
+      this.vouchermodel.recevierTxt = data.recevierTxt;
+      this.vouchermodel.invoiceReference = data.invoiceReference;
+      this.vouchermodel.invoiceValue = data.invoiceValue;
+      this.vouchermodel.reVoucherNValueText = data.invoiceValueText;
+  
+      if (parseInt(data.invoiceValue) == parseInt(data.totalValue)) {
+        //debugger;
+  
+        if (data.taxAmount != null) {
+          this.vouchermodel.valuebefore = parseFloat(
+            (
+              parseFloat(data.invoiceValue.toString()) -
+              parseFloat(data.taxAmount.toString())
+            ).toString()
+          ).toFixed(this.DigitalNumGlobal);
+        } else {
+          this.vouchermodel.valuebefore = parseFloat(data.invoiceValue).toFixed(
+            this.DigitalNumGlobal
+          );
+        }
+      } else {
+        this.vouchermodel.valuebefore = parseFloat(data.invoiceValue).toFixed(
+          this.DigitalNumGlobal
+        );
+      }
+  
+      this.vouchermodel.taxAmount = data.taxAmount;
+      this.vouchermodel.valueafter = data.totalValue;
+      // if (parseFloat(data.taxAmount).toFixed(2).toString() == '0.00') {
+      //   this.Taxchechdisabl = false;
+  
+      //   this.vouchermodel.taxcheck1 = true;
+      // } else {
+      //   this.Taxchechdisabl = false;
+  
+      //   this.vouchermodel.taxcheck1 = false;
+      // }
+      this.Taxchechdisabl=true;
+      var DunCalcV = data.dunCalc;
+      //debugger;
+      if (DunCalcV == true) {
+        this.vouchermodel.dunCalc = true;
+      } else {
+        this.vouchermodel.dunCalc = false;
+      }
+  
+      var taxType =
+        parseInt(data.totalValue) === parseInt(data.tnvoiceValue) ? 3 : 2;
+      this.vouchermodel.taxtype = taxType;
+  
+      this.vouchermodel.clauseId = data.clauseId;
+      this.vouchermodel.supplierId = data.supplierId;
+  
+      if (data.addDate != null) {
+        this.addUser = data.addUser;
+        this.addDate = data.addDate;
+        if (data.addInvoiceImg != '' && data.addInvoiceImg != null) {
+          this.addInvoiceImg = data.addInvoiceImg;
+        }
+      }
+  
+      this.GetTaxNoBySuppId(data.supplierId);
+  
+      var payType = parseInt(data.payType);
+      this.vouchermodel.payType = payType;
+  
+      //payFlagselectClick(1)
+      this.FillSubAccountLoad();
+      if (payType == 1) {
+        this.FillCustAccountsSelect2_Receipt(1);
+      } else if (payType == 2 || payType == 6) {
+        this.FillCustAccountsSelect2_Receipt(6);
+      } else if (payType == 3) {
+        this.FillCustAccountsSelect2_Receipt(4);
+      } else if (payType == 4) {
+        this.FillCustAccountsSelect2_Receipt(5);
+      } else if (payType == 5) {
+        this.FillCustAccountsSelect2_Receipt(6);
+      } else if (payType == 9) {
+        this.FillCustAccountsSelect2_Receipt(9);
+      } else if (payType == 15) {
+        this.FillCustAccountsSelect2_Receipt(15);
+      } else if (payType == 16) {
+        this.FillCustAccountsSelect2_Receipt(16);
+      } else if (payType == 17) {
+        this.FillCustAccountsSelect2_Receipt(17);
+      } else {
+        this.FillCustAccountsSelect2_Receipt(0);
+      }
+  
+      this._payvoucherservice
+        .GetAllDetailsByVoucherId(voucherId)
+        .subscribe((data2) => {
+          //debugger;
+  
+          this.vouchermodel.toAccountId = data2.result[0].toAccountId;
+          this.vouchermodel.CostCenterId = data2.result[0].costCenterId;
+          this.vouchermodel.accountId = data2.result[0].accountId;
+          this.vouchermodel.notes = data2.result[0].description;
+          this.getaccountcode(data2.result[0].accountId, 2);
+          this.getaccountcode(data2.result[0].toAccountId, 1);
+  
+          this.vouchermodel.amount = data2.result[0].amount;
+          this.vouchermodel.taxtype = data2.result[0].taxType;
+          this.vouchermodel.taxAmount = data2.result[0].taxAmount;
+  
+          this.vouchermodel.totalAmount = data2.result[0].totalAmount;
+          this.vouchermodel.payType = data2.result[0].payType;
+  
+          this.vouchermodel.referenceNumber = data2.result[0].referenceNumber;
+  
+          if (
+            data2.result[0].payType == 2 ||
+            data2.result[0].payType == 6 ||
+            data2.result[0].payType == 17
+          ) {
+            this.CheckDetailsIntial();
+  
+            if (data2.result[0].payType == 2) {
+              this.CheckDetailsForm.controls['paymenttypeName'].setValue('شيك');
+              this.CheckDetailsForm.controls['Check_transferNumber'].setValue(
+                data2.result[0].checkNo
+              );
+              this.CheckDetailsForm.controls['dateCheck_transfer'].setValue(
+                new Date(data2.result[0].checkDate)
+              );
+              this.CheckDetailsForm.controls['BankId'].setValue(
+                data2.result[0].bankId
+              );
+              this.CheckDetailsForm.controls['bankName'].setValue(
+                data2.result[0].bankName
+              );
+            } else if (data2.result[0].payType == 6) {
+              this.CheckDetailsForm.controls['paymenttypeName'].setValue('حوالة');
+              this.CheckDetailsForm.controls['Check_transferNumber'].setValue(
+                data2.result[0].moneyOrderNo
+              );
+              this.CheckDetailsForm.controls['dateCheck_transfer'].setValue(
+                new Date(data2.result[0].moneyOrderDate)
+              );
+              this.CheckDetailsForm.controls['BankId'].setValue(
+                data2.result[0].bankId
+              );
+              this.CheckDetailsForm.controls['bankName'].setValue(
+                data2.result[0].bankName
+              );
+            } else if (data2.result[0].payType == 17) {
+              this.CheckDetailsForm.controls['paymenttypeName'].setValue(
+                'نقاط بيع'
+              );
+              this.CheckDetailsForm.controls['Check_transferNumber'].setValue(
+                data2.result[0].moneyOrderNo
+              );
+              this.CheckDetailsForm.controls['dateCheck_transfer'].setValue(
+                new Date(data2.result[0].moneyOrderDate)
+              );
+              this.CheckDetailsForm.controls['BankId'].setValue(
+                data2.result[0].bankId
+              );
+              this.CheckDetailsForm.controls['bankName'].setValue(
+                data2.result[0].bankName
+              );
+            }
+            this.checkdetailsTabel();
+          }
+        });
+    }
 
   //#endregion
 
+  
     //-----------------------------------Storehouse------------------------------------------------
   //#region 
 

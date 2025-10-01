@@ -3679,12 +3679,14 @@
             >
               <tr>
                 <th>{{ "ServiceNo" | translate }}</th>
-                <th style="width: 30% !important">
+                <th style="width: 21% !important">
                   {{ "ServiceName" | translate }}
                 </th>
                 <th>{{ "Unit" | translate }}</th>
                 <th>{{ "Quantity" | translate }}</th>
                 <th>{{ "price" | translate }}</th>
+                <th>{{ "الخصم" | translate }}</th>
+                <th>{{ "نسبة الخصم" | translate }}</th>
                 <th>{{ "totalBeforeTax" | translate }}</th>
                 <th>{{ "VATTax" | translate }}</th>
                 <th>{{ "netTax" | translate }}</th>
@@ -3729,7 +3731,7 @@
                     type="text"
                     name="os-amount{{ item.idRow }}"
                     [(ngModel)]="item.QtyConst"
-                    (keyup)="CalculateTotal_Offer()"
+                    (keyup)="CalculateTotal_Offer(1)"
                   />
                 </td>
 
@@ -3738,7 +3740,27 @@
                     type="number"
                     name="os-price{{ item.idRow }}"
                     [(ngModel)]="item.Amounttxt"
-                    (keyup)="CalculateTotal_Offer()"
+                    (keyup)="CalculateTotal_Offer(1)"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    min="0"
+                    name="os-DiscountValue{{ item.idRow }}"
+                    [(ngModel)]="item.DiscountValueConst"
+                    [disabled]="modalInvoice.AddOrView != 1"
+                    (keyup)="CalculateTotal_Offer(1)"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    min="0"
+                    name="os-DiscountPercentage{{ item.idRow }}"
+                    [(ngModel)]="item.DiscountPercentageConst"
+                    [disabled]="modalInvoice.AddOrView != 1"
+                    (keyup)="CalculateTotal_Offer(2)"
                   />
                 </td>
 
@@ -3798,7 +3820,7 @@
               placeholder="{{ 'Chose' | translate }}"
               name="include_tax"
               [(ngModel)]="modalDetailsOffer.taxtype"
-              (change)="CalculateTotal_Offer()"
+              (change)="CalculateTotal_Offer(1)"
               [clearable]="false"
             >
               <ng-option [value]="2">{{

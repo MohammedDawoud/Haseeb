@@ -381,7 +381,6 @@
                 <!--فك الترحيل   -->
                 <button
                   type="button"
-                  id="68"
                   class="p-2 bg-blue-100 hover:bg-blue-500 rounded-lg duration-300 hover:text-white mx-1"
                   data-toggle="tooltip"
                   data-placement="top"
@@ -394,7 +393,6 @@
                 <!--عرض القيد المحاسبي   -->
                 <button
                   type="button"
-                  id="68"
                   class="p-2 bg-blue-100 hover:bg-blue-500 rounded-lg duration-300 hover:text-white mx-1"
                   data-toggle="tooltip"
                   data-placement="top"
@@ -408,7 +406,6 @@
                 <!--طباعة  -->
                 <button
                   type="button"
-                  id="68"
                   class="AddNewTaskbtn btn btn-outline-success btn-sm waves-effect mx-1"
                   (click)="GetReport(element)"
                   data-toggle="tooltip"
@@ -429,8 +426,8 @@
           mat-row
           *matRowDef="let row; columns: projectDisplayedColumns"
           (dblclick)="
-            open(ReceiptVoucherwithoutCustomerModal, row, 'viewReceiptModal')
-          "
+            open(ReceiptVoucherwithoutCustomerModal, row, 'viewReceiptModal')"
+          [ngClass]="{ 'highlightRow': row.invoiceId === selectedId }"
         ></tr>
       </table>
     </div>

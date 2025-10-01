@@ -1044,6 +1044,12 @@ projectName:null,
       oferserviceobj.Serviceamountval = element.Amounttxt;
       oferserviceobj.LineNumber = element.idRow;
 
+      oferserviceobj.Amount = element.AmountBeforeTaxtxt;
+      oferserviceobj.TaxAmount = element.taxAmounttxt;
+      oferserviceobj.TotalAmount = element.TotalAmounttxt;
+      oferserviceobj.DiscountValue_Det = element.DiscountValueConst;
+      oferserviceobj.DiscountPercentage_Det =element.DiscountPercentageConst;
+
       VoucherDetailsList.push(oferserviceobj);
     });
     this.offerTerms.forEach((element: any) => {
@@ -1182,7 +1188,8 @@ projectName:null,
           maxVal + 1,
           data.result,
           offerdata.serviceQty,
-          offerdata.serviceamountval
+          offerdata.serviceamountval,
+          offerdata
         );
       });
   }
@@ -1435,13 +1442,15 @@ projectName:null,
       PackageRatio3: null,
     });
   }
-  addServiceOffer(
-    AccualLinenumber: any,
-    indexRow: any,
-    item: any,
-    Qty: any,
-    servamount: any
-  ) {
+  addServiceOffer(AccualLinenumber: any,indexRow: any,item: any,Qty: any,
+    servamount: any,data:any) {
+
+    var AmountVal = 0;
+    if (data.taxType == 3) {
+      AmountVal =(+parseFloat(data.totalAmount).toFixed(2) + +parseFloat(data.discountValue_Det).toFixed(2)) /Qty;
+    } else {
+      AmountVal =(+parseFloat(data.amount).toFixed(2) + +parseFloat(data.discountValue_Det).toFixed(2)) / Qty;
+    }
     var maxVal = 0;
     var indexVal = 0;
     if (AccualLinenumber == 0) {
@@ -1464,6 +1473,8 @@ projectName:null,
       AccJournalid: null,
       UnitConst: null,
       QtyConst: null,
+      DiscountValueConst: null,
+      DiscountPercentageConst: null,
       accountJournaltxt: null,
       Amounttxt: null,
       AmountBeforeTaxtxt:null,
@@ -1477,34 +1488,30 @@ projectName:null,
       PackageRatio2: null,
       PackageRatio3: null,
     });
-    this.offerServices.filter(
-      (a: { idRow: any }) => a.idRow == indexVal
-    )[0].AccJournalid = item.servicesId;
-    this.offerServices.filter(
-      (a: { idRow: any }) => a.idRow == indexVal
-    )[0].UnitConst = item.serviceTypeName;
-    this.offerServices.filter(
-      (a: { idRow: any }) => a.idRow == indexVal
-    )[0].QtyConst = Qty;
-    this.offerServices.filter(
-      (a: { idRow: any }) => a.idRow == indexVal
-    )[0].accountJournaltxt = item.name;
-    this.offerServices.filter(
-      (a: { idRow: any }) => a.idRow == indexVal
-    )[0].Amounttxt = servamount;
+    this.offerServices.filter((a: { idRow: any }) => a.idRow == indexVal)[0].AccJournalid = item.servicesId;
+    this.offerServices.filter((a: { idRow: any }) => a.idRow == indexVal)[0].UnitConst = item.serviceTypeName;
+    this.offerServices.filter((a: { idRow: any }) => a.idRow == indexVal)[0].QtyConst = Qty;
+    this.offerServices.filter((a: { idRow: any }) => a.idRow == indexVal)[0].accountJournaltxt = item.name;
+    this.offerServices.filter((a: { idRow: any }) => a.idRow == indexVal)[0].DiscountValueConst = data.discountValue_Det;
+    this.offerServices.filter((a: { idRow: any }) => a.idRow == indexVal)[0].DiscountPercentageConst = data.discountPercentage_Det;
+    this.offerServices.filter((a: { idRow: any }) => a.idRow == indexVal)[0].AmountBeforeTaxtxt = AmountVal;
+    this.offerServices.filter((a: { idRow: any }) => a.idRow == indexVal)[0].Amounttxt = AmountVal;
+    this.offerServices.filter((a: { idRow: any }) => a.idRow == indexVal)[0].taxAmounttxt = data.taxAmount;
+    this.offerServices.filter((a: { idRow: any }) => a.idRow == indexVal)[0].TotalAmounttxt = data.totalAmount;
+
 
     this.offerServices.sort(
       (a: { lineNumber: number }, b: { lineNumber: number }) =>
         (a.lineNumber ?? 0) - (b.lineNumber ?? 0)
     ); // b - a for reverse sort
-    this.CalculateTotal_Offer();
+    this.CalculateTotal_Offer(1);
   }
   deleteService(idRow: any) {
     let index = this.offerServices.findIndex(
       (d: { idRow: any }) => d.idRow == idRow
     );
     this.offerServices.splice(index, 1);
-    this.CalculateTotal_Offer();
+    this.CalculateTotal_Offer(1);
   }
 
   setServiceRowValue_Offer(element: any) {
@@ -1524,7 +1531,7 @@ projectName:null,
       (a: { idRow: any }) => a.idRow == this.selectedServiceRowOffer
     )[0].Amounttxt = element.amount;
     this.SetAmountPackage(this.selectedServiceRowOffer, element);
-    this.CalculateTotal_Offer();
+    this.CalculateTotal_Offer(1);
   }
 
   setServiceRowValueNew_Offer(
@@ -1532,9 +1539,10 @@ projectName:null,
     indexRow: any,
     item: any,
     Qty: any,
-    servamount: any
+    servamount: any,
+    data:any
   ) {
-    this.addServiceOffer(AccualLinenumber, indexRow, item, Qty, servamount);
+    this.addServiceOffer(AccualLinenumber, indexRow, item, Qty, servamount,data);
   }
 
   SetAmountPackage(indexRow: any, item: any) {
@@ -1675,13 +1683,12 @@ projectName:null,
           AccAmount = 0;
         }
         element.Amounttxt = parseFloat(AccAmount.toString()).toFixed(2);
-        this.CalculateTotal_Offer();
+        this.CalculateTotal_Offer(1);
         modal?.dismiss();
       });
     }
   }
-
-  CalculateTotal_Offer() {
+    CalculateTotal_Offer(type:any) {
     var totalwithtaxes = 0;
     var totalAmount = 0;
     var totaltax = 0;
@@ -1689,11 +1696,45 @@ projectName:null,
     var vAT_TaxVal = parseFloat(this.userG.orgVAT ?? 0);
 
     this.offerServices.forEach((element: any) => {
-      var Value = parseFloat((element.Amounttxt ?? 0).toString()).toFixed(2);
-      var FVal = +Value * element.QtyConst;
+      var ValueAmount = parseFloat((element.Amounttxt ?? 0).toString()).toFixed(2);
+      ValueAmount = parseFloat((+ValueAmount * element.QtyConst).toString()).toFixed(2);
+      var DiscountValue_Det;
+      if (type == 1) {
+        DiscountValue_Det = parseFloat((element.DiscountValueConst ?? 0).toString()).toFixed(2);
+      } else {
+        var Discountper_Det = parseFloat((element.DiscountPercentageConst ?? 0).toString()).toFixed(2);
+        DiscountValue_Det = parseFloat(((+Discountper_Det * +ValueAmount) / 100).toString()).toFixed(2);
+        this.offerServices.filter(
+          (a: { idRow: any }) => a.idRow == element.idRow)[0].DiscountValueConst = parseFloat(DiscountValue_Det.toString()).toFixed(2);
+      }
+      var Value = parseFloat(
+        (+ValueAmount - +DiscountValue_Det).toString()).toFixed(2);
+      if (!(+Value >= 0)) {
+        this.offerServices.filter((a: { idRow: any }) => a.idRow == element.idRow)[0].DiscountValueConst = 0;
+        this.offerServices.filter(
+          (a: { idRow: any }) => a.idRow == element.idRow)[0].DiscountPercentageConst = 0;
+        DiscountValue_Det = 0;
+        Value = parseFloat((+ValueAmount - +DiscountValue_Det).toString()).toFixed(2);
+      }
+      if (type == 1) {
+        var DiscountPercentage_Det;
+        if (+ValueAmount > 0) {
+          DiscountPercentage_Det = (+DiscountValue_Det * 100) / +ValueAmount;
+        } else {
+          DiscountPercentage_Det = 0;
+        }
+        DiscountPercentage_Det = parseFloat(DiscountPercentage_Det.toString()).toFixed(2);
+        this.offerServices.filter(
+          (a: { idRow: any }) => a.idRow == element.idRow)[0].DiscountPercentageConst = DiscountPercentage_Det;
+      }
+
+      var FValDisc = DiscountValue_Det;
+      var FValAmountAll = ValueAmount;
+      var FVal = Value;
       var FValIncludeT = FVal;
       var taxAmount = 0;
       var totalwithtax = 0;
+
       var TaxV8erS = parseFloat(
         (
           +parseFloat((+Value * vAT_TaxVal).toString()).toFixed(2) / 100
@@ -1712,7 +1753,7 @@ projectName:null,
         ).toFixed(2);
       } else {
         taxAmount = +TaxVS;
-        FValIncludeT = +parseFloat(
+        FValIncludeT = parseFloat(
           (+parseFloat(Value).toFixed(2) - +TaxVS).toString()
         ).toFixed(2);
         totalwithtax = +parseFloat(Value).toFixed(2);
@@ -1726,17 +1767,22 @@ projectName:null,
       this.offerServices.filter(
         (a: { idRow: any }) => a.idRow == element.idRow
       )[0].TotalAmounttxt = parseFloat(
-        (totalwithtax * element.QtyConst).toString()
+        (totalwithtax).toString()
       ).toFixed(2);
 
       totalwithtaxes += totalwithtax;
-      totalAmount += FVal;
+      //totalAmount += FVal;
       totalAmountIncludeT += totalwithtax;
       totaltax += taxAmount;
     });
     this.CalcSumTotal();
     this.CalcOfferDet(1);
+
+    setTimeout(() => {
+      this.ConvertNumToString_Offer(this.modalDetailsOffer.total_amount);
+    }, 500);
   }
+
 
   CalcSumTotal() {
     let sum = 0;
@@ -2266,6 +2312,27 @@ projectName:null,
       else if (description == 'يحفظهم الله') return 'May God protect them';
       else description;
     }
+  }
+
+  GetAccualValueOffer(item: any) {
+    //debugger
+    var AccualValue = 0;
+    if (item.taxType == 3) {
+      AccualValue =
+        ((item.totalAmount ?? 0) + (item.discountValue_Det ?? 0)) /
+        (item.serviceQty ?? 1);
+    } else {
+      AccualValue =
+        ((item.amount ?? 0) + (item.discountValue_Det ?? 0)) / (item.serviceQty ?? 1);
+    }
+    return AccualValue;
+  }
+  GetDiffOffer(item: any) {
+    var Diff = '0';
+    Diff = parseFloat((item?.totalAmount - item?.taxAmount).toString()).toFixed(
+      2
+    );
+    return Diff;
   }
 
   Getserviceamountval(value: any) {
@@ -2989,7 +3056,8 @@ projectName:null,
           maxVal + 1,
           data.result,
           offerdata.serviceQty,
-          offerdata.serviceamountval
+          offerdata.serviceamountval,
+          offerdata
         );
       });
   }
@@ -3055,23 +3123,28 @@ projectName:null,
     this.addInvoiceRow();
   }
 
-  setServiceRowValueNew(indexRow: any, item: any, Qty: any, servamount: any) {
+ setServiceRowValueNew(indexRow: any, item: any, Qty: any, servamount: any,data:any) {
+      var AmountVal = 0;
+      if (data.taxType == 3) {
+        AmountVal =(+parseFloat(data.totalAmount).toFixed(2) + +parseFloat(data.discountValue_Det).toFixed(2)) /Qty;
+      } else {
+        AmountVal =(+parseFloat(data.amount).toFixed(2) + +parseFloat(data.discountValue_Det).toFixed(2)) / Qty;
+      }
+
     this.addInvoiceRow();
-    this.InvoiceDetailsRows.filter(
-      (a: { idRow: any }) => a.idRow == indexRow
-    )[0].AccJournalid = item.servicesId;
-    this.InvoiceDetailsRows.filter(
-      (a: { idRow: any }) => a.idRow == indexRow
-    )[0].UnitConst = item.serviceTypeName;
-    this.InvoiceDetailsRows.filter(
-      (a: { idRow: any }) => a.idRow == indexRow
-    )[0].QtyConst = Qty;
-    this.InvoiceDetailsRows.filter(
-      (a: { idRow: any }) => a.idRow == indexRow
-    )[0].accountJournaltxt = item.name;
-    this.InvoiceDetailsRows.filter(
-      (a: { idRow: any }) => a.idRow == indexRow
-    )[0].Amounttxt = servamount;
+    this.InvoiceDetailsRows.filter((a: { idRow: any }) => a.idRow == indexRow)[0].AccJournalid = item.servicesId;
+    this.InvoiceDetailsRows.filter((a: { idRow: any }) => a.idRow == indexRow)[0].UnitConst = item.serviceTypeName;
+    this.InvoiceDetailsRows.filter((a: { idRow: any }) => a.idRow == indexRow)[0].QtyConst = Qty;
+    this.InvoiceDetailsRows.filter((a: { idRow: any }) => a.idRow == indexRow)[0].accountJournaltxt = item.name;
+    this.InvoiceDetailsRows.filter((a: { idRow: any }) => a.idRow == indexRow)[0].Amounttxt = servamount;
+
+    this.InvoiceDetailsRows.filter((a: { idRow: any }) => a.idRow == indexRow)[0].DiscountValueConst = data.discountValue_Det;
+    this.InvoiceDetailsRows.filter((a: { idRow: any }) => a.idRow == indexRow)[0].DiscountPercentageConst = data.discountPercentage_Det;
+    this.InvoiceDetailsRows.filter((a: { idRow: any }) => a.idRow == indexRow)[0].AmountBeforeTaxtxt = AmountVal;
+    this.InvoiceDetailsRows.filter((a: { idRow: any }) => a.idRow == indexRow)[0].Amounttxt = AmountVal;
+    this.InvoiceDetailsRows.filter((a: { idRow: any }) => a.idRow == indexRow)[0].taxAmounttxt = data.taxAmount;
+    this.InvoiceDetailsRows.filter((a: { idRow: any }) => a.idRow == indexRow)[0].TotalAmounttxt = data.totalAmount;
+
     this.CalculateTotal(1);
   }
 
@@ -3709,7 +3782,8 @@ projectName:null,
           maxVal + 1,
           data.result,
           1,
-          data.result.amount
+          data.result.amount,
+          offerdata
         );
       });
   }

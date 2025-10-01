@@ -892,7 +892,7 @@
                     <th style="width: 14% !important;">{{ "costCenter" | translate }}</th>
                     <th>{{ "Statement" | translate }}</th>
                     <th>{{ "referenceNumber" | translate }}</th>
-                    <th>{{ "CountsAsExpense" | translate }}</th>
+                    <!-- <th>{{ "CountsAsExpense" | translate }}</th> -->
                     <th>{{ "delete" | translate }}</th>
                   </tr>
                 </thead>
@@ -951,9 +951,9 @@
                         name="os-referenceNotxt{{ item.idRow }}"
                       />
                     </td>
-                    <td>
+                    <!-- <td>
                       <input (change)="ChangeAccCalc(item.idRow,1)" [disabled]="WhichTypeAddEditView==3" style="transform: scale(2);" type="checkbox" name="os-accCalcExpencheck{{ item.idRow }}" [(ngModel)]="item.AccCalcExpen" />
-                    </td>
+                    </td> -->
                     <td>
                       <button *ngIf="WhichTypeAddEditView!=3" (click)="deleteEntryVoucherRow(item.idRow)"
                       class="p-2 bg-red-100 hover:bg-red-500 rounded-lg duration-300 hover:text-white w-10"

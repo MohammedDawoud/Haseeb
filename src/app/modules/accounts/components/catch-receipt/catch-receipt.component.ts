@@ -356,143 +356,8 @@ export class CatchReceiptComponent implements OnInit {
       }
     });
   }
+  selectedId: number | null = null;
   ngOnInit(): void {
-    // this.users = [
-    //   { id: 1, Name: 'محمود نافع' },
-    //   { id: 2, Name: 'محمود نافع' }
-    // ];
-    // this.delayedProjects = [
-    //   {
-    //     user: 'adwawd',
-    //     customerName: 'adawdv',
-    //     projectStatus: 4,
-    //     startDate: new Date(),
-    //     endDate: new Date(),
-    //   },
-    // ];
-    // this.latedProjects = [
-    //   {
-    //     user: 'adwawd',
-    //     customerName: 'adawdv',
-    //     projectStatus: 0,
-    //     startDate: new Date(),
-    //     endDate: new Date(),
-    //   },
-    // ];
-    // this.projects = [
-    //   {
-    //     BondNumber: '000056',
-    //     BondDate: '2023-06-13',
-    //     CustomerName: '2,300',
-    //     BondTotal: 'أجل',
-    //     PaymentType: '2023-06-13',
-    //     BondCondition: 50,
-    //     RegistrationNumber: 50,
-    //     PostingDate: 50,
-    //     progress: 50,
-    //     BondAttachments: 50,
-    //   },
-    //   {
-    //     BondNumber: '000057',
-    //     BondDate: '2023-06-13',
-    //     CustomerName: '2,300',
-    //     BondTotal: 'أجل',
-    //     PaymentType: '2023-06-13',
-    //     BondCondition: 50,
-    //     RegistrationNumber: 50,
-    //     PostingDate: 50,
-    //     BondAttachments: 50,
-    //     progress: 50,
-    //   },
-    //   {
-    //     BondNumber: '000058',
-    //     BondDate: '2023-06-13',
-    //     CustomerName: '2,300',
-    //     BondTotal: 'أجل',
-    //     PaymentType: '2023-06-13',
-    //     BondCondition: 50,
-    //     RegistrationNumber: 50,
-    //     PostingDate: 50,
-    //     progress: 50,
-    //     BondAttachments: 50,
-    //   },
-    //   {
-    //     BondNumber: '000059',
-    //     BondDate: '2023-06-13',
-    //     CustomerName: '2,300',
-    //     BondTotal: 'أجل',
-    //     PaymentType: '2023-06-13',
-    //     BondCondition: 50,
-    //     RegistrationNumber: 50,
-    //     PostingDate: 50,
-    //     progress: 50,
-    //     BondAttachments: 50,
-    //   },
-    //   {
-    //     BondNumber: '000060',
-    //     BondDate: '2023-06-13',
-    //     CustomerName: '2,300',
-    //     BondTotal: 'أجل',
-    //     PaymentType: '2023-06-13',
-    //     BondCondition: 50,
-    //     RegistrationNumber: 50,
-    //     PostingDate: 50,
-    //     progress: 50,
-    //     BondAttachments: 50,
-    //   },
-    // ];
-
-    // this.userPermissions = [
-    //   {
-    //     userName: 'adawdawd',
-    //     watch: false,
-    //     add: true,
-    //     edit: true,
-    //     delete: false,
-    //   },
-    //   {
-    //     userName: 'adawdawd',
-    //     watch: false,
-    //     add: true,
-    //     edit: true,
-    //     delete: false,
-    //   },
-    //   {
-    //     userName: 'adawdawd',
-    //     watch: false,
-    //     add: true,
-    //     edit: true,
-    //     delete: true,
-    //   },
-    //   {
-    //     userName: 'adawdawd',
-    //     watch: false,
-    //     add: false,
-    //     edit: true,
-    //     delete: false,
-    //   },
-    //   {
-    //     userName: 'adawdawd',
-    //     watch: false,
-    //     add: true,
-    //     edit: true,
-    //     delete: false,
-    //   },
-    //   {
-    //     userName: 'adawdawd',
-    //     watch: true,
-    //     add: true,
-    //     edit: true,
-    //     delete: false,
-    //   },
-    //   {
-    //     userName: 'adawdawd',
-    //     watch: true,
-    //     add: true,
-    //     edit: true,
-    //     delete: true,
-    //   },
-    // ];
 
     this.projectsDataSource = new MatTableDataSource();
 
@@ -878,8 +743,17 @@ export class CatchReceiptComponent implements OnInit {
       isChecked: this.datafilter.dateFrom == null ? false : true,
     };
     this.receiptService.GetAllVouchers(obj).subscribe((data) => {
-      this.GetAllVouchersList = data;
-      this.projectsDataSource = new MatTableDataSource(data);
+      var AccData=data;
+      this._sharedService.selectedId$.subscribe(id => {
+          this.selectedId = id;
+          if(!(this.selectedId==null || this.selectedId==0))
+          {
+            AccData = AccData.filter((d: { invoiceId: any }) => d.invoiceId == this.selectedId);
+          }
+      });
+      
+      this.GetAllVouchersList = AccData;
+      this.projectsDataSource = new MatTableDataSource(AccData);
       this.projectsDataSource.paginator = this.paginator;
       this.projectsDataSource.sort = this.sort;
     });

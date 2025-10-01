@@ -356,13 +356,20 @@ export class ReceiptComponent implements OnInit {
       }
     });
   }
-
+  selectedId: number | null = null;
   ngOnInit(): void {
-    this.users = [
-      { id: 1, Name: 'محمود نافع' },
-      { id: 2, Name: 'محمود نافع' },
-    ];
-    this.GetAllVouchersLastMonth();
+    this.users = [];
+        this._sharedService.selectedId$.subscribe(id => {
+        this.selectedId = id;
+        if(!(this.selectedId==null || this.selectedId==0))
+        {
+          this.GetAllVouchers();
+        }
+        else
+        {
+          this.GetAllVouchersLastMonth();
+        }
+    });
     this.FillBankSelect();
     this.FillCostCenterSelect();
     this.FillClausesSelect();
@@ -465,12 +472,18 @@ export class ReceiptComponent implements OnInit {
     // _voucherFilterVM.isSearch=false;
     // var obj=_voucherFilterVM;
     this.receiptService.GetAllVouchers(this.datafilter).subscribe((data) => {
-      this.projectsDataSource = new MatTableDataSource(data);
-      this.GetAllVouchersList = data;
-
+      var AccData=data;
+      this._sharedService.selectedId$.subscribe(id => {
+          this.selectedId = id;
+          if(!(this.selectedId==null || this.selectedId==0))
+          {
+            AccData = AccData.filter((d: { invoiceId: any }) => d.invoiceId == this.selectedId);
+          }
+      });
+      this.projectsDataSource = new MatTableDataSource(AccData);
+      this.GetAllVouchersList = AccData;
       this.projectsDataSource.paginator = this.paginator;
       this.projectsDataSource.sort = this.sort;
-      console.log('alldata', data);
     });
   }
   GetAllVouchersLastMonth() {

@@ -1521,7 +1521,8 @@ export class SalesBillComponent implements OnInit {
           maxVal + 1,
           data.result,
           offerdata.serviceQty,
-          offerdata.serviceamountval
+          offerdata.serviceamountval,
+          offerdata
         );
       });
   }
@@ -1587,23 +1588,28 @@ export class SalesBillComponent implements OnInit {
     this.addInvoiceRow();
   }
 
-  setServiceRowValueNew(indexRow: any, item: any, Qty: any, servamount: any) {
+  setServiceRowValueNew(indexRow: any, item: any, Qty: any, servamount: any,data:any) {
+      var AmountVal = 0;
+      if (data.taxType == 3) {
+        AmountVal =(+parseFloat(data.totalAmount).toFixed(2) + +parseFloat(data.discountValue_Det).toFixed(2)) /Qty;
+      } else {
+        AmountVal =(+parseFloat(data.amount).toFixed(2) + +parseFloat(data.discountValue_Det).toFixed(2)) / Qty;
+      }
+
     this.addInvoiceRow();
-    this.InvoiceDetailsRows.filter(
-      (a: { idRow: any }) => a.idRow == indexRow
-    )[0].AccJournalid = item.servicesId;
-    this.InvoiceDetailsRows.filter(
-      (a: { idRow: any }) => a.idRow == indexRow
-    )[0].UnitConst = item.serviceTypeName;
-    this.InvoiceDetailsRows.filter(
-      (a: { idRow: any }) => a.idRow == indexRow
-    )[0].QtyConst = Qty;
-    this.InvoiceDetailsRows.filter(
-      (a: { idRow: any }) => a.idRow == indexRow
-    )[0].accountJournaltxt = item.name;
-    this.InvoiceDetailsRows.filter(
-      (a: { idRow: any }) => a.idRow == indexRow
-    )[0].Amounttxt = servamount;
+    this.InvoiceDetailsRows.filter((a: { idRow: any }) => a.idRow == indexRow)[0].AccJournalid = item.servicesId;
+    this.InvoiceDetailsRows.filter((a: { idRow: any }) => a.idRow == indexRow)[0].UnitConst = item.serviceTypeName;
+    this.InvoiceDetailsRows.filter((a: { idRow: any }) => a.idRow == indexRow)[0].QtyConst = Qty;
+    this.InvoiceDetailsRows.filter((a: { idRow: any }) => a.idRow == indexRow)[0].accountJournaltxt = item.name;
+    this.InvoiceDetailsRows.filter((a: { idRow: any }) => a.idRow == indexRow)[0].Amounttxt = servamount;
+
+    this.InvoiceDetailsRows.filter((a: { idRow: any }) => a.idRow == indexRow)[0].DiscountValueConst = data.discountValue_Det;
+    this.InvoiceDetailsRows.filter((a: { idRow: any }) => a.idRow == indexRow)[0].DiscountPercentageConst = data.discountPercentage_Det;
+    this.InvoiceDetailsRows.filter((a: { idRow: any }) => a.idRow == indexRow)[0].AmountBeforeTaxtxt = AmountVal;
+    this.InvoiceDetailsRows.filter((a: { idRow: any }) => a.idRow == indexRow)[0].Amounttxt = AmountVal;
+    this.InvoiceDetailsRows.filter((a: { idRow: any }) => a.idRow == indexRow)[0].taxAmounttxt = data.taxAmount;
+    this.InvoiceDetailsRows.filter((a: { idRow: any }) => a.idRow == indexRow)[0].TotalAmounttxt = data.totalAmount;
+
     this.CalculateTotal(1);
   }
 

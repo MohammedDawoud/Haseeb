@@ -1009,12 +1009,14 @@
             >
               <tr>
                 <th>{{ "ServiceNo" | translate }}</th>
-                <th style="width: 30% !important">
+                <th style="width: 21% !important">
                   {{ "ServiceName" | translate }}
                 </th>
                 <th>{{ "Unit" | translate }}</th>
                 <th>{{ "Quantity" | translate }}</th>
                 <th>{{ "price" | translate }}</th>
+                <th>{{ "الخصم" | translate }}</th>
+                <th>{{ "نسبة الخصم" | translate }}</th>
                 <th>{{ "totalBeforeTax" | translate }}</th>
                 <th>{{ "VATTax" | translate }}</th>
                 <th>{{ "netTax" | translate }}</th>
@@ -1059,7 +1061,7 @@
                     type="text"
                     name="os-amount{{ item.idRow }}"
                     [(ngModel)]="item.QtyConst"
-                    (keyup)="CalculateTotal_Offer()"
+                    (keyup)="CalculateTotal_Offer(1)"
                   />
                 </td>
 
@@ -1069,13 +1071,35 @@
                       type="number"
                       name="os-price{{ item.idRow }}"
                       [(ngModel)]="item.Amounttxt"
-                      (keyup)="CalculateTotal_Offer()"
+                      (keyup)="CalculateTotal_Offer(1)"
                     />
                     <span *ngIf="item.Amounttxt" style="align-self: center"
                       ><app-sar-icon></app-sar-icon></span
                     >
                   </div>
                 </td>
+
+                 <td>
+                  <input
+                    type="number"
+                    min="0"
+                    name="os-DiscountValue{{ item.idRow }}"
+                    [(ngModel)]="item.DiscountValueConst"
+                    [disabled]="modalInvoice.AddOrView != 1"
+                    (keyup)="CalculateTotal_Offer(1)"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    min="0"
+                    name="os-DiscountPercentage{{ item.idRow }}"
+                    [(ngModel)]="item.DiscountPercentageConst"
+                    [disabled]="modalInvoice.AddOrView != 1"
+                    (keyup)="CalculateTotal_Offer(2)"
+                  />
+                </td>
+
                 <td>
                   <div class="flex">
                   <input
@@ -1147,7 +1171,7 @@
               placeholder="{{ 'Chose' | translate }}"
               name="include_tax"
               [(ngModel)]="modalDetailsOffer.taxtype"
-              (change)="CalculateTotal_Offer()"
+              (change)="CalculateTotal_Offer(1)"
               [clearable]="false"
             >
               <ng-option [value]="2">{{
@@ -2372,6 +2396,43 @@
                 </td>
                 <td
                   style="
+                      font-size: 13px;
+                      background-color: #0f9c9b;
+                      padding: 2px;
+                      text-align: center;
+                      color: #000;
+                      word-wrap: break-word;
+                  "
+                >
+                  {{ lang == "ar" ? "الخصم" : "Discount" }}
+                </td>
+                <td
+                  style="
+                        font-size: 13px;
+                        background-color: #0f9c9b;
+                        padding: 2px;
+                        text-align: center;
+                        color: #000;
+                        word-wrap: break-word;
+                  "
+                >
+                  {{ lang == "ar" ? "نسبة الخصم" : "Discount Percent" }}
+                </td>
+               
+                <td
+                style="
+                  font-size: 13px;
+                  background-color: #0f9c9b;
+                  padding: 2px;
+                  text-align: center;
+                  color: #000;
+                  word-wrap: break-word;
+                "
+              >
+                {{ lang == "ar" ? "إ.ق.الضريبة" : " t.b Tax" }}
+              </td>
+                <td
+                  style="
                     font-size: 14px;
                     background-color: #0f9c9b;
                     padding: 3px;
@@ -2420,7 +2481,7 @@
                     color: #000;
                     border-inline-start: 2px dashed #0c8191;
                     border-bottom: 2px dashed #0c8191;
-                    width: 390px;
+                    width: 280px;
                   "
                 >
                   <span style="font-weight: 700">{{
@@ -2431,11 +2492,11 @@
                     style="
                       list-style: none;
                       padding: 0px;
-                      margin-inline-start: 10px;
+                      margin-inline-start: 8px;
                       text-align: right;
                       margin-top: 3px;
                       line-height: 16px;
-                      font-size: 13px;
+                      font-size: 12px;
                     "
                   >
                     <hr style="margin: 6px" />
@@ -2467,8 +2528,46 @@
                     border-bottom: 2px dashed #0c8191;
                   "
                 >
-                  {{ Getserviceamountval(item.serviceamountval) }}
+                  {{ GetAccualValueOffer(item) }}
                   <app-sar-icon></app-sar-icon>
+                </td>
+                 <td
+                  style="
+                    background-color: #fff;
+                    font-size: 13px;
+                    padding: 2px;
+                    color: #000;
+                    border-inline-start: 2px dashed #0c8191;
+                    border-bottom: 2px dashed #0c8191;
+                  "
+                >
+                  {{ item.discountValue_Det }}
+                 <app-sar-icon></app-sar-icon> <!-- {{ lang == "ar" ? "ر.س" : "SAR" }} -->
+                </td>
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 13px;
+                    padding: 2px;
+                    color: #000;
+                    border-inline-start: 2px dashed #0c8191;
+                    border-bottom: 2px dashed #0c8191;
+                  "
+                >
+                  {{ item.discountPercentage_Det }}
+                </td>
+                <td
+                  style="
+                    background-color: #fff;
+                    font-size: 13px;
+                    padding: 2px;
+                    color: #000;
+                    border-inline-start: 2px dashed #0c8191;
+                    border-bottom: 2px dashed #0c8191;
+                  "
+                >
+                  {{ GetDiffOffer(item) }}
+                 <app-sar-icon></app-sar-icon> <!-- {{ lang == "ar" ? "ر.س" : "SAR" }} -->
                 </td>
                 <td
                   style="
@@ -2480,7 +2579,7 @@
                     border-bottom: 2px dashed #0c8191;
                   "
                 >
-                  {{ GetTaxValue(item, OfferPrintData?.taxAmount) }}
+                  {{ item.taxAmount }}
                   <app-sar-icon></app-sar-icon>
                 </td>
                 <td
@@ -2494,7 +2593,7 @@
                     border-inline-end: 2px dashed #0c8191;
                   "
                 >
-                  {{ GetTotalValue(item, OfferPrintData?.taxAmount) }}
+                  {{ item.totalAmount }}
                   <app-sar-icon></app-sar-icon>
                 </td>
               </tr>
@@ -2925,6 +3024,30 @@
             border: 1px solid black;
           "
         >
+          {{ lang == "ar" ? "الخصم" : "Discount" }}
+        </td>
+        <td
+          style="
+            font-size: 13px;
+            background-color: midnightblue;
+            padding: 2px;
+            text-align: center;
+            color: white;
+            border: 1px solid black;
+          "
+        >
+          {{ lang == "ar" ? "نسبة الخصم" : "Discount Percent" }}
+        </td>
+        <td
+          style="
+            font-size: 13px;
+            background-color: midnightblue;
+            padding: 2px;
+            text-align: center;
+            color: white;
+            border: 1px solid black;
+          "
+        >
           {{ lang == "ar" ? "إ.ق.الضريبة" : "t.b Tax" }}
         </td>
         <td
@@ -2958,7 +3081,7 @@
         <td style="font-size: 13px; padding: 2px; border: 1px solid black;background-color:midnightblue;color: white;">
           {{ i + 1 }}
         </td>
-        <td style="font-size: 13px; padding: 2px; border: 1px solid black; width: 390px;">
+        <td style="font-size: 13px; padding: 2px; border: 1px solid black; width: 285px;">
           <span style="font-weight: 700">{{ GetServiceName(lang, item) }}</span>
           <ul
             *ngFor="let det of item?.servicesPricesOffer"
@@ -2974,19 +3097,34 @@
           {{ item.serviceQty }}
         </td>
         <td style="font-size: 13px; padding: 2px; border: 1px solid black;">
-          {{ Getserviceamountval(item.serviceamountval) }}
+          {{ GetAccualValueOffer(item) }}
+          <!-- {{ lang == "ar" ? "ر.س" : "SAR" }} --><app-sar-icon></app-sar-icon>
+        </td>
+              <td style="font-size: 13px; padding: 2px; border: 1px solid black;">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 4px;">
+          {{ item.discountValue_Det }}
+          <div style="width: 19px;">
+          <app-sar-icon ></app-sar-icon>
+          </div>
+        </div>
+      </td>
+      <td style="font-size: 13px; padding: 2px; border: 1px solid black;">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 4px;">
+          {{ item.discountPercentage_Det }}
+          <div style="width: 19px;">
+          </div>
+        </div>
+      </td>
+        <td style="font-size: 13px; padding: 2px; border: 1px solid black;">
+          {{ GetDiffOffer(item) }}
           <!-- {{ lang == "ar" ? "ر.س" : "SAR" }} --><app-sar-icon></app-sar-icon>
         </td>
         <td style="font-size: 13px; padding: 2px; border: 1px solid black;">
-          {{ GetValueBefore(item, OfferPrintData?.taxAmount) }}
+          {{ item.taxAmount }}
           <!-- {{ lang == "ar" ? "ر.س" : "SAR" }} --><app-sar-icon></app-sar-icon>
         </td>
         <td style="font-size: 13px; padding: 2px; border: 1px solid black;">
-          {{ GetTaxValue(item, OfferPrintData?.taxAmount) }}
-          <!-- {{ lang == "ar" ? "ر.س" : "SAR" }} --><app-sar-icon></app-sar-icon>
-        </td>
-        <td style="font-size: 13px; padding: 2px; border: 1px solid black;">
-          {{ GetTotalValue(item, OfferPrintData?.taxAmount) }}
+          {{ item.totalAmount }}
           <!-- {{ lang == "ar" ? "ر.س" : "SAR" }} --><app-sar-icon></app-sar-icon>
         </td>
       </tr>

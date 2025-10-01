@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import * as CryptoJS from 'crypto-js';
 import { environment } from 'src/environments/environment';
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { AbstractControl } from '@angular/forms/';
 
 @Injectable({
@@ -226,6 +226,15 @@ export class SharedService {
   getAction() {
     return this.action;
   }
+
+  private selectedIdSource = new BehaviorSubject<number | null>(null);
+  selectedId$ = this.selectedIdSource.asObservable();
+
+  setSelectedId(id: number) {
+    this.selectedIdSource.next(id);
+  }
+
+
 }
 
 

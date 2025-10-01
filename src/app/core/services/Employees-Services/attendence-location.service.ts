@@ -70,6 +70,11 @@ export class AttendenceLocationService {
   SaveEmplocation(EmpId:any,LocationId:any){
     return this.http.post(this.apiEndPoint+'Employee/SaveEmplocation', {}, { params:{EmpId:EmpId,LocationId:LocationId}});
   }
+  SaveEmplocationList(locationDataNew:any): Observable<any> {
+    const headers = { 'content-type': 'application/json'}
+    const body=JSON.stringify(locationDataNew);
+    return this.http.post(this.apiEndPoint + 'Employee/SaveEmplocationList', body,{'headers':headers});
+  }
   AllowEmployeesites(EmpId:any,Check:any,Type:any){
     return this.http.post(this.apiEndPoint+'Employee/AllowEmployeesites', {}, { params:{EmpId:EmpId,Check:Check,Type:Type}});
   }
