@@ -1176,6 +1176,8 @@ export class UnderDailyComponent implements OnInit {
         var TotalCredit = 0;
         var TotalDepit = 0;
         if (data.invoicesVM.length > 0) {
+        this.EntryVoucherPrintData.invoicesVM.sort((a: { lineNumber: number }, b: { lineNumber: number }) =>
+        (a.lineNumber ?? 0) - (b.lineNumber ?? 0));
           data.invoicesVM.forEach((element: any) => {
             var Credit = 0;
             var Depit = 0;
