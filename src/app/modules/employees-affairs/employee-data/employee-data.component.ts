@@ -2860,6 +2860,11 @@ export class EmployeeDataComponent {
       this.toast.error('هذا العمر تحت السن القانوني', 'رسالة');
       this.modalDetails.birthDate = '';
       return;
+      }else if (age>=70){
+       //debugger;
+      this.toast.error('هذا العمر فوق السن القانوني', 'رسالة');
+      this.modalDetails.birthDate = '';
+      return;
     }
     this.modalDetails.age = age;
   }

@@ -3689,7 +3689,7 @@
                 [(ngModel)]="modalDetails.employeeNo"
                 class="form-control"
                 placeholder="{{ 'Emp Code' | translate }}"
-                [disabled]="!userG?.userPrivileges.includes(141003)"
+                [disabled]="!userG?.userPrivileges.includes(141006) && !userG?.userPrivileges.includes(142006)"
               />
             </div>
             <div>
