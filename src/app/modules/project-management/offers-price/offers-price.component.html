@@ -2171,7 +2171,7 @@
               margin-bottom: 0px;
             "
           >
-            {{ OfferPrintData?.org_VD?.nameAr }}
+            {{ OfferCustomData.OrgnameAr }}
           </h1>
           <h1
             style="
@@ -2181,7 +2181,7 @@
               margin-bottom: 0px;
             "
           >
-            {{ OfferPrintData?.org_VD?.nameEn }}
+            {{ OfferCustomData.OrgnameEn }}
           </h1>
           <div class="line" style="position: relative; padding: 5px 0px 10px">
             <span
@@ -2887,8 +2887,8 @@
      <p>
   {{
     lang === 'ar'
-      ? 'يســر ' + OfferPrintData?.org_VD?.nameAr + ' التقدم لكم بهذا العرض المالي حسب طلبكم...'
-      : OfferPrintData?.org_VD?.nameEn + ' is pleased to present to you this financial offer as per your request...'
+      ? 'يســر ' + OfferCustomData.OrgnameAr + ' التقدم لكم بهذا العرض المالي حسب طلبكم...'
+      : OfferCustomData.OrgnameEn + ' is pleased to present to you this financial offer as per your request...'
   }}
 </p>
     <p *ngIf="lang == 'ar'" style="font-size: 12px; margin-bottom: 10px;text-align: center;">
@@ -6011,10 +6011,25 @@
                   [ngModelOptions]="{ standalone: true }"
                   [disabled]="modalInvoice.AddOrView != 1"
                 />
-                <label for="date" class="mx-2">{{
+                <label for="printBankAccount" class="mx-2">{{
                   "hideAccount" | translate
                 }}</label>
               </div>
+
+            <div class="d-flex me-3">
+              <input
+                type="checkbox"
+                name="zatcaSimplified"
+                id="zatcaSimplified"
+                [(ngModel)]="modalInvoice.zatcaSimplified"
+                [ngModelOptions]="{ standalone: true }"
+                [disabled]="modalInvoice.AddOrView != 1"
+              />
+              <label for="zatcaSimplified" class="mx-2">{{
+                "مبسطة" | translate
+              }}</label>
+            </div>
+
 
               <div class="form-group row me-3">
                 <label for="Statement" class="col-sm-2 col-form-label">{{

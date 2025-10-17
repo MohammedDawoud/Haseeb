@@ -4912,6 +4912,7 @@ export class TrackProjectsComponent implements OnInit {
     DiscountValue: 0,
     customerId: null,
     printBankAccount: false,
+    zatcaSimplified:false,
     InvoiceReference: null,
     PageInsert: 1,
     CostCenterId: null,
@@ -5004,6 +5005,7 @@ export class TrackProjectsComponent implements OnInit {
       DiscountValue: 0,
       customerId: null,
       printBankAccount: false,
+      zatcaSimplified:false,
       InvoiceReference: null,
       PageInsert: 1,
       CostCenterId: null,
@@ -5855,6 +5857,8 @@ export class TrackProjectsComponent implements OnInit {
     VoucherObj.DiscountValue = this.modalInvoice.DiscountValue;
     VoucherObj.CustomerId = this.modalInvoice.customerId;
     VoucherObj.printBankAccount = this.modalInvoice.printBankAccount;
+    VoucherObj.zatcaSimplified = this.modalInvoice.zatcaSimplified;
+  
     VoucherObj.InvoiceReference = this.modalInvoice.Reference;
     VoucherObj.PaidValue = this.modalInvoice.PaidValue;
     VoucherObj.CostCenterId = this.modalInvoice.CostCenterId;

@@ -85,6 +85,7 @@ export class BranchesVM {
     headerPrintrevoucher: boolean | null;
     headerprintdarvoucher: boolean | null;
     headerPrintpayvoucher: boolean | null;
+    headerPrintoffer: boolean | null;
     bublicRevenue: number | null;
     otherRevenue: number | null;
 }

@@ -2164,6 +2164,8 @@ projectName:null,
     Account1Bank: null,
     Account2Bank: null,
     OrgImg: null,
+    OrgnameAr: null,
+    OrgnameEn: null,
     ValuetxtConvert: null,
     CustomerName: null,
   };
@@ -2177,6 +2179,8 @@ projectName:null,
       Account1Bank: null,
       Account2Bank: null,
       OrgImg: null,
+      OrgnameAr: null,
+      OrgnameEn: null,
       ValuetxtConvert: null,
       CustomerName: null,
     };
@@ -2245,10 +2249,37 @@ projectName:null,
             environment.PhotoURL + this.OfferCustomData.Account2Img;
         else this.OfferCustomData.Account2Img = null;
 
-        if (this.OfferPrintData?.offers?.isContainLogo == false)
+      //----------------------------------------------------------------------------
+      if (this.OfferPrintData?.offers?.isContainLogo == false)
+      {
+        if (
+          this.OfferPrintData?.branch_VD.headerPrintoffer == true &&
+          this.OfferPrintData?.branch_VD.branchLogoUrl != '' &&
+          this.OfferPrintData?.branch_VD.branchLogoUrl != null
+        ) {
           this.OfferCustomData.OrgImg =
-            environment.PhotoURL + this.OfferPrintData?.org_VD.logoUrl;
-        else this.OfferCustomData.OrgImg = null;
+            environment.PhotoURL + this.OfferPrintData?.branch_VD.branchLogoUrl;
+        } else {
+          if (this.OfferPrintData?.org_VD.logoUrl)
+            this.OfferCustomData.OrgImg =
+              environment.PhotoURL + this.OfferPrintData?.org_VD.logoUrl;
+          else this.OfferCustomData.OrgImg = null;
+        }
+      }
+      else
+      {
+        this.OfferCustomData.OrgImg = null;
+      }
+      if(this.OfferPrintData?.branch_VD.headerPrintoffer == true)
+      {
+        this.OfferCustomData.OrgnameAr=this.OfferPrintData?.branch_VD.nameAr;
+        this.OfferCustomData.OrgnameEn=this.OfferPrintData?.branch_VD.nameEn;
+      }
+      else{
+        this.OfferCustomData.OrgnameAr=this.OfferPrintData?.org_VD?.nameAr;
+        this.OfferCustomData.OrgnameEn=this.OfferPrintData?.org_VD?.nameEn;
+      }
+      //----------------------------------------------------------------------------
 
         if (this.OfferPrintData?.offers?.notDisCustPrint == false) {
           this.OfferCustomData.CustomerMobile =
@@ -2410,6 +2441,7 @@ projectName:null,
     DiscountValue: 0,
     customerId: null,
     printBankAccount: false,
+    zatcaSimplified:false,
     InvoiceReference: null,
     PageInsert: 1,
     CostCenterId: null,
@@ -2492,6 +2524,7 @@ projectName:null,
       DiscountValue: 0,
       customerId: null,
       printBankAccount: false,
+      zatcaSimplified:false,
       InvoiceReference: null,
       PageInsert: 1,
       CostCenterId: null,
@@ -3303,6 +3336,8 @@ projectName:null,
     VoucherObj.DiscountValue = this.modalInvoice.DiscountValue;
     VoucherObj.CustomerId = this.modalInvoice.customerId;
     VoucherObj.printBankAccount = this.modalInvoice.printBankAccount;
+    VoucherObj.zatcaSimplified = this.modalInvoice.zatcaSimplified;
+  
     VoucherObj.InvoiceReference = this.modalInvoice.Reference;
     VoucherObj.PaidValue = this.modalInvoice.PaidValue;
     VoucherObj.PageInsert = 1;
