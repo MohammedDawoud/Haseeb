@@ -1948,6 +1948,7 @@ export class OrganizationComponent implements OnInit {
       headerPrintrevoucher: [false, []],
       headerprintdarvoucher: [false, []],
       headerPrintpayvoucher: [false, []],
+      headerPrintoffer: [false, []],
       uploadedFile: [null, []],
       uploadedFileheader: [null, []],
       uploadedFilefooter: [null, []],
@@ -2244,6 +2245,10 @@ export class OrganizationComponent implements OnInit {
     formData.append(
       'headerPrintpayvoucher',
       this.BranchInfoForm.controls['headerPrintpayvoucher'].value
+    );
+    formData.append(
+      'headerPrintoffer',
+      this.BranchInfoForm.controls['headerPrintoffer'].value
     );
 
     // formData.append('BranchLogoUrl', $("#ImgUrl").val());
@@ -2902,6 +2907,10 @@ export class OrganizationComponent implements OnInit {
         this.BranchInfoForm.controls['headerPrintpayvoucher'].setValue(
           item?.headerPrintpayvoucher
         );
+        this.BranchInfoForm.controls['headerPrintoffer'].setValue(
+          item?.headerPrintoffer
+        );
+        
         // this.BranchInfoForm.controls["uploadedFile"].setValue(item?.branchLogoUrl == "" ? null : item?.branchLogoUrl)
         // this.BranchInfoForm.controls["uploadedFileheader"].setValue(item?.headerLogoUrl == "" ? null : item?.headerLogoUrl)
         // this.BranchInfoForm.controls["uploadedFilefooter"].setValue(item?.footerLogoUrl == "" ? null : item?.footerLogoUrl)
@@ -3013,6 +3022,10 @@ export class OrganizationComponent implements OnInit {
       this.BranchInfoForm.controls['headerPrintpayvoucher'].setValue(
         item?.headerPrintpayvoucher
       );
+      this.BranchInfoForm.controls['headerPrintoffer'].setValue(
+        item?.headerPrintoffer
+      );
+      
       // this.BranchInfoForm.controls["uploadedFile"].setValue(item?.branchLogoUrl == "" ? null : item?.branchLogoUrl)
       // this.BranchInfoForm.controls["uploadedFileheader"].setValue(item?.headerLogoUrl == "" ? null : item?.headerLogoUrl)
       // this.BranchInfoForm.controls["uploadedFilefooter"].setValue(item?.footerLogoUrl == "" ? null : item?.footerLogoUrl)

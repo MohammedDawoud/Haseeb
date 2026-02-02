@@ -499,6 +499,7 @@ export class AccountsComponent {
     totalres: null,
   };
   BranchName:any
+  printprojectsDataSource: any = []
   printdata() {
     let x = [];
 
@@ -520,11 +521,21 @@ export class AccountsComponent {
     this.reportparam.Sortedlist = this.transactionIds;
 
     debugger;
-
+    this.printprojectsDataSource = [];
     this.service
       .GetReportGrid_AcountCustomer(this.reportparam)
       .subscribe((data: any) => {
         console.log(data);
+
+        if(this.dataSource.sort)
+        {
+          this.printprojectsDataSource=this.dataSource.sortData(this.dataSource.filteredData,this.dataSource.sort);
+        }
+        else
+        {
+          this.printprojectsDataSource=this.dataSource.data;
+        }
+
         this.result = data;
         this.result.accountName = data.accountName;
         this.result.accountCode = data.accountCode;

@@ -3063,8 +3063,22 @@
                 [ngModelOptions]="{ standalone: true }"
                 [disabled]="modalInvoice.AddOrView != 1"
               />
-              <label for="date" class="mx-2">{{
+              <label for="printBankAccount" class="mx-2">{{
                 "hideAccount" | translate
+              }}</label>
+            </div>
+
+            <div class="d-flex me-3">
+              <input
+                type="checkbox"
+                name="zatcaSimplified"
+                id="zatcaSimplified"
+                [(ngModel)]="modalInvoice.zatcaSimplified"
+                [ngModelOptions]="{ standalone: true }"
+                [disabled]="modalInvoice.AddOrView != 1"
+              />
+              <label for="zatcaSimplified" class="mx-2">{{
+                "مبسطة" | translate
               }}</label>
             </div>
 
