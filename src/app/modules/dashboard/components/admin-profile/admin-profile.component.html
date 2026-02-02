@@ -323,6 +323,14 @@
           </label>
           <input hidden type="file" id="user-StampUrl" (change)="selectFileStampUrl($event)"accept="image/*" />
         </div>
+
+              <div>
+            <mat-slide-toggle  formControlName="AppearInInvoicePrint" color="primary"><span [translate]="'name'"
+              [translateParams]="{
+                  ar: 'عدم اظهار اسم المستخدم في طباعة الفاتورة',
+                  en: 'Hide user name on invoice print'
+                }"></span></mat-slide-toggle>
+          </div>
         <div class="text-end">
           <!-- [disabled]="!userForm.valid" -->
           <button style="width: 200px" class="btn submit-btn" (click)="open(confirmAlert)" [translate]="'name'"
