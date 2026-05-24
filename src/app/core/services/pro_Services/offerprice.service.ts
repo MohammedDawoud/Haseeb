@@ -170,4 +170,7 @@ export class OfferpriceService {
     ConfirmCertifyOffer(_offersPricesId:any,Code:any){
     return this.http.post(this.apiEndPoint+'OffersPrice/ConfirmCertifyOffer', {}, { params:{OffersPricesId:_offersPricesId,Code:Code}});
   }
+    ConfirmCertifyOfferWithoutCode(_offersPricesId:any){
+    return this.http.post(this.apiEndPoint+'OffersPrice/ConfirmCertifyOfferWithoutCode', {}, { params:{OffersPricesId:_offersPricesId}});
+  }
 }

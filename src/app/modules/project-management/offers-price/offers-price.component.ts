@@ -6077,7 +6077,16 @@ sendmail:any;
         }
       });
   }
-
+  ConfirmCertifyOfferWithoutCode(element: any) {
+    this._offerpriceService.ConfirmCertifyOfferWithoutCode(element.offersPricesId).subscribe((result: any) => {
+        if (result.statusCode == 200) {
+          this.toast.success(this.translate.instant(result.reasonPhrase),this.translate.instant('Message'));
+          this.getData();
+        } else {
+          this.toast.error(this.translate.instant(result.reasonPhrase), this.translate.instant("Message"));
+        }
+      });
+  }
     GetValueBefore(item: any, TaxAmount: any) {
     var Value = item.serviceamountval;
     Value=+Value*item.serviceQty;
