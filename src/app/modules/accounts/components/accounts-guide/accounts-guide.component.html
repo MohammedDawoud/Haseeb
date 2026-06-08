@@ -36,6 +36,19 @@
               <i class="fa-solid fa-folder-minus tree-icon"></i>
             </span>
           </ng-template>
+
+          <ng-template #nodeNameTemplate let-node="node" let-context="context">
+            <span [class.active]="context.active" style="color: #0a6dca"
+              (click)="selectedTree()">{{node.name}}</span>
+
+              <button style="color: #0a6dca;font-size: 15px;padding-right: 5px;" type="button" (click)="onAccountCodeClick(node,2); $event.stopPropagation();">
+                <i class="fa-solid fa-pen"></i>
+              </button>
+              <button style="color: red;font-size: 19px;padding-right: 5px;" type="button" (click)="open(deleteModal, node, 'deleteItemTree'); $event.stopPropagation();">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+          </ng-template>
+
         </tree-ngx>
         </div>
       </div>
@@ -402,8 +415,8 @@
               {{ "new" | translate }}
             </button>
 
-            <button (click)="SaveAccount()"
-            [disabled]="this.classification==null||this.Type==null||this.accountNameAR==null"
+            <button (click)="open(SaveAccountTreeConfirmModal, null, 'SaveAccountTreeConfirmModal')"
+            [disabled]="selectItemOftree==true || this.classification==null||this.Type==null||this.accountNameAR==null"
             type="button" class="btn bg-base text-white mb-3 col-md-2">
               {{ "save" | translate }}
             </button>
@@ -543,7 +556,7 @@
               class="p-2 bg-orange-100 hover:bg-orange-500 rounded-lg duration-300 hover:text-white w-10"
               data-toggle="tooltip"
               data-placement="top"
-              (click)="onAccountCodeClick(element)"
+              (click)="onAccountCodeClick(element,1)"
             >
               <i class="fa-regular fa-pen-to-square"></i>
             </button>
@@ -723,5 +736,22 @@
     </div>
   </div>
 </ng-template>
+
+
+<ng-template #SaveAccountTreeConfirmModal let-modal>
+  <div class="modal-body text-center">
+<p [translate]="'name'" [translateParams]="{ar: 'هل تريد الحفظ ',en: 'Are you sure to save ?'}"></p>
+    <div class="flex gap-2 justify-center">
+      <button type="button" (click)="modal.dismiss()" color="basic" class="btn btn-secondary text-white mb-3 col-md-2 ">
+        {{ "close" | translate }}
+      </button>
+
+      <button type="button" class="btn bg-base text-white mb-3 col-md-2" (click)="SaveAccount();modal.dismiss()">
+        {{ "confirem" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
 
 <!-- <div id="print-voucher" style="opacity: 0; position: fixed">awdawd</div> -->

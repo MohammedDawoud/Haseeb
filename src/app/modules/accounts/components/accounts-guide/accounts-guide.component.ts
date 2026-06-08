@@ -820,33 +820,38 @@ export class AccountsGuideComponent implements OnInit {
     { id: 19, name: " مصروفات " },
   ]
 
-  onAccountCodeClick(element: any) {
-    this.GetAccCredit_Depit(element.accountId);
-    this.accId = element.accountId
-    this.acountCode = element.code
-    this.MainAccountCode = element.parentAccountCode
-    this.MainAccountName = element.parentAccountName
-    this.accountNameAR = element.nameAr
-    this.accountNameEn = element.nameEn
-    if(element.openAccCreditDate)
+  onAccountCodeClick(element: any,type:any) {
+    var ElementData=element;
+    if(type==2)
     {
-      this.creditDate =this._sharedService.String_TO_date(element.openAccCreditDate)
+      ElementData =this.projectsDataSourceTemp.filter((x:any)=>x.accountId==element.id)[0];
     }
-    if(element.openAccDepitDate)
+    this.GetAccCredit_Depit(ElementData.accountId);
+    this.accId = ElementData.accountId
+    this.acountCode = ElementData.code
+    this.MainAccountCode = ElementData.parentAccountCode
+    this.MainAccountName = ElementData.parentAccountName
+    this.accountNameAR = ElementData.nameAr
+    this.accountNameEn = ElementData.nameEn
+    if(ElementData.openAccCreditDate)
     {
-      this.depitDate = this._sharedService.String_TO_date(element.openAccDepitDate)
+      this.creditDate =this._sharedService.String_TO_date(ElementData.openAccCreditDate)
     }
-    this.debtorEditorial = element.openAccDepit
-    this.CreditorEditorial = element.openAccCredit
-    this.Type = element.type
-    this.classification = element.classification
-    this.accountLevel = element.level
-    this.AccountIdAhlak = element.accountIdAhlak
-    this.CurrencyId = element.currencyId
-    this.LevelNode = element.level
-    this.ParentId = element.parentId
-    if (element.nature == 1) { this.Nature = true } else { this.Nature = false }
-    if (element.active == 1) { this.accounStatus = true } else { this.accounStatus = false }
+    if(ElementData.openAccDepitDate)
+    {
+      this.depitDate = this._sharedService.String_TO_date(ElementData.openAccDepitDate)
+    }
+    this.debtorEditorial = ElementData.openAccDepit
+    this.CreditorEditorial = ElementData.openAccCredit
+    this.Type = ElementData.type
+    this.classification = ElementData.classification
+    this.accountLevel = ElementData.level
+    this.AccountIdAhlak = ElementData.accountIdAhlak
+    this.CurrencyId = ElementData.currencyId
+    this.LevelNode = ElementData.level
+    this.ParentId = ElementData.parentId
+    if (ElementData.nature == 1) { this.Nature = true } else { this.Nature = false }
+    if (ElementData.active == 1) { this.accounStatus = true } else { this.accounStatus = false }
     this.selectItemOftree = false
 
 
@@ -862,6 +867,9 @@ export class AccountsGuideComponent implements OnInit {
     }
     if (type == 'deleteItem') {
       this.deleteItem = data.accountId;
+    }
+    if (type == 'deleteItemTree') {
+      this.deleteItem = parseInt(data.id??"0");
     }
     this.modalService
       // .open(content, {
