@@ -859,7 +859,7 @@ export class AccountsGuideComponent implements OnInit {
   ngAfterViewInit() {
     // this.open(this.smartModal, null, 'smartModal');
   }
-
+  selectedNode: any = null;
   open(content: any, data?: any, type?: any) {
     if (data && type == 'edit') {
       this.modalDetails = data;

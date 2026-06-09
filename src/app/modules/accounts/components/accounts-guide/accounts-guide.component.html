@@ -41,8 +41,12 @@
             <span [class.active]="context.active" style="color: #0a6dca"
               (click)="selectedTree()">{{node.name}}</span>
 
-              <button style="color: #0a6dca;font-size: 15px;padding-right: 5px;" type="button" (click)="onAccountCodeClick(node,2); $event.stopPropagation();">
-                <i class="fa-solid fa-pen"></i>
+              <button style="color: #0a6dca;font-size: 15px;padding-right: 5px;" type="button" (click)="selectedNode = node.id;onAccountCodeClick(node,2); $event.stopPropagation();">
+                <!-- <i class="fa-solid fa-pen"></i> -->
+                 <i
+                    class="fa-solid fa-pen"
+                    [class.active-icon]="selectedNode === node.id">
+                  </i>
               </button>
               <button style="color: red;font-size: 19px;padding-right: 5px;" type="button" (click)="open(deleteModal, node, 'deleteItemTree'); $event.stopPropagation();">
                 <i class="fa-solid fa-xmark"></i>
