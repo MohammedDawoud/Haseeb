@@ -77,6 +77,7 @@ import { PrintreportsService } from 'src/app/core/services/acc_Services/printrep
 import { HttpEventType } from '@angular/common/http';
 import { EmployeePermissionsService } from 'src/app/core/services/Employees-Services/employee-permissions.service';
 import { Permissions } from 'src/app/core/Classes/DomainObjects/Permissions';
+import { AccountsreportsService } from 'src/app/core/services/acc_Services/accountsreports.service';
 
 const DEFAULT_DURATION = 300;
 
@@ -1791,7 +1792,7 @@ console.log(data.absenceData);
     private _printreportsService: PrintreportsService,
     private datePipe: DatePipe,
     private _report: EmployeeReportService,
-
+    private _accountsreportsService: AccountsreportsService,
     private translate: TranslateService,
     private _permissionservice :EmployeePermissionsService
 
@@ -2273,7 +2274,10 @@ console.log(data.absenceData);
     this.ActiveYear();
     this.GetOrganizationData();
     this.GetHostingExpireAlert();
-
+    if(this.userG.organizationData.modeType==3)
+    {
+      this.GetAllInvoiceRequests();
+    }
     //this.getALERTData();
 
     this.users = [
@@ -7006,6 +7010,62 @@ if(type==1){
             }, timeoutDuration);
           }
   //#endregion
+
+
+
+  @ViewChild('InvoiceRequestswarning') InvoiceRequestswarning!: MatSort;
+
+  homeNotificationsInvoiceRequests: string[] = [];
+
+  GetAllInvoiceRequests() {
+    this._accountsreportsService.GetAllInvoiceRequests().subscribe(data => {
+      this.GetHomeNotifications(data);
+    });
+  }
+  GetHomeNotifications(Accdata: any) {
+    const acceptedWithWarnings = Accdata.filter(
+      (x: any) => x.statusCode == 202
+    ).length;
+
+    const rejectedInvoices = Accdata.filter(
+      (x: any) => x.statusCode == 400 || x.statusCode == 401
+    ).length;
+
+    const resendInvoices = Accdata.filter(
+      (x: any) =>
+        x.statusCode == 0 ||
+        x.statusCode == 504 ||
+        x.statusCode == 503 ||
+        x.statusCode == 500 ||
+        x.statusCode == 429
+    ).length;
+
+    this.homeNotificationsInvoiceRequests = [];
+
+    if (acceptedWithWarnings > 0) {
+      this.homeNotificationsInvoiceRequests.push(
+        `تم قبول ${acceptedWithWarnings} فاتورة لدى هيئة الزكاة والضريبة والجمارك مع وجود تحذيرات لمعالجتها من طرفكم.`
+      );
+    }
+
+    if (rejectedInvoices > 0) {
+      this.homeNotificationsInvoiceRequests.push(
+        `رفضت هيئة الزكاة والضريبة والجمارك عدد ${rejectedInvoices} فاتورة بسبب مشاكل في الفاتورة، يرجى سرعة معالجتها وإعادة إرسالها.`
+      );
+    }
+    
+    if (resendInvoices > 0) {
+      this.homeNotificationsInvoiceRequests.push(
+        `يوجد لديك عدد ${resendInvoices} فاتورة يجب عليك إعادة إرسالها مرة أخرى خلال مدة إعادة الإرسال التي حددتها الهيئة.`
+      );
+    }
+
+    if (rejectedInvoices > 0 || resendInvoices > 0) {
+       this.open(this.InvoiceRequestswarning, '', 'xl', '');
+    }
+
+  }
+
 }
 
 

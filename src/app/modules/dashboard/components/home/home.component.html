@@ -16564,3 +16564,29 @@
     </div>
   </div>
 </ng-template>
+
+  <ng-template #InvoiceRequestswarning let-modal>
+    <div class="modal-body !pt-0" style="padding-top: 0 !important;">
+      <div class="pb-[20px] pt-[24px] flex justify-between bg-white text-red-500 mb-[20px]"
+        style="border-bottom: 1px solid #FECDCA">
+        <h4 class="m-0">
+          <i class="fa fa-exclamation-circle text-red-500 text-lg me-3"></i>
+          <span class="text-lg font-bold" [translate]="'name'" [translateParams]="{
+          ar: 'تنبيهات',
+          en: 'Warning'
+        }">
+          </span>
+        </h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+      </div>
+
+      <div class="w-100 usersAlerts">
+        <h4 class="text-[#1A1A1A] mb-[24px]" style="font-weight: 700;">
+          عزيزي مسؤل الحسابات, يرجي الانتباه للنقاط التالية، حيث انها في غاية الاهمية 
+        </h4>
+        <p *ngFor="let msg of homeNotificationsInvoiceRequests" class="alert alert-warning">
+           {{ msg }}
+        </p>      
+      </div>
+    </div>
+  </ng-template>

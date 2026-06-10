@@ -728,3 +728,24 @@
   color: #d9bf06 !important;
   font-weight: bold !important;
 }
+
+.usersAlerts {
+  p {
+    position: relative;
+    padding-inline-start: 16px;
+    color: #333333;
+    font-weight: 600;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      inset-inline-start: 4px;
+      width: 6px;
+      height: 6px;
+      background: #D92D20;
+      border-radius: 50%;
+    }
+  }
+}
